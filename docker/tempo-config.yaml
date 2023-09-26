@@ -1,0 +1,30 @@
+server:
+  http_listen_port: 3200
+  grpc_listen_port: 9096
+
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: "localhost:4417"
+        http:
+          endpoint: "localhost:4418"
+
+storage:
+  trace:
+    backend: local
+    wal:
+      path: /tmp/tempo/wal
+    local:
+      path: /tmp/tempo/blocks
+
+#metrics_generator:
+#  storage:
+#    path: /tmp/tempo/generator/wal
+#    remote_write:
+#      - url: http://localhost:9090/api/v1/write
+#        send_exemplars: true
+
+#overrides:
+#  metrics_generator_processors: [span-metrics]

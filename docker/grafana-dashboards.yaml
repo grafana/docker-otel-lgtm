@@ -1,0 +1,13 @@
+apiVersion: 1
+
+providers:
+  - name: 'RED Metrics'
+    type: file
+    options:
+      path: /otel-lgtm/grafana-dashboard-red-metrics.json
+      foldersFromFilesStructure: false
+  - name: 'JVM Metrics'
+    type: file
+    options:
+      path: /otel-lgtm/grafana-dashboard-jvm-metrics.json
+      foldersFromFilesStructure: false

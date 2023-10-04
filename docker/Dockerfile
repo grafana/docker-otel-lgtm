@@ -4,7 +4,7 @@ FROM redhat/ubi8
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm
 
-RUN yum install -y unzip
+RUN yum install -y unzip jq
 
 RUN curl -sOL https://dl.grafana.com/oss/release/grafana-10.1.2.linux-amd64.tar.gz && \
     tar xfz grafana-10.1.2.linux-amd64.tar.gz && \

@@ -160,7 +160,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (rate(http_server_duration_count{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))",
+          "expr": "sum by (instance) (rate(http_server_duration_milliseconds_count{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -256,7 +256,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(sum by (instance)(rate(http_server_duration_count{job=~\"$job\", instance=~\"$instance\", http_status_code=~\"5.*\"}[$__rate_interval]))) / on (instance) (sum by (instance)(rate(http_server_duration_count{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])))\n",
+          "expr": "(sum by (instance)(rate(http_server_duration_milliseconds_count{job=~\"$job\", instance=~\"$instance\", http_status_code=~\"5.*\"}[$__rate_interval]))) / on (instance) (sum by (instance)(rate(http_server_duration_milliseconds_count{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])))\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -322,7 +322,7 @@
               }
             ]
           },
-          "unit": "s"
+          "unit": "ms"
         },
         "overrides": []
       },
@@ -352,7 +352,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(histogram_quantile(0.95, sum by(le, instance) (rate(http_server_duration_bucket{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))))",
+          "expr": "(histogram_quantile(0.95, sum by(le, instance) (rate(http_server_duration_milliseconds_bucket{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))))",
           "instant": false,
           "legendFormat": "{{instance}}",
           "range": true,
@@ -448,7 +448,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "process_runtime_jvm_system_cpu_utilization{job=~\"$job\", instance=~\"$instance\"}",
+          "expr": "process_runtime_jvm_system_cpu_utilization_ratio{job=~\"$job\", instance=~\"$instance\"}",
           "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
@@ -543,7 +543,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (process_runtime_jvm_memory_usage{job=~\"$job\",type=\"heap\", instance=~\"$instance\"}) / on (instance) \nsum by (instance) (process_runtime_jvm_memory_limit{job=~\"$job\",type=\"heap\", instance=~\"$instance\"})",
+          "expr": "sum by (instance) (process_runtime_jvm_memory_usage_bytes{job=~\"$job\",type=\"heap\", instance=~\"$instance\"}) / on (instance) \nsum by (instance) (process_runtime_jvm_memory_limit_bytes{job=~\"$job\",type=\"heap\", instance=~\"$instance\"})",
           "legendFormat": "{{instance}} - used",
           "range": true,
           "refId": "A"
@@ -634,7 +634,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by(instance) (rate(process_runtime_jvm_gc_duration_sum{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))",
+          "expr": "sum by(instance) (rate(process_runtime_jvm_gc_duration_seconds_sum{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))",
           "hide": false,
           "legendFormat": "__auto",
           "range": true,

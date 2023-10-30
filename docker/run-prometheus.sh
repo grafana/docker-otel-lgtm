@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./prometheus-2.47.0/prometheus \
+./prometheus-$PROMETHEUS_VERSION/prometheus \
       --web.enable-remote-write-receiver \
       --enable-feature=exemplar-storage \
       --enable-feature=native-histograms \

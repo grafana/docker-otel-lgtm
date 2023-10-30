@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cd ./grafana-10.1.2
+cd ./grafana-$GRAFANA_VERSION
 ./bin/grafana server > /dev/null 2>&1

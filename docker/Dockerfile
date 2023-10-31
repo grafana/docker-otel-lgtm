@@ -39,7 +39,8 @@ COPY prometheus.yaml .
 COPY run-prometheus.sh .
 COPY grafana-datasources.yaml ./grafana-$GRAFANA_VERSION/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml grafana-$GRAFANA_VERSION/conf/provisioning/dashboards/
-COPY grafana-dashboard-red-metrics.json .
+COPY grafana-dashboard-red-metrics-classic.json .
+COPY grafana-dashboard-red-metrics-native.json .
 COPY grafana-dashboard-jvm-metrics.json .
 COPY run-grafana.sh .
 COPY loki-config.yaml .

@@ -1,35 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "datasource",
-      "label": "Prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "10.1.0-57731pre"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -57,7 +26,6 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 18812,
   "graphTooltip": 0,
-  "id": null,
   "links": [
     {
       "asDropdown": false,
@@ -86,6 +54,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -160,7 +129,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (rate(http_server_duration_milliseconds_count{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))",
+          "expr": "sum by (instance) (rate(http_server_request_duration_seconds_count{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -182,6 +151,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -256,7 +226,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(sum by (instance)(rate(http_server_duration_milliseconds_count{job=~\"$job\", instance=~\"$instance\", http_status_code=~\"5.*\"}[$__rate_interval]))) / on (instance) (sum by (instance)(rate(http_server_duration_milliseconds_count{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])))\n",
+          "expr": "(sum by (instance)(rate(http_server_request_duration_seconds_count{job=~\"$job\", instance=~\"$instance\", http_response_status_code=~\"5.*\"}[$__rate_interval]))) / on (instance) (sum by (instance)(rate(http_server_request_duration_seconds_count{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])))\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -278,6 +248,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -322,7 +293,7 @@
               }
             ]
           },
-          "unit": "ms"
+          "unit": "s"
         },
         "overrides": []
       },
@@ -352,7 +323,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(histogram_quantile(0.95, sum by(le, instance) (rate(http_server_duration_milliseconds_bucket{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))))",
+          "expr": "(histogram_quantile(0.95, sum by(le, instance) (rate(http_server_request_duration_seconds_bucket{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))))",
           "instant": false,
           "legendFormat": "{{instance}}",
           "range": true,
@@ -374,6 +345,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -469,6 +441,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -564,6 +537,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -656,6 +630,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -751,6 +726,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
@@ -835,9 +811,8 @@
       "type": "timeseries"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 38,
-  "style": "dark",
   "tags": [
     "JVM",
     "open-telemetry",
@@ -851,8 +826,8 @@
       {
         "current": {
           "selected": false,
-          "text": "default",
-          "value": "default"
+          "text": "Prometheus",
+          "value": "prometheus"
         },
         "description": "Choose a Prometheus data source",
         "hide": 0,
@@ -870,7 +845,11 @@
       },
       {
         "allValue": ".+",
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${datasource}"
@@ -897,7 +876,11 @@
       },
       {
         "allValue": ".+",
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "${datasource}"
@@ -957,6 +940,6 @@
   "timezone": "",
   "title": "JVM Overview (OpenTelemetry)",
   "uid": "b91844d7-121e-4d0a-93b8-a9c1a05703b3",
-  "version": 13,
+  "version": 1,
   "weekStart": ""
 }

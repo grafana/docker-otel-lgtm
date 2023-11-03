@@ -29,7 +29,7 @@
       },
       "description": "",
       "gridPos": {
-        "h": 2,
+        "h": 5,
         "w": 12,
         "x": 0,
         "y": 0
@@ -41,7 +41,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "# RED Metrics: (r)equest rate, (e)rror rate, (d)uration",
+        "content": "# RED Metrics: (r)equest rate, (e)rror rate, (d)uration\n\nThis dashboard uses exponential histograms and the stable [OpenTelemetry metrics semantic conventions](https://opentelemetry.io/docs/specs/semconv/general/metrics/).\nTo enable this for the [OpenTelemetry Java instrumentation agent](https://github.com/open-telemetry/opentelemetry-java-instrumentation/), set the following environment variables:\n\n```\nexport OTEL_EXPORTER_OTLP_METRICS_DEFAULT_HISTOGRAM_AGGREGATION=base2_exponential_bucket_histogram\nexport OTEL_SEMCONV_STABILITY_OPT_IN=http\n```",
         "mode": "markdown"
       },
       "pluginVersion": "10.2.0",
@@ -112,7 +112,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 2
+        "y": 5
       },
       "id": 1,
       "options": {
@@ -134,7 +134,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(histogram_count(rate(http_server_duration_milliseconds{job=\"$job\", instance=\"$instance\"}[5m])))",
+          "expr": "sum(histogram_count(rate(http_server_request_duration_seconds{job=\"$job\", instance=\"$instance\"}[5m])))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -208,7 +208,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 10
+        "y": 13
       },
       "id": 2,
       "options": {
@@ -230,7 +230,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(histogram_count(rate(http_server_duration_milliseconds{job=\"$job\", instance=\"$instance\", http_status_code=~\"5..\"}[5m]))) / sum(histogram_count(rate(http_server_duration_milliseconds{job=\"$job\", instance=\"$instance\"}[5m])))\n\n",
+          "expr": "sum(histogram_count(rate(http_server_request_duration_seconds{job=\"$job\", instance=\"$instance\", http_response_status_code=~\"5..\"}[5m]))) / sum(histogram_count(rate(http_server_request_duration_seconds{job=\"$job\", instance=\"$instance\"}[5m])))\n\n",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -263,7 +263,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 18
+        "y": 21
       },
       "id": 5,
       "options": {
@@ -297,7 +297,7 @@
         "yAxis": {
           "axisPlacement": "left",
           "reverse": false,
-          "unit": "ms"
+          "unit": "s"
         }
       },
       "pluginVersion": "10.2.0",
@@ -309,7 +309,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate(http_server_duration_milliseconds{job=\"$job\", instance=\"$instance\"}[5m]))",
+          "expr": "sum(rate(http_server_request_duration_seconds{job=\"$job\", instance=\"$instance\"}[5m]))",
           "format": "time_series",
           "instant": false,
           "range": true,
@@ -376,7 +376,7 @@
               }
             ]
           },
-          "unit": "ms"
+          "unit": "s"
         },
         "overrides": []
       },
@@ -384,7 +384,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 26
+        "y": 29
       },
       "id": 4,
       "options": {
@@ -408,7 +408,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(http_server_duration_milliseconds{job=\"$job\", instance=\"$instance\"}[5m])))",
+          "expr": "histogram_quantile(0.95, sum(rate(http_server_request_duration_seconds{job=\"$job\", instance=\"$instance\"}[5m])))",
           "format": "time_series",
           "instant": false,
           "legendFormat": "95th",
@@ -422,7 +422,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.5, sum(rate(http_server_duration_milliseconds{job=\"$job\", instance=\"$instance\"}[5m])))",
+          "expr": "histogram_quantile(0.5, sum(rate(http_server_request_duration_seconds{job=\"$job\", instance=\"$instance\"}[5m])))",
           "hide": false,
           "legendFormat": "50th",
           "range": true,

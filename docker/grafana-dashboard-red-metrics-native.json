@@ -134,7 +134,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(histogram_count(rate(http_server_request_duration_seconds{job=\"$job\", instance=\"$instance\"}[5m])))",
+          "expr": "sum(histogram_count(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\", job=\"$job\", instance=\"$instance\"}[5m])))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -230,7 +230,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(histogram_count(rate(http_server_request_duration_seconds{job=\"$job\", instance=\"$instance\", http_response_status_code=~\"5..\"}[5m]))) / sum(histogram_count(rate(http_server_request_duration_seconds{job=\"$job\", instance=\"$instance\"}[5m])))\n\n",
+          "expr": "sum(histogram_count(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\", job=\"$job\", instance=\"$instance\", http_response_status_code=~\"5..\"}[5m]))) / sum(histogram_count(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\", job=\"$job\", instance=\"$instance\"}[5m])))\n\n",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -309,7 +309,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate(http_server_request_duration_seconds{job=\"$job\", instance=\"$instance\"}[5m]))",
+          "expr": "sum(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\",job=\"$job\", instance=\"$instance\"}[5m]))",
           "format": "time_series",
           "instant": false,
           "range": true,
@@ -408,7 +408,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate(http_server_request_duration_seconds{job=\"$job\", instance=\"$instance\"}[5m])))",
+          "expr": "histogram_quantile(0.95, sum(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\",job=\"$job\", instance=\"$instance\"}[5m])))",
           "format": "time_series",
           "instant": false,
           "legendFormat": "95th",
@@ -422,7 +422,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.5, sum(rate(http_server_request_duration_seconds{job=\"$job\", instance=\"$instance\"}[5m])))",
+          "expr": "histogram_quantile(0.5, sum(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\",job=\"$job\", instance=\"$instance\"}[5m])))",
           "hide": false,
           "legendFormat": "50th",
           "range": true,

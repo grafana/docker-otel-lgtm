@@ -37,8 +37,8 @@ RUN curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases
 
 COPY prometheus.yaml .
 COPY run-prometheus.sh .
-COPY grafana-datasources.yaml ./grafana-$GRAFANA_VERSION/conf/provisioning/datasources/
-COPY grafana-dashboards.yaml grafana-$GRAFANA_VERSION/conf/provisioning/dashboards/
+COPY grafana-datasources.yaml ./grafana-v$GRAFANA_VERSION/conf/provisioning/datasources/
+COPY grafana-dashboards.yaml grafana-v$GRAFANA_VERSION/conf/provisioning/dashboards/
 COPY grafana-dashboard-red-metrics-classic.json .
 COPY grafana-dashboard-red-metrics-native.json .
 COPY grafana-dashboard-jvm-metrics.json .

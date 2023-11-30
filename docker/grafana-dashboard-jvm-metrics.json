@@ -885,7 +885,7 @@
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values({__name__=~\"(jvm_class_count|process_runtime_jvm_classes_current_loaded)\", job=~\"$job\"},instance)",
+        "definition": "label_values({__name__=~\"(jvm_class_count|process_runtime_jvm_classes_current_loaded|jvm_classes_loaded)\", job=~\"$job\"},instance)",
         "description": "The instance of the application, e.g. pod1",
         "hide": 0,
         "includeAll": true,
@@ -894,7 +894,7 @@
         "name": "instance",
         "options": [],
         "query": {
-          "query": "label_values({__name__=~\"(jvm_class_count|process_runtime_jvm_classes_current_loaded)\", job=~\"$job\"},instance)",
+          "query": "label_values({__name__=~\"(jvm_class_count|process_runtime_jvm_classes_current_loaded|jvm_classes_loaded)\", job=~\"$job\"},instance)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 2,

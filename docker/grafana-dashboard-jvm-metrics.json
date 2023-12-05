@@ -129,7 +129,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (rate({__name__=~\"http_server_request_duration_seconds_count|http_server_request_duration_count|http_server_duration_milliseconds_count|http_server_duration_seconds_count|http_server_duration_count\", job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))",
+          "expr": "sum by (instance) (rate({__name__=~\"http_server_request_duration_seconds_count|http_server_request_duration_count|http_server_duration_seconds_count|http_server_duration_count|http_server_duration_milliseconds_count|http_server_requests_milliseconds_count|http_server_requests_count|http_server_requests_seconds_count\", job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -226,7 +226,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(sum by (instance)(rate({__name__=~\"http_server_request_duration_seconds_count|http_server_request_duration_count\", job=~\"$job\", instance=~\"$instance\", http_response_status_code=~\"5.*\"}[$__rate_interval]))) / on (instance) (sum by (instance)(rate({__name__=~\"http_server_request_duration_seconds_count|http_server_request_duration_count\", job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))) or (sum by (instance)(rate({__name__=~\"http_server_duration_milliseconds_count|http_server_duration_seconds_count|http_server_duration_count\", job=~\"$job\", instance=~\"$instance\", http_status_code=~\"5.*\"}[$__rate_interval]))) / on (instance) (sum by (instance)(rate({__name__=~\"http_server_duration_milliseconds_count|http_server_duration_seconds_count|http_server_duration_count\", job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])))\n",
+          "expr": "(sum by (instance)(rate({__name__=~\"http_server_request_duration_seconds_count|http_server_request_duration_count\", job=~\"$job\", instance=~\"$instance\", http_response_status_code=~\"5.*\"}[$__rate_interval]))) / on (instance) (sum by (instance)(rate({__name__=~\"http_server_request_duration_seconds_count|http_server_request_duration_count\", job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])))\nor\n(sum by (instance)(rate({__name__=~\"http_server_duration_milliseconds_count|http_server_duration_seconds_count|http_server_duration_count\", job=~\"$job\", instance=~\"$instance\", http_status_code=~\"5.*\"}[$__rate_interval]))) / on (instance) (sum by (instance)(rate({__name__=~\"http_server_duration_milliseconds_count|http_server_duration_seconds_count|http_server_duration_count\", job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])))\nor\n(sum by (instance)(rate({__name__=~\"http_server_requests_milliseconds_count|http_server_requests_count|http_server_requests_seconds_count\", job=~\"$job\", instance=~\"$instance\", outcome=\"SERVER_ERROR\"}[$__rate_interval]))) / on (instance) (sum by (instance)(rate({__name__=~\"http_server_requests_milliseconds_count|http_server_requests_count|http_server_requests_seconds_count\", job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])))\n",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
@@ -241,7 +241,7 @@
         "type": "prometheus",
         "uid": "${datasource}"
       },
-      "description": "HTTP server request duration",
+      "description": "95th percentile of HTTP server request duration in seconds",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -323,14 +323,14 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(histogram_quantile(0.95, sum by(le, instance) (rate({__name__=~\"http_server_request_duration_seconds_bucket|http_server_request_duration_bucket|http_server_duration_milliseconds_bucket|http_server_duration_seconds_bucket|http_server_duration_bucket\", job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))))",
+          "expr": "(histogram_quantile(0.95, sum by(le, instance) (rate({__name__=~\"http_server_request_duration_seconds_bucket|http_server_request_duration_bucket|http_server_duration_seconds_bucket|http_server_duration_bucket|http_server_requests_seconds_bucket\", job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))))\nor\n(histogram_quantile(0.95, sum by(le, instance) (rate({__name__=~\"http_server_duration_milliseconds_bucket|http_server_requests_milliseconds_bucket|http_server_requests_bucket\", job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))) / 1000)\n",
           "instant": false,
           "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Duration",
+      "title": "Duration (95%)",
       "type": "timeseries"
     },
     {
@@ -420,7 +420,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "{__name__=~\"jvm_cpu_recent_utilization|jvm_cpu_recent_utilization_ratio|process_runtime_jvm_system_cpu_utilization|process_runtime_jvm_system_cpu_utilization_ratio\", job=~\"$job\", instance=~\"$instance\"}",
+          "expr": "{__name__=~\"jvm_cpu_recent_utilization|jvm_cpu_recent_utilization_ratio|process_runtime_jvm_system_cpu_utilization|process_runtime_jvm_system_cpu_utilization_ratio|system_cpu_usage\", job=~\"$job\", instance=~\"$instance\"}",
           "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
@@ -516,7 +516,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(sum by (instance) ({__name__=~\"jvm_memory_used|jvm_memory_used_bytes\",job=~\"$job\",jvm_memory_type=\"heap\", instance=~\"$instance\"}) / on(instance) sum by (instance) ({__name__=~\"jvm_memory_limit|jvm_memory_limit_bytes\",job=~\"$job\",jvm_memory_type=\"heap\", instance=~\"$instance\"})) or (sum by (instance) ({__name__=~\"process_runtime_jvm_memory_usage|process_runtime_jvm_memory_usage_bytes\",job=~\"$job\",type=\"heap\", instance=~\"$instance\"}) / on(instance) sum by (instance) ({__name__=~\"process_runtime_jvm_memory_limit|process_runtime_jvm_memory_limit_bytes\",job=~\"$job\",type=\"heap\", instance=~\"$instance\"}))",
+          "expr": "(sum by (instance) ({__name__=~\"jvm_memory_used|jvm_memory_used_bytes\",job=~\"$job\",jvm_memory_type=\"heap\", instance=~\"$instance\"}) / on(instance) sum by (instance) ({__name__=~\"jvm_memory_limit|jvm_memory_limit_bytes\",job=~\"$job\",jvm_memory_type=\"heap\", instance=~\"$instance\"}))\nor\n(sum by (instance) ({__name__=~\"process_runtime_jvm_memory_usage|process_runtime_jvm_memory_usage_bytes\",job=~\"$job\",type=\"heap\", instance=~\"$instance\"}) / on(instance) sum by (instance) ({__name__=~\"process_runtime_jvm_memory_limit|process_runtime_jvm_memory_limit_bytes\",job=~\"$job\",type=\"heap\", instance=~\"$instance\"}))\nor\n(sum by (instance) ({__name__=~\"jvm_memory_used|jvm_memory_used_bytes\",job=~\"$job\",area=\"heap\", instance=~\"$instance\"}) / on(instance) sum by (instance) ({__name__=~\"jvm_memory_max|jvm_memory_max_bytes\",job=~\"$job\",area=\"heap\", instance=~\"$instance\"}))",
           "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
@@ -608,7 +608,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by(instance) (rate({__name__=~\"jvm_gc_duration_sum|jvm_gc_duration_seconds_sum|process_runtime_jvm_gc_duration_sum|process_runtime_jvm_gc_duration_seconds_sum\",job=~\"$job\", instance=~\"$instance\"}[$__rate_interval]))",
+          "expr": "(sum by(instance) (rate({__name__=~\"jvm_gc_duration_sum|jvm_gc_duration_seconds_sum|process_runtime_jvm_gc_duration_sum|process_runtime_jvm_gc_duration_seconds_sum|jvm_gc_pause_sum|jvm_gc_pause_seconds_sum\",job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])))\nor\n(sum by(instance) (rate(jvm_gc_pause_milliseconds_sum{job=~\"$job\", instance=~\"$instance\"}[$__rate_interval])) / 1000)",
           "hide": false,
           "legendFormat": "__auto",
           "range": true,
@@ -705,7 +705,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "{__name__=~\"jvm_class_count|process_runtime_jvm_classes_current_loaded\",job=~\"$job\", instance=~\"$instance\"}",
+          "expr": "{__name__=~\"jvm_class_count|process_runtime_jvm_classes_current_loaded|jvm_classes_loaded\",job=~\"$job\", instance=~\"$instance\"}",
           "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
@@ -801,7 +801,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum({__name__=~\"jvm_thread_count|process_runtime_jvm_threads_count\",job=~\"$job\", instance=~\"$instance\"}) by (instance)",
+          "expr": "sum({__name__=~\"jvm_thread_count|process_runtime_jvm_threads_count|jvm_threads_live\",job=~\"$job\", instance=~\"$instance\"}) by (instance)",
           "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
@@ -854,7 +854,7 @@
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values({__name__=~\"(jvm_class_count|process_runtime_jvm_classes_current_loaded)\"},job)",
+        "definition": "label_values({__name__=~\"jvm_class_count|process_runtime_jvm_classes_current_loaded|jvm_classes_loaded\"},job)",
         "hide": 0,
         "includeAll": true,
         "label": "Job",
@@ -862,7 +862,7 @@
         "name": "job",
         "options": [],
         "query": {
-          "query": "label_values({__name__=~\"(jvm_class_count|process_runtime_jvm_classes_current_loaded)\"},job)",
+          "query": "label_values({__name__=~\"jvm_class_count|process_runtime_jvm_classes_current_loaded|jvm_classes_loaded\"},job)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 2,
@@ -885,7 +885,7 @@
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values({__name__=~\"(jvm_class_count|process_runtime_jvm_classes_current_loaded)\", job=~\"$job\"},instance)",
+        "definition": "label_values({__name__=~\"(jvm_class_count|process_runtime_jvm_classes_current_loaded|jvm_classes_loaded)\", job=~\"$job\"},instance)",
         "description": "The instance of the application, e.g. pod1",
         "hide": 0,
         "includeAll": true,
@@ -894,7 +894,7 @@
         "name": "instance",
         "options": [],
         "query": {
-          "query": "label_values({__name__=~\"(jvm_class_count|process_runtime_jvm_classes_current_loaded)\", job=~\"$job\"},instance)",
+          "query": "label_values({__name__=~\"(jvm_class_count|process_runtime_jvm_classes_current_loaded|jvm_classes_loaded)\", job=~\"$job\"},instance)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 2,

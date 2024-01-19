@@ -22,6 +22,7 @@ datasources:
     uid: prometheus
     url: http://localhost:9090
     jsonData:
+      timeInterval: 60s
       exemplarTraceIdDestinations:
         - name: trace_id
           datasourceUid: tempo

@@ -1,13 +1,6 @@
 #!/bin/bash
 
-cd example-app
-if [[ ! -f ./target/example-app.jar ]] ; then
-    ./mvnw clean package
-fi
-if [[ ! -f ./opentelemetry-javaagent.jar ]] ; then
-    curl -sOL https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v2.0.0/opentelemetry-javaagent.jar
-fi
-export OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-export OTEL_SEMCONV_STABILITY_OPT_IN=http
-export OTEL_RESOURCE_ATTRIBUTES="service.name=example-app,service.instance.id=localhost:8080"
-java -Dotel.metric.export.interval=500 -Dotel.bsp.schedule.delay=500 -javaagent:opentelemetry-javaagent.jar -jar ./target/example-app.jar
+set -euo pipefail
+
+cd examples/java
+./run.sh

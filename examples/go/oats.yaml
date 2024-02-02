@@ -1,0 +1,16 @@
+docker-compose:
+  generator: lgtm
+  files:
+    - ./docker-compose.oats.yml
+input:
+  - path: /rolldice
+expected:
+  traces:
+    - traceql: '{ span.http.route = "/rolldice" }'
+      spans:
+        - name: '/' # should be "GET /rolldice"
+          attributes:
+            otel.library.name: go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
+  metrics:
+    - promql: 'process_runtime_go_goroutines{}'
+      value: "> 0"

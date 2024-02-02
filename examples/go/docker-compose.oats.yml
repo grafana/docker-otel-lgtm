@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  go:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://collector:4318
+      OTEL_METRIC_EXPORT_INTERVAL: "5000"  # so we don't have to wait 60s for metrics
+    ports:
+      - "8080:8080"

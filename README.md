@@ -21,7 +21,7 @@ The Docker image is available on Docker hub: https://hub.docker.com/r/grafana/ot
 ## Run the Docker image
 
 ```sh
-docker run -p 3000:3000 -p 4317:4317 --rm -ti grafana/otel-lgtm
+docker run -p 3000:3000 -p 4317:4317 -p 4318:4318 --rm -ti grafana/otel-lgtm
 ```
 
 ## Send OpenTelemetry Data

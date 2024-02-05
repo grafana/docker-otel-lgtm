@@ -1,3 +1,3 @@
 #!/bin/bash
 
-watch curl -s http://localhost:8080
+watch 'curl -s http://localhost:8080/rolldice; curl -s http://localhost:8081/rolldice'

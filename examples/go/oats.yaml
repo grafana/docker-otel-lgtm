@@ -4,7 +4,7 @@ docker-compose:
   files:
     - ./docker-compose.oats.yml
 input:
-  - path: /
+  - path: /rolldice
 expected:
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'

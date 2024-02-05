@@ -59,3 +59,17 @@ Generate traffic:
 ./generate-traffic.sh
 ```
 
+## Run example apps in different languages
+
+The example apps are in the `examples/` directory.
+Each example has a `run.sh` script to start the app.
+
+Every example implements a rolldice service, which returns a random number between 1 and 6.
+
+Each example uses a different application port (to be able to run all applications at the same time).
+
+| Example | Service URL                           |
+|---------|---------------------------------------|
+| Java    | `curl http://localhost:8080/rolldice` |
+| Go      | `curl http://localhost:8081/rolldice` |
+

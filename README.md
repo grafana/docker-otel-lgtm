@@ -21,7 +21,7 @@ The Docker image is available on Docker hub: https://hub.docker.com/r/grafana/ot
 ## Run the Docker image
 
 ```sh
-docker run -p 3000:3000 -p 4317:4317 -p 4318:4318 --rm -ti grafana/otel-lgtm
+./run-lgtm.sh
 ```
 
 ## Send OpenTelemetry Data
@@ -72,4 +72,5 @@ Each example uses a different application port (to be able to run all applicatio
 |---------|---------------------------------------|
 | Java    | `curl http://localhost:8080/rolldice` |
 | Go      | `curl http://localhost:8081/rolldice` |
+| Python  | `curl http://localhost:8082/rolldice` |
 

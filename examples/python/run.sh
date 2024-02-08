@@ -13,8 +13,10 @@ source ./venv/bin/activate
 # 2. Run `pip freeze > requirements.txt` in the same directory as your app.py file
 pip install -r requirements.txt
 
+# Step 1: Install the OpenTelemetry SDK
 pip install opentelemetry-distro[otlp]
 opentelemetry-bootstrap -a install
 
+# Step 2: Run the application
 export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
 opentelemetry-instrument flask run -p 8082

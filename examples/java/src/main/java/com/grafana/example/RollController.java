@@ -11,6 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 public class RollController {
+
     private static final Logger logger = LoggerFactory.getLogger(RollController.class);
 
     @GetMapping("/rolldice")

@@ -1,6 +1,6 @@
 # docker-otel-lgtm
 
-[grafana/otel-lgtm](https://hub.docker.com/grafana/otel-lgtm) bundles Grafana's open source stack for OpenTelemetry monitoring in a single Docker image.
+[grafana/otel-lgtm](https://hub.docker.com/r/grafana/otel-lgtm) bundles Grafana's open source stack for OpenTelemetry monitoring in a single Docker image.
 
 ![alt](img/overview.png)
 

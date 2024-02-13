@@ -14,7 +14,7 @@ while ! curl -sg 'http://localhost:9090/api/v1/query?query=up{job="opentelemetry
     sleep 1
 done
 
-echo "The OpenTelemtry collector and the Grafana LGTM stack are up and running!"
+echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running."
 
 echo "Open ports:"
 echo " - 4317: OpenTelemetry GRPC endpoint"

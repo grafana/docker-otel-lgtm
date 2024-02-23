@@ -44,7 +44,7 @@
         "content": "# RED Metrics: (r)equest rate, (e)rror rate, (d)uration\n\nThis dashboard uses exponential histograms and the stable [OpenTelemetry metrics semantic conventions](https://opentelemetry.io/docs/specs/semconv/general/metrics/).\nTo enable this for the [OpenTelemetry Java instrumentation agent](https://github.com/open-telemetry/opentelemetry-java-instrumentation/), set the following environment variables:\n\n```\nexport OTEL_EXPORTER_OTLP_METRICS_DEFAULT_HISTOGRAM_AGGREGATION=base2_exponential_bucket_histogram\nexport OTEL_SEMCONV_STABILITY_OPT_IN=http\n```",
         "mode": "markdown"
       },
-      "pluginVersion": "10.2.0",
+      "pluginVersion": "10.3.3",
       "type": "text"
     },
     {
@@ -104,7 +104,8 @@
               }
             ]
           },
-          "unit": "reqps"
+          "unit": "reqps",
+          "unitScale": true
         },
         "overrides": []
       },
@@ -134,7 +135,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(histogram_count(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\", job=\"$job\", instance=\"$instance\"}[5m])))",
+          "expr": "sum(histogram_count(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\", job=~\"$job\", instance=~\"$instance\"}[5m])))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -200,7 +201,8 @@
               }
             ]
           },
-          "unit": "percentunit"
+          "unit": "percentunit",
+          "unitScale": true
         },
         "overrides": []
       },
@@ -230,7 +232,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(histogram_count(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\", job=\"$job\", instance=\"$instance\", http_response_status_code=~\"5..\"}[5m]))) / sum(histogram_count(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\", job=\"$job\", instance=\"$instance\"}[5m])))\n\n",
+          "expr": "sum(histogram_count(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\", job=~\"$job\", instance=~\"$instance\", http_response_status_code=~\"5..\"}[5m]))) / sum(histogram_count(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\", job=~\"$job\", instance=~\"$instance\"}[5m])))\n\n",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -255,7 +257,8 @@
             "scaleDistribution": {
               "type": "linear"
             }
-          }
+          },
+          "unitScale": true
         },
         "overrides": []
       },
@@ -291,7 +294,8 @@
           "layout": "auto"
         },
         "tooltip": {
-          "show": true,
+          "mode": "single",
+          "showColorScale": false,
           "yHistogram": false
         },
         "yAxis": {
@@ -300,7 +304,7 @@
           "unit": "s"
         }
       },
-      "pluginVersion": "10.2.0",
+      "pluginVersion": "10.3.3",
       "targets": [
         {
           "datasource": {
@@ -309,7 +313,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\",job=\"$job\", instance=\"$instance\"}[5m]))",
+          "expr": "sum(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\",job=~\"$job\", instance=~\"$instance\"}[5m]))",
           "format": "time_series",
           "instant": false,
           "range": true,
@@ -376,7 +380,8 @@
               }
             ]
           },
-          "unit": "s"
+          "unit": "s",
+          "unitScale": true
         },
         "overrides": []
       },
@@ -408,7 +413,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\",job=\"$job\", instance=\"$instance\"}[5m])))",
+          "expr": "histogram_quantile(0.95, sum(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\",job=~\"$job\", instance=~\"$instance\"}[5m])))",
           "format": "time_series",
           "instant": false,
           "legendFormat": "95th",
@@ -422,7 +427,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.5, sum(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\",job=\"$job\", instance=\"$instance\"}[5m])))",
+          "expr": "histogram_quantile(0.5, sum(rate({__name__=~\"http_server_request_duration_seconds|http_server_request_duration|http_server_duration_milliseconds|http_server_duration_seconds|http_server_duration\",job=~\"$job\", instance=~\"$instance\"}[5m])))",
           "hide": false,
           "legendFormat": "50th",
           "range": true,
@@ -434,15 +439,20 @@
     }
   ],
   "refresh": "",
-  "schemaVersion": 38,
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": [
       {
+        "allValue": ".+",
         "current": {
-          "selected": false,
-          "text": "hello-world-app",
-          "value": "hello-world-app"
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "prometheus",
@@ -450,9 +460,9 @@
         },
         "definition": "label_values(job)",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "label": "",
-        "multi": false,
+        "multi": true,
         "name": "job",
         "options": [],
         "query": {
@@ -466,24 +476,29 @@
         "type": "query"
       },
       {
+        "allValue": ".+",
         "current": {
-          "selected": false,
-          "text": "ae8f5726-99a0-401b-b70b-34ceabe2c0ba",
-          "value": "ae8f5726-99a0-401b-b70b-34ceabe2c0ba"
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "definition": "label_values({job=\"$job\"},instance)",
+        "definition": "label_values({job=~\"$job\"},instance)",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "label": "instance",
-        "multi": false,
+        "multi": true,
         "name": "instance",
         "options": [],
         "query": {
-          "query": "label_values({job=\"$job\"},instance)",
+          "query": "label_values({job=~\"$job\"},instance)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,

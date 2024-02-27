@@ -14,6 +14,8 @@ The intended usage is:
 
 The Docker image is not intended for production monitoring.
 
+> If you are looking for an production-ready out-of-the box solution to monitor applications and minimize MTTR (mean time to resolution) with OpenTelemetry and Prometheus try [Grafana Cloud Application Observability](https://grafana.com/products/cloud/application-observability/).
+
 ## Get the Docker image
 
 The Docker image is available on Docker hub: https://hub.docker.com/r/grafana/otel-lgtm

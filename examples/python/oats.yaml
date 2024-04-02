@@ -15,3 +15,7 @@ expected:
   metrics:
     - promql: 'http_server_active_requests{http_method="GET"}'
       value: ">= 0"
+  logs:
+    - logql: '{exporter="OTLP"} | json | body =~ `Anonymous player is rolling the dice.*`'
+      contains:
+        - 'Anonymous player is rolling the dice'

@@ -16,6 +16,7 @@ COPY app.py .
 
 # Logging support is still in alpha, so we need to enable it explicitly
 ENV OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+ENV OTEL_LOGS_EXPORTER=otlp
 
 EXPOSE 8082
 

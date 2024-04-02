@@ -19,4 +19,5 @@ opentelemetry-bootstrap -a install
 
 # Step 2: Run the application
 export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+export OTEL_LOGS_EXPORTER=otlp
 opentelemetry-instrument flask run -p 8082

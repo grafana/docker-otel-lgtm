@@ -1,20 +1,14 @@
 # docker-otel-lgtm
 
-[grafana/otel-lgtm](https://hub.docker.com/r/grafana/otel-lgtm) bundles Grafana's open source stack for OpenTelemetry monitoring in a single Docker image.
+An OpenTelemetry backend in a Docker image.
 
-![alt](img/overview.png)
+![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana](img/overview.png)
 
-## Intended Usage
+The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry that’s intended for development, demo, and testing environments. If you are looking for a production-ready, out-of-the box solution to monitor applications and minimize MTTR (mean time to resolution) with OpenTelemetry and Prometheus, you should try [Grafana Cloud Application Observability](https://grafana.com/products/cloud/application-observability/).
 
-The intended usage is:
+## Documentation
 
-* Quick way to try OSS Grafana with OpenTelemetry.
-* Demos, presentations.
-* Integration tests for OpenTelemetry instrumentation: Run automated queries against the databases to check if expected metrics/traces/logs are present.
-
-The Docker image is not intended for production monitoring.
-
-> ![](https://grafana.com/static/img/menu/application-observability.svg) If you are looking for an production-ready out-of-the box solution to monitor applications and minimize MTTR (mean time to resolution) with OpenTelemetry and Prometheus try [Grafana Cloud Application Observability](https://grafana.com/products/cloud/application-observability/).
+* Blog post: [An OpenTelemetry backend in a Docker image: Introducing grafana/otel-lgtm](https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/)
 
 ## Get the Docker image
 
@@ -76,3 +70,6 @@ Each example uses a different application port (to be able to run all applicatio
 | Go      | `curl http://localhost:8081/rolldice` |
 | Python  | `curl http://localhost:8082/rolldice` |
 
+## Related Work
+
+* Metrics, Logs, Traces and Profiles in Grafana: https://github.com/grafana/intro-to-mltp

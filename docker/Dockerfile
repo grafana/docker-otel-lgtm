@@ -6,6 +6,9 @@ ENV TEMPO_VERSION="2.4.1"
 ENV LOKI_VERSION="2.9.6"
 ENV OPENTELEMETRY_COLLECTOR_VERSION="0.97.0"
 
+# TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts
+# on an amd64 architecture, than the TARGETARCH will be set to `amd64`.
+# More details on the variables can be found here: https://docs.docker.com/desktop/extensions-sdk/extensions/multi-arch/
 ARG TARGETARCH
 ENV TARGETARCH=${TARGETARCH}
 

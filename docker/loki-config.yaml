@@ -14,6 +14,9 @@ common:
     kvstore:
       store: inmemory
 
+limits_config:
+  allow_structured_metadata: true
+
 schema_config:
   configs:
     - from: 2020-10-24

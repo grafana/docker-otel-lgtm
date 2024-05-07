@@ -19,8 +19,8 @@ exporters:
     add_metric_suffixes: true
   otlphttp:
     endpoint: http://localhost:4418
-  loki:
-    endpoint: http://localhost:3100/loki/api/v1/push
+  otlp/logs:
+    endpoint: http://localhost:3100/otlp
   logging/metrics:
     verbosity: detailed
   logging/traces:
@@ -43,5 +43,5 @@ service:
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [loki]
-      #exporters: [loki,logging/logs]
+      exporters: [otlp/logs]
+      #exporters: [otlp/logs,logging/logs]

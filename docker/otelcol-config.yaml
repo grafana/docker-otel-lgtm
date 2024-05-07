@@ -16,7 +16,7 @@ processors:
 exporters:
   otlp/metrics:
     endpoint: http://localhost:9090/api/v1/otlp
-  otlphttp:
+  otlp/traces:
     endpoint: http://localhost:4418
   loki:
     endpoint: http://localhost:3100/loki/api/v1/push
@@ -32,8 +32,8 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp]
-      #exporters: [otlphttp,logging/traces]
+      exporters: [otlp/traces]
+      #exporters: [otlp/traces,logging/traces]
     metrics:
       receivers: [otlp,prometheus/collector]
       processors: [batch]

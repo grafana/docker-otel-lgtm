@@ -26,6 +26,7 @@ datasources:
       exemplarTraceIdDestinations:
         - name: trace_id
           datasourceUid: tempo
+          urlDisplayLabel: 'Trace: ${__value.raw}'
 
   - name: Tempo
     type: tempo

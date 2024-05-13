@@ -14,9 +14,9 @@ processors:
   batch:
 
 exporters:
-  otlp/metrics:
+  otlphttp/metrics:
     endpoint: http://localhost:9090/api/v1/otlp
-  otlp/traces:
+  otlphttp/traces:
     endpoint: http://localhost:4418
   otlp/logs:
     endpoint: http://localhost:3100/otlp
@@ -32,13 +32,13 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp/traces]
-      #exporters: [otlp/traces,logging/traces]
+      exporters: [otlphttp/traces]
+      #exporters: [otlphttp/traces,logging/traces]
     metrics:
       receivers: [otlp,prometheus/collector]
       processors: [batch]
-      exporters: [otlp/metrics]
-      #exporters: [otlp/metrics,logging/metrics]
+      exporters: [otlphttp/metrics]
+      #exporters: [otlphttp/metrics,logging/metrics]
     logs:
       receivers: [otlp]
       processors: [batch]

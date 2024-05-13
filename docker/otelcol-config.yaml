@@ -14,10 +14,9 @@ processors:
   batch:
 
 exporters:
-  prometheusremotewrite:
-    endpoint: http://localhost:9090/api/v1/write
-    add_metric_suffixes: true
-  otlphttp:
+  otlp/metrics:
+    endpoint: http://localhost:9090/api/v1/otlp
+  otlp/traces:
     endpoint: http://localhost:4418
   loki:
     endpoint: http://localhost:3100/loki/api/v1/push
@@ -33,13 +32,13 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp]
-      #exporters: [otlphttp,logging/traces]
+      exporters: [otlp/traces]
+      #exporters: [otlp/traces,logging/traces]
     metrics:
       receivers: [otlp,prometheus/collector]
       processors: [batch]
-      exporters: [prometheusremotewrite]
-      #exporters: [prometheusremotewrite,logging/metrics]
+      exporters: [otlp/metrics]
+      #exporters: [otlp/metrics,logging/metrics]
     logs:
       receivers: [otlp]
       processors: [batch]

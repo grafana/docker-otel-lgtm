@@ -27,6 +27,7 @@ metrics_generator:
     path: /tmp/tempo/generator/traces
   storage:
     path: /tmp/tempo/generator/wal
+    # TODO: support otlp at metrics_generator
     remote_write:
       - url: http://localhost:9090/api/v1/write
         send_exemplars: true

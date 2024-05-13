@@ -24,8 +24,9 @@ datasources:
     jsonData:
       timeInterval: 60s
       exemplarTraceIdDestinations:
-        - name: trace_id
+        - name: traceID
           datasourceUid: tempo
+          urlDisplayLabel: 'Trace: $${__value.raw}'
 
   - name: Tempo
     type: tempo

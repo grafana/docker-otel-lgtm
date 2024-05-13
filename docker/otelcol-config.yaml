@@ -18,7 +18,7 @@ exporters:
     endpoint: http://localhost:9090/api/v1/otlp
   otlphttp/traces:
     endpoint: http://localhost:4418
-  otlp/logs:
+  otlphttp/logs:
     endpoint: http://localhost:3100/otlp
   logging/metrics:
     verbosity: detailed
@@ -42,5 +42,5 @@ service:
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp/logs]
-      #exporters: [otlp/logs,logging/logs]
+      exporters: [otlphttp/logs]
+      #exporters: [otlphttp/logs,logging/logs]

@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "name": "Docker .NET Launch",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "netCore": {
+                "appProject": "${workspaceFolder}/examples/dotnet/rolldice.csproj"
+            }
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+services:
+  rolldice:
+    image: rolldice
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # args:
+      #   - configuration=Debug
+    ports:
+      - 8083:8083
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4317
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+
+  otel-lgtm:
+    image: grafana/otel-lgtm
+
+    ports:
+      - 3000:3000
+      - 4317:4317
+      - 4318:4318

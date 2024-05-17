@@ -69,6 +69,7 @@ Each example uses a different application port (to be able to run all applicatio
 | Java    | `curl http://localhost:8080/rolldice` |
 | Go      | `curl http://localhost:8081/rolldice` |
 | Python  | `curl http://localhost:8082/rolldice` |
+| dotnet  | `curl http://localhost:8083/rolldice` |
 
 ## Related Work
 

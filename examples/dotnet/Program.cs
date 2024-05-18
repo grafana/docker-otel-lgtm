@@ -30,6 +30,7 @@ var useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXP
 
 if (useOtlpExporter)
 {
+    Console.WriteLine("Using OTLP exporter");
     builder.Services.Configure<OpenTelemetryLoggerOptions>(logging => logging.AddOtlpExporter());
     builder.Services.ConfigureOpenTelemetryMeterProvider(metrics => metrics.AddOtlpExporter());
     builder.Services.ConfigureOpenTelemetryTracerProvider(tracing => tracing.AddOtlpExporter());

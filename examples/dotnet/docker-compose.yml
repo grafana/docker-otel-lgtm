@@ -10,9 +10,9 @@ services:
       - 8083:8083
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4317
-      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-lgtm:4318
+      - OTEL_METRIC_EXPORT_INTERVAL=5000  # so we don't have to wait 60s for metrics
+# https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.OpenTelemetryProtocol/README.md
   otel-lgtm:
     image: grafana/otel-lgtm
 

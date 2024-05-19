@@ -4,15 +4,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      # args:
-      #   - configuration=Debug
     ports:
       - 8083:8083
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-lgtm:4318
+      - Otlp__Endpoint=http://otel-lgtm:4317
       - OTEL_METRIC_EXPORT_INTERVAL=5000  # so we don't have to wait 60s for metrics
-# https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.OpenTelemetryProtocol/README.md
+    depends_on:
+      - otel-lgtm
+
   otel-lgtm:
     image: grafana/otel-lgtm
 

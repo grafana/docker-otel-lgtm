@@ -13,4 +13,4 @@ docker run \
   -v $PWD/container/prometheus:/data/prometheus \
   -v $PWD/container/loki:/loki \
   -e GF_PATHS_DATA=/data/grafana \
-  localhost/grafana/otel-lgtm:${RELEASE}
+  docker.io/grafana/otel-lgtm:${RELEASE}

@@ -1,0 +1,21 @@
+# OATS is an acceptance testing framework for OpenTelemetry - https://github.com/grafana/oats/tree/main/yaml
+docker-compose:
+  generator: lgtm
+  files:
+    - ./docker-compose.oats.yml
+input:
+  - path: /rolldice
+expected:
+  traces:
+    - traceql: '{ span.http.route = "/rolldice" }'
+      spans:
+        - name: '/rolldice' # should be "GET /rolldice"
+          attributes:
+            telemetry.sdk.language: dotnet
+  metrics:
+    - promql: 'http_server_active_requests{http_method="GET"}'
+      value: ">= 0"
+  logs:
+    - logql: '{exporter="OTLP"} | json | body =~ `Anonymous player is rolling the dice.*`'
+      contains:
+        - 'Anonymous player is rolling the dice'

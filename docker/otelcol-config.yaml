@@ -18,8 +18,8 @@ exporters:
     endpoint: http://localhost:9090/api/v1/otlp
   otlphttp/traces:
     endpoint: http://localhost:4418
-  loki:
-    endpoint: http://localhost:3100/loki/api/v1/push
+  otlphttp/logs:
+    endpoint: http://localhost:3100/otlp
   logging/metrics:
     verbosity: detailed
   logging/traces:
@@ -42,5 +42,5 @@ service:
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [loki]
-      #exporters: [loki,logging/logs]
+      exporters: [otlphttp/logs]
+      #exporters: [otlphttp/logs,logging/logs]

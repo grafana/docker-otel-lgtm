@@ -18,11 +18,14 @@ datasources:
     uid: tempo
     url: http://localhost:3200
     jsonData:
-      tracesToLogs:
+      tracesToLogsV2:
+        customQuery: true
         datasourceUid: 'loki'
-        mappedTags: [{ key: 'service.name', value: 'job' }]
-        mapTagNamesEnabled: true
-        filterByTraceID: true
+        query: '{$${__tags}} | trace_id = "$${__trace.traceId}"'
+        tags:
+          - key: 'service.name'
+            value: 'service_name'
+        
       serviceMap:
         datasourceUid: 'prometheus'
       search:
@@ -39,6 +42,8 @@ datasources:
     jsonData:
       derivedFields:
         - name: 'trace_id'
-          matcherRegex: '"traceid":"(\w+)"'
+          matcherType: 'label'
+          matcherRegex: 'trace_id'
           url: '$${__value.raw}'
           datasourceUid: 'tempo'
+          urlDisplayLabel: 'Trace: $${__value.raw}'

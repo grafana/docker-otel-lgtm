@@ -1,0 +1,33 @@
+# this is intended for testing / demo purposes only, not for production use
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lgtm
+spec:
+  selector:
+    matchLabels:
+      app: lgtm
+  template:
+    metadata:
+      labels:
+        app: lgtm
+    spec:
+      containers:
+      - name: lgtm
+        image: grafana/otel-lgtm
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lgtm
+spec:
+  selector:
+    app: lgtm
+  ports:
+  - name: grafana-ui
+    port: 3000
+  - name: opentelemetry-grpc
+    port: 4317
+  - name: opentelemetry-http
+    port: 4318

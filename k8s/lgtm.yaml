@@ -1,3 +1,4 @@
+# this is intended for demo / testing purposes only, not for production usage
 apiVersion: v1
 kind: Service
 metadata:

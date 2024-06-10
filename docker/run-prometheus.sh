@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./prometheus-$PROMETHEUS_VERSION/prometheus \
+./prometheus/prometheus \
       --web.enable-remote-write-receiver \
       --enable-feature=otlp-write-receiver \
       --enable-feature=exemplar-storage \

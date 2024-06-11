@@ -20,6 +20,15 @@ The Docker image is available on Docker hub: https://hub.docker.com/r/grafana/ot
 ./run-lgtm.sh
 ```
 
+## Run lgtm in kubernetes
+```sh
+# create k8s resources
+kubectl apply -f k8s/lgtm.yaml
+
+# port forwarding
+kubectl port-forward service/lgtm 3000:3000 4317:4317 4318:4318
+```
+
 ## Send OpenTelemetry Data
 
 There's no need to configure anything: The Docker image works with OpenTelemetry's defaults.

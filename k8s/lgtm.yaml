@@ -1,0 +1,43 @@
+# this is intended for demo / testing purposes only, not for production usage
+apiVersion: v1
+kind: Service
+metadata:
+  name: lgtm
+spec:
+  selector:
+    app: lgtm
+  ports:
+    - name: grafana
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+    - name: otel-grpc
+      protocol: TCP
+      port: 4317
+      targetPort: 4317
+    - name: otel-http
+      protocol: TCP
+      port: 4318
+      targetPort: 4318
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lgtm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lgtm
+  template:
+    metadata:
+      labels:
+        app: lgtm
+    spec:
+      containers:
+        - name: lgtm
+          image: grafana/otel-lgtm:latest
+          ports:
+            - containerPort: 3000
+            - containerPort: 4317
+            - containerPort: 4318

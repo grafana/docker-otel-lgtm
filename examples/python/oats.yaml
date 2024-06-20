@@ -9,7 +9,7 @@ expected:
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'
       spans:
-        - name: '/rolldice' # should be "GET /rolldice"
+        - name: 'GET /rolldice'
           attributes:
             otel.library.name: opentelemetry.instrumentation.flask
   metrics:

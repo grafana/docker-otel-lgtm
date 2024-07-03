@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RELEASE=${1:-dev}
+RELEASE=${1:-latest}
 
 docker run \
   --name lgtm \

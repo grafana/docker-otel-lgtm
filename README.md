@@ -12,15 +12,20 @@ The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry
 
 ## Get the Docker image
 
-The Docker image is available on Docker hub: https://hub.docker.com/r/grafana/otel-lgtm
+The Docker image is available on Docker hub: <https://hub.docker.com/r/grafana/otel-lgtm>
 
 ## Run the Docker image
 
 ```sh
+# Unix/Linux
 ./run-lgtm.sh
+
+# Windows (PowerShell)
+./run-lgtm
 ```
 
 ## Run lgtm in kubernetes
+
 ```sh
 # create k8s resources
 kubectl apply -f k8s/lgtm.yaml
@@ -55,19 +60,27 @@ docker build . -t grafana/otel-lgtm
 Run the example REST service:
 
 ```sh
+# Unix/Linux
 ./run-example.sh
+
+# Windows (PowerShell)
+./run-example
 ```
 
 Generate traffic:
 
 ```sh
+# Unix/Linux
 ./generate-traffic.sh
+
+# Windows (PowerShell)
+./generate-traffic
 ```
 
 ## Run example apps in different languages
 
 The example apps are in the `examples/` directory.
-Each example has a `run.sh` script to start the app.
+Each example has a `run.sh` or `run.cmd` script to start the app.
 
 Every example implements a rolldice service, which returns a random number between 1 and 6.
 
@@ -82,4 +95,4 @@ Each example uses a different application port (to be able to run all applicatio
 
 ## Related Work
 
-* Metrics, Logs, Traces and Profiles in Grafana: https://github.com/grafana/intro-to-mltp
+* Metrics, Logs, Traces and Profiles in Grafana: <https://github.com/grafana/intro-to-mltp>

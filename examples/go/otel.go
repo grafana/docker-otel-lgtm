@@ -3,16 +3,27 @@ package main
 import (
 	"context"
 	"errors"
+	"time"
+
+	"go.opentelemetry.io/contrib/bridges/otelslog"
 	"go.opentelemetry.io/contrib/instrumentation/runtime"
 	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
+	"go.opentelemetry.io/otel/log/global"
 	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/sdk/log"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/trace"
-	"log"
-	"time"
+)
+
+const schemaName = "https://github.com/grafana/docker-otel-lgtm"
+
+var (
+	tracer = otel.Tracer(schemaName)
+	logger = otelslog.NewLogger(schemaName)
 )
 
 // setupOTelSDK bootstraps the OpenTelemetry pipeline.
@@ -43,7 +54,7 @@ func setupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
 	)
 	otel.SetTextMapPropagator(prop)
 
-	traceExporter, err := otlptrace.New(ctx, otlptracehttp.NewClient())
+	traceExporter, err := otlptrace.New(ctx, otlptracehttp.NewClient(otlptracehttp.WithInsecure()))
 	if err != nil {
 		return nil, err
 	}
@@ -56,12 +67,12 @@ func setupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
 	shutdownFuncs = append(shutdownFuncs, tracerProvider.Shutdown)
 	otel.SetTracerProvider(tracerProvider)
 
-	metricExporter, err := otlpmetrichttp.New(ctx)
+	metricExporter, err := otlpmetrichttp.New(ctx, otlpmetrichttp.WithInsecure())
 	if err != nil {
 		return nil, err
 	}
 
-	meterProvider := metric.NewMeterProvider(metric.WithReader(metric.NewPeriodicReader(metricExporter)))
+	meterProvider := metric.NewMeterProvider(metric.WithReader(metric.NewPeriodicReader(metricExporter, metric.WithInterval(5*time.Second))))
 	if err != nil {
 		handleErr(err)
 		return
@@ -69,9 +80,22 @@ func setupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
 	shutdownFuncs = append(shutdownFuncs, meterProvider.Shutdown)
 	otel.SetMeterProvider(meterProvider)
 
+	logExporter, err := otlploghttp.New(ctx, otlploghttp.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+
+	loggerProvider := log.NewLoggerProvider(log.WithProcessor(log.NewBatchProcessor(logExporter)))
+	if err != nil {
+		handleErr(err)
+		return
+	}
+	shutdownFuncs = append(shutdownFuncs, loggerProvider.Shutdown)
+	global.SetLoggerProvider(loggerProvider)
+
 	err = runtime.Start(runtime.WithMinimumReadMemStatsInterval(time.Second))
 	if err != nil {
-		log.Fatal(err)
+		logger.ErrorContext(ctx, "otel runtime instrumentation failed:", err)
 	}
 
 	return

@@ -54,7 +54,7 @@ func setupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
 	)
 	otel.SetTextMapPropagator(prop)
 
-	traceExporter, err := otlptrace.New(ctx, otlptracehttp.NewClient(otlptracehttp.WithInsecure()))
+	traceExporter, err := otlptrace.New(ctx, otlptracehttp.NewClient())
 	if err != nil {
 		return nil, err
 	}
@@ -67,12 +67,12 @@ func setupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
 	shutdownFuncs = append(shutdownFuncs, tracerProvider.Shutdown)
 	otel.SetTracerProvider(tracerProvider)
 
-	metricExporter, err := otlpmetrichttp.New(ctx, otlpmetrichttp.WithInsecure())
+	metricExporter, err := otlpmetrichttp.New(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	meterProvider := metric.NewMeterProvider(metric.WithReader(metric.NewPeriodicReader(metricExporter, metric.WithInterval(5*time.Second))))
+	meterProvider := metric.NewMeterProvider(metric.WithReader(metric.NewPeriodicReader(metricExporter)))
 	if err != nil {
 		handleErr(err)
 		return

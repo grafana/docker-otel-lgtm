@@ -15,15 +15,15 @@ processors:
 
 exporters:
   otlphttp/metrics:
-    endpoint: localhost:9090/api/v1/otlp
+    endpoint: http://localhost:9090/api/v1/otlp
     tls:
       insecure: true
   otlphttp/traces:
-    endpoint: localhost:4418
+    endpoint: http://localhost:4418
     tls:
       insecure: true
   otlphttp/logs:
-    endpoint: localhost:3100/otlp
+    endpoint: http://localhost:3100/otlp
     tls:
       insecure: true
   logging/metrics:

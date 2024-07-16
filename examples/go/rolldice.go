@@ -3,19 +3,23 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
+	"log/slog"
 	"math/rand"
 	"net/http"
 	"strconv"
 )
 
 func rolldice(w http.ResponseWriter, r *http.Request) {
+	ctx, span := tracer.Start(r.Context(), "roll")
+	defer span.End()
+
 	roll := 1 + rand.Intn(6)
 
-	fmt.Printf("Rolled a %d\n", roll)
+	msg := fmt.Sprintf("Rolled a dice: %d\n", roll)
+	logger.InfoContext(ctx, msg, slog.Int("result", roll))
 
 	resp := strconv.Itoa(roll) + "\n"
 	if _, err := io.WriteString(w, resp); err != nil {
-		log.Printf("Write failed: %v\n", err)
+		logger.ErrorContext(ctx, "Write failed: %v\n", err)
 	}
 }

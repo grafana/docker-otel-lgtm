@@ -15,7 +15,7 @@ ENV TARGETARCH=${TARGETARCH}
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm
 
-RUN yum install -y unzip jq procps
+RUN yum install -y unzip jq procps dos2unix
 
 RUN curl -sOL https://dl.grafana.com/oss/release/grafana-$GRAFANA_VERSION.linux-${TARGETARCH}.tar.gz && \
     tar xfz grafana-$GRAFANA_VERSION.linux-${TARGETARCH}.tar.gz && \
@@ -57,5 +57,6 @@ COPY run-tempo.sh .
 COPY otelcol-config.yaml .
 COPY run-otelcol.sh .
 COPY run-all.sh .
+RUN find . -maxdepth 1 -type f | xargs dos2unix
 
 CMD /otel-lgtm/run-all.sh

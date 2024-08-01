@@ -9,7 +9,7 @@ COPY requirements.txt .
 # 2. Run `pip freeze > requirements.txt` in the same directory as your app.py file
 RUN pip install -r requirements.txt
 
-RUN pip install opentelemetry-distro[otlp]
+RUN pip install 'opentelemetry-distro[otlp]==0.46b0'
 RUN opentelemetry-bootstrap -a install
 
 COPY app.py .

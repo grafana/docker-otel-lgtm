@@ -1,10 +1,10 @@
 FROM redhat/ubi8
 
-ENV GRAFANA_VERSION="11.1.0"
+ENV GRAFANA_VERSION="11.1.3"
 ENV PROMETHEUS_VERSION="2.53.1"
 ENV TEMPO_VERSION="2.5.0"
 ENV LOKI_VERSION="3.1.0"
-ENV OPENTELEMETRY_COLLECTOR_VERSION="0.103.0"
+ENV OPENTELEMETRY_COLLECTOR_VERSION="0.105.0"
 
 # TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts
 # on an amd64 architecture, than the TARGETARCH will be set to `amd64`.

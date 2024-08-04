@@ -5,7 +5,7 @@ set -euo pipefail
 if [[ ! -f ./target/rolldice.jar ]] ; then
     ./mvnw clean package
 fi
-version=v2.1.0
+version=v2.6.0
 jar=opentelemetry-javaagent-${version}.jar
 if [[ ! -f ./${jar} ]] ; then
     curl -sL https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/${version}/opentelemetry-javaagent.jar -o ${jar}

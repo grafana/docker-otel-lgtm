@@ -43,11 +43,6 @@ func setupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
 		return err
 	}
 
-	// handleErr calls shutdown for cleanup and makes sure that all errors are returned.
-	handleErr := func(inErr error) {
-		err = errors.Join(inErr, shutdown(ctx))
-	}
-
 	prop := propagation.NewCompositeTextMapPropagator(
 		propagation.TraceContext{},
 		propagation.Baggage{},
@@ -60,10 +55,6 @@ func setupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
 	}
 
 	tracerProvider := trace.NewTracerProvider(trace.WithBatcher(traceExporter))
-	if err != nil {
-		handleErr(err)
-		return
-	}
 	shutdownFuncs = append(shutdownFuncs, tracerProvider.Shutdown)
 	otel.SetTracerProvider(tracerProvider)
 
@@ -73,10 +64,6 @@ func setupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
 	}
 
 	meterProvider := metric.NewMeterProvider(metric.WithReader(metric.NewPeriodicReader(metricExporter)))
-	if err != nil {
-		handleErr(err)
-		return
-	}
 	shutdownFuncs = append(shutdownFuncs, meterProvider.Shutdown)
 	otel.SetMeterProvider(meterProvider)
 
@@ -86,10 +73,6 @@ func setupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
 	}
 
 	loggerProvider := log.NewLoggerProvider(log.WithProcessor(log.NewBatchProcessor(logExporter)))
-	if err != nil {
-		handleErr(err)
-		return
-	}
 	shutdownFuncs = append(shutdownFuncs, loggerProvider.Shutdown)
 	global.SetLoggerProvider(loggerProvider)
 

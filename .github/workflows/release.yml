@@ -25,8 +25,7 @@ jobs:
         uses: grafana/shared-workflows/actions/build-push-to-dockerhub@main
         with:
           repository: ${{ github.repository }} # or any other dockerhub repository
-          context: .
-          file: docker/Dockerfile
+          context: docker
 #          push: true
           push: false
           platforms: linux/amd64,linux/arm64

@@ -27,7 +27,8 @@ jobs:
           repository: ${{ github.repository }} # or any other dockerhub repository
           context: .
           file: docker/Dockerfile
-          push: true
+#          push: true
+          push: false
           platforms: linux/amd64,linux/arm64
           tags: |-
             "2024-test-${{ github.sha }}"

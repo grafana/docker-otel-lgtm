@@ -1,13 +1,9 @@
 name: Release
 
-# do this once it works
-#on:
-#  push:
-#    tags:
-#      - "v*.*.*"
-
 on:
-  pull_request:
+  push:
+    tags:
+      - "v*.*.*"
 
 permissions:
   contents: read
@@ -24,11 +20,10 @@ jobs:
       - id: push-to-dockerhub
         uses: grafana/shared-workflows/actions/build-push-to-dockerhub@main
         with:
-          repository: ${{ github.repository }} # or any other dockerhub repository
+          repository: grafana/otel-lgtm
           context: docker
-#          push: true
-          push: false
+          push: true
           platforms: linux/amd64,linux/arm64
           tags: |-
-            "2024-test-${{ github.sha }}"
-#            "latest"
+            type=match,pattern=v(.*),group=1
+            latest

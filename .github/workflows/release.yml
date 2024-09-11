@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - id: checkout
+        uses: actions/checkout@v4
+
+      - id: push-to-dockerhub
+        uses: grafana/shared-workflows/actions/build-push-to-dockerhub@main
+        with:
+          repository: grafana/otel-lgtm
+          context: docker
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |-
+            type=match,pattern=v(.*),group=1
+            latest

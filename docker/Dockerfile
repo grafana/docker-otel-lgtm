@@ -1,9 +1,14 @@
 FROM redhat/ubi9
 
+# renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
 ENV GRAFANA_VERSION="11.1.3"
+# renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
 ENV PROMETHEUS_VERSION="2.53.1"
+# renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
 ENV TEMPO_VERSION="2.5.0"
+# renovate: datasource=github-releases depName=loki packageName=grafana/loki
 ENV LOKI_VERSION="3.1.0"
+# renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
 ENV OPENTELEMETRY_COLLECTOR_VERSION="0.106.1"
 
 # TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts

@@ -1,0 +1,57 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:recommended"
+    ],
+    "branchPrefix": "grafanarenovatebot/",
+    "username": "GrafanaRenovateBot",
+    "gitAuthor": "GrafanaRenovateBot <renovategrafana@grafana.com>",
+    "platformCommit": true,
+    "dependencyDashboard": false,
+    "platform": "github",
+    "forkProcessing": "enabled",
+    "repositories": [
+        "grafana/docker-otel-lgtm"
+    ],
+    "packageRules": [
+        {
+            "matchUpdateTypes": [
+                "major"
+            ],
+            "labels": [
+                "update-major"
+            ]
+        },
+        {
+            "matchUpdateTypes": [
+                "minor"
+            ],
+            "labels": [
+                "update-minor"
+            ]
+        },
+        {
+            "matchUpdateTypes": [
+                "patch"
+            ],
+            "labels": [
+                "automerge-patch"
+            ]
+        },
+        {
+            "matchUpdateTypes": [
+                "digest"
+            ],
+            "labels": [
+                "update-digest"
+            ]
+        }
+    ],
+    "vulnerabilityAlerts": {
+        "enabled": true,
+        "labels": [
+            "automerge-security-update"
+        ]
+    },
+    "osvVulnerabilityAlerts": true
+}

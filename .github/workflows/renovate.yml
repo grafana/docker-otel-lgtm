@@ -1,0 +1,26 @@
+name: Renovate
+on:
+  schedule:
+    - cron:  '0 */4 * * *'
+jobs:
+  renovate:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      - name: Generate token
+        id: generate-token
+        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a #v2.1.0
+        with:
+          revoke: true
+          app_id: ${{ secrets.RENOVATEGRAFANABOT_ID }}
+          private_key: ${{ secrets.RENOVATEGRAFANABOT_PEM }}
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@v39.0.5 #v.39.0.5
+        with:
+          renovate-version: 37.5.3@sha256:613fe86ea2730c062a42bf097a02563e35cb0d8df4fef08d2c4e50b8cd2ccdbc
+          configurationFile: .github/renovate.json
+          token: '${{ steps.generate-token.outputs.token }}'

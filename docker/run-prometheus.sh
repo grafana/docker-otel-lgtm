@@ -8,4 +8,4 @@ run_with_logging "Prometheus ${PROMETHEUS_VERSION}" "${ENABLE_LOGS_PROMETHEUS:-f
       --enable-feature=exemplar-storage \
       --enable-feature=native-histograms \
       --storage.tsdb.path=/data/prometheus \
-      --config.file=./prometheus.yaml > /dev/null 2>&1
+      --config.file=./prometheus.yaml

@@ -24,6 +24,23 @@ The Docker image is available on Docker hub: <https://hub.docker.com/r/grafana/o
 ./run-lgtm
 ```
 
+### Configuration
+
+#### Enable logging
+
+You can enable logging for troubleshooting:
+
+| Environment Variable   | Enable Logging in       |
+|------------------------|-------------------------|
+| ENABLE_LOGS_GRAFANA    | Grafana                 |
+| ENABLE_LOGS_LOKI       | Loki                    |
+| ENABLE_LOGS_PROMETHEUS | Prometheus              |
+| ENABLE_LOGS_TEMPO      | Tempo                   |
+| ENABLE_LOGS_OTELCOL    | OpenTelemetry Collector |
+| ENABLE_LOGS_ALL        | all of the above        |
+
+This has nothing to do with the application logs, which are collected by OpenTelemetry.
+
 ## Run lgtm in kubernetes
 
 ```sh

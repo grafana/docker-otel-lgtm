@@ -49,6 +49,7 @@ COPY grafana-dashboards.yaml ./grafana/conf/provisioning/dashboards/
 COPY grafana-dashboard-red-metrics-classic.json .
 COPY grafana-dashboard-red-metrics-native.json .
 COPY grafana-dashboard-jvm-metrics.json .
+COPY logging.sh .
 COPY run-grafana.sh .
 COPY loki-config.yaml .
 COPY run-loki.sh .

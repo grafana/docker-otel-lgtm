@@ -1,4 +1,6 @@
 #!/bin/bash
 
+source ./logging.sh
+
 cd ./grafana
-./bin/grafana server > /dev/null 2>&1
+run_with_logging "Grafana ${GRAFANA_VERSION}" "${ENABLE_LOGS_GRAFANA:-false}" ./bin/grafana server

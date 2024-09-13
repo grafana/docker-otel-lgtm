@@ -32,10 +32,10 @@ RUN bash -c 'curl -sOL https://github.com/prometheus/prometheus/releases/downloa
     mv prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}" prometheus && \
     rm prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}".tar.gz'
 
-RUN bash -c 'curl -sOL https://github.com/grafana/tempo/releases/download/v"$TEMPO_VERSION"/tempo_"${TEMPO_VERSION}"_linux_"${TARGETARCH}".tar.gz && \
+RUN bash -c 'curl -sOL https://github.com/grafana/tempo/releases/download/${TEMPO_VERSION}"/tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
     mkdir tempo && \
-    tar xfz tempo_"${TEMPO_VERSION}"_linux_"${TARGETARCH}".tar.gz -C tempo/ && \
-    rm tempo_"${TEMPO_VERSION}"_linux_"${TARGETARCH}".tar.gz'
+    tar xfz tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz -C tempo/ && \
+    rm tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz'
 
 RUN bash -c 'curl -sOL https://github.com/grafana/loki/releases/download/v"$LOKI_VERSION"/loki-linux-"${TARGETARCH}".zip && \
     mkdir loki && \

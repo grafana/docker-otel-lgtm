@@ -7,7 +7,7 @@ ENV PROMETHEUS_VERSION=v2.54.1
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
 ENV TEMPO_VERSION=v2.6.0
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
-ENV LOKI_VERSION="3.1.0"
+ENV LOKI_VERSION=v3.1.1
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
 ENV OPENTELEMETRY_COLLECTOR_VERSION=v0.109.0
 
@@ -37,7 +37,7 @@ RUN bash -c 'curl -sOL https://github.com/grafana/tempo/releases/download/"${TEM
     tar xfz tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz -C tempo/ && \
     rm tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz'
 
-RUN bash -c 'curl -sOL https://github.com/grafana/loki/releases/download/v"$LOKI_VERSION"/loki-linux-"${TARGETARCH}".zip && \
+RUN bash -c 'curl -sOL https://github.com/grafana/loki/releases/download/"${LOKI_VERSION}"/loki-linux-"${TARGETARCH}".zip && \
     mkdir loki && \
     unzip loki-linux-"${TARGETARCH}" -d loki/ && \
     rm loki-linux-"${TARGETARCH}".zip'

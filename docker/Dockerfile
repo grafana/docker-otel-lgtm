@@ -5,7 +5,7 @@ ENV GRAFANA_VERSION="11.1.3"
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
 ENV PROMETHEUS_VERSION=v2.54.1
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
-ENV TEMPO_VERSION="2.5.0"
+ENV TEMPO_VERSION=v2.6.0
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
 ENV LOKI_VERSION="3.1.0"
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases

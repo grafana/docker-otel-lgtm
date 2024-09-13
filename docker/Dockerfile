@@ -3,7 +3,7 @@ FROM redhat/ubi9
 # renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
 ENV GRAFANA_VERSION="11.1.3"
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
-ENV PROMETHEUS_VERSION="2.53.1"
+ENV PROMETHEUS_VERSION=v2.54.1
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
 ENV TEMPO_VERSION="2.5.0"
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
@@ -22,30 +22,30 @@ WORKDIR /otel-lgtm
 
 RUN yum install -y unzip jq procps dos2unix
 
-RUN curl -sOL https://dl.grafana.com/oss/release/grafana-$GRAFANA_VERSION.linux-${TARGETARCH}.tar.gz && \
-    tar xfz grafana-$GRAFANA_VERSION.linux-${TARGETARCH}.tar.gz && \
-    rm grafana-$GRAFANA_VERSION.linux-${TARGETARCH}.tar.gz && \
-    mv grafana-v$GRAFANA_VERSION grafana/
+RUN bash -c 'curl -sOL https://dl.grafana.com/oss/release/grafana-"$GRAFANA_VERSION".linux-"${TARGETARCH}".tar.gz && \
+    tar xfz grafana-"$GRAFANA_VERSION".linux-"${TARGETARCH}".tar.gz && \
+    rm grafana-"$GRAFANA_VERSION".linux-"${TARGETARCH}".tar.gz && \
+    mv grafana-v"$GRAFANA_VERSION" grafana/'
 
-RUN curl -sOL https://github.com/prometheus/prometheus/releases/download/v$PROMETHEUS_VERSION/prometheus-$PROMETHEUS_VERSION.linux-${TARGETARCH}.tar.gz && \
-    tar xfz prometheus-$PROMETHEUS_VERSION.linux-${TARGETARCH}.tar.gz && \
-    mv prometheus-$PROMETHEUS_VERSION.linux-${TARGETARCH} prometheus && \
-    rm prometheus-$PROMETHEUS_VERSION.linux-${TARGETARCH}.tar.gz
+RUN bash -c 'curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
+    tar xfz prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
+    mv prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}" prometheus && \
+    rm prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}".tar.gz'
 
-RUN curl -sOL https://github.com/grafana/tempo/releases/download/v$TEMPO_VERSION/tempo_${TEMPO_VERSION}_linux_${TARGETARCH}.tar.gz && \
+RUN bash -c 'curl -sOL https://github.com/grafana/tempo/releases/download/v"$TEMPO_VERSION"/tempo_"${TEMPO_VERSION}"_linux_"${TARGETARCH}".tar.gz && \
     mkdir tempo && \
-    tar xfz tempo_${TEMPO_VERSION}_linux_${TARGETARCH}.tar.gz -C tempo/ && \
-    rm tempo_${TEMPO_VERSION}_linux_${TARGETARCH}.tar.gz
+    tar xfz tempo_"${TEMPO_VERSION}"_linux_"${TARGETARCH}".tar.gz -C tempo/ && \
+    rm tempo_"${TEMPO_VERSION}"_linux_"${TARGETARCH}".tar.gz'
 
-RUN curl -sOL https://github.com/grafana/loki/releases/download/v$LOKI_VERSION/loki-linux-${TARGETARCH}.zip && \
+RUN bash -c 'curl -sOL https://github.com/grafana/loki/releases/download/v"$LOKI_VERSION"/loki-linux-"${TARGETARCH}".zip && \
     mkdir loki && \
-    unzip loki-linux-${TARGETARCH} -d loki/ && \
-    rm loki-linux-${TARGETARCH}.zip
+    unzip loki-linux-"${TARGETARCH}" -d loki/ && \
+    rm loki-linux-"${TARGETARCH}".zip'
 
-RUN curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v$OPENTELEMETRY_COLLECTOR_VERSION/otelcol-contrib_${OPENTELEMETRY_COLLECTOR_VERSION}_linux_${TARGETARCH}.tar.gz && \
+RUN bash -c 'curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v"$OPENTELEMETRY_COLLECTOR_VERSION"/otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION}"_linux_"${TARGETARCH}".tar.gz && \
     mkdir otelcol-contrib && \
-    tar xfz otelcol-contrib_${OPENTELEMETRY_COLLECTOR_VERSION}_linux_${TARGETARCH}.tar.gz -C otelcol-contrib/ && \
-    rm otelcol-contrib_${OPENTELEMETRY_COLLECTOR_VERSION}_linux_${TARGETARCH}.tar.gz
+    tar xfz otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION}"_linux_"${TARGETARCH}".tar.gz -C otelcol-contrib/ && \
+    rm otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION}"_linux_"${TARGETARCH}".tar.gz'
 
 COPY prometheus.yaml .
 COPY run-prometheus.sh .

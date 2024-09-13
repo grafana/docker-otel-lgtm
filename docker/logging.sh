@@ -9,10 +9,10 @@ function run_with_logging(){
   shift
   command=$*
   if [[ ${envvar} == "true" || ${ENABLE_LOGS_ALL:-false} == "true" ]]; then
-    echo "Running ${name} with logging"
+    echo "Running ${name} logging=true"
     ${command}
   else
-    echo "Running ${name} without logging"
+    echo "Running ${name} logging=false"
     ${command} > /dev/null 2>&1
   fi
 }

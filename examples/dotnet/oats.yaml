@@ -1,6 +1,6 @@
 # OATS is an acceptance testing framework for OpenTelemetry - https://github.com/grafana/oats/tree/main/yaml
 docker-compose:
-  generator: lgtm
+  generator: docker-lgtm
   files:
     - ./docker-compose.oats.yml
 input:
@@ -17,6 +17,6 @@ expected:
     - promql: 'http_server_active_requests{http_request_method="GET"}'
       value: ">= 0"
   logs:
-    - logql: '{exporter="OTLP"} | json | body =~ `Anonymous player is rolling the dice.*`'
+    - logql: '{service_name="rolldice"} |~ `Anonymous player is rolling the dice.*`'
       contains:
         - 'Anonymous player is rolling the dice'

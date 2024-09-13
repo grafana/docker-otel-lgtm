@@ -37,7 +37,7 @@ RUN bash -c 'curl -sOL https://github.com/grafana/tempo/releases/download/v"$TEM
     tar xfz tempo_"${TEMPO_VERSION}"_linux_"${TARGETARCH}".tar.gz -C tempo/ && \
     rm tempo_"${TEMPO_VERSION}"_linux_"${TARGETARCH}".tar.gz'
 
-RUN bash -c 'curl -sOL https://github.com/grafana/loki/releases/download/v"$LOKI_VERSION"/loki-linux-"${TARGETARCH}".zip && \
+RUN bash -c 'curl -sOL https://github.com/grafana/loki/releases/download/"${LOKI_VERSION}"/loki-linux-"${TARGETARCH}".zip && \
     mkdir loki && \
     unzip loki-linux-"${TARGETARCH}" -d loki/ && \
     rm loki-linux-"${TARGETARCH}".zip'

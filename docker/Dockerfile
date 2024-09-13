@@ -42,7 +42,7 @@ RUN bash -c 'curl -sOL https://github.com/grafana/loki/releases/download/v"$LOKI
     unzip loki-linux-"${TARGETARCH}" -d loki/ && \
     rm loki-linux-"${TARGETARCH}".zip'
 
-RUN bash -c 'curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/${OPENTELEMETRY_COLLECTOR_VERSION}"/otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
+RUN bash -c 'curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
     mkdir otelcol-contrib && \
     tar xfz otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz -C otelcol-contrib/ && \
     rm otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz'

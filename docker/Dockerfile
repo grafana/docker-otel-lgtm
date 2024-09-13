@@ -22,10 +22,10 @@ WORKDIR /otel-lgtm
 
 RUN yum install -y unzip jq procps dos2unix
 
-RUN bash -c 'curl -sOL https://dl.grafana.com/oss/release/grafana-"$GRAFANA_VERSION".linux-"${TARGETARCH}".tar.gz && \
-    tar xfz grafana-"$GRAFANA_VERSION".linux-"${TARGETARCH}".tar.gz && \
-    rm grafana-"$GRAFANA_VERSION".linux-"${TARGETARCH}".tar.gz && \
-    mv grafana-v"$GRAFANA_VERSION" grafana/'
+RUN bash -c 'curl -sOL https://dl.grafana.com/oss/release/grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
+    tar xfz grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
+    rm grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
+    mv grafana-v"${GRAFANA_VERSION:1}" grafana/'
 
 RUN bash -c 'curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
     tar xfz prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \

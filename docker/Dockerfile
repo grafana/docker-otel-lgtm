@@ -9,7 +9,7 @@ ENV TEMPO_VERSION=v2.6.0
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
 ENV LOKI_VERSION="3.1.0"
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
-ENV OPENTELEMETRY_COLLECTOR_VERSION="0.106.1"
+ENV OPENTELEMETRY_COLLECTOR_VERSION=v0.109.0
 
 # TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts
 # on an amd64 architecture, than the TARGETARCH will be set to `amd64`.
@@ -42,10 +42,10 @@ RUN bash -c 'curl -sOL https://github.com/grafana/loki/releases/download/v"$LOKI
     unzip loki-linux-"${TARGETARCH}" -d loki/ && \
     rm loki-linux-"${TARGETARCH}".zip'
 
-RUN bash -c 'curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v"$OPENTELEMETRY_COLLECTOR_VERSION"/otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION}"_linux_"${TARGETARCH}".tar.gz && \
+RUN bash -c 'curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
     mkdir otelcol-contrib && \
-    tar xfz otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION}"_linux_"${TARGETARCH}".tar.gz -C otelcol-contrib/ && \
-    rm otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION}"_linux_"${TARGETARCH}".tar.gz'
+    tar xfz otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz -C otelcol-contrib/ && \
+    rm otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz'
 
 COPY prometheus.yaml .
 COPY run-prometheus.sh .

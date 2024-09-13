@@ -5,7 +5,7 @@ ENV GRAFANA_VERSION=v11.2.0
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
 ENV PROMETHEUS_VERSION=v2.54.1
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
-ENV TEMPO_VERSION="2.5.0"
+ENV TEMPO_VERSION=v2.6.0
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
 ENV LOKI_VERSION="3.1.0"
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
@@ -32,10 +32,10 @@ RUN bash -c 'curl -sOL https://github.com/prometheus/prometheus/releases/downloa
     mv prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}" prometheus && \
     rm prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}".tar.gz'
 
-RUN bash -c 'curl -sOL https://github.com/grafana/tempo/releases/download/v"$TEMPO_VERSION"/tempo_"${TEMPO_VERSION}"_linux_"${TARGETARCH}".tar.gz && \
+RUN bash -c 'curl -sOL https://github.com/grafana/tempo/releases/download/"${TEMPO_VERSION}"/tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
     mkdir tempo && \
-    tar xfz tempo_"${TEMPO_VERSION}"_linux_"${TARGETARCH}".tar.gz -C tempo/ && \
-    rm tempo_"${TEMPO_VERSION}"_linux_"${TARGETARCH}".tar.gz'
+    tar xfz tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz -C tempo/ && \
+    rm tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz'
 
 RUN bash -c 'curl -sOL https://github.com/grafana/loki/releases/download/v"$LOKI_VERSION"/loki-linux-"${TARGETARCH}".zip && \
     mkdir loki && \

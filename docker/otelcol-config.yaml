@@ -28,11 +28,11 @@ exporters:
     endpoint: http://localhost:3100/otlp
     tls:
       insecure: true
-  logging/metrics:
+  debug/metrics:
     verbosity: detailed
-  logging/traces:
+  debug/traces:
     verbosity: detailed
-  logging/logs:
+  debug/logs:
     verbosity: detailed
 
 service:
@@ -41,14 +41,14 @@ service:
       receivers: [otlp]
       processors: [batch]
       exporters: [otlphttp/traces]
-      #exporters: [otlphttp/traces,logging/traces]
+      #exporters: [otlphttp/traces,debug/traces]
     metrics:
       receivers: [otlp,prometheus/collector]
       processors: [batch]
       exporters: [otlphttp/metrics]
-      #exporters: [otlphttp/metrics,logging/metrics]
+      #exporters: [otlphttp/metrics,debug/metrics]
     logs:
       receivers: [otlp]
       processors: [batch]
       exporters: [otlphttp/logs]
-      #exporters: [otlphttp/logs,logging/logs]
+      #exporters: [otlphttp/logs,debug/logs]

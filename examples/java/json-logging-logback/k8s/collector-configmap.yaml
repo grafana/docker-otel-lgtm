@@ -1,0 +1,134 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+data:
+  otel-collector-config.yaml: |-
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+      prometheus/collector: # needed if you use the docker-lgtm image
+        config:
+          scrape_configs:
+            - job_name: 'opentelemetry-collector'
+              static_configs:
+                - targets: [ 'localhost:8888' ]
+      filelog/json-logback:
+        include:
+          - /var/log/pods/*/dice/*.log
+        include_file_path: true
+        operators:
+          - type: json_parser
+            body: attributes.formattedMessage
+            timestamp:
+              parse_from: attributes.timestamp
+              layout_type: 'epoch'
+              layout: 'ms'
+            severity:
+              parse_from: attributes.level
+            trace:
+              trace_id:
+                parse_from: attributes.mdc.trace_id
+              span_id:
+                parse_from: attributes.mdc.span_id
+              trace_flags:
+                parse_from: attributes.mdc.trace_flags
+            scope_name:
+              parse_from: attributes.loggerName
+          - id: move_thread_name
+            type: move
+            from: attributes.threadName
+            to: attributes["thread.name"]
+          - id: move_throwable_class_name
+            type: move
+            if: "attributes.throwable?.className != nil"
+            from: attributes.throwable.className
+            to: attributes["exception.type"]
+          - id: move_throwable_message
+            type: move
+            if: "attributes.throwable?.message != nil"
+            from: attributes.throwable.message
+            to: attributes["exception.message"]
+          # FIXME handle stack trace
+          - id: remove_throwable_stack_trace
+            type: remove
+            if: "attributes.throwable?.stepArray != nil"
+            field: attributes.throwable.stepArray
+          - id: remove_throwable
+            type: remove
+            field: attributes.throwable
+          - id: remove_logger_name
+            type: remove
+            field: attributes.loggerName
+          - id: remove_timestamp
+            type: remove
+            field: attributes.timestamp
+          - id: remove_level
+            type: remove
+            field: attributes.level
+          - id: remove_span_id
+            type: remove
+            field: attributes.mdc.span_id
+          - id: remove_trace_id
+            type: remove
+            field: attributes.mdc.trace_id
+          - id: remove_trace_flags
+            type: remove
+            field: attributes.mdc.trace_flags
+          - id: remove_context
+            type: remove
+            field: attributes.context
+          - id: remove_formatted_message
+            type: remove
+            field: attributes.formattedMessage
+        resource:
+          service.name: dice
+          service.namespace: shop
+          deployment.environment: staging
+    
+    processors:
+      batch:
+      resourcedetection:
+        detectors: [ "env", "system" ]
+        override: false
+    
+    exporters:
+      otlphttp/metrics:
+        endpoint: http://localhost:9090/api/v1/otlp
+      otlphttp/traces:
+        endpoint: http://localhost:4418
+      otlphttp/logs:
+        endpoint: http://localhost:3100/otlp
+      debug/metrics:
+        verbosity: detailed
+      debug/traces:
+        verbosity: detailed
+      debug/logs:
+        verbosity: detailed
+      nop:
+    
+    service:
+      pipelines:
+        traces:
+          receivers: [ otlp ]
+          processors: [ batch ]
+          exporters: [ otlphttp/traces ]
+        metrics:
+          receivers: [ otlp, prometheus/collector ]
+          processors: [ batch ]
+          exporters: [ otlphttp/metrics ]
+        logs/otlp:
+          receivers: [ otlp ]
+          processors: [ batch ]
+          exporters: [ otlphttp/logs ]
+        logs/json-elastic:
+          receivers: [ filelog/json-logback ]
+          processors: [ batch ]
+          exporters: [ otlphttp/logs ]
+          # exporters: [ otlphttp/logs, debug/logs ]  # Uncomment this line to enable debug logging
+          
+          

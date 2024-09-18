@@ -32,7 +32,8 @@ while ! curl -sg 'http://localhost:9090/api/v1/query?query=otelcol_process_uptim
   sleep 1
 done
 
-echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running."
+touch /tmp/ready
+echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
 
 echo "Open ports:"
 echo " - 4317: OpenTelemetry GRPC endpoint"

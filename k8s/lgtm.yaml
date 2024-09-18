@@ -41,3 +41,8 @@ spec:
             - containerPort: 3000
             - containerPort: 4317
             - containerPort: 4318
+          readinessProbe:
+            exec:
+              command:
+                - cat
+                - /tmp/ready

@@ -10,19 +10,29 @@ input:
   - path: /rolldice
 expected:
   logs:
-    # check for attributes
-    - logql: '{service_name="dice"} |~ `Anonymous player is rolling the dice.*`'
-      contains:
-        - 'Anonymous player is rolling the dice'
+    - logql: '{service_name="dice"} |~ `.*simulating an error.*`'
+      equals:
+        - 'Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: simulating an error] with root cause'
       attributes:
-        scope_name: "com.grafana.example.RollController"
+        deployment_environment: staging
+        exception_message: "simulating an error"
+        exception_type: "java.lang.RuntimeException"
+        scope_name: "org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/].[dispatcherServlet]"
         service_name: dice
         service_namespace: shop
-        severity_number: 9
-        severity_text: INFO
+        severity_number: 17
+        severity_text: ERROR
         k8s_container_name: dice
+        k8s_namespace_name: default
       attribute-regexp:
+        detected_level: ".*" # from loki
+        observed_timestamp: ".*" # from loki
         thread_name: ".*"
         span_id: ".*"
         trace_id: ".*"
+        k8s_pod_name: dice-.*-.*
+        k8s_pod_uid: ".*"
+        k8s_container_restart_count: ".*"
+        service_instance_id: ".*"
+        exception_stacktrace: ".*"
       no-extra-attributes: true

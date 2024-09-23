@@ -38,7 +38,7 @@ spec:
           - name: OTEL_RESOURCE_ATTRIBUTES
             value: service.name=dice,service.namespace=shop,service.version=1.1,deployment.environment=staging
           - name: OTEL_INSTRUMENTATION_COMMON_MDC_RESOURCE_ATTRIBUTES
-            value: "service.namespace,service.instance.id,deployment.environment"
+            value: "service.namespace,service.name,service.instance.id,service.version,deployment.environment"
           - name: SERVICE_NAME
             value: dice
 

@@ -17,7 +17,7 @@ data:
             - job_name: 'opentelemetry-collector'
               static_configs:
                 - targets: [ 'localhost:8888' ]
-      filelog/json-elastic:
+      filelog/json-ecs:
         include:
           - /var/log/pods/*/dice/*.log
         include_file_path: true
@@ -163,8 +163,8 @@ data:
           receivers: [ otlp ]
           processors: [ batch ]
           exporters: [ otlphttp/logs ]
-        logs/json-elastic:
-          receivers: [ filelog/json-elastic ]
+        logs/json-ecs:
+          receivers: [ filelog/json-ecs ]
           processors: [ batch ]
           exporters: [ otlphttp/logs ]
           # exporters: [ otlphttp/logs, debug/logs ]  # Uncomment this line to enable debug logging

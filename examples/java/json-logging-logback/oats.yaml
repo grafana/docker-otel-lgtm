@@ -10,7 +10,7 @@ input:
   - path: /rolldice
 expected:
   logs:
-    - logql: '{service_name="dice"} |~ `simulating an error`'
+    - logql: '{service_name="dice"} |~ `.*simulating an error.*`'
       equals:
         - 'Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: simulating an error] with root cause'
       attributes:
@@ -20,15 +20,16 @@ expected:
         scope_name: "org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/].[dispatcherServlet]"
         service_name: dice
         service_namespace: shop
+        service_version: 1.1
         severity_number: 17
         severity_text: ERROR
         k8s_container_name: dice
         k8s_namespace_name: default
       attribute-regexp:
-#        flags: ".*" # seems to be from loki
-#        detected_level: ".*" # seems to be from loki
-#        observed_timestamp: ".*" # seems to be from loki
-        thread_name: ".*"]
+        flags: ".*" # from loki
+        detected_level: ".*" # from loki
+        observed_timestamp: ".*" # from loki
+        thread_name: ".*"
         span_id: ".*"
         trace_id: ".*"
         k8s_pod_name: dice-.*-.*

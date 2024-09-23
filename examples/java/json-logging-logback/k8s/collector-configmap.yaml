@@ -56,7 +56,11 @@ data:
           - id: move_service_name
             type: move
             from: attributes.mdc["service.name"]
-            to: resource["service.name"]
+            to: resource["service.name"]          
+          - id: move_service_version
+            type: move
+            from: attributes.mdc["service.version"]
+            to: resource["service.version"]
           - id: move_service_instance_id
             type: move
             if: 'attributes.mdc["service.instance.id"] != nil'
@@ -110,21 +114,9 @@ data:
           - id: remove_detected_level
             type: remove
             field: attributes["detected.level"]
-          - id: remove_span_id
+          - id: remove_mdc
             type: remove
-            if: "attributes.mdc?.span_id != nil"
-            field: attributes.mdc.span_id
-          - id: remove_trace_id
-            type: remove
-            if: "attributes.mdc?.trace_id != nil"
-            field: attributes.mdc.trace_id
-          - id: remove_trace_flags
-            type: remove
-            if: "attributes.mdc?.trace_flags != nil"
-            field: attributes.mdc.trace_flags        
-          - id: remove_flags
-            type: remove
-            field: attributes["flags"]
+            field: attributes.mdc
           - id: remove_context
             type: remove
             field: attributes.context
@@ -149,10 +141,6 @@ data:
           - id: remove_sequenceNumber
             type: remove
             field: attributes.sequenceNumber  
-        resource:
-          service.name: dice
-          service.namespace: shop
-          deployment.environment: staging
     
     processors:
       batch:
@@ -192,7 +180,7 @@ data:
         logs/json-elastic:
           receivers: [ filelog/json-logback ]
           processors: [ batch ]
-          #      exporters: [ otlphttp/logs ] # todo
-          exporters: [ otlphttp/logs, debug/logs ]  # Uncomment this line to enable debug logging
+          exporters: [ otlphttp/logs ] 
+          # exporters: [ otlphttp/logs, debug/logs ]  # Uncomment this line to enable debug logging
           
           

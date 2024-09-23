@@ -18,6 +18,18 @@ spec:
       protocol: TCP
       port: 4318
       targetPort: 4318
+    - name: prometheus # needed for automated tests
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+    - name: loki # needed for automated tests
+      protocol: TCP
+      port: 3100
+      targetPort: 3100
+    - name: tempo # needed for automated tests
+      protocol: TCP
+      port: 3200
+      targetPort: 3200
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -40,6 +52,14 @@ spec:
             - containerPort: 3000
             - containerPort: 4317
             - containerPort: 4318
+            - containerPort: 9090 # needed for automated tests
+            - containerPort: 3100 # needed for automated tests
+            - containerPort: 3200 # needed for automated tests
+          readinessProbe:
+            exec:
+              command:
+                - cat
+                - /tmp/ready
           volumeMounts:
             - mountPath: /otel-lgtm/otelcol-config.yaml
               name: otel-collector-config

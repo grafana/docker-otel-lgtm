@@ -1,9 +1,5 @@
 # Exporting Application logs using JSON logging in Kubernetes
 
-## Introduction
-
-todo
-
 ## Running the example
 
 1. Build the Docker image using using `build.sh`

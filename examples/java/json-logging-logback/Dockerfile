@@ -5,8 +5,7 @@ WORKDIR /usr/src/app/
 COPY ./mvnw pom.xml ./
 COPY ./.mvn ./.mvn
 COPY ./src ./src
-COPY json-logging/logback.xml ./src/main/resources/logback.xml
-RUN sed -i '/<dependencies>/a <dependency><groupId>co.elastic.logging</groupId><artifactId>logback-ecs-encoder</artifactId><version>1.6.0</version></dependency>' pom.xml
+COPY json-logging-logback/logback-spring.xml ./src/main/resources/logback-spring.xml
 RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests
 
 FROM eclipse-temurin:21-jre

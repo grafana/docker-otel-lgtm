@@ -1,0 +1,28 @@
+# OATS is an acceptance testing framework for OpenTelemetry - https://github.com/grafana/oats/tree/main/yaml
+kubernetes:
+  dir: k8s
+  app-service: dice
+  app-docker-file: Dockerfile
+  app-docker-context: ..
+  app-docker-tag: dice:1.1-SNAPSHOT
+  app-docker-port: 8080
+input:
+  - path: /rolldice
+expected:
+  logs:
+    # check for attributes
+    - logql: '{service_name="dice"} |~ `Anonymous player is rolling the dice.*`'
+      contains:
+        - 'Anonymous player is rolling the dice'
+      attributes:
+        scope_name: "com.grafana.example.RollController"
+        service_name: dice
+        service_namespace: shop
+        severity_number: 9
+        severity_text: INFO
+        k8s_container_name: dice
+      attribute-regexp:
+        thread_name: ".*"
+        span_id: ".*"
+        trace_id: ".*"
+      no-extra-attributes: true

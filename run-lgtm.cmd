@@ -31,9 +31,9 @@ podman run ^
 	-p 4318:4318 ^
 	--rm ^
 	-ti ^
-	-v ./container/grafana:/data/grafana ^
-	-v ./container/prometheus:/data/prometheus ^
-	-v ./container/loki:/loki ^
+	-v %cd%/container/grafana:/data/grafana ^
+	-v %cd%/container/prometheus:/data/prometheus ^
+	-v %cd%/container/loki:/loki ^
 	-e GF_PATHS_DATA=/data/grafana ^
 	docker.io/grafana/otel-lgtm:%release_tag%
 goto:EOF
@@ -46,9 +46,9 @@ docker run ^
 	-p 4318:4318 ^
 	--rm ^
 	-ti ^
-	-v ./container/grafana:/data/grafana ^
-	-v ./container/prometheus:/data/prometheus ^
-	-v ./container/loki:/loki ^
+	-v %cd%/container/grafana:/data/grafana ^
+	-v %cd%/container/prometheus:/data/prometheus ^
+	-v %cd%/container/loki:/loki ^
 	-e GF_PATHS_DATA=/data/grafana ^
 	docker.io/grafana/otel-lgtm:%release_tag%
 goto:EOF

@@ -24,8 +24,7 @@ wait_ready "Loki" "http://localhost:3100/ready"
 wait_ready "Prometheus" "http://localhost:9090/api/v1/status/runtimeinfo"
 wait_ready "Tempo" "http://localhost:3200/ready"
 
-# collector may not have a prometheus endpoint exposed if the config has been replaced,
-# so we query the otelcol_process_uptime_total metric instead, which checks if the collector is up,
+# we query the otelcol_process_uptime_total metric instead, which checks if the collector is up,
 # and indirectly checks if the prometheus endpoint is up.
 while ! curl -sg 'http://localhost:9090/api/v1/query?query=otelcol_process_uptime_total{}' | jq -r .data.result[0].value[1] | grep '[0-9]' > /dev/null ; do
   echo "Waiting for the OpenTelemetry collector to start up..."

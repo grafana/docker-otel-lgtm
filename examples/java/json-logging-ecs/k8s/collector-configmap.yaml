@@ -19,7 +19,7 @@ data:
                 - targets: [ 'localhost:8888' ]
       filelog/json-ecs:
         include:
-          - /var/log/pods/*/dice/*.log
+          - /var/log/pods/*/*/*.log
         include_file_path: true
         operators:
           - id: container-parser
@@ -31,7 +31,7 @@ data:
                 expr: 'body matches "\\{[^{}]*\\}" == true'
           - id: json_parser
             type: json_parser
-            on_error: drop # TODO use 'drop_quiet' once available:
+            on_error: drop_quiet
             body: attributes.message
             timestamp:
               parse_from: attributes["@timestamp"]

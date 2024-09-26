@@ -12,9 +12,10 @@ input:
   - path: /rolldice
 expected:
   logs:
+    - logql: '{service_name="dice"} |~ `.*Anonymous player is rolling the dice:.*`'
+      regexp: 'Anonymous player is rolling the dice: \d+' # uses formatted message
     - logql: '{service_name="dice"} |~ `.*simulating an error.*`'
-      equals:
-        - 'Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: simulating an error] with root cause'
+      equals: 'Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: simulating an error] with root cause'
       attributes:
         deployment_environment: staging
         exception_message: "simulating an error"

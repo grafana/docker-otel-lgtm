@@ -19,7 +19,7 @@ data:
                 - targets: [ 'localhost:8888' ]
       filelog/json-logback:
         include:
-          - /var/log/pods/*/dice/*.log
+          - /var/log/pods/*/*/*.log
         include_file_path: true
         operators:
           - id: container-parser
@@ -31,8 +31,8 @@ data:
                 expr: 'body matches "\\{[^{}]*\\}" == true'
           - id: json_parser
             type: json_parser
-            on_error: drop # TODO use 'drop_quiet' once available:
-            body: attributes.message
+            on_error: drop_quiet
+            body: attributes.formattedMessage
             timestamp:
               parse_from: attributes.timestamp
               layout_type: 'epoch'
@@ -102,9 +102,6 @@ data:
           - id: remove_timestamp
             type: remove
             field: attributes.timestamp          
-          - id: remove_nanoseconds
-            type: remove
-            field: attributes.nanoseconds          
           - id: remove_observed_timestamp
             type: remove
             field: attributes["observed.timestamp"]
@@ -120,9 +117,9 @@ data:
           - id: remove_context
             type: remove
             field: attributes.context
-          - id: remove_message
+          - id: remove_formattedMessage
             type: remove
-            field: attributes.message
+            field: attributes.formattedMessage
           - id: remove_logtag
             type: remove
             field: attributes.logtag
@@ -138,9 +135,6 @@ data:
           - id: remove_time
             type: remove
             field: attributes.time  
-          - id: remove_sequenceNumber
-            type: remove
-            field: attributes.sequenceNumber  
     
     processors:
       batch:

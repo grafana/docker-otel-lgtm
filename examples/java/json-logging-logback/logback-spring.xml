@@ -4,10 +4,10 @@
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
     <root level="INFO">
-        <appender-ref ref="stdout"/>
+        <appender-ref ref="CONSOLE_JSON"/>
     </root>
 
-    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.JsonEncoder">
             <withFormattedMessage>true</withFormattedMessage>
             <withMessage>false</withMessage>

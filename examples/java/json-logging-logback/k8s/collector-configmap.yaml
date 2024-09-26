@@ -102,9 +102,6 @@ data:
           - id: remove_timestamp
             type: remove
             field: attributes.timestamp          
-          - id: remove_nanoseconds
-            type: remove
-            field: attributes.nanoseconds          
           - id: remove_observed_timestamp
             type: remove
             field: attributes["observed.timestamp"]
@@ -138,9 +135,6 @@ data:
           - id: remove_time
             type: remove
             field: attributes.time  
-          - id: remove_sequenceNumber
-            type: remove
-            field: attributes.sequenceNumber  
     
     processors:
       batch:

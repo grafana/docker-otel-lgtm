@@ -22,30 +22,35 @@ WORKDIR /otel-lgtm
 
 RUN yum install -y unzip jq procps dos2unix
 
-RUN bash -c 'curl -sOL https://dl.grafana.com/oss/release/grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
-    tar xfz grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
-    rm grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
-    mv grafana-v"${GRAFANA_VERSION:1}" grafana/'
+RUN bash -c 'ARCHIVE=grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
+    curl -sOL https://dl.grafana.com/oss/release/"${ARCHIVE}" && \
+    tar xfz "${ARCHIVE}" && \
+    rm "${ARCHIVE}" && \
+    mv grafana-"${GRAFANA_VERSION}" grafana/'
 
-RUN bash -c 'curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
-    tar xfz prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
-    mv prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}" prometheus && \
-    rm prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}".tar.gz'
+RUN bash -c 'ARCHIVE=prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}" && \
+    curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/"${ARCHIVE}".tar.gz && \
+    tar xfz "${ARCHIVE}".tar.gz && \
+    mv "${ARCHIVE}" prometheus && \
+    rm "${ARCHIVE}".tar.gz'
 
-RUN bash -c 'curl -sOL https://github.com/grafana/tempo/releases/download/"${TEMPO_VERSION}"/tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
+RUN bash -c 'ARCHIVE=tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
+    curl -sOL https://github.com/grafana/tempo/releases/download/"${TEMPO_VERSION}"/"${ARCHIVE}" && \
     mkdir tempo && \
-    tar xfz tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz -C tempo/ && \
-    rm tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz'
+    tar xfz "${ARCHIVE}" -C tempo/ && \
+    rm "${ARCHIVE}"'
 
-RUN bash -c 'curl -sOL https://github.com/grafana/loki/releases/download/"${LOKI_VERSION}"/loki-linux-"${TARGETARCH}".zip && \
+RUN bash -c 'ARCHIVE=loki-linux-"${TARGETARCH}".zip && \
+    curl -sOL https://github.com/grafana/loki/releases/download/"${LOKI_VERSION}"/"${ARCHIVE}" && \
     mkdir loki && \
-    unzip loki-linux-"${TARGETARCH}" -d loki/ && \
-    rm loki-linux-"${TARGETARCH}".zip'
+    unzip "${ARCHIVE}" -d loki/ && \
+    rm "${ARCHIVE}"'
 
-RUN bash -c 'curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
+RUN bash -c 'ARCHIVE=otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
+    curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/"${ARCHIVE}" && \
     mkdir otelcol-contrib && \
-    tar xfz otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz -C otelcol-contrib/ && \
-    rm otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz'
+    tar xfz "${ARCHIVE}" -C otelcol-contrib/ && \
+    rm "${ARCHIVE}"'
 
 COPY prometheus.yaml .
 COPY run-prometheus.sh .

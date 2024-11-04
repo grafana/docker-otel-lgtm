@@ -3,7 +3,7 @@ FROM redhat/ubi9
 # renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
 ENV GRAFANA_VERSION=v11.2.2
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
-ENV PROMETHEUS_VERSION=v2.54.1
+ENV PROMETHEUS_VERSION=v2.55.0
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
 ENV TEMPO_VERSION=v2.6.0
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki

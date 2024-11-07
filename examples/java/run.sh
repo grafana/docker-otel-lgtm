@@ -1,14 +1,15 @@
 #!/bin/bash
 
-set -euo pipefail
+set -euox pipefail
 
 if [[ ! -f ./target/rolldice.jar ]] ; then
     ./mvnw clean package
 fi
-version=v2.6.0
+#version=2.10.0-SNAPSHOT
+version=2.9.0
 jar=opentelemetry-javaagent-${version}.jar
 if [[ ! -f ./${jar} ]] ; then
-    curl -sL https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/${version}/opentelemetry-javaagent.jar -o ${jar}
+    curl -sL http://us-docker.pkg.dev/grafanalabs-global/docker-grafana-opentelemetry-java-prod/grafana-opentelemetry-java:${version}/grafana-javaagent.jar -o ${jar}
 fi
 export OTEL_RESOURCE_ATTRIBUTES="service.name=rolldice,service.instance.id=localhost:8080"
 # uncomment the next line to switch to Prometheus native histograms.

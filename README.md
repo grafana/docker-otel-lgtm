@@ -57,8 +57,8 @@ There's no need to configure anything: The Docker image works with OpenTelemetry
 
 ```sh
 # Not needed as these are the defaults in OpenTelemetry:
-export OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
+export OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
 ```
 
 ## View Grafana

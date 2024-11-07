@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+data:
+  otel-collector-config.yaml: |-
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+      prometheus/collector: # needed if you use the docker-lgtm image
+        config:
+          scrape_configs:
+            - job_name: 'opentelemetry-collector'
+              static_configs:
+                - targets: [ 'localhost:8888' ]
+      filelog/otlp-json-logs:
+        include:
+          - /var/log/pods/*/*/*.log
+        include_file_path: true
+        operators:
+          - id: container-parser
+            type: container
+    
+    processors:
+      batch:
+      resourcedetection:
+        detectors: [ "env", "system" ]
+        override: false
+
+    connectors:
+      otlpjson:
+
+    exporters:
+      otlphttp/metrics:
+        endpoint: http://localhost:9090/api/v1/otlp
+      otlphttp/traces:
+        endpoint: http://localhost:4418
+      otlphttp/logs:
+        endpoint: http://localhost:3100/otlp
+      debug/metrics:
+        verbosity: detailed
+      debug/traces:
+        verbosity: detailed
+      debug/logs:
+        verbosity: detailed
+      nop:
+    
+    service:
+      pipelines:
+        traces:
+          receivers: [ otlp ]
+          processors: [ batch ]
+          exporters: [ otlphttp/traces ]
+        metrics:
+          receivers: [ otlp, prometheus/collector ]
+          processors: [ batch ]
+          exporters: [ otlphttp/metrics ]
+        logs/raw_otlpjson:
+          receivers: [ filelog/otlp-json-logs ]
+          # (i) no need for processors before the otlpjson connector
+          # Declare processors in the shared "logs" pipeline below
+          processors: [ ]
+          exporters: [ otlpjson ]
+        logs/otlp:
+          receivers: [ otlp, otlpjson ]
+          processors: [ resourcedetection, batch ]
+          exporters: [ otlphttp/logs ]
+          # exporters: [ otlphttp/logs, debug/logs ]  # Uncomment this line to enable debug logging

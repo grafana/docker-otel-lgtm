@@ -26,7 +26,7 @@ expected:
         service_version: 1.1
         severity_number: 17
         severity_text: SEVERE
-        exception_stacktrace: "java.lang.RuntimeException: simulating an error
+        exception_stacktrace: "java.lang.RuntimeException: simulating an error\
           \n\tat com.grafana.example.RollController.index(RollController.java:21)\
           \n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)\
           \n\tat java.base/java.lang.reflect.Method.invoke(Unknown Source)\
@@ -47,39 +47,39 @@ expected:
           \n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)\
           \n\tat org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)\
           \n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)\
-          \n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
-          \n\tat org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
-          \n\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
-          \n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
-          \n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
-          \n\tat org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
-          \n\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
-          \n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
-          \n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
-          \n\tat org.springframework.web.servlet.v6_0.OpenTelemetryHandlerMappingFilter.doFilter(OpenTelemetryHandlerMappingFilter.java:78)
-          \n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
-          \n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
-          \n\tat org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
-          \n\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
-          \n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
-          \n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
-          \n\tat org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
-          \n\tat org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
-          \n\tat org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
-          \n\tat org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
-          \n\tat org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
-          \n\tat org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
-          \n\tat org.apache.catalina.valves.RemoteIpValve.invoke(RemoteIpValve.java:731)
-          \n\tat org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
-          \n\tat org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
-          \n\tat org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
-          \n\tat org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)
-          \n\tat org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
-          \n\tat org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
-          \n\tat org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
-          \n\tat org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
-          \n\tat org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
-          \n\tat java.base/java.lang.Thread.run(Unknown Source)"
+          \n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)\
+          \n\tat org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)\
+          \n\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\
+          \n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)\
+          \n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)\
+          \n\tat org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)\
+          \n\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\
+          \n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)\
+          \n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)\
+          \n\tat org.springframework.web.servlet.v6_0.OpenTelemetryHandlerMappingFilter.doFilter(OpenTelemetryHandlerMappingFilter.java:78)\
+          \n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)\
+          \n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)\
+          \n\tat org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)\
+          \n\tat org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)\
+          \n\tat org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)\
+          \n\tat org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)\
+          \n\tat org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)\
+          \n\tat org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)\
+          \n\tat org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)\
+          \n\tat org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)\
+          \n\tat org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)\
+          \n\tat org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)\
+          \n\tat org.apache.catalina.valves.RemoteIpValve.invoke(RemoteIpValve.java:731)\
+          \n\tat org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)\
+          \n\tat org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)\
+          \n\tat org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)\
+          \n\tat org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905)\
+          \n\tat org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)\
+          \n\tat org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)\
+          \n\tat org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)\
+          \n\tat org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)\
+          \n\tat org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)\
+          \n\tat java.base/java.lang.Thread.run(Unknown Source)\n"
       attribute-regexp:
         flags: ".*" # from loki
         detected_level: ".*" # from loki

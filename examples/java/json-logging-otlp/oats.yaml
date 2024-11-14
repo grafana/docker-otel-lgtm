@@ -84,9 +84,26 @@ expected:
         flags: ".*" # from loki
         detected_level: ".*" # from loki
         observed_timestamp: ".*" # from loki
-        thread_name: ".*"
+        # thread_name: ".*" # thread name is missing when there is an exception - has nothing to do with stdout logging
         span_id: ".*"
         trace_id: ".*"
+        container_id: ".*"
+        host_arch: ".*"
+        host_name: ".*"
+        os_description: ".*"
+        os_type: ".*"
+        process_command_args: ".*"
+        process_executable_path: ".*"
+        process_pid: ".*"
+        process_runtime_description: ".*"
+        process_runtime_name: ".*"
+        process_runtime_version: ".*"
         service_instance_id: ".*"
+        telemetry_distro_name: ".*"
+        telemetry_distro_version: ".*"
+        telemetry_sdk_language: ".*"
+        telemetry_sdk_name: ".*"
+        telemetry_sdk_version: ".*"
+
       no-extra-attributes: true
 

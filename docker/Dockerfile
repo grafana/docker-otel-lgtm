@@ -1,7 +1,7 @@
 FROM redhat/ubi9
 
 # renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
-ENV GRAFANA_VERSION=v11.3.0
+ENV GRAFANA_VERSION=v11.3.1
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
 ENV PROMETHEUS_VERSION=v2.55.1
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo

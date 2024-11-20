@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lgtm
+spec:
+  selector:
+    app: lgtm
+  ports:
+    - name: grafana
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+    - name: otel-grpc
+      protocol: TCP
+      port: 4317
+      targetPort: 4317
+    - name: otel-http
+      protocol: TCP
+      port: 4318
+      targetPort: 4318
+    - name: prometheus # needed for automated tests
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
+    - name: loki # needed for automated tests
+      protocol: TCP
+      port: 3100
+      targetPort: 3100
+    - name: tempo # needed for automated tests
+      protocol: TCP
+      port: 3200
+      targetPort: 3200
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lgtm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lgtm
+  template:
+    metadata:
+      labels:
+        app: lgtm
+    spec:
+      containers:
+        - name: lgtm
+          image: grafana/otel-lgtm:latest
+          ports:
+            - containerPort: 3000
+            - containerPort: 4317
+            - containerPort: 4318
+            - containerPort: 9090 # needed for automated tests
+            - containerPort: 3100 # needed for automated tests
+            - containerPort: 3200 # needed for automated tests
+          readinessProbe:
+            exec:
+              command:
+                - cat
+                - /tmp/ready
+          volumeMounts:
+            - mountPath: /otel-lgtm/otelcol-config.yaml
+              name: otel-collector-config
+              subPath: otel-collector-config.yaml
+              readOnly: true
+            - mountPath: /var/log
+              name: varlog
+              readOnly: true
+            - mountPath: /var/lib/docker/containers
+              name: varlibdockercontainers
+              readOnly: true
+          env:
+            - name: ENABLE_LOGS_OTELCOL
+              value: "true"
+      volumes:
+        - name: otel-collector-config
+          configMap:
+            name: otel-collector-config
+        - name: varlog
+          hostPath:
+            path: /var/log
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers

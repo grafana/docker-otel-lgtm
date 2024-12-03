@@ -15,7 +15,7 @@ public class SpringBootApp {
      */
     @GetMapping("/")
     public void redirect(HttpServletResponse httpServletResponse) {
-        httpServletResponse.setHeader("Location", "/rolldice");
+        httpServletResponse.setHeader("Location", "/shop");
         httpServletResponse.setStatus(302);
     }
 

@@ -4,3 +4,5 @@ venv/
 /container/grafana/*
 /container/loki/*
 /container/prometheus/*
+.DS_Store
+examples/java/grafana-opentelemetry-java.jar

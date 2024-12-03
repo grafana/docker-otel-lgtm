@@ -8,6 +8,8 @@ jar=grafana-opentelemetry-java.jar
 function run() {
     service=$1
     port=$2
+    ps aux | grep "$service" | grep -v grep | awk '{print $2}' | xargs kill -9 || true
+
     export SERVER_PORT=$port
     export OTEL_RESOURCE_ATTRIBUTES="service.name=$service,service.instance.id=$service"
     # uncomment the next line to switch to Prometheus native histograms.

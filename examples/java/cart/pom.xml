@@ -5,7 +5,7 @@
 
     <groupId>com.grafana.example</groupId>
     <artifactId>cart</artifactId>
-    <version>1.0.0k-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>Hackathon et-phone-home cart</name>
 

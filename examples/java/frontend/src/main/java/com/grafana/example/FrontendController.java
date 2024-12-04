@@ -22,11 +22,5 @@ public class FrontendController {
         return checkOutRestTemplate.exchange("http://localhost:8082/checkout",
                 HttpMethod.GET,
                 new HttpEntity<>(headers), String.class).getBody();
-
-        // checkout returns result from cart
-        // cart returns result cart ID
-        // customer ID "error" will cause an error in checkout service
-        // this will cause the sample logic to keep this span and tell both frontend and cart to keep the span
-        // for now, we need to add the "sampled" attribute to the span
     }
 }

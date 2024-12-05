@@ -1,5 +1,7 @@
 package com.grafana.example;
 
+import java.util.Optional;
+import java.util.Random;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -13,9 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Optional;
-import java.util.Random;
 
 @RestController
 public class CheckoutController {
@@ -32,27 +31,37 @@ public class CheckoutController {
         //    but 20 traces for the cart service
         callCart(customerId);
 
-        Thread.sleep((long) (Math.abs((random.nextGaussian() + 1.0) * 200.0)));
+        // 10ms base request rate with 0-10ms fluctuation
+        Thread.sleep((long) (10 + Math.abs((random.nextGaussian() + 1.0) * 10)));
+
+        // 1% of requests take much longer
+        if (random.nextInt(100) < 1) {
+          Thread.sleep((long) (Math.abs((random.nextGaussian() + 1.0) * 100.0)));
+        }
 
         try {
             // todo why did this not work?
-//            ((ExtendedSpanBuilder) GlobalOpenTelemetry.getTracer("app").spanBuilder("internal")).startAndRun(() -> {
-//                            if (random.nextInt(10) < 2) {
-//                                throw new RuntimeException("Simulating application error");
-//                            }
-//                        });
+            // ((ExtendedSpanBuilder) GlobalOpenTelemetry.getTracer("app").spanBuilder("internal")).startAndRun(() -> {
+            //     if (random.nextInt(10) < 2) {
+            //         throw new RuntimeException("Simulating application error");
+            //     }
+            // });
 
             Tracer tracer = GlobalOpenTelemetry.getTracer("app");
             Span span = tracer.spanBuilder("internal").startSpan();
+
             try (Scope scope = span.makeCurrent()) {
-//                if (random.nextInt(10) < 2) {
+                // 1% error rate
+                if (random.nextInt(100) <= 1) {
                     throw new RuntimeException("Simulating application error");
-//                }
-            } catch (RuntimeException e) {
+                }
+            }
+            catch (RuntimeException e) {
                 span.recordException(e);
                 span.setStatus(StatusCode.ERROR);
                 throw e;
-            } finally {
+            }
+            finally {
                 span.end();
             }
         } catch (RuntimeException e) {

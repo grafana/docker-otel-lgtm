@@ -1,5 +1,8 @@
 package com.grafana.example;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 import io.opentelemetry.api.trace.Span;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,22 +13,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
 public class FrontendController {
 
     private final RestTemplate checkOutRestTemplate = new RestTemplate();
+    private final Random random = new Random(0);
 
     @GetMapping("/shop")
     public String index(@RequestParam("customer") Optional<String> customerId) throws InterruptedException {
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Customer-ID", customerId.orElse("anonymous"));
+
         ResponseEntity<String> response = checkOutRestTemplate.exchange("http://localhost:8082/checkout",
                 HttpMethod.GET,
                 new HttpEntity<>(headers), String.class);
+
         List<String> list = response.getHeaders().get("Server-Timing");
+
         if (list != null) {
             for (String timing : list) {
                 if (timing.endsWith("-01\"")) {
@@ -35,6 +39,15 @@ public class FrontendController {
                 }
             }
         }
+
+        // 10ms base request rate with 0-10ms fluctuation
+        Thread.sleep((long) (10 + Math.abs((random.nextGaussian() + 1.0) * 10)));
+
+        // 1% of requests take much longer
+        if (random.nextInt(100) <= 1) {
+          Thread.sleep((long) (Math.abs((random.nextGaussian() + 1.0) * 100.0)));
+        }
+
         return response.getBody();
     }
 }

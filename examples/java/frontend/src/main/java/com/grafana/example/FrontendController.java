@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -24,11 +25,14 @@ public class FrontendController {
         ResponseEntity<String> response = checkOutRestTemplate.exchange("http://localhost:8082/checkout",
                 HttpMethod.GET,
                 new HttpEntity<>(headers), String.class);
-        for (String timing : response.getHeaders().get("Server-Timing")) {
-            if (timing.endsWith("-01\"")) {
-                // wor
-                // sampled traces are marked with a server timing header
-                Span.current().setAttribute("sampled", true);
+        List<String> list = response.getHeaders().get("Server-Timing");
+        if (list != null) {
+            for (String timing : list) {
+                if (timing.endsWith("-01\"")) {
+                    // sampled traces are marked with a server timing header
+                    Span.current().setAttribute("sampled", true);
+                    Span.current().setAttribute("sampled.comment", "child-workaround");
+                }
             }
         }
         return response.getBody();

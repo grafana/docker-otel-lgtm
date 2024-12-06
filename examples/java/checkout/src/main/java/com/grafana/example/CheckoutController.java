@@ -35,13 +35,13 @@ public class CheckoutController {
         // 10ms base request rate with 0-10ms fluctuation
         Thread.sleep((long) (10 + Math.abs((random.nextGaussian() + 1.0) * 10)));
 
-        // 1% of requests take much longer
-        if (random.nextInt(100) < 1) {
+        // 0.1% of requests
+        if (random.nextInt(1000) <= 1) {
             Thread.sleep((long) (Math.abs((random.nextGaussian() + 1.0) * 100.0)));
         }
 
-        // 1% of requests use more cpu
-        if (random.nextInt(100) < 1) {
+        // 0.1% of requests
+        if (random.nextInt(1000) <= 1) {
             try {
                 // 10 million
                 for (int i = 1; i <= 10000000; i++) {

@@ -1,9 +1,5 @@
 package com.grafana.example;
 
-import java.security.MessageDigest;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 import io.opentelemetry.api.trace.Span;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.security.MessageDigest;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 @RestController
 public class FrontendController {
@@ -34,9 +35,9 @@ public class FrontendController {
         if (list != null) {
             for (String timing : list) {
                 if (timing.endsWith("-01\"")) {
+                    // workaround: the java agent should read the server timing header and mark the trace as sampled
                     // sampled traces are marked with a server timing header
-                    Span.current().setAttribute("sampled", true);
-                    Span.current().setAttribute("sampled.comment", "child-workaround");
+                    Span.current().setAttribute("sampled.reason", "child");
                 }
             }
         }

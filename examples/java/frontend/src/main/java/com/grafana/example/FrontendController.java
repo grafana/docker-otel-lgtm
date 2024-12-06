@@ -1,5 +1,6 @@
 package com.grafana.example;
 
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -46,6 +47,20 @@ public class FrontendController {
         // 1% of requests take much longer
         if (random.nextInt(100) <= 1) {
           Thread.sleep((long) (Math.abs((random.nextGaussian() + 1.0) * 100.0)));
+        }
+
+        // 1% of requests use more cpu
+        if (random.nextInt(100) < 1) {
+            try {
+                // 10 million
+                for (int i = 1; i <= 10000000; i++) {
+                    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                    digest.update(("" + random.nextInt()).getBytes());
+                }
+            }
+            catch(Exception ex){
+                throw new RuntimeException(ex);
+            }
         }
 
         return response.getBody();

@@ -27,12 +27,12 @@ public class CartController {
         Thread.sleep((long) (10 + Math.abs((random.nextGaussian() + 1.0) * 10)));
 
         // 0.1% of requests
-        if (random.nextInt(1000) <= 1) {
+        if (random.nextInt(10000) <= 1) {
           Thread.sleep((long) (Math.abs((random.nextGaussian() + 1.0) * 100.0)));
         }
 
         // 0.1% of requests
-        if (random.nextInt(1000) <= 1) {
+        if (random.nextInt(10000) <= 1) {
             try {
                 // 10 million
                 for (int i = 1; i <= 10000000; i++) {

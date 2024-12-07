@@ -41,6 +41,15 @@ You can enable logging for troubleshooting:
 
 This has nothing to do with the application logs, which are collected by OpenTelemetry.
 
+#### Persist data across container instantiation
+
+The various components in the repo are configured to write their data to the /data
+directory. If you need to persist data across containers being created and destroyed,
+you can mount a volume to the /data directory. Note that this image is intended for
+development, demo, and testing environments and persisting data to an external volume
+doesn't change that. However, this feature could be useful in certain cases for 
+some users even in testing situations.
+
 ## Run lgtm in kubernetes
 
 ```sh

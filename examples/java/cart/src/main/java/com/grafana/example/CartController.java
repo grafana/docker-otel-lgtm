@@ -1,18 +1,17 @@
 package com.grafana.example;
 
-import java.security.MessageDigest;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.security.MessageDigest;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 @RestController
 public class CartController {
@@ -32,7 +31,7 @@ public class CartController {
         }
 
         // 0.1% of requests
-        if (random.nextInt(10000) <= 1) {
+        if (random.nextInt(20000) <= 1) {
             try {
                 // 10 million
                 for (int i = 1; i <= 10000000; i++) {

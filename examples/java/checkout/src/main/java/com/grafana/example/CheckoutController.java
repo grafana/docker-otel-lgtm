@@ -1,8 +1,5 @@
 package com.grafana.example;
 
-import java.security.MessageDigest;
-import java.util.Optional;
-import java.util.Random;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -16,6 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import java.security.MessageDigest;
+import java.util.Optional;
+import java.util.Random;
 
 @RestController
 public class CheckoutController {
@@ -41,7 +42,7 @@ public class CheckoutController {
         }
 
         // 0.1% of requests
-        if (random.nextInt(10000) <= 1) {
+        if (random.nextInt(20000) <= 1) {
             try {
                 // 10 million
                 for (int i = 1; i <= 1000000; i++) {

@@ -1,3 +1,7 @@
 #!/bin/bash
 
-watch 'curl -s http://localhost:8080/rolldice; curl -s http://localhost:8081/rolldice; curl -s http://localhost:8082/rolldice; curl -s http://localhost:8083/rolldice'
+echo "Generating traffic to the shop service at $(date)"
+
+# generate a request every 100ms
+# run for 5s and kill
+watch -n 0.1 'curl -s http://localhost:8081/shop' & sleep 600 ; kill $!

@@ -3,7 +3,7 @@
 set -euox pipefail
 
 ./mvnw clean package
-jar=grafana-opentelemetry-java.jar
+jar=opentelemetry-javaagent-2.10.0.jar
 
 function run() {
     service=$1

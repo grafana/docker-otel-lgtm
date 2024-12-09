@@ -14,5 +14,6 @@
         <module>frontend</module>
         <module>checkout</module>
         <module>cart</module>
+        <module>auth</module>
    </modules>
 </project>

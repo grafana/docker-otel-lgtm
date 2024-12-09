@@ -8,7 +8,6 @@ import io.opentelemetry.context.Scope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +20,7 @@ import java.util.Random;
 @RestController
 public class CheckoutController {
 
-    private final RestTemplate checkOutRestTemplate = new RestTemplate();
+    private final RestTemplate restTemplate = new RestTemplate();
     private final Random random = new Random(0);
 
     @GetMapping("/checkout")
@@ -31,8 +30,12 @@ public class CheckoutController {
         //    (because we don't know that the trace is interesting yet)
         // 2. if we keep 10 traces per minute per service, we should see 10 traces for the check service
         //    but 20 traces for the cart service
-        callCart(customerId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Customer-ID", customerId.orElse("anonymous"));
 
+        restTemplate.exchange("http://localhost:8084/auth",
+                HttpMethod.GET,
+                new HttpEntity<>(headers), String.class).getBody();
         // 10ms base request rate with 0-10ms fluctuation
         Thread.sleep((long) (10 + Math.abs((random.nextGaussian() + 1.0) * 10)));
 
@@ -49,8 +52,7 @@ public class CheckoutController {
                     MessageDigest digest = MessageDigest.getInstance("SHA-256");
                     digest.update(("" + random.nextInt()).getBytes());
                 }
-            }
-            catch(Exception ex){
+            } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
         }
@@ -62,38 +64,30 @@ public class CheckoutController {
             //         throw new RuntimeException("Simulating application error");
             //     }
             // });
+                Tracer tracer = GlobalOpenTelemetry.getTracer("app");
+                Span span = tracer.spanBuilder("internal").startSpan();
 
-            Tracer tracer = GlobalOpenTelemetry.getTracer("app");
-            Span span = tracer.spanBuilder("internal").startSpan();
-
-            try (Scope scope = span.makeCurrent()) {
+                try (Scope scope = span.makeCurrent()) {
                 // 1% error rate
                 if (customerId.orElse("").equals("error") || random.nextInt(100) <= 1) {
                     throw new RuntimeException("Simulating application error");
                 }
             }
             catch (RuntimeException e) {
-                span.recordException(e);
-                span.setStatus(StatusCode.ERROR);
-                throw e;
+                    span.recordException(e);
+                    span.setStatus(StatusCode.ERROR);
+                    throw e;
+                } finally {
+                    span.end();
+                }
+            } catch (RuntimeException e) {
+                // we don't want to propagate this exception to the client
+                // but the whole trace should be kept
             }
-            finally {
-                span.end();
-            }
-        } catch (RuntimeException e) {
-            // we don't want to propagate this exception to the client
-            // but the whole trace should be kept
+
+            return restTemplate.exchange("http://localhost:8083/cart",
+                    HttpMethod.GET,
+                    new HttpEntity<>(headers), String.class).getBody();
         }
 
-        return callCart(customerId).getBody();
     }
-
-    private ResponseEntity<String> callCart(Optional<String> customerId) {
-        HttpHeaders headers = new HttpHeaders();
-               headers.add("X-Customer-ID", customerId.orElse("anonymous"));
-
-        return checkOutRestTemplate.exchange("http://localhost:8083/cart",
-                HttpMethod.GET,
-                new HttpEntity<>(headers), String.class);
-    }
-}

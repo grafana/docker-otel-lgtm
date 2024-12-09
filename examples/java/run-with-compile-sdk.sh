@@ -15,7 +15,7 @@ function run() {
     local service=$1
     local port=$2
     local debug=${3:-}
-    ps aux | grep "$service" | grep -v grep | awk '{print $2}' | xargs kill -9 || true
+    ps aux | grep java | grep "$service" | grep -v grep | awk '{print $2}' | xargs kill -9 || true
 
     export SERVER_PORT=$port
     export OTEL_RESOURCE_ATTRIBUTES="service.name=$service,service.instance.id=$service"
@@ -25,5 +25,6 @@ function run() {
 }
 
 run frontend 8081
-run checkout 8082 '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'
-run cart 8083
+run checkout 8082 '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006'
+run cart 8083     '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005'
+run auth 8084

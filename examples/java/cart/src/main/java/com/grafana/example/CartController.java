@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import java.security.MessageDigest;
 import java.util.Map;
@@ -16,7 +15,6 @@ import java.util.UUID;
 @RestController
 public class CartController {
 
-	private final RestTemplate checkOutRestTemplate = new RestTemplate();
     private final Random random = new Random(0);
 
 	@GetMapping("/cart")

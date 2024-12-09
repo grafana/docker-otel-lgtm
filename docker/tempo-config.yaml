@@ -15,18 +15,18 @@ storage:
   trace:
     backend: local
     wal:
-      path: /tmp/tempo/wal
+      path: /data/tempo/wal
     local:
-      path: /tmp/tempo/blocks
+      path: /data/tempo/blocks
 
 metrics_generator:
   processor:
     local_blocks:
       filter_server_spans: false
   traces_storage:
-    path: /tmp/tempo/generator/traces
+    path: /data/tempo/generator/traces
   storage:
-    path: /tmp/tempo/generator/wal
+    path: /data/tempo/generator/wal
     # TODO: support otlp at metrics_generator
     remote_write:
       - url: http://localhost:9090/api/v1/write

@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+data:
+  tempo-config.yaml: |-
+    server:
+      http_listen_port: 3200
+      grpc_listen_port: 9096
+
+    distributor:
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: "localhost:4417"
+            http:
+              endpoint: "localhost:4418"
+
+    storage:
+      trace:
+        backend: local
+        wal:
+          path: /tmp/tempo/wal
+        local:
+          path: /tmp/tempo/blocks
+
+    metrics_generator:
+      processor:
+        local_blocks:
+          filter_server_spans: false
+        span_metrics:
+          dimensions:
+            - service_name
+            - operation
+            - status_code
+      traces_storage:
+        path: /tmp/tempo/generator/traces
+      storage:
+        path: /tmp/tempo/generator/wal
+        remote_write:
+          - url: http://localhost:9090/api/v1/write
+            send_exemplars: true
+
+    overrides:
+      metrics_generator_processors: [ service-graphs, local-blocks, span-metrics ]
+  otel-collector-config.yaml: |-
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+      prometheus/collector:
+        config:
+          scrape_configs:
+            - job_name: "opentelemetry-collector"
+              static_configs:
+                - targets: ["localhost:8888"]
+            - job_name: "tempo"
+              static_configs:
+                - targets: ["localhost:3200"]
+    
+    processors:
+      batch:
+    
+    exporters:
+      otlphttp/metrics:
+        endpoint: http://localhost:9090/api/v1/otlp
+        tls:
+          insecure: true
+      otlphttp/traces:
+        endpoint: http://localhost:4418
+        tls:
+          insecure: true
+      otlphttp/logs:
+        endpoint: http://localhost:3100/otlp
+        tls:
+          insecure: true
+      debug/metrics:
+        verbosity: detailed
+      debug/traces:
+        verbosity: detailed
+      debug/logs:
+        verbosity: detailed
+    
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlphttp/traces]
+          #exporters: [otlphttp/traces,debug/traces]
+        metrics:
+          receivers: [otlp, prometheus/collector]
+          processors: [batch]
+          exporters: [otlphttp/metrics]
+          #exporters: [otlphttp/metrics,debug/metrics]
+        logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlphttp/logs]
+          #exporters: [otlphttp/logs,debug/logs]

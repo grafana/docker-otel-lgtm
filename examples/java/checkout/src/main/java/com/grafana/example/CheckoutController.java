@@ -10,7 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,7 +25,7 @@ public class CheckoutController {
     private final Random random = new Random(0);
 
     @GetMapping("/checkout")
-    public String index(@RequestParam("customer") Optional<String> customerId) throws InterruptedException {
+    public String index(@RequestHeader("X-Customer-ID") Optional<String> customerId) throws InterruptedException {
         // call cart before and after internal call to simulate a more realistic scenario
         // 1. if an error occurs in the internal call, the second call to cart should be sampled, but not the first
         //    (because we don't know that the trace is interesting yet)
@@ -68,7 +68,7 @@ public class CheckoutController {
 
             try (Scope scope = span.makeCurrent()) {
                 // 1% error rate
-                if (random.nextInt(100) <= 1) {
+                if (customerId.orElse("").equals("error") || random.nextInt(100) <= 1) {
                     throw new RuntimeException("Simulating application error");
                 }
             }

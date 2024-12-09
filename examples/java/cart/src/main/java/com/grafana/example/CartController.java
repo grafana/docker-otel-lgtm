@@ -3,7 +3,7 @@ package com.grafana.example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,7 +20,7 @@ public class CartController {
     private final Random random = new Random(0);
 
 	@GetMapping("/cart")
-	public ResponseEntity<Object> index(@RequestParam("customer") Optional<String> customerId) throws InterruptedException {
+	public ResponseEntity<Object> index(@RequestHeader("X-Customer-ID") Optional<String> customerId) throws InterruptedException {
 
         // 10ms base request rate with 0-10ms fluctuation
         Thread.sleep((long) (10 + Math.abs((random.nextGaussian() + 1.0) * 10)));

@@ -45,6 +45,17 @@ data:
     overrides:
       metrics_generator_processors: [ service-graphs, local-blocks, span-metrics ]
   otel-collector-config.yaml: |-
+    extensions:
+      basicauth/grafana_cloud:
+        # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/basicauthextension
+        client_auth:
+          username: "user"
+          password: "password"
+    
+    connectors:
+      grafanacloud:
+        # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/grafanacloudconnector
+        host_identifiers: ["host.name"]
     receivers:
       otlp:
         protocols:
@@ -66,6 +77,11 @@ data:
       batch:
     
     exporters:
+      otlphttp/grafana_cloud:
+        # https://github.com/open-telemetry/opentelemetry-collector/tree/main/exporter/otlpexporter
+        endpoint: "otlp endpoint"
+        auth:
+          authenticator: basicauth/grafana_cloud
       otlphttp/metrics:
         endpoint: http://localhost:9090/api/v1/otlp
         tls:
@@ -86,19 +102,20 @@ data:
         verbosity: detailed
     
     service:
+      extensions: [basicauth/grafana_cloud]
       pipelines:
         traces:
           receivers: [otlp]
           processors: [batch]
-          exporters: [otlphttp/traces]
+          exporters: [otlphttp/traces, otlphttp/grafana_cloud]
           #exporters: [otlphttp/traces,debug/traces]
         metrics:
           receivers: [otlp, prometheus/collector]
           processors: [batch]
-          exporters: [otlphttp/metrics]
+          exporters: [otlphttp/metrics, otlphttp/grafana_cloud]
           #exporters: [otlphttp/metrics,debug/metrics]
         logs:
           receivers: [otlp]
           processors: [batch]
-          exporters: [otlphttp/logs]
+          exporters: [otlphttp/logs, otlphttp/grafana_cloud]
           #exporters: [otlphttp/logs,debug/logs]

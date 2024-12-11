@@ -4,6 +4,7 @@ otlp:
     - service.instance.id
     - service.name
     - service.namespace
+    - service.version
     - cloud.availability_zone
     - cloud.region
     - container.name

@@ -1,4 +1,8 @@
 # Contributing
+                        
+## Building locally
+
+`./build-lgtm.sh` will build the docker image locally.
 
 ## Acceptance Tests
 

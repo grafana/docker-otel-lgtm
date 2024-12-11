@@ -23,14 +23,18 @@ metrics_generator:
   processor:
     local_blocks:
       filter_server_spans: false
+    span_metrics:
+      dimensions:
+        - service_name
+        - operation
+        - status_code
   traces_storage:
     path: /tmp/tempo/generator/traces
   storage:
     path: /tmp/tempo/generator/wal
-    # TODO: support otlp at metrics_generator
     remote_write:
       - url: http://localhost:9090/api/v1/write
         send_exemplars: true
 
 overrides:
-  metrics_generator_processors: [service-graphs, local-blocks]
+  metrics_generator_processors: [service-graphs, local-blocks, span-metrics]

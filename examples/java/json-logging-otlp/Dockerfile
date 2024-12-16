@@ -5,8 +5,7 @@ WORKDIR /usr/src/app/
 COPY ./mvnw pom.xml ./
 COPY ./.mvn ./.mvn
 COPY ./src ./src
-# uncomment the following line when 2.10.0 is released
-# COPY json-logging-otlp/logback-spring.xml ./src/main/resources/logback-spring.xml
+COPY json-logging-otlp/logback-spring.xml ./src/main/resources/logback-spring.xml
 RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests
 
 FROM eclipse-temurin:21-jre

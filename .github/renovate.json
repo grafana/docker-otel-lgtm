@@ -9,6 +9,15 @@
   "platform": "github",
   "forkProcessing": "enabled",
   "repositories": ["grafana/docker-otel-lgtm"],
+  "enabledManagers": [
+    "dockerfile",
+    "github-actions",
+    "custom.regex",
+    "nuget",
+    "gomod",
+    "maven",
+    "pip_requirements"
+  ],
   "packageRules": [
     {
       "matchUpdateTypes": ["major"],

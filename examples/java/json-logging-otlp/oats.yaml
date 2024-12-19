@@ -1,3 +1,4 @@
+---
 # OATS is an acceptance testing framework for OpenTelemetry - https://github.com/grafana/oats/tree/main/yaml
 kubernetes:
   dir: k8s
@@ -15,7 +16,7 @@ expected:
     - logql: '{service_name="dice"} |~ `.*Anonymous player is rolling the dice:.*`'
       regexp: 'Anonymous player is rolling the dice: \d+' # uses formatted message
     - logql: '{service_name="dice"} |~ `.*simulating an error.*`'
-      equals: 'Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: simulating an error] with root cause'
+      equals: "Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: simulating an error] with root cause"
       attributes:
         deployment_environment: staging
         exception_message: "simulating an error"
@@ -27,7 +28,7 @@ expected:
         severity_number: 17
         severity_text: SEVERE
         exception_stacktrace: "java.lang.RuntimeException: simulating an error\
-          \n\tat com.grafana.example.RollController.index(RollController.java:21)\
+          \n\tat com.grafana.example.RollController.index(RollController.java:23)\
           \n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)\
           \n\tat java.base/java.lang.reflect.Method.invoke(Unknown Source)\
           \n\tat org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)\
@@ -106,4 +107,3 @@ expected:
         telemetry_sdk_version: ".*"
 
       no-extra-attributes: true
-

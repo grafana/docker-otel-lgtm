@@ -1,85 +1,54 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
+  "extends": ["config:recommended"],
   "branchPrefix": "grafanarenovatebot/",
   "username": "GrafanaRenovateBot",
   "gitAuthor": "GrafanaRenovateBot <renovategrafana@grafana.com>",
-  "platformCommit": true,
+  "platformCommit": "enabled",
   "dependencyDashboard": false,
   "platform": "github",
   "forkProcessing": "enabled",
-  "repositories": [
-    "grafana/docker-otel-lgtm"
-  ],
+  "repositories": ["grafana/docker-otel-lgtm"],
   "packageRules": [
     {
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "labels": [
-        "update-major"
-      ]
+      "matchUpdateTypes": ["major"],
+      "labels": ["update-major"]
     },
     {
-      "matchUpdateTypes": [
-        "minor"
-      ],
-      "labels": [
-        "update-minor"
-      ]
+      "matchUpdateTypes": ["minor"],
+      "labels": ["update-minor"]
     },
     {
-      "matchUpdateTypes": [
-        "patch"
-      ],
-      "labels": [
-        "automerge-patch"
-      ]
+      "matchUpdateTypes": ["patch"],
+      "labels": ["automerge-patch"]
     },
     {
-      "matchUpdateTypes": [
-        "digest"
-      ],
-      "labels": [
-        "update-digest"
-      ]
+      "matchUpdateTypes": ["digest"],
+      "labels": ["update-digest"]
     },
     {
-      "matchPackageNames": [
-        "open-telemetry/opentelemetry-collector-releases"
-      ],
+      "matchPackageNames": ["open-telemetry/opentelemetry-collector-releases"],
       "allowedVersions": "!/cmd/"
     },
     {
-      "matchPackageNames": [
-        "grafana/loki"
-      ],
+      "matchPackageNames": ["grafana/loki"],
       "allowedVersions": "!/operator/"
     },
     {
-      "matchPackageNames": [
-        "grafana/tempo"
-      ],
+      "matchPackageNames": ["grafana/tempo"],
       "allowedVersions": "!/rc/"
     }
   ],
   "vulnerabilityAlerts": {
     "enabled": true,
-    "labels": [
-      "automerge-security-update"
-    ]
+    "labels": ["automerge-security-update"]
   },
   "osvVulnerabilityAlerts": true,
   "customManagers": [
     {
       "customType": "regex",
       "description": "Update _VERSION variables in Dockerfiles",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$",
-        "(^|/)Dockerfile\\.[^/]*$"
-      ],
+      "fileMatch": ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile\\.[^/]*$"],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s"
       ]

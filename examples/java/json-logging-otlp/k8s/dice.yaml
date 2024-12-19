@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -25,24 +26,23 @@ spec:
         app: dice
     spec:
       containers:
-      - name: dice
-        image: dice:1.1-SNAPSHOT
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 8080
-        env:
-          - name: OTEL_EXPORTER_OTLP_ENDPOINT
-            value: "http://lgtm:4318"
-          - name: OTEL_LOGS_EXPORTER
-            value: "experimental-otlp/stdout"
-          - name: OTEL_RESOURCE_ATTRIBUTES
-            value: service.name=dice,service.namespace=shop,service.version=1.1,deployment.environment=staging
-          - name: OTEL_INSTRUMENTATION_LOGBACK_APPENDER_EXPERIMENTAL_LOG_ATTRIBUTES
-            value: "true"
-          - name: OTEL_INSTRUMENTATION_LOGBACK_APPENDER_EXPERIMENTAL_CAPTURE_KEY_VALUE_PAIR_ATTRIBUTES
-            value: "true"
-          - name: OTEL_INSTRUMENTATION_LOGBACK_APPENDER_EXPERIMENTAL_CAPTURE_MDC_ATTRIBUTES
-            value: "true"
-          - name: SERVICE_NAME
-            value: dice
-
+        - name: dice
+          image: dice:1.1-SNAPSHOT
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://lgtm:4318"
+            - name: OTEL_LOGS_EXPORTER
+              value: "experimental-otlp/stdout"
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.name=dice,service.namespace=shop,service.version=1.1,deployment.environment=staging
+            - name: OTEL_INSTRUMENTATION_LOGBACK_APPENDER_EXPERIMENTAL_LOG_ATTRIBUTES
+              value: "true"
+            - name: OTEL_INSTRUMENTATION_LOGBACK_APPENDER_EXPERIMENTAL_CAPTURE_KEY_VALUE_PAIR_ATTRIBUTES
+              value: "true"
+            - name: OTEL_INSTRUMENTATION_LOGBACK_APPENDER_EXPERIMENTAL_CAPTURE_MDC_ATTRIBUTES
+              value: "true"
+            - name: SERVICE_NAME
+              value: dice

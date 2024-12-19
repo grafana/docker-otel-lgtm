@@ -1,6 +1,8 @@
-.idea
+.idea/
 venv/
 .venv
 /container/grafana/*
 /container/loki/*
 /container/prometheus/*
+.lycheecache
+*.iml

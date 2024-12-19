@@ -15,7 +15,9 @@ source ./venv/bin/activate
 pip install -r requirements.txt
 
 # Step 1: Install the OpenTelemetry SDK
-pip install 'opentelemetry-distro[otlp]==0.46b0'
+# renovate: datasource=github-releases depName=opentelemetry-python-contrib packageName=open-telemetry/opentelemetry-python-contrib
+opentelemetry_distro_version=0.46b0
+pip install "opentelemetry-distro[otlp]==${opentelemetry_distro_version}"
 opentelemetry-bootstrap -a install
 
 # Step 2: Run the application

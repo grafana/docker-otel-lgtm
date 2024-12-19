@@ -10,17 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SpringBootApp {
 
-    /**
-     * Redirect to {@link RollController}
-     */
-    @GetMapping("/")
-    public void redirect(HttpServletResponse httpServletResponse) {
-        httpServletResponse.setHeader("Location", "/rolldice");
-        httpServletResponse.setStatus(302);
-    }
+  /** Redirect to {@link RollController} */
+  @GetMapping("/")
+  public void redirect(HttpServletResponse httpServletResponse) {
+    httpServletResponse.setHeader("Location", "/rolldice");
+    httpServletResponse.setStatus(302);
+  }
 
-    public static void main(String[] args) {
-        SpringApplication.run(SpringBootApp.class, args);
-    }
-
+  public static void main(String[] args) {
+    SpringApplication.run(SpringBootApp.class, args);
+  }
 }

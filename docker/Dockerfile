@@ -1,4 +1,5 @@
-FROM redhat/ubi9
+# hadolint global ignore=DL3059
+FROM redhat/ubi9:9.5
 
 # renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
 ENV GRAFANA_VERSION=v11.4.0
@@ -20,7 +21,8 @@ ENV TARGETARCH=${TARGETARCH}
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm
 
-RUN yum install -y unzip jq procps dos2unix
+# hadolint ignore=DL3033
+RUN yum install -y unzip jq procps dos2unix && yum clean all
 
 RUN bash -c 'ARCHIVE=grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
     curl -sOL https://dl.grafana.com/oss/release/"${ARCHIVE}" && \
@@ -68,6 +70,7 @@ COPY run-tempo.sh .
 COPY otelcol-config.yaml .
 COPY run-otelcol.sh .
 COPY run-all.sh .
+# hadolint ignore=SC2038,DL4006
 RUN find . -maxdepth 1 -type f | xargs dos2unix
 
-CMD /otel-lgtm/run-all.sh
+CMD ["/otel-lgtm/run-all.sh"]

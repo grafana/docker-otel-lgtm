@@ -2,7 +2,7 @@
 
 RELEASE=${1:-latest}
 
-docker pull docker.io/grafana/otel-lgtm:${RELEASE}
+docker pull docker.io/grafana/otel-lgtm:"${RELEASE}"
 
 docker run \
   --name lgtm \
@@ -11,8 +11,8 @@ docker run \
   -p 4318:4318 \
   --rm \
   -ti \
-  -v $PWD/container/grafana:/data/grafana \
-  -v $PWD/container/prometheus:/data/prometheus \
-  -v $PWD/container/loki:/data/loki \
+  -v "$PWD"/container/grafana:/data/grafana \
+  -v "$PWD"/container/prometheus:/data/prometheus \
+  -v "$PWD"/container/loki:/data/loki \
   -e GF_PATHS_DATA=/data/grafana \
-  docker.io/grafana/otel-lgtm:${RELEASE}
+  docker.io/grafana/otel-lgtm:"${RELEASE}"

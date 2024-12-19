@@ -2,7 +2,9 @@
 
 set -euo pipefail
 
-cd "$(dirname "$0")/.."
+dir="$(dirname "$0")"
+
+pushd "$dir/.."
 
 echo "Fix markdownlint issues"
 markdownlint -f -i container -i examples/python/venv .
@@ -10,9 +12,7 @@ markdownlint -f -i container -i examples/python/venv .
 echo "Check links"
 lychee .
 
+popd
+
 echo "Run Super-Linter"
-docker run \
-  -e LOG_LEVEL=DEBUG \
-  -e RUN_LOCAL=true \
-  -v .:/tmp/lint \
-  ghcr.io/super-linter/super-linter:latest
+"$dir"/super-linter.sh

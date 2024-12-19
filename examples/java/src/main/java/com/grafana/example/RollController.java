@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/** A simple controller that simulates rolling a dice. */
 @RestController
 public class RollController {
 
   private static final Logger logger = LoggerFactory.getLogger(RollController.class);
   private final Random random = new Random(0);
 
+  /** Simulates rolling a dice. */
   @GetMapping("/rolldice")
   public String index(@RequestParam("player") Optional<String> player) throws InterruptedException {
     Thread.sleep((long) (Math.abs((random.nextGaussian() + 1.0) * 200.0)));
@@ -29,7 +31,7 @@ public class RollController {
     return Integer.toString(result);
   }
 
-  public int getRandomNumber(int min, int max) {
+  private int getRandomNumber(int min, int max) {
     return random.nextInt(min, max + 1);
   }
 }

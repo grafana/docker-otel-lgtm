@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -56,7 +57,7 @@ data:
           - id: move_service_name
             type: move
             from: attributes.mdc["service.name"]
-            to: resource["service.name"]          
+            to: resource["service.name"]
           - id: move_service_version
             type: move
             from: attributes.mdc["service.version"]
@@ -101,13 +102,13 @@ data:
             field: attributes.loggerName
           - id: remove_timestamp
             type: remove
-            field: attributes.timestamp          
+            field: attributes.timestamp
           - id: remove_observed_timestamp
             type: remove
             field: attributes["observed.timestamp"]
           - id: remove_level
             type: remove
-            field: attributes.level          
+            field: attributes.level
           - id: remove_detected_level
             type: remove
             field: attributes["detected.level"]
@@ -134,7 +135,7 @@ data:
             field: attributes["log.iostream"]
           - id: remove_time
             type: remove
-            field: attributes.time  
+            field: attributes.time
     
     processors:
       batch:
@@ -174,7 +175,7 @@ data:
         logs/json-elastic:
           receivers: [ filelog/json-logback ]
           processors: [ batch ]
-          exporters: [ otlphttp/logs ] 
+          exporters: [ otlphttp/logs ]
           # exporters: [ otlphttp/logs, debug/logs ]  # Uncomment this line to enable debug logging
           
           

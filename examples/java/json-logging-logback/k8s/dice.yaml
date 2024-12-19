@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -25,20 +26,20 @@ spec:
         app: dice
     spec:
       containers:
-      - name: dice
-        image: dice:1.1-SNAPSHOT
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 8080
-        env:
-          - name: OTEL_EXPORTER_OTLP_ENDPOINT
-            value: "http://lgtm:4318"
-          - name: OTEL_LOGS_EXPORTER
-            value: "none" # to avoid duplicate logs
-          - name: OTEL_RESOURCE_ATTRIBUTES
-            value: service.name=dice,service.namespace=shop,service.version=1.1,deployment.environment=staging
-          - name: OTEL_INSTRUMENTATION_COMMON_MDC_RESOURCE_ATTRIBUTES
-            value: "service.namespace,service.name,service.instance.id,service.version,deployment.environment"
-          - name: SERVICE_NAME
-            value: dice
+        - name: dice
+          image: dice:1.1-SNAPSHOT
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://lgtm:4318"
+            - name: OTEL_LOGS_EXPORTER
+              value: "none" # to avoid duplicate logs
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: service.name=dice,service.namespace=shop,service.version=1.1,deployment.environment=staging
+            - name: OTEL_INSTRUMENTATION_COMMON_MDC_RESOURCE_ATTRIBUTES
+              value: "service.namespace,service.name,service.instance.id,service.version,deployment.environment"
+            - name: SERVICE_NAME
+              value: dice
 

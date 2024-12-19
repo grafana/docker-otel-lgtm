@@ -2,7 +2,7 @@
 name: Renovate
 on:
   schedule:
-    - cron: '0 */4 * * *'
+    - cron: "0 */4 * * *"
 jobs:
   renovate:
     permissions:
@@ -24,4 +24,4 @@ jobs:
         with:
           renovate-version: 37.5.3@sha256:613fe86ea2730c062a42bf097a02563e35cb0d8df4fef08d2c4e50b8cd2ccdbc
           configurationFile: .github/renovate.json
-          token: '${{ steps.generate-token.outputs.token }}'
+          token: "${{ steps.generate-token.outputs.token }}"

@@ -8,7 +8,7 @@ expected:
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'
       spans:
-        - name: 'GET /rolldice'
+        - name: "GET /rolldice"
           attributes:
             otel.library.name: opentelemetry.instrumentation.flask
   metrics:
@@ -17,4 +17,4 @@ expected:
   logs:
     - logql: '{service_name="rolldice"} |~ `Anonymous player is rolling the dice.*`'
       contains:
-        - 'Anonymous player is rolling the dice'
+        - "Anonymous player is rolling the dice"

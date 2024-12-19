@@ -1,17 +1,17 @@
 apiVersion: 1
 
 providers:
-  - name: 'RED Metrics (classic histogram)'
+  - name: "RED Metrics (classic histogram)"
     type: file
     options:
       path: /otel-lgtm/grafana-dashboard-red-metrics-classic.json
       foldersFromFilesStructure: false
-  - name: 'RED Metrics (exponential/native histogram)'
+  - name: "RED Metrics (exponential/native histogram)"
     type: file
     options:
       path: /otel-lgtm/grafana-dashboard-red-metrics-native.json
       foldersFromFilesStructure: false
-  - name: 'JVM Metrics'
+  - name: "JVM Metrics"
     type: file
     options:
       path: /otel-lgtm/grafana-dashboard-jvm-metrics.json

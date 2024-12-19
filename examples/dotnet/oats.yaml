@@ -8,7 +8,7 @@ expected:
   traces:
     - traceql: '{ span.http.route = "/rolldice/{player?}" }'
       spans:
-        - name: 'GET /rolldice/{player?}' # should be "GET /rolldice"
+        - name: "GET /rolldice/{player?}" # should be "GET /rolldice"
           attributes:
             otel.library.name: Microsoft.AspNetCore
   # https://opentelemetry.io/docs/specs/semconv/dotnet/dotnet-http-metrics/#metric-httpclientactive_requests
@@ -18,4 +18,4 @@ expected:
   logs:
     - logql: '{service_name="rolldice"} |~ `Anonymous player is rolling the dice.*`'
       contains:
-        - 'Anonymous player is rolling the dice'
+        - "Anonymous player is rolling the dice"

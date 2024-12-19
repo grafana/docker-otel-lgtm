@@ -1,6 +1,2 @@
 ---
-extends: default
-
-rules:
-  # don't bother me with this rule
-  indentation: line-length
+extends: relaxed

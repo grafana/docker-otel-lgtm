@@ -136,13 +136,13 @@ data:
           - id: remove_time
             type: remove
             field: attributes.time
-    
+
     processors:
       batch:
       resourcedetection:
         detectors: [ "env", "system" ]
         override: false
-    
+
     exporters:
       otlphttp/metrics:
         endpoint: http://localhost:9090/api/v1/otlp
@@ -157,7 +157,7 @@ data:
       debug/logs:
         verbosity: detailed
       nop:
-    
+
     service:
       pipelines:
         traces:
@@ -177,5 +177,3 @@ data:
           processors: [ batch ]
           exporters: [ otlphttp/logs ]
           # exporters: [ otlphttp/logs, debug/logs ]  # Uncomment this line to enable debug logging
-          
-          

@@ -1,3 +1,4 @@
+---
 name: Acceptance Tests
 
 on: [pull_request]

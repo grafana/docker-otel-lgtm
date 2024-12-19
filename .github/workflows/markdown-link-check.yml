@@ -1,10 +1,10 @@
+---
 name: markdown-link-check
 
 on:
   pull_request:
-    branches: [ 'main*' ]
     paths:
-    - '**.md'
+      - '**.md'
 
 jobs:
   markdown-link-check:

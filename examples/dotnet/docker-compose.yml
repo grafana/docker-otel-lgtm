@@ -1,3 +1,4 @@
+---
 services:
   rolldice:
     image: rolldice

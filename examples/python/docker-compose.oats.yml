@@ -1,3 +1,4 @@
+---
 # OATS is an acceptance testing framework for OpenTelemetry - https://github.com/grafana/oats/tree/main/yaml
 version: '3.4'
 

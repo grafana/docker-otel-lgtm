@@ -12,7 +12,7 @@
   "enabledManagers": [
     "dockerfile",
     "github-actions",
-    "regex",
+    "custom.regex",
     "dotnet",
     "golang",
     "java",

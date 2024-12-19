@@ -1,0 +1,25 @@
+name: Lint
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    name: Lint
+    runs-on: ubuntu-24.04
+
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Super-linter
+        uses: super-linter/super-linter@v7.2.1
+        env:
+          # To report GitHub Actions status checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

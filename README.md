@@ -1,5 +1,7 @@
 # docker-otel-lgtm
 
+[![Super-Linter](https://github.com/grafana/docker-otel-lgtm/actions/workflows/super-linter.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
+
 An OpenTelemetry backend in a Docker image.
 
 ![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana](img/overview.png)
@@ -47,7 +49,7 @@ The various components in the repo are configured to write their data to the /da
 directory. If you need to persist data across containers being created and destroyed,
 you can mount a volume to the /data directory. Note that this image is intended for
 development, demo, and testing environments and persisting data to an external volume
-doesn't change that. However, this feature could be useful in certain cases for 
+doesn't change that. However, this feature could be useful in certain cases for
 some users even in testing situations.
 
 ## Run lgtm in kubernetes

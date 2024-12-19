@@ -1,8 +1,13 @@
 # Contributing
-                        
+
 ## Building locally
 
 `./build-lgtm.sh` will build the docker image locally.
+
+## Linting
+
+- Markdown lint: `markdownlint -f .` (`-f` fixes simple violations, requires [markdownlint](https://github.com/DavidAnson/markdownlint#markdownlint))
+- Markdown link checker: `lychee .` (requires [lychee](https://github.com/lycheeverse/lychee))
 
 ## Acceptance Tests
 

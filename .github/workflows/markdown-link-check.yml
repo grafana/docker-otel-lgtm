@@ -1,0 +1,20 @@
+name: markdown-link-check
+
+on:
+  pull_request:
+    branches: [ 'main*' ]
+    paths:
+    - '**.md'
+
+jobs:
+  markdown-link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          # remove version after next release of lychee-action
+          lycheeVersion: latest
+          args: .
+

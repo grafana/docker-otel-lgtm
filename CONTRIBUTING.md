@@ -6,8 +6,9 @@
 
 ## Linting
 
-- Markdown lint: `markdownlint -f .` (`-f` fixes simple violations, requires [markdownlint](https://github.com/DavidAnson/markdownlint#markdownlint))
+- Markdown lint: `markdownlint -f -i container -i examples/python/venv .` (`-f` fixes simple violations, requires [markdownlint](https://github.com/DavidAnson/markdownlint#markdownlint))
 - Markdown link checker: `lychee .` (requires [lychee](https://github.com/lycheeverse/lychee))
+- Run all checks: `./scripts/lint.sh`
 
 ## Acceptance Tests
 

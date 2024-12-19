@@ -6,6 +6,7 @@ export OTEL_METRIC_EXPORT_INTERVAL="5000"  # so we don't have to wait 60s for me
 export OTEL_RESOURCE_ATTRIBUTES="service.name=rolldice,service.instance.id=localhost:8082"
 
 python3 -m venv venv
+# shellcheck disable=SC1091
 source ./venv/bin/activate
 
 # How to get the requirements.txt file?

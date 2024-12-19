@@ -16,4 +16,4 @@ jobs:
         with:
           # remove version after next release of lychee-action
           lycheeVersion: latest
-          args: .
+          args: --include-fragments .

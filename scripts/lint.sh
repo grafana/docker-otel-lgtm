@@ -6,11 +6,8 @@ dir="$(dirname "$0")"
 
 pushd "$dir/.."
 
-echo "Fix markdownlint issues"
-markdownlint -f -i container -i examples/python/venv .
-
 echo "Check links"
-lychee --cache .
+lychee --cache --include-fragments .
 
 popd
 

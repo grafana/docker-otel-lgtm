@@ -1,2 +1,2 @@
 linters:
-  disable: metalinter
+#  disable: metalinter

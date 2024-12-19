@@ -5,3 +5,4 @@ venv/
 /container/loki/*
 /container/prometheus/*
 .lycheecache
+*.iml

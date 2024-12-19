@@ -28,7 +28,7 @@ expected:
         severity_number: 17
         severity_text: SEVERE
         exception_stacktrace: "java.lang.RuntimeException: simulating an error\
-          \n\tat com.grafana.example.RollController.index(RollController.java:21)\
+          \n\tat com.grafana.example.RollController.index(RollController.java:23)\
           \n\tat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)\
           \n\tat java.base/java.lang.reflect.Method.invoke(Unknown Source)\
           \n\tat org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)\

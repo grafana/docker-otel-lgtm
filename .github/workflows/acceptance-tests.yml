@@ -23,9 +23,11 @@ jobs:
           go-version: "1.23"
           cache-dependency-path: oats/go.sum
       - name: Build Image for integration tests
-        run: ./main/build-lgtm.sh
+        working-directory: ./main
+        run: ./build-lgtm.sh
       - name: Run acceptance tests
-        run: ./main/scripts/run-acceptance-tests.sh
+        working-directory: ./main
+        run: ./scripts/run-acceptance-tests.sh
       - name: upload log file
         uses: actions/upload-artifact@v4
         if: failure()

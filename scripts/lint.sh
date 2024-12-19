@@ -10,7 +10,7 @@ echo "Fix markdownlint issues"
 markdownlint -f -i container -i examples/python/venv .
 
 echo "Check links"
-lychee .
+lychee --cache .
 
 popd
 

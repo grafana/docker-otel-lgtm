@@ -13,10 +13,10 @@
     "dockerfile",
     "github-actions",
     "custom.regex",
-    "dotnet",
-    "golang",
-    "java",
-    "python"
+    "nuget",
+    "gomod",
+    "maven",
+    "pip_requirements"
   ],
   "packageRules": [
     {

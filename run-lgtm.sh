@@ -2,6 +2,8 @@
 
 RELEASE=${1:-latest}
 
+docker pull docker.io/grafana/otel-lgtm:${RELEASE}
+
 docker run \
   --name lgtm \
   -p 3000:3000 \

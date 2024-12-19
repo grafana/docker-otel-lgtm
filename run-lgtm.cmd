@@ -24,6 +24,9 @@ echo Please install Podman or docker
 goto:EOF
 
 :use_podman
+
+podman pull docker.io/grafana/otel-lgtm:%release_tag%
+
 podman run ^
 	--name lgtm ^
 	-p 3000:3000 ^
@@ -39,6 +42,9 @@ podman run ^
 goto:EOF
 
 :use_docker
+
+docker pull docker.io/grafana/otel-lgtm:%release_tag%
+
 docker run ^
 	--name lgtm ^
 	-p 3000:3000 ^

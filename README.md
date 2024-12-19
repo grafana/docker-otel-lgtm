@@ -49,7 +49,7 @@ This has nothing to do with the application logs, which are collected by OpenTel
 
 #### Persist data across container instantiation
 
-The various components in the repo are configured to write their data to the /data
+The various components in the repository are configured to write their data to the /data
 directory. If you need to persist data across containers being created and destroyed,
 you can mount a volume to the /data directory. Note that this image is intended for
 development, demo, and testing environments and persisting data to an external volume

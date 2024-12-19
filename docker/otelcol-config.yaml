@@ -8,9 +8,9 @@ receivers:
   prometheus/collector:
     config:
       scrape_configs:
-        - job_name: 'opentelemetry-collector'
+        - job_name: "opentelemetry-collector"
           static_configs:
-            - targets: ['localhost:8888']
+            - targets: ["localhost:8888"]
 
 processors:
   batch:
@@ -43,7 +43,7 @@ service:
       exporters: [otlphttp/traces]
       #exporters: [otlphttp/traces,debug/traces]
     metrics:
-      receivers: [otlp,prometheus/collector]
+      receivers: [otlp, prometheus/collector]
       processors: [batch]
       exporters: [otlphttp/metrics]
       #exporters: [otlphttp/metrics,debug/metrics]

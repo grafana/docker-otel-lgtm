@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"time"
 
 	"go.opentelemetry.io/contrib/bridges/otelslog"
@@ -95,7 +96,7 @@ func setupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
 
 	err = runtime.Start(runtime.WithMinimumReadMemStatsInterval(time.Second))
 	if err != nil {
-		logger.ErrorContext(ctx, "otel runtime instrumentation failed:", err)
+		logger.ErrorContext(ctx, "otel runtime instrumentation failed:", slog.Any("error", err))
 	}
 
 	return

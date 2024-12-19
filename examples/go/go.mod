@@ -1,6 +1,6 @@
 module dice
 
-go 1.21.1
+go 1.23
 
 require (
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.53.0

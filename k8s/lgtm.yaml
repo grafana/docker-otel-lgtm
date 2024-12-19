@@ -46,10 +46,10 @@ spec:
               command:
                 - cat
                 - /tmp/ready
-      # NOTE: By default OpenShift does not allow writing the root directory.
-      # Thats why the data dirs for grafana, prometheus and loki can not be
-      # created and the pod never becomes ready.
-      # See: https://github.com/grafana/docker-otel-lgtm/issues/132
+          # NOTE: By default OpenShift does not allow writing the root directory.
+          # Thats why the data dirs for grafana, prometheus and loki can not be
+          # created and the pod never becomes ready.
+          # See: https://github.com/grafana/docker-otel-lgtm/issues/132
           volumeMounts:
             - name: tempo-data
               mountPath: /data/tempo

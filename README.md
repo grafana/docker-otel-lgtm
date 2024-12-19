@@ -1,14 +1,20 @@
 # docker-otel-lgtm
 
+[![Super-Linter](https://github.com/grafana/docker-otel-lgtm/actions/workflows/super-linter.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
+
 An OpenTelemetry backend in a Docker image.
 
 ![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana](img/overview.png)
 
-The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry that’s intended for development, demo, and testing environments. If you are looking for a production-ready, out-of-the box solution to monitor applications and minimize MTTR (mean time to resolution) with OpenTelemetry and Prometheus, you should try [Grafana Cloud Application Observability](https://grafana.com/products/cloud/application-observability/).
+The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry that’s intended for development, demo,
+and testing environments.
+If you are looking for a production-ready, out-of-the box solution to monitor applications and minimize
+MTTR (mean time to resolution) with OpenTelemetry and Prometheus,
+you should try [Grafana Cloud Application Observability](https://grafana.com/products/cloud/application-observability/).
 
 ## Documentation
 
-* Blog post: [An OpenTelemetry backend in a Docker image: Introducing grafana/otel-lgtm](https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/)
+- Blog post: [An OpenTelemetry backend in a Docker image: Introducing grafana/otel-lgtm](https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/)
 
 ## Get the Docker image
 
@@ -31,7 +37,7 @@ The Docker image is available on Docker hub: <https://hub.docker.com/r/grafana/o
 You can enable logging for troubleshooting:
 
 | Environment Variable   | Enable Logging in       |
-|------------------------|-------------------------|
+| ---------------------- | ----------------------- |
 | ENABLE_LOGS_GRAFANA    | Grafana                 |
 | ENABLE_LOGS_LOKI       | Loki                    |
 | ENABLE_LOGS_PROMETHEUS | Prometheus              |
@@ -43,11 +49,11 @@ This has nothing to do with the application logs, which are collected by OpenTel
 
 #### Persist data across container instantiation
 
-The various components in the repo are configured to write their data to the /data
+The various components in the repository are configured to write their data to the /data
 directory. If you need to persist data across containers being created and destroyed,
 you can mount a volume to the /data directory. Note that this image is intended for
 development, demo, and testing environments and persisting data to an external volume
-doesn't change that. However, this feature could be useful in certain cases for 
+doesn't change that. However, this feature could be useful in certain cases for
 some users even in testing situations.
 
 ## Run lgtm in kubernetes
@@ -113,7 +119,7 @@ Every example implements a rolldice service, which returns a random number betwe
 Each example uses a different application port (to be able to run all applications at the same time).
 
 | Example | Service URL                           |
-|---------|---------------------------------------|
+| ------- | ------------------------------------- |
 | Java    | `curl http://localhost:8080/rolldice` |
 | Go      | `curl http://localhost:8081/rolldice` |
 | Python  | `curl http://localhost:8082/rolldice` |
@@ -121,4 +127,4 @@ Each example uses a different application port (to be able to run all applicatio
 
 ## Related Work
 
-* Metrics, Logs, Traces and Profiles in Grafana: <https://github.com/grafana/intro-to-mltp>
+- Metrics, Logs, Traces and Profiles in Grafana: <https://github.com/grafana/intro-to-mltp>

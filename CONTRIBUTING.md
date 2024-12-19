@@ -13,7 +13,6 @@
 ## Acceptance Tests
 
 Acceptance test cases are defined in `oats.yaml` files in the examples directory. The test cases are run by [oats].
-The declarative YAML tests are described in <https://github.com/grafana/oats/blob/main/yaml>.
 
 If a test case fails (lets say "examples/jdbc/spring-boot-reactive-2"), follows these steps:
 

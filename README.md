@@ -14,7 +14,7 @@ you should try [Grafana Cloud Application Observability](https://grafana.com/pro
 
 ## Documentation
 
-* Blog post: [An OpenTelemetry backend in a Docker image: Introducing grafana/otel-lgtm](https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/)
+- Blog post: [An OpenTelemetry backend in a Docker image: Introducing grafana/otel-lgtm](https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/)
 
 ## Get the Docker image
 
@@ -37,7 +37,7 @@ The Docker image is available on Docker hub: <https://hub.docker.com/r/grafana/o
 You can enable logging for troubleshooting:
 
 | Environment Variable   | Enable Logging in       |
-|------------------------|-------------------------|
+| ---------------------- | ----------------------- |
 | ENABLE_LOGS_GRAFANA    | Grafana                 |
 | ENABLE_LOGS_LOKI       | Loki                    |
 | ENABLE_LOGS_PROMETHEUS | Prometheus              |
@@ -119,7 +119,7 @@ Every example implements a rolldice service, which returns a random number betwe
 Each example uses a different application port (to be able to run all applications at the same time).
 
 | Example | Service URL                           |
-|---------|---------------------------------------|
+| ------- | ------------------------------------- |
 | Java    | `curl http://localhost:8080/rolldice` |
 | Go      | `curl http://localhost:8081/rolldice` |
 | Python  | `curl http://localhost:8082/rolldice` |
@@ -127,4 +127,4 @@ Each example uses a different application port (to be able to run all applicatio
 
 ## Related Work
 
-* Metrics, Logs, Traces and Profiles in Grafana: <https://github.com/grafana/intro-to-mltp>
+- Metrics, Logs, Traces and Profiles in Grafana: <https://github.com/grafana/intro-to-mltp>

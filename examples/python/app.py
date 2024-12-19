@@ -1,3 +1,4 @@
+"""Simple Flask app that rolls a dice."""
 import logging
 from random import randint
 
@@ -8,6 +9,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+"""Rolls a dice and returns the result."""
 @app.route("/rolldice")
 def roll_dice():
     player = request.args.get("player", default=None, type=str)
@@ -19,5 +21,6 @@ def roll_dice():
     return result
 
 
+"""Rolls a dice and returns the result."""
 def roll():
     return randint(1, 6)

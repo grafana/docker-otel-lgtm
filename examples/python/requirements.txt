@@ -1,7 +1,7 @@
 blinker==1.9.0
 click==8.1.7
 Flask==3.0.2
-itsdangerous==2.1.2
+itsdangerous==2.2.0
 Jinja2==3.1.4
 MarkupSafe==2.1.5
 Werkzeug==3.0.6

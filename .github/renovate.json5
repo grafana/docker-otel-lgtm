@@ -1,0 +1,90 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:recommended"],
+  branchPrefix: "grafanarenovatebot/",
+  platformCommit: "enabled",
+  automerge: true,
+  dependencyDashboard: false,
+  forkProcessing: "enabled",
+  enabledManagers: [
+    "dockerfile",
+    "github-actions",
+    "custom.regex",
+    "nuget",
+    "gomod",
+    "maven",
+    "pip_requirements",
+  ],
+  rebaseWhen: "behind-base-branch",
+  packageRules: [
+    {
+      matchUpdateTypes: ["major"],
+      labels: ["update-major"],
+    },
+    {
+      matchUpdateTypes: ["minor"],
+      labels: ["update-minor"],
+    },
+    {
+      matchUpdateTypes: ["patch"],
+      labels: ["automerge-patch"],
+    },
+    {
+      matchUpdateTypes: ["digest"],
+      labels: ["update-digest"],
+    },
+    {
+      matchPackageNames: ["open-telemetry/opentelemetry-collector-releases"],
+      allowedVersions: "!/cmd/",
+    },
+    {
+      matchPackageNames: ["grafana/loki"],
+      allowedVersions: "!/operator/",
+    },
+    {
+      matchPackageNames: ["grafana/tempo"],
+      allowedVersions: "!/rc/",
+    },
+    {
+      matchPackageNames: [
+        "ghcr.io/renovatebot/renovate",
+        "renovatebot/github-action",
+      ],
+      groupName: "renovatebot",
+      schedule: ["before 4am on monday"],
+    },
+  ],
+  vulnerabilityAlerts: {
+    enabled: true,
+    labels: ["automerge-security-update"],
+  },
+  osvVulnerabilityAlerts: true,
+  customManagers: [
+    {
+      customType: "regex",
+      depNameTemplate: "ghcr.io/renovatebot/renovate",
+      datasourceTemplate: "docker",
+      fileMatch: ["^\\.github/workflows/.*\\.ya?ml$"],
+      matchStrings: [
+        "renovate-version: (?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?",
+        "RENOVATE_IMAGE=ghcr.io/renovatebot/renovate:(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?",
+      ],
+    },
+    {
+      customType: "regex",
+      description: "Update _VERSION variables in Dockerfiles",
+      fileMatch: ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile\\.[^/]*$"],
+      matchStrings: [
+        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s",
+      ],
+    },
+    {
+      customType: "regex",
+      description: "Update _version variables in run.sh",
+      fileMatch: ["(^|/)run.sh$"],
+      matchStrings: [
+        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s",
+      ],
+    },
+  ],
+}

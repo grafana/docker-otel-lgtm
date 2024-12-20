@@ -6,7 +6,7 @@
   automerge: true,
   dependencyDashboard: false,
   forkProcessing: "enabled",
-  rebaseWhen: "behind-base-branch",
+  rebaseWhen: "conflicted",
   ignorePaths: [],
   ignoreUnstable: true,
   packageRules: [

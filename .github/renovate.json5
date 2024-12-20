@@ -69,7 +69,7 @@
       ],
       allowedVersions: '!/rc/',
     },
-     {
+    {
       matchPackageNames: [
         'ghcr.io/renovatebot/renovate',
         'renovatebot/github-action',

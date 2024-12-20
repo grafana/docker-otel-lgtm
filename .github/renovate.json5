@@ -6,15 +6,6 @@
   automerge: true,
   dependencyDashboard: false,
   forkProcessing: "enabled",
-  enabledManagers: [
-    "dockerfile",
-    "github-actions",
-    "custom.regex",
-    "nuget",
-    "gomod",
-    "maven",
-    "pip_requirements",
-  ],
   rebaseWhen: "behind-base-branch",
   packageRules: [
     {
@@ -59,12 +50,27 @@
     labels: ["automerge-security-update"],
   },
   osvVulnerabilityAlerts: true,
+  maven: {
+    fileMatch: ["examples/java/pom.xml"],
+  },
+  "maven-wrapper": {
+    fileMatch: ["examples/java/.mvn/wrapper/maven-wrapper.properties$"],
+  },
+  gomod: {
+    fileMatch: ["examples/go/go.mod"],
+  },
+  pip_requirements: {
+    fileMatch: ["examples/python/requirements.txt"],
+  },
+  nuget: {
+    fileMatch: ["examples/dotnet/rolldice.csproj"],
+  },
   customManagers: [
     {
       customType: "regex",
       depNameTemplate: "ghcr.io/renovatebot/renovate",
       datasourceTemplate: "docker",
-      fileMatch: ["^\\.github/workflows/.*\\.ya?ml$"],
+      fileMatch: ["^\\.github/workflows/renovate.yml$"],
       matchStrings: [
         "renovate-version: (?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?",
         "RENOVATE_IMAGE=ghcr.io/renovatebot/renovate:(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?",
@@ -73,7 +79,7 @@
     {
       customType: "regex",
       description: "Update _VERSION variables in Dockerfiles",
-      fileMatch: ["(^|/|\\.)Dockerfile$", "(^|/)Dockerfile\\.[^/]*$"],
+      fileMatch: ["Dockerfile"],
       matchStrings: [
         "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s",
       ],
@@ -81,7 +87,7 @@
     {
       customType: "regex",
       description: "Update _version variables in run.sh",
-      fileMatch: ["(^|/)run.sh$"],
+      fileMatch: ["run.sh$"],
       matchStrings: [
         "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))? packageName=(?<packageName>.+?)(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s",
       ],

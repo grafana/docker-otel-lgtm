@@ -10,8 +10,8 @@ COPY requirements.txt .
 # 2. Run `pip freeze > requirements.txt` in the same directory as your app.py file
 RUN pip install --no-cache-dir -r requirements.txt
 
-# renovate: datasource=github-releases depName=opentelemetry-python-contrib packageName=open-telemetry/opentelemetry-python-contrib
-ENV OPENTELEMETRY_DISTRO_VERSION=v1.16.0
+# renovate: datasource=pip_requirements depName=opentelemetry-distro packageName=opentelemetry-distro
+ENV OPENTELEMETRY_DISTRO_VERSION=0.46b0
 RUN pip install --no-cache-dir "opentelemetry-distro[otlp]==$OPENTELEMETRY_DISTRO_VERSION"
 RUN opentelemetry-bootstrap -a install
 

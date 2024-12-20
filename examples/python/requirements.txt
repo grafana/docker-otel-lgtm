@@ -1,4 +1,4 @@
-blinker==1.7.0
+blinker==1.9.0
 click==8.1.7
 Flask==3.0.2
 itsdangerous==2.1.2

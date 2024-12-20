@@ -4,15 +4,10 @@
     'config:recommended',
   ],
   branchPrefix: 'grafanarenovatebot/',
-  username: 'GrafanaRenovateBot',
-  gitAuthor: 'GrafanaRenovateBot <renovategrafana@grafana.com>',
   platformCommit: 'enabled',
+  automerge: true,
   dependencyDashboard: false,
-  platform: 'github',
   forkProcessing: 'enabled',
-  repositories: [
-    'grafana/docker-otel-lgtm',
-  ],
   enabledManagers: [
     'dockerfile',
     'github-actions',
@@ -22,6 +17,7 @@
     'maven',
     'pip_requirements',
   ],
+  rebaseWhen: 'behind-base-branch',
   packageRules: [
     {
       matchUpdateTypes: [
@@ -72,6 +68,16 @@
         'grafana/tempo',
       ],
       allowedVersions: '!/rc/',
+    },
+     {
+      matchPackageNames: [
+        'ghcr.io/renovatebot/renovate',
+        'renovatebot/github-action',
+      ],
+      groupName: 'renovatebot',
+      schedule: [
+        'before 4am on monday',
+      ],
     },
   ],
   vulnerabilityAlerts: {

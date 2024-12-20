@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 # Step 1: Install the OpenTelemetry SDK
 # renovate: datasource=github-releases depName=opentelemetry-python-contrib packageName=open-telemetry/opentelemetry-python-contrib
-opentelemetry_distro_version=0.46b0
+opentelemetry_distro_version=v1.16.0
 pip install "opentelemetry-distro[otlp]==${opentelemetry_distro_version}"
 opentelemetry-bootstrap -a install
 

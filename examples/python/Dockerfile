@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # renovate: datasource=github-releases depName=opentelemetry-python-contrib packageName=open-telemetry/opentelemetry-python-contrib
-ENV OPENTELEMETRY_DISTRO_VERSION=0.46b0
+ENV OPENTELEMETRY_DISTRO_VERSION=v1.16.0
 RUN pip install --no-cache-dir "opentelemetry-distro[otlp]==$OPENTELEMETRY_DISTRO_VERSION"
 RUN opentelemetry-bootstrap -a install
 

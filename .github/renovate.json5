@@ -7,8 +7,8 @@
   dependencyDashboard: false,
   forkProcessing: "enabled",
   rebaseWhen: "behind-base-branch",
+  ignorePaths: [],
   ignoreUnstable: true,
-  includePaths: ["**/examples/**"],
   packageRules: [
     {
       matchPackageNames: ["open-telemetry/opentelemetry-collector-releases"],

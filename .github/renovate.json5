@@ -7,23 +7,9 @@
   dependencyDashboard: false,
   forkProcessing: "enabled",
   rebaseWhen: "behind-base-branch",
+  ignoreUnstable: true,
+  includePaths: ["**/examples/**"],
   packageRules: [
-    {
-      matchUpdateTypes: ["major"],
-      labels: ["update-major"],
-    },
-    {
-      matchUpdateTypes: ["minor"],
-      labels: ["update-minor"],
-    },
-    {
-      matchUpdateTypes: ["patch"],
-      labels: ["automerge-patch"],
-    },
-    {
-      matchUpdateTypes: ["digest"],
-      labels: ["update-digest"],
-    },
     {
       matchPackageNames: ["open-telemetry/opentelemetry-collector-releases"],
       allowedVersions: "!/cmd/",
@@ -31,10 +17,6 @@
     {
       matchPackageNames: ["grafana/loki"],
       allowedVersions: "!/operator/",
-    },
-    {
-      matchPackageNames: ["grafana/tempo"],
-      allowedVersions: "!/rc/",
     },
     {
       matchPackageNames: [
@@ -50,21 +32,6 @@
     labels: ["automerge-security-update"],
   },
   osvVulnerabilityAlerts: true,
-  maven: {
-    fileMatch: ["examples/java/pom.xml"],
-  },
-  "maven-wrapper": {
-    fileMatch: ["examples/java/.mvn/wrapper/maven-wrapper.properties$"],
-  },
-  gomod: {
-    fileMatch: ["examples/go/go.mod"],
-  },
-  pip_requirements: {
-    fileMatch: ["examples/python/requirements.txt"],
-  },
-  nuget: {
-    fileMatch: ["examples/dotnet/rolldice.csproj"],
-  },
   customManagers: [
     {
       customType: "regex",

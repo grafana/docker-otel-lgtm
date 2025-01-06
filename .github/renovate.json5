@@ -29,8 +29,8 @@
     {
       matchDatasources: ["pypi"],
       matchDepNames: ["opentelemetry-distro"],
-      ignoreUnstable: false
-    }
+      ignoreUnstable: false,
+    },
   ],
   vulnerabilityAlerts: {
     enabled: true,

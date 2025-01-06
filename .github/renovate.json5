@@ -26,6 +26,11 @@
       groupName: "renovatebot",
       schedule: ["before 4am on monday"],
     },
+    {
+      matchDatasources: ["pypi"],
+      matchDepNames: ["opentelemetry-distro"],
+      ignoreUnstable: false,
+    },
   ],
   vulnerabilityAlerts: {
     enabled: true,

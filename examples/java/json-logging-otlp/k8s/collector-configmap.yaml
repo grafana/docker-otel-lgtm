@@ -62,7 +62,7 @@ data:
           exporters: [ otlphttp/metrics ]
         logs/raw_otlpjson:
           receivers: [ filelog/otlp-json-logs ]
-          # (i) no need for processors before the otlpjson connector
+          # No need for processors before the otlpjson connector
           # Declare processors in the shared "logs" pipeline below
           processors: [ ]
           exporters: [ otlpjson ]

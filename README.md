@@ -1,7 +1,5 @@
 # docker-otel-lgtm
 
-[![Super-Linter](https://github.com/grafana/docker-otel-lgtm/actions/workflows/super-linter.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
-
 An OpenTelemetry backend in a Docker image.
 
 ![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana](img/overview.png)

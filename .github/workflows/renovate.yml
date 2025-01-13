@@ -36,9 +36,9 @@ jobs:
           owner: ${{ github.repository_owner }}
 
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@2be773c4be8361d8182cc1b750e75bbc75af71b0 # v41.0.7
+        uses: renovatebot/github-action@f24426972367551f3391720e34317783a92fd32b # v41.0.8
         with:
-          renovate-version: 39.91.0@sha256:60d04619493d43fe67d728121dfef56b893bf90695219d352e772e881403d158
+          renovate-version: 39.106.0@sha256:5fd000e985e53d0ed8ba06278eeddab616bdbe9031fe50d345b844617b31c79c
           token: "${{ steps.app-token.outputs.token }}"
         env:
           LOG_LEVEL: debug

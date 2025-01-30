@@ -1,0 +1,13 @@
+# .github/release.yml
+
+changelog:
+  categories:
+    - title: OpenTelemetry & LGTM
+      labels:
+        - docker-dependency
+    - title: Other Changes
+      labels:
+        - '*'
+      exclude:
+        authors:
+          - grafanarenovatebot

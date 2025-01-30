@@ -31,6 +31,16 @@
       matchDepNames: ["opentelemetry-distro"],
       ignoreUnstable: false,
     },
+    {
+      matchPackageNames: [
+        "grafana/grafana",
+        "prometheus/prometheus",
+        "grafana/loki",
+        "grafana/tempo",
+        "open-telemetry/opentelemetry-collector-releases"
+      ],
+      labels: ["docker-dependency"],
+    }
   ],
   vulnerabilityAlerts: {
     enabled: true,

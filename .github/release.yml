@@ -7,7 +7,7 @@ changelog:
         - docker-dependency
     - title: Other Changes
       labels:
-        - '*'
+        - "*"
       exclude:
         authors:
           - grafanarenovatebot

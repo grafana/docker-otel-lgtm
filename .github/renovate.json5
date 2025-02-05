@@ -37,10 +37,10 @@
         "prometheus/prometheus",
         "grafana/loki",
         "grafana/tempo",
-        "open-telemetry/opentelemetry-collector-releases"
+        "open-telemetry/opentelemetry-collector-releases",
       ],
       labels: ["docker-dependency"],
-    }
+    },
   ],
   vulnerabilityAlerts: {
     enabled: true,

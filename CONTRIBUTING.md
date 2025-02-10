@@ -2,7 +2,11 @@
 
 ## Building locally
 
-`./build-lgtm.sh` will build the docker image locally.
+`dev1` is an example of a tag to test locally.
+
+- `./build-lgtm.sh dev1` will build the docker image locally.
+- `./run-lgtm.sh dev1` will run the docker image locally.
+
 
 ## Linting
 

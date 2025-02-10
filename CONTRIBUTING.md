@@ -7,7 +7,6 @@
 - `./build-lgtm.sh dev1` will build the docker image locally.
 - `./run-lgtm.sh dev1` will run the docker image locally.
 
-
 ## Linting
 
 - Markdown lint: `markdownlint -f -i container -i examples/python/venv .` (`-f` fixes simple violations, requires [markdownlint](https://github.com/DavidAnson/markdownlint#markdownlint))

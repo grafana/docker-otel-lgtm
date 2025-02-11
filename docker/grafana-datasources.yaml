@@ -8,7 +8,7 @@ datasources:
     jsonData:
       timeInterval: 60s
       exemplarTraceIdDestinations:
-        - name: traceID
+        - name: trace_id
           datasourceUid: tempo
           urlDisplayLabel: "Trace: $${__value.raw}"
 

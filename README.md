@@ -28,9 +28,9 @@ The Docker image is available on Docker hub: <https://hub.docker.com/r/grafana/o
 ./run-lgtm
 ```
 
-### Configuration
+## Configuration
 
-#### Enable logging
+### Enable logging
 
 You can enable logging for troubleshooting:
 
@@ -43,7 +43,37 @@ You can enable logging for troubleshooting:
 | ENABLE_LOGS_OTELCOL    | OpenTelemetry Collector |
 | ENABLE_LOGS_ALL        | all of the above        |
 
+### Send data to vendors
+
+You can send data to vendors - in addition to the built-in observability components.
+That way, you can easily try and switch between different backends.
+
 This has nothing to do with the application logs, which are collected by OpenTelemetry.
+
+#### Send data to Grafana Cloud
+
+See https://grafana.com/docs/grafana-cloud/send-data/otlp/send-data-otlp/#manual-opentelemetry-setup-for-advanced-users
+
+| Environment variable | Type   | Default |
+| -------------------- | ------ | ------- |
+| `GRAFANA_CLOUD_ZONE` | string | (unset) |
+
+The cloud zone of your Grafana endpoint. This will be used to compose the
+Grafana OTLP URL. For example, if the value is `prod-eu-west-0`, the
+used OTLP URL will be `https://otlp-gateway-prod-eu-west-0.grafana.net/otlp`.
+
+| Environment variable        | Type   | Default |
+| --------------------------- | ------ | ------- |
+| `GRAFANA_CLOUD_INSTANCE_ID` | string | (unset) |
+
+Your Grafana user name. It is usually a number but it must be set as a
+string inside the YAML file.
+
+| Environment variable    | Type   | Default |
+| ----------------------- | ------ | ------- |
+| `GRAFANA_CLOUD_API_KEY` | string | (unset) |
+
+API key of your Grafana Cloud account.
 
 #### Persist data across container instantiation
 

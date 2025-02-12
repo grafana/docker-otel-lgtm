@@ -51,15 +51,15 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp/traces,otlphttp/external]
+      exporters: [otlphttp/traces, otlphttp/external]
       #exporters: [otlphttp/traces,debug/traces]
     metrics:
       receivers: [otlp, prometheus/collector]
       processors: [batch]
-      exporters: [otlphttp/metrics,otlphttp/external]
+      exporters: [otlphttp/metrics, otlphttp/external]
       #exporters: [otlphttp/metrics,debug/metrics]
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp/logs,otlphttp/external]
+      exporters: [otlphttp/logs, otlphttp/external]
       #exporters: [otlphttp/logs,debug/logs]

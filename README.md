@@ -45,7 +45,7 @@ You can enable logging for troubleshooting:
 
 ### Send data to vendors
 
-You can send data to vendors - in addition to the built-in observability components.
+In addition to the built-in observability tools, you can also send data to vendors.
 That way, you can easily try and switch between different backends.
 
 This has nothing to do with the application logs, which are collected by OpenTelemetry.

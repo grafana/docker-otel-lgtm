@@ -7,8 +7,8 @@ $image = "docker.io/grafana/otel-lgtm:$release_tag"
 # prefilled pwd var to avoid repeted calls in build string.moved to top init section or logic
 $path = (Get-Location).Path
 
-$containerCommand = $supportedContainerRuntime | ForEach-Object { 
-    (Get-Command $_ -ErrorAction SilentlyContinue).Source 
+$containerCommand = $supportedContainerRuntime | ForEach-Object {
+    (Get-Command $_ -ErrorAction SilentlyContinue).Source
 } | Select-Object -first 1
 
 if ($null -eq $containerCommand) {

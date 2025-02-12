@@ -16,10 +16,10 @@ processors:
   batch:
 
 extensions:
-  basicauth/grafana-cloud:
+  basicauth/external:
     client_auth:
-      username: ${env:GRAFANA_CLOUD_INSTANCE_ID}
-      password: ${env:GRAFANA_CLOUD_API_KEY}
+      username: ${env:OTEL_EXPORTER_OTLP_USERNAME}
+      password: ${env:OTEL_EXPORTER_OTLP_PASSWORD}
 
 exporters:
   otlphttp/metrics:
@@ -34,10 +34,10 @@ exporters:
     endpoint: http://localhost:3100/otlp
     tls:
       insecure: true
-  otlphttp/grafana-cloud:
-    endpoint: "https://otlp-gateway-${env:GRAFANA_CLOUD_ZONE}.grafana.net/otlp"
+  otlphttp/external:
+    endpoint: ${env:OTEL_EXPORTER_OTLP_ENDPOINT}
     auth:
-      authenticator: basicauth/grafana-cloud
+      authenticator: basicauth/external
   debug/metrics:
     verbosity: detailed
   debug/traces:
@@ -46,20 +46,20 @@ exporters:
     verbosity: detailed
 
 service:
-  extensions: [basicauth/grafana-cloud]
+  extensions: [basicauth/external]
   pipelines:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp/traces,otlphttp/grafana-cloud]
+      exporters: [otlphttp/traces,otlphttp/external]
       #exporters: [otlphttp/traces,debug/traces]
     metrics:
       receivers: [otlp, prometheus/collector]
       processors: [batch]
-      exporters: [otlphttp/metrics,otlphttp/grafana-cloud]
+      exporters: [otlphttp/metrics,otlphttp/external]
       #exporters: [otlphttp/metrics,debug/metrics]
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp/logs,otlphttp/grafana-cloud]
+      exporters: [otlphttp/logs,otlphttp/external]
       #exporters: [otlphttp/logs,debug/logs]

@@ -4,6 +4,8 @@ RELEASE=${1:-latest}
 
 docker pull docker.io/grafana/otel-lgtm:"${RELEASE}"
 
+touch .env
+
 docker run \
 	--name lgtm \
 	-p 3000:3000 \
@@ -15,4 +17,5 @@ docker run \
 	-v "$PWD"/container/prometheus:/data/prometheus \
 	-v "$PWD"/container/loki:/data/loki \
 	-e GF_PATHS_DATA=/data/grafana \
+	--env-file .env \
 	docker.io/grafana/otel-lgtm:"${RELEASE}"

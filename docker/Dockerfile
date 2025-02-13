@@ -67,7 +67,7 @@ COPY loki-config.yaml .
 COPY run-loki.sh .
 COPY tempo-config.yaml .
 COPY run-tempo.sh .
-COPY otelcol-config.yaml .
+COPY otelcol-config*.yaml .
 COPY run-otelcol.sh .
 COPY run-all.sh .
 # hadolint ignore=SC2038,DL4006

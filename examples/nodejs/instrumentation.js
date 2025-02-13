@@ -1,33 +1,33 @@
-const { NodeSDK } = require("@opentelemetry/sdk-node");
+const { NodeSDK } = require('@opentelemetry/sdk-node')
 const {
-  getNodeAutoInstrumentations,
-} = require("@opentelemetry/auto-instrumentations-node");
-const { PeriodicExportingMetricReader } = require("@opentelemetry/sdk-metrics");
+  getNodeAutoInstrumentations
+} = require('@opentelemetry/auto-instrumentations-node')
+const { PeriodicExportingMetricReader } = require('@opentelemetry/sdk-metrics')
 const {
-  OTLPTraceExporter,
-} = require("@opentelemetry/exporter-trace-otlp-proto");
+  OTLPTraceExporter
+} = require('@opentelemetry/exporter-trace-otlp-proto')
 const {
-  OTLPMetricExporter,
-} = require("@opentelemetry/exporter-metrics-otlp-proto");
+  OTLPMetricExporter
+} = require('@opentelemetry/exporter-metrics-otlp-proto')
 
 const sdk = new NodeSDK({
   traceExporter: new OTLPTraceExporter(),
   metricReader: new PeriodicExportingMetricReader({
     exportIntervalMillis: 10000,
-    exporter: new OTLPMetricExporter(),
+    exporter: new OTLPMetricExporter()
   }),
   instrumentations: [
     getNodeAutoInstrumentations({
-      "@opentelemetry/instrumentation-http": {
+      '@opentelemetry/instrumentation-http': {
         ignoreIncomingRequestHook: (request) => {
-          if (request.url === "/favicon.ico") {
-            return true;
+          if (request.url === '/favicon.ico') {
+            return true
           }
-          return false;
-        },
-      },
-    }),
-  ],
-});
+          return false
+        }
+      }
+    })
+  ]
+})
 
-sdk.start();
+sdk.start()

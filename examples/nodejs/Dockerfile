@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1.4
 
 ARG NODE_VERSION=22.14.0
 
@@ -20,4 +20,4 @@ COPY . .
 
 EXPOSE 8084
 
-CMD node app.js
+CMD ["node", "app.js"]

@@ -53,9 +53,9 @@ That way, you can easily try and switch between different backends.
 If the [OTEL_EXPORTER_OTLP_ENDPOINT](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint)
 variable is set, the OpenTelemetry Collector will send data (logs, metrics, and traces) to the specified endpoint using "OTLP/HTTP".
 
-In addition, you can provide 
-[OTEL_EXPORTER_OTLP_HEADERS](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers), 
-e.g. to authenticate with the backend. 
+In addition, you can provide
+[OTEL_EXPORTER_OTLP_HEADERS](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers),
+e.g. to authenticate with the backend.
 
 #### Send data to Grafana Cloud
 

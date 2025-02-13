@@ -1,74 +1,74 @@
-const { SeverityNumber } = require("@opentelemetry/api-logs");
+const { SeverityNumber } = require('@opentelemetry/api-logs')
 const {
   LoggerProvider,
-  BatchLogRecordProcessor,
-} = require("@opentelemetry/sdk-logs");
-const { OTLPLogExporter } = require("@opentelemetry/exporter-logs-otlp-proto");
-const { Resource } = require("@opentelemetry/resources");
+  BatchLogRecordProcessor
+} = require('@opentelemetry/sdk-logs')
+const { OTLPLogExporter } = require('@opentelemetry/exporter-logs-otlp-proto')
+const { Resource } = require('@opentelemetry/resources')
 const {
   ATTR_SERVICE_NAME,
-  ATTR_SERVICE_VERSION,
-} = require("@opentelemetry/semantic-conventions");
+  ATTR_SERVICE_VERSION
+} = require('@opentelemetry/semantic-conventions')
 
 class Logger {
-  context;
+  context
 
-  constructor(context) {
-    this.context = context;
+  constructor (context) {
+    this.context = context
 
     // To start a logger, you first need to initialize the Logger provider.
     const loggerProvider = new LoggerProvider({
       resource: new Resource({
         [ATTR_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME,
-        [ATTR_SERVICE_VERSION]: process.env.OTEL_SERVICE_VERSION,
-      }),
-    });
+        [ATTR_SERVICE_VERSION]: process.env.OTEL_SERVICE_VERSION
+      })
+    })
     // Add a processor to export log record
     loggerProvider.addLogRecordProcessor(
       new BatchLogRecordProcessor(new OTLPLogExporter())
-    );
+    )
 
-    this.logger = loggerProvider.getLogger("default");
+    this.logger = loggerProvider.getLogger('default')
   }
 
-  log(message) {
+  log (message) {
     this.logger.emit({
       severityNumber: SeverityNumber.INFO,
-      severityText: "INFO",
+      severityText: 'INFO',
       body: message,
       attributes: {
-        context: this.context,
-      },
-    });
+        context: this.context
+      }
+    })
 
-    console.log(`[${this.context}] - ${message}`);
+    console.log(`[${this.context}] - ${message}`)
   }
 
-  warn(message) {
+  warn (message) {
     this.logger.emit({
       severityNumber: SeverityNumber.WARN,
-      severityText: "WARN",
+      severityText: 'WARN',
       body: message,
       attributes: {
-        context: this.context,
-      },
-    });
+        context: this.context
+      }
+    })
 
-    console.warn(`[${this.context}] - ${message}`);
+    console.warn(`[${this.context}] - ${message}`)
   }
 
-  error(message) {
+  error (message) {
     this.logger.emit({
       severityNumber: SeverityNumber.ERROR,
-      severityText: "ERROR",
+      severityText: 'ERROR',
       body: message,
       attributes: {
-        context: this.context,
-      },
-    });
+        context: this.context
+      }
+    })
 
-    console.error(`[${this.context}] - ${message}`);
+    console.error(`[${this.context}] - ${message}`)
   }
 }
 
-module.exports = { Logger };
+module.exports = { Logger }

@@ -12,7 +12,7 @@ const app = express()
 
 app.get('/rolldice', (req, res) => {
   return tracer.startActiveSpan('rollDice', (span) => {
-    logger.log('Received request to roll dice.')
+    logger.log('Received request to roll dice')
     const rolls = req.query.rolls ? parseInt(req.query.rolls.toString()) : NaN
     if (isNaN(rolls)) {
       const errorMessage =

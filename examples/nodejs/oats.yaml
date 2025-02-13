@@ -15,6 +15,6 @@ expected:
     - promql: 'dice_lib_rolls_counter_total{service_name="dice-server"}'
       value: ">= 0"
   logs:
-    - logql: '{service_name="dice-server"} |~ `Rolling 5 dice\(s\) between 1 and 6`'
+    - logql: '{service_name="dice-server"} |~ `Received request to roll dice`'
       contains:
-        - "Rolling 5 dice(s) between 1 and 6"
+        - "Received request to roll dice"

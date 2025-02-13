@@ -6,3 +6,4 @@ venv/
 /container/prometheus/*
 .lycheecache
 *.iml
+.env

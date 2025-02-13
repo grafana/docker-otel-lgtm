@@ -9,25 +9,28 @@ if [[ -v OTEL_EXPORTER_OTLP_ENDPOINT ]]; then
 	config_file="otelcol-config-export-http.yaml"
 
 	if [[ -v OTEL_EXPORTER_OTLP_HEADERS ]]; then
-		echo "Adding basic auth to OTLP/HTTP export"
-		config_file="otelcol-config-export-http-auth.yaml"
+		echo "Adding headers from OTEL_EXPORTER_OTLP_HEADERS"
 
-		# fail if the headers do not start with "Authorization=Basic "
-		if [[ ! ${OTEL_EXPORTER_OTLP_HEADERS} =~ ^Authorization=Basic\  ]]; then
-			echo "OTEL_EXPORTER_OTLP_HEADERS must start with 'Authorization Basic '"
-			exit 1
-		fi
-		# fail if there are multiple headers, separated by commas
-		if [[ ${OTEL_EXPORTER_OTLP_HEADERS} =~ , ]]; then
-			echo "OTEL_EXPORTER_OTLP_HEADERS must not contain commas"
-			exit 1
-		fi
+    yaml_headers="{"
+    # split the headers into an array on , - and then each element using =
+    IFS=',' read -r -a headers <<< "$OTEL_EXPORTER_OTLP_HEADERS"
+    for header in "${headers[@]}"; do
+      IFS='=' read -r -a header_parts <<< "$header"
+      if [[ ${#header_parts[@]} -eq 2 ]]; then
+        if [[ $yaml_headers != "{" ]]; then
+          yaml_headers+=", "
+        fi
+        yaml_headers+="'${header_parts[0]}': '${header_parts[1]}'"
+      else
+        echo "Invalid header: $header"
+      fi
+    done
+    yaml_headers+="}"
 
-		# remove "Authorization=Basic " prefix
-		username=$(echo "${OTEL_EXPORTER_OTLP_HEADERS#* }" | base64 -d | cut -d: -f1)
-		password=$(echo "${OTEL_EXPORTER_OTLP_HEADERS#* }" | base64 -d | cut -d: -f2)
-		export OTEL_EXPORTER_OTLP_USERNAME=${username}
-		export OTEL_EXPORTER_OTLP_PASSWORD=${password}
+    # add the contents of OTEL_EXPORTER_OTLP_HEADERS to the otelcol-config-export-http.yaml file
+    # after "endpoint: ${env:OTEL_EXPORTER_OTLP_ENDPOINT}"
+
+    sed -i "s#.*endpoint: \${env:OTEL_EXPORTER_OTLP_ENDPOINT}.*#&\n    headers: ${yaml_headers}#" "$config_file"
 	fi
 fi
 

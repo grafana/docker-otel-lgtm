@@ -13,7 +13,7 @@ const {
 class Logger {
   context
 
-  constructor (context) {
+  constructor(context) {
     this.context = context
 
     // To start a logger, you first need to initialize the Logger provider.
@@ -31,7 +31,7 @@ class Logger {
     this.logger = loggerProvider.getLogger('default')
   }
 
-  log (message) {
+  log(message) {
     this.logger.emit({
       severityNumber: SeverityNumber.INFO,
       severityText: 'INFO',
@@ -44,7 +44,7 @@ class Logger {
     console.log(`[${this.context}] - ${message}`)
   }
 
-  warn (message) {
+  warn(message) {
     this.logger.emit({
       severityNumber: SeverityNumber.WARN,
       severityText: 'WARN',
@@ -57,7 +57,7 @@ class Logger {
     console.warn(`[${this.context}] - ${message}`)
   }
 
-  error (message) {
+  error(message) {
     this.logger.emit({
       severityNumber: SeverityNumber.ERROR,
       severityText: 'ERROR',

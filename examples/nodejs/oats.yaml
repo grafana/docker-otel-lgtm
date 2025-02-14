@@ -8,13 +8,13 @@ expected:
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'
       spans:
-        - name: "GET /rolldice"
+        - name: 'GET /rolldice'
           attributes:
-            otel.library.name: "@opentelemetry/instrumentation-http"
+            otel.library.name: '@opentelemetry/instrumentation-http'
   metrics:
     - promql: 'dice_lib_rolls_counter_total{service_name="dice-server"}'
-      value: ">= 0"
+      value: '>= 0'
   logs:
     - logql: '{service_name="dice-server"} |~ `Received request to roll dice`'
       contains:
-        - "Received request to roll dice"
+        - 'Received request to roll dice'

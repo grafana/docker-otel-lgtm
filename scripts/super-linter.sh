@@ -9,6 +9,7 @@ docker pull ghcr.io/super-linter/super-linter:latest
 docker run --rm \
 	-e RUN_LOCAL=true \
 	-e DEFAULT_BRANCH=main \
+	-e VALIDATE_JAVASCRIPT_STANDARD=false \
 	--env-file ".github/super-linter.env" \
 	-v "$(pwd)":/tmp/lint \
 	ghcr.io/super-linter/super-linter:latest

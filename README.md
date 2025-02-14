@@ -59,7 +59,7 @@ e.g. to authenticate with the backend.
 
 #### Send data to Grafana Cloud
 
-The values for the environment variables can be found in your
+You can find the values for the environment variables in your
 [Grafana Cloud account](https://grafana.com/docs/grafana-cloud/send-data/otlp/send-data-otlp/#manual-opentelemetry-setup-for-advanced-users).
 
 #### Persist data across container instantiation

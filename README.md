@@ -55,7 +55,7 @@ variable is set, the OpenTelemetry Collector will send data (logs, metrics, and 
 
 In addition, you can provide
 [OTEL_EXPORTER_OTLP_HEADERS](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers),
-e.g. to authenticate with the backend.
+for example, to authenticate with the backend.
 
 #### Send data to Grafana Cloud
 

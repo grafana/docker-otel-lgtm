@@ -28,9 +28,9 @@ The Docker image is available on Docker hub: <https://hub.docker.com/r/grafana/o
 ./run-lgtm
 ```
 
-### Configuration
+## Configuration
 
-#### Enable logging
+### Enable logging
 
 You can enable logging for troubleshooting:
 
@@ -44,6 +44,23 @@ You can enable logging for troubleshooting:
 | ENABLE_LOGS_ALL        | all of the above        |
 
 This has nothing to do with the application logs, which are collected by OpenTelemetry.
+
+### Send data to vendors
+
+In addition to the built-in observability tools, you can also send data to vendors.
+That way, you can easily try and switch between different backends.
+
+If the [OTEL_EXPORTER_OTLP_ENDPOINT](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint)
+variable is set, the OpenTelemetry Collector will send data (logs, metrics, and traces) to the specified endpoint using "OTLP/HTTP".
+
+In addition, you can provide
+[OTEL_EXPORTER_OTLP_HEADERS](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers),
+for example, to authenticate with the backend.
+
+#### Send data to Grafana Cloud
+
+You can find the values for the environment variables in your
+[Grafana Cloud account](https://grafana.com/docs/grafana-cloud/send-data/otlp/send-data-otlp/#manual-opentelemetry-setup-for-advanced-users).
 
 #### Persist data across container instantiation
 

@@ -62,7 +62,7 @@ for example, to authenticate with the backend.
 You can find the values for the environment variables in your
 [Grafana Cloud account](https://grafana.com/docs/grafana-cloud/send-data/otlp/send-data-otlp/#manual-opentelemetry-setup-for-advanced-users).
 
-#### Persist data across container instantiation
+### Persist data across container instantiation
 
 The various components in the repository are configured to write their data to the /data
 directory. If you need to persist data across containers being created and destroyed,

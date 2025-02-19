@@ -13,7 +13,6 @@ const {
 const sdk = new NodeSDK({
   traceExporter: new OTLPTraceExporter(),
   metricReader: new PeriodicExportingMetricReader({
-    exportIntervalMillis: 10000,
     exporter: new OTLPMetricExporter()
   }),
   instrumentations: [

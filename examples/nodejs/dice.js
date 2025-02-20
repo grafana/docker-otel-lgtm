@@ -8,7 +8,7 @@ const counter = meter.createCounter('dice-lib.rolls.counter')
 
 const logger = new Logger('dice-lib')
 
-function rollOnce(i, min, max) {
+function rollOnce (i, min, max) {
   return tracer.startActiveSpan(`rollOnce:${i}`, (span) => {
     counter.add(1)
     logger.log(`Rolling a single die between ${min} and ${max}`)
@@ -22,7 +22,7 @@ function rollOnce(i, min, max) {
   })
 }
 
-function rollTheDice(rolls, min, max) {
+function rollTheDice (rolls, min, max) {
   // Create a span. A span must be closed.
   return tracer.startActiveSpan(
     'rollTheDice',

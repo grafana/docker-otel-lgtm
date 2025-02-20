@@ -23,7 +23,7 @@ If a test case fails (lets say "examples/jdbc/spring-boot-reactive-2"), follows 
 2. Go to the oats folder
 3. `cd yaml`
 4. Install ginkgo: `go install github.com/onsi/ginkgo/v2/ginkgo`
-5. `TESTCASE_TIMEOUT=2h TESTCASE_BASE_PATH=/path/to/this/repo/examples ginkgo -v -r` (or the sub-directory you're debugging) 
-6. go to <http://localhost:3000> 
+5. `TESTCASE_TIMEOUT=2h TESTCASE_BASE_PATH=/path/to/this/repo/examples ginkgo -v -r` (or the sub-directory you're debugging)
+6. go to <http://localhost:3000>
 
 [oats]: https://github.com/grafana/oats

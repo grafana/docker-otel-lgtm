@@ -71,14 +71,7 @@ string HandleRollDice([FromServices] ILogger<Program> logger, string? player)
 {
     var result = RollDice();
 
-    if (string.IsNullOrEmpty(player))
-    {
-        logger.LogInformation("Anonymous player is rolling the dice: {result}", result);
-    }
-    else
-    {
-        logger.LogInformation("{player} is rolling the dice: {result}", player, result);
-    }
+    logger.LogInformation("Loki cannot ingest this log with a null attribute {value}", null);
 
     return result.ToString(CultureInfo.InvariantCulture);
 }

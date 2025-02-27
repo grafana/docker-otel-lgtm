@@ -24,7 +24,7 @@ jobs:
         run: grep -v '^#' .github/super-linter.env | grep -v 'FIX_' >> "$GITHUB_ENV"
 
       - name: Super-linter
-        uses: super-linter/super-linter@v7.2.1
+        uses: super-linter/super-linter@v7.3.0
         env:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -12,6 +12,7 @@ source ./venv/bin/activate
 # How to get the requirements.txt file?
 # 1. Follow https://opentelemetry.io/docs/languages/python/getting-started/
 # 2. Run `pip freeze > requirements.txt` in the same directory as your app.py file
+pip install --upgrade pip
 pip install -r requirements.txt
 
 # Step 1: Install the OpenTelemetry SDK

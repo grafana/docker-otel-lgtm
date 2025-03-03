@@ -1,2 +1,5 @@
-linters:
+#linters:
 #  disable: metalinter
+
+run:
+  timeout: 1m

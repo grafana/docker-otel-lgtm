@@ -5,6 +5,7 @@ datasources:
     type: prometheus
     uid: prometheus
     url: http://localhost:9090
+    editable: true
     jsonData:
       timeInterval: 60s
       exemplarTraceIdDestinations:
@@ -16,6 +17,7 @@ datasources:
     type: tempo
     uid: tempo
     url: http://localhost:3200
+    editable: true
     jsonData:
       tracesToLogsV2:
         customQuery: true
@@ -38,6 +40,7 @@ datasources:
     type: loki
     uid: loki
     url: http://localhost:3100
+    editable: true
     jsonData:
       derivedFields:
         - name: "trace_id"

@@ -124,6 +124,8 @@ Generate traffic:
 ./generate-traffic
 ```
 
+> **_NOTE:_** You can use [OTel Checker](https://github.com/grafana/otel-checker/) to check if the instrumentation is correct.
+
 ## Run example apps in different languages
 
 The example apps are in the `examples/` directory.

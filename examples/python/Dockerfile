@@ -8,6 +8,8 @@ COPY requirements.txt .
 # How to get the requirements.txt file?
 # 1. Follow https://opentelemetry.io/docs/languages/python/getting-started/
 # 2. Run `pip freeze > requirements.txt` in the same directory as your app.py file
+RUN apk add --no-cache build-base
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # renovate: datasource=pypi depName=opentelemetry-distro

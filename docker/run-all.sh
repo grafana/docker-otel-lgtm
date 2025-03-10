@@ -9,7 +9,6 @@ start_component() {
 	local start_time=$(date +%s)
 	# Store start time in an associative array
 	eval "start_time_${component}=${start_time}"
-	echo "Starting ${component}..."
 }
 
 # Start all components and record their start times
@@ -28,58 +27,107 @@ start_component "prometheus"
 start_component "tempo"
 ./run-tempo.sh &
 
-echo "Waiting for the OpenTelemetry collector and the Grafana LGTM stack to start up..."
+echo "Waiting for all components to start up..."
 
-# Declare an array to store elapsed times
-declare -A elapsed_times
+# Declare arrays to store service status and elapsed times
+declare -A service_ready elapsed_times
 
-function wait_ready() {
-	service=$1
-	url=$2
-	service_key=$(echo "$service" | tr '[:upper:]' '[:lower:]')
+# Define services and their health check URLs
+declare -A services
+services["grafana"]="http://localhost:3000/api/health"
+services["loki"]="http://localhost:3100/ready"
+services["prometheus"]="http://localhost:9090/api/v1/status/runtimeinfo"
+services["tempo"]="http://localhost:3200/ready"
 
-	while [[ $(curl -o /dev/null -sg "${url}" -w "%{response_code}") != "200" ]]; do
-		echo "Waiting for ${service} to start up..."
-		sleep 1
-	done
-
-	# Calculate and display startup time
-	end_time=$(date +%s)
-	start_var="start_time_${service_key}"
-	start_time=$(eval echo \${$start_var})
-	elapsed=$((end_time - start_time))
-	# Store the elapsed time in the array
-	elapsed_times[$service_key]=$elapsed
-	echo "${service} is up and running. Startup time: ${elapsed} seconds"
-}
-
-wait_ready "Grafana" "http://localhost:3000/api/health"
-wait_ready "Loki" "http://localhost:3100/ready"
-wait_ready "Prometheus" "http://localhost:9090/api/v1/status/runtimeinfo"
-wait_ready "Tempo" "http://localhost:3200/ready"
-
-# Record start time for OpenTelemetry check if not already done
-otelcol_start_time=${start_time_otelcol}
-
-# we query the otelcol_process_uptime_total metric instead, which checks if the collector is up,
-# and indirectly checks if the prometheus endpoint is up.
-while ! curl -sg 'http://localhost:9090/api/v1/query?query=otelcol_process_uptime_total{}' | jq -r .data.result[0].value[1] | grep '[0-9]' >/dev/null; do
-	echo "Waiting for the OpenTelemetry collector to start up..."
-	sleep 1
+# Initialize service_ready status to false for all services
+for service in "${!services[@]}"; do
+    service_ready[$service]=false
 done
 
-# Calculate and display OpenTelemetry collector startup time
-otelcol_end_time=$(date +%s)
-otelcol_elapsed=$((otelcol_end_time - otelcol_start_time))
-elapsed_times[otelcol]=$otelcol_elapsed
-echo "OpenTelemetry collector is up and running. Startup time: ${otelcol_elapsed} seconds"
+# Also check OpenTelemetry collector separately (since it uses a different check method)
+service_ready["otelcol"]=false
+
+# Function to check if a service is ready
+check_service_ready() {
+    local service=$1
+    local url=$2
+    
+    # Skip if service is already marked as ready
+    if [[ ${service_ready[$service]} == true ]]; then
+        return 0
+    fi
+    
+    # Check if service is ready
+    if [[ $(curl -o /dev/null -sg "${url}" -w "%{response_code}" 2>/dev/null) == "200" ]]; then
+        # Calculate and display startup time
+        end_time=$(date +%s)
+        start_var="start_time_${service}"
+        start_time=$(eval echo \${$start_var})
+        elapsed=$((end_time - start_time))
+        # Store the elapsed time in the array
+        elapsed_times[$service]=$elapsed
+        service_ready[$service]=true
+        echo "${service^} is up and running. Startup time: ${elapsed} seconds"
+        return 0
+    fi
+    
+    return 1
+}
+
+# Function to check if OpenTelemetry collector is ready
+check_otelcol_ready() {
+    # Skip if already marked as ready
+    if [[ ${service_ready["otelcol"]} == true ]]; then
+        return 0
+    fi
+    
+    # Check if collector is ready via Prometheus metric
+    if curl -sg 'http://localhost:9090/api/v1/query?query=otelcol_process_uptime_total{}' 2>/dev/null | jq -r .data.result[0].value[1] 2>/dev/null | grep '[0-9]' >/dev/null; then
+        # Calculate and display startup time
+        end_time=$(date +%s)
+        otelcol_start_time=${start_time_otelcol}
+        elapsed=$((end_time - otelcol_start_time))
+        elapsed_times["otelcol"]=$elapsed
+        service_ready["otelcol"]=true
+        echo "OpenTelemetry collector is up and running. Startup time: ${elapsed} seconds"
+        return 0
+    fi
+    
+    return 1
+}
+
+# Wait for all services to be ready
+all_ready=false
+while [[ $all_ready == false ]]; do
+    # Check each service
+    for service in "${!services[@]}"; do
+        check_service_ready "$service" "${services[$service]}"
+    done
+    
+    # Check OpenTelemetry collector
+    check_otelcol_ready
+    
+    # Check if all services are ready
+    all_ready=true
+    for service in "${!service_ready[@]}"; do
+        if [[ ${service_ready[$service]} == false ]]; then
+            all_ready=false
+            break
+        fi
+    done
+    
+    # If not all ready, wait a second before trying again
+    if [[ $all_ready == false ]]; then
+        sleep 1
+    fi
+done
 
 # Calculate total startup time
 end_time_global=$(date +%s)
 total_elapsed=$((end_time_global - start_time_global))
 
 touch /tmp/ready
-echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
+echo "All components are up and running. (created /tmp/ready)"
 echo "Total startup time: ${total_elapsed} seconds"
 
 echo "Open ports:"

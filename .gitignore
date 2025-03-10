@@ -7,3 +7,6 @@ venv/
 .lycheecache
 *.iml
 .env
+opentelemetry-javaagent*.jar
+grafana-opentelemetry*.jar
+

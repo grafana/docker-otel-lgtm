@@ -6,7 +6,8 @@ start_time_global=$(date +%s)
 # Function to record start time for a component
 start_component() {
 	local component=$1
-	local start_time=$(date +%s)
+	local start_time
+	start_time=$(date +%s)
 	# Store start time in an associative array
 	eval "start_time_${component}=${start_time}"
 }
@@ -62,6 +63,7 @@ check_service_ready() {
 		# Calculate and display startup time
 		end_time=$(date +%s)
 		start_var="start_time_${service}"
+		# shellcheck disable=SC1083,SC2086
 		start_time=$(eval echo \${$start_var})
 		elapsed=$((end_time - start_time))
 		# Store the elapsed time in the array
@@ -85,6 +87,7 @@ check_otelcol_ready() {
 	if curl -sg 'http://localhost:9090/api/v1/query?query=otelcol_process_uptime_total{}' 2>/dev/null | jq -r .data.result[0].value[1] 2>/dev/null | grep '[0-9]' >/dev/null; then
 		# Calculate and display startup time
 		end_time=$(date +%s)
+		# shellcheck disable=SC2154
 		otelcol_start_time=${start_time_otelcol}
 		elapsed=$((end_time - otelcol_start_time))
 		elapsed_times["otelcol"]=$elapsed

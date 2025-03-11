@@ -28,7 +28,7 @@ start_component "prometheus"
 start_component "tempo"
 ./run-tempo.sh &
 
-echo "Waiting for all components to start up..."
+echo "Waiting for the OpenTelemetry collector and the Grafana LGTM stack to start up..."
 
 # Declare arrays to store service status and elapsed times
 declare -A service_ready elapsed_times
@@ -129,14 +129,7 @@ done
 end_time_global=$(date +%s)
 total_elapsed=$((end_time_global - start_time_global))
 
-touch /tmp/ready
-echo "All components are up and running. (created /tmp/ready)"
 echo "Total startup time: ${total_elapsed} seconds"
-
-echo "Open ports:"
-echo " - 4317: OpenTelemetry GRPC endpoint"
-echo " - 4318: OpenTelemetry HTTP endpoint"
-echo " - 3000: Grafana. User: admin, password: admin"
 
 # Print startup time summary
 echo -e "\nStartup Time Summary:"
@@ -147,5 +140,13 @@ echo "Prometheus: ${elapsed_times[prometheus]} seconds"
 echo "Tempo: ${elapsed_times[tempo]} seconds"
 echo "OpenTelemetry collector: ${elapsed_times[otelcol]} seconds"
 echo "Total: ${total_elapsed} seconds"
+
+touch /tmp/ready
+echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
+
+echo "Open ports:"
+echo " - 4317: OpenTelemetry GRPC endpoint"
+echo " - 4318: OpenTelemetry HTTP endpoint"
+echo " - 3000: Grafana. User: admin, password: admin"
 
 sleep infinity

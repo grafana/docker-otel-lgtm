@@ -4,7 +4,7 @@ const {
   BatchLogRecordProcessor
 } = require('@opentelemetry/sdk-logs')
 const { OTLPLogExporter } = require('@opentelemetry/exporter-logs-otlp-proto')
-const { Resource } = require('@opentelemetry/resources')
+const { resourceFromAttributes } = require('@opentelemetry/resources')
 const {
   ATTR_SERVICE_NAME,
   ATTR_SERVICE_VERSION
@@ -18,7 +18,7 @@ class Logger {
 
     // To start a logger, you first need to initialize the Logger provider.
     const loggerProvider = new LoggerProvider({
-      resource: new Resource({
+      resource: resourceFromAttributes({
         [ATTR_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME,
         [ATTR_SERVICE_VERSION]: process.env.OTEL_SERVICE_VERSION
       })

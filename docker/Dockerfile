@@ -10,7 +10,7 @@ ENV TEMPO_VERSION=v2.7.1
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
 ENV LOKI_VERSION=v3.4.2
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
-ENV OPENTELEMETRY_COLLECTOR_VERSION=v0.122.0
+ENV OPENTELEMETRY_COLLECTOR_VERSION=v0.122.1
 
 # TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts
 # on an amd64 architecture, than the TARGETARCH will be set to `amd64`.

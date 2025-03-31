@@ -1,0 +1,36 @@
+[tasks.lint]
+run = "scripts/super-linter.sh"
+
+[tasks.lint-markdown]
+run = "markdownlint-cli2 --fix ."
+
+[tasks.lint-links]
+run = "lychee --cache --include-fragments ."
+
+[tasks.lint-all]
+depends = ["lint", "lint-links"]
+
+[tasks.lgtm]
+run = './run-lgtm.sh {{arg(name="tag", default="latest")}}'
+
+[tasks.example]
+run = "./run-example.sh"
+
+[tasks.generate-traffic]
+run = "./generate-traffic.sh"
+
+[tasks.all]
+depends = ["lgtm", "example", "generate-traffic"]
+
+[tasks.k8s-apply]
+run = "kubectl apply -f k8s/lgtm.yaml"
+
+[tasks.k8s-port-forward]
+run = "kubectl port-forward service/lgtm 3000:3000 4317:4317 4318:4318"
+
+[tasks.build-lgtm]
+run = './build-lgtm.sh {{arg(name="tag", default="latest")}}'
+
+[tools]
+lychee = "latest"
+markdownlint-cli2 = "latest"

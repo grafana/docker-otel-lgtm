@@ -1,17 +1,19 @@
 # Contributing
 
+It's recommended to use the [mise](https://mise.jdx.dev/) for development.
+
 ## Building locally
 
 `dev1` is an example of a tag to test locally.
 
-- `./build-lgtm.sh dev1` will build the docker image locally.
-- `./run-lgtm.sh dev1` will run the docker image locally.
+- `mise run build-lgtm dev1` will build the docker image locally.
+- `mise run lgtm dev1` will run the docker image locally.
 
 ## Linting
 
-- Markdown lint: `markdownlint -f -i container -i examples/python/venv .` (`-f` fixes simple violations, requires [markdownlint](https://github.com/DavidAnson/markdownlint#markdownlint))
-- Markdown link checker: `lychee .` (requires [lychee](https://github.com/lycheeverse/lychee))
-- Run all checks: `./scripts/lint.sh`
+- Markdown lint: `mise run lint-markdown`
+- Markdown link checker: `mise run lint-links`
+- Run all checks: `mise run lint-all`
 
 ## Acceptance Tests
 

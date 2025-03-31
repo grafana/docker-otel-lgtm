@@ -3,7 +3,7 @@
 source ./logging.sh
 
 if [ -z "${GF_AUTH_ANONYMOUS_ENABLED}" ]; then
-     export GF_AUTH_ANONYMOUS_ENABLED=true
+	export GF_AUTH_ANONYMOUS_ENABLED=true
      export GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
 fi
 

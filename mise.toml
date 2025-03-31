@@ -1,0 +1,8 @@
+[tasks.lint]
+run = "scripts/super-linter.sh"
+
+[tasks.lint-links]
+run = "lychee --cache --include-fragments ."
+
+[tasks.lint-all]
+depends = ["lint", "lint-links"]

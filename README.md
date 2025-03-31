@@ -26,6 +26,9 @@ The Docker image is available on Docker hub: <https://hub.docker.com/r/grafana/o
 
 # Windows (PowerShell)
 ./run-lgtm
+
+# Using mise (Unix/Linux)
+mise run lgtm
 ```
 
 ## Configuration
@@ -79,6 +82,10 @@ kubectl apply -f k8s/lgtm.yaml
 
 # port forwarding
 kubectl port-forward service/lgtm 3000:3000 4317:4317 4318:4318
+
+# Using mise
+mise k8s-apply
+mise k8s-port-forward
 ```
 
 ## Send OpenTelemetry Data
@@ -100,9 +107,14 @@ Log in to [http://localhost:3000](http://localhost:3000) with user _admin_ and p
 ```sh
 cd docker/
 docker build . -t grafana/otel-lgtm
+
+# Using mise
+mise build-lgtm
 ```
 
 ## Build and run the example app
+
+> **_NOTE:_** You can run everything together using [mise](https://mise.jdx.dev/) with `mise run all`
 
 Run the example REST service:
 
@@ -112,6 +124,9 @@ Run the example REST service:
 
 # Windows (PowerShell)
 ./run-example
+
+# Using mise (Unix/Linux)
+mise run example
 ```
 
 Generate traffic:
@@ -122,6 +137,9 @@ Generate traffic:
 
 # Windows (PowerShell)
 ./generate-traffic
+
+# Using mise (Unix/Linux)
+mise run generate-traffic
 ```
 
 > **_NOTE:_** You can use [OTel Checker](https://github.com/grafana/otel-checker/) to check if the instrumentation is correct.

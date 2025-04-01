@@ -19,6 +19,7 @@ jobs:
           path: oats
       - uses: jdx/mise-action@v2
         with:
+          experimental: true
           working_directory: main
       - name: Build Image for integration tests
         working-directory: ./main

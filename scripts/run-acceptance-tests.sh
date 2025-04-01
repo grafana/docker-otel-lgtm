@@ -14,5 +14,6 @@ export TESTCASE_TIMEOUT=5m
 export TESTCASE_BASE_PATH=$example_dir
 export LGTM_VERSION=$RELEASE
 
+cp mise.* ../oats
 cd ../oats/yaml
 ginkgo

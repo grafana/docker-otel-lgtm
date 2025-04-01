@@ -26,7 +26,11 @@ jobs:
         run: ./build-lgtm.sh $GITHUB_SHA
       - name: Run acceptance tests
         working-directory: ./main
-        run: ./scripts/run-acceptance-tests.sh $GITHUB_SHA
+        run: ./scripts/run-acceptance-tests.sh
+        env:
+          TESTCASE_TIMEOUT: 5m
+          TESTCASE_BASE_PATH: examples
+          LGTM_VERSION: $GITHUB_SHA
       - name: upload log file
         uses: actions/upload-artifact@v4
         if: failure()

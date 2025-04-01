@@ -5,6 +5,12 @@ docker-compose:
 input:
   - path: /rolldice
 expected:
+  # this is checking that the health check is working
+  # this is usually not needed - because we check the functionality of the app
+  # but some cases are missing, e.g. that grafana is up and running
+  # We also check that this exact log line is present in the logs, which some users rely on
+  compose-logs:
+    - "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'
       spans:

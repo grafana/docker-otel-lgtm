@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: grafana/oats
-          ref: ec2a620bcaebc053dcfa468734cb013ae2ccf947
+          ref: fce03979737154faa36616d4d6ae0e5a638b043c
           path: oats
       - uses: jdx/mise-action@v2
         with:

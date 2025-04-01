@@ -18,6 +18,8 @@ jobs:
           ref: ec2a620bcaebc053dcfa468734cb013ae2ccf947
           path: oats
       - uses: jdx/mise-action@v2
+        with:
+          working_directory: main
       - name: Build Image for integration tests
         working-directory: ./main
         run: ./build-lgtm.sh $GITHUB_SHA

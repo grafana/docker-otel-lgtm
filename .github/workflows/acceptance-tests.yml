@@ -23,14 +23,14 @@ jobs:
           working_directory: main
       - name: Build Image for integration tests
         working-directory: ./main
-        run: ./build-lgtm.sh ${{ env.GITHUB_SHA }}
+        run: ./build-lgtm.sh ${{ github.event.pull_request.head.sha }}
       - name: Run acceptance tests
         working-directory: ./main
         run: ./scripts/run-acceptance-tests.sh
         env:
           TESTCASE_TIMEOUT: 5m
           TESTCASE_BASE_PATH: ../../main/examples
-          LGTM_VERSION: ${{ env.GITHUB_SHA }}
+          LGTM_VERSION: ${{ github.event.pull_request.head.sha }}
       - name: upload log file
         uses: actions/upload-artifact@v4
         if: failure()

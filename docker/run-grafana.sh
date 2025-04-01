@@ -2,8 +2,7 @@
 
 source ./logging.sh
 
-# this should fail the build - revert when it really did fail
-if [ -z "${GF_AUTH_ANONYMOUS_ENABLED}" ]; then
+if [ -z "${GF_AUTH_ANONYMOUS_ENABLED:-}" ]; then
 	export GF_AUTH_ANONYMOUS_ENABLED=true
 	export GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
 fi

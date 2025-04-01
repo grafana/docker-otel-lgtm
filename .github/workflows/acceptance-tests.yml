@@ -15,19 +15,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: grafana/oats
-          ref: v0.1.0
+          ref: ec2a620bcaebc053dcfa468734cb013ae2ccf947
           path: oats
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: "1.24"
-          cache-dependency-path: oats/go.sum
+      - uses: jdx/mise-action@v2
       - name: Build Image for integration tests
         working-directory: ./main
-        run: ./build-lgtm.sh
+        run: ./build-lgtm.sh $GITHUB_SHA
       - name: Run acceptance tests
         working-directory: ./main
-        run: ./scripts/run-acceptance-tests.sh
+        run: ./scripts/run-acceptance-tests.sh $GITHUB_SHA
       - name: upload log file
         uses: actions/upload-artifact@v4
         if: failure()

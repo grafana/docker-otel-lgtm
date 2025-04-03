@@ -20,6 +20,8 @@ It's recommended to use the [mise](https://mise.jdx.dev/) for development.
 Acceptance test cases are defined in `oats.yaml` files in the examples directory. The test cases are run by [oats].
 
 If a test case fails (lets say "examples/jdbc/spring-boot-reactive-2"), follows these steps:
+                  
+todo fixme
 
 1. Check out the [oats] repository
 2. Go to the oats folder

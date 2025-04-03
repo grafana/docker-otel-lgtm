@@ -9,31 +9,16 @@ jobs:
     steps:
       - name: Check out
         uses: actions/checkout@v4
-        with:
-          path: main
-      - name: Check out oats
-        uses: actions/checkout@v4
-        with:
-          repository: grafana/oats
-          ref: v0.1.2
-          path: oats
       - uses: jdx/mise-action@v2
         with:
           experimental: true
-          working_directory: main
       - name: Build Image for integration tests
-        working-directory: ./main
         run: ./build-lgtm.sh ${{ github.event.pull_request.head.sha }}
       - name: Run acceptance tests
-        working-directory: ./main
-        run: ./scripts/run-acceptance-tests.sh
-        env:
-          TESTCASE_TIMEOUT: 5m
-          TESTCASE_BASE_PATH: ../../main/examples
-          LGTM_VERSION: ${{ github.event.pull_request.head.sha }}
+        run: oats -timeout 5m -lgtm-version ${{ github.event.pull_request.head.sha }} examples/
       - name: upload log file
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: OATS logs
-          path: oats/yaml/build/**/*.log
+          name: OATs logs
+          path: build/**/*.log

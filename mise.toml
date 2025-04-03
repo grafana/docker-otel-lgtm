@@ -32,7 +32,7 @@ run = "kubectl port-forward service/lgtm 3000:3000 4317:4317 4318:4318"
 run = './build-lgtm.sh {{arg(name="tag", default="latest")}}'
 
 [tools]
-ginkgo = "latest"
 go = "latest"
+"go:github.com/grafana/oats" = "338027ff020799e2e16bfe301ed6352d9cab6c88"
 lychee = "latest"
 markdownlint-cli2 = "latest"

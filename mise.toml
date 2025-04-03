@@ -18,7 +18,7 @@ depends = ["lint", "lint-links"]
 
 [tasks.test]
 description = "Run integration tests"
-run = "scripts/run-acceptance-tests.sh"
+run = 'scripts/run-acceptance-tests.sh {{arg(name="tag", default="latest")}}'
 
 [tasks.lgtm]
 run = './run-lgtm.sh {{arg(name="tag", default="latest")}}'

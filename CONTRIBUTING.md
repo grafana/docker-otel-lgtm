@@ -19,7 +19,7 @@ It's recommended to use the [mise](https://mise.jdx.dev/) for development.
 
 Acceptance test cases are defined in `oats.yaml` files in the examples directory. The test cases are run by [oats].
 
-If a test case fails (lets say "examples/nodejs"), follows these steps:
+If a test case fails (lets say `examples/nodejs`), follows these steps:
 
 1. Build a new image: `mise run build-lgtm dev1`
 2. `oats -timeout 2h -lgtm-version dev1 examples/nodejs` (automatically installed by `mise`)

@@ -12,8 +12,13 @@ jobs:
       - uses: jdx/mise-action@v2
         with:
           experimental: true
+          mise_toml: |
+            [tools]
+            # renovate: datasource=github-releases depName=oats packageName=grafana/oats
+            "go:github.com/grafana/oats" = "0.2.0"
+
       - name: Run acceptance tests
-        run: mise run test ${{ github.event.pull_request.head.sha }}
+        run: ./scripts/run-acceptance-tests.sh ${{ github.event.pull_request.head.sha }}
       - name: upload log file
         uses: actions/upload-artifact@v4
         if: failure()

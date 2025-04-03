@@ -74,5 +74,13 @@
         "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s",
       ],
     },
+    {
+      customType: "regex",
+      description: "Update mise variables in GitHub Actions",
+      fileMatch: ["^\\.github/workflows/*.yml$"],
+      matchStrings: [
+        '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?".+" = "(?<currentValue>.+?)"',
+      ],
+    },
   ],
 }

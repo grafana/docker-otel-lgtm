@@ -1,6 +1,7 @@
 [tools]
 go = "latest"
 "go:github.com/grafana/oats" = "0.2.0"
+java = "temurin-21"
 lychee = "latest"
 markdownlint-cli2 = "latest"
 
@@ -18,7 +19,7 @@ depends = ["lint", "lint-links"]
 
 [tasks.test]
 description = "Run integration tests"
-run = 'scripts/run-acceptance-tests.sh {{arg(name="tag", default="latest")}}'
+run = './scripts/run-acceptance-tests.sh {{arg(name="tag", default="latest")}}'
 
 [tasks.lgtm]
 run = './run-lgtm.sh {{arg(name="tag", default="latest")}}'

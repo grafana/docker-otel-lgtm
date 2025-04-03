@@ -6,6 +6,10 @@ backend = "core:go"
 version = "0.2.0"
 backend = "go:github.com/grafana/oats"
 
+[tools.java]
+version = "temurin-21.0.6+7.0.LTS"
+backend = "core:java"
+
 [tools.lychee]
 version = "0.18.1"
 backend = "aqua:lycheeverse/lychee"

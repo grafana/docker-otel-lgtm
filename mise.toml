@@ -1,6 +1,7 @@
 [tools]
 go = "latest"
 "go:github.com/grafana/oats" = "0.2.0"
+java = "temurin-21"
 lychee = "latest"
 markdownlint-cli2 = "latest"
 

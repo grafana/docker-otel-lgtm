@@ -79,7 +79,7 @@
       description: "Update mise variables in GitHub Actions",
       fileMatch: ["^\\.github/workflows/*.yml$"],
       matchStrings: [
-        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?\".+\" = \"(?<currentValue>.+?)\"",
+        '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?".+" = "(?<currentValue>.+?)"',
       ],
     },
   ],

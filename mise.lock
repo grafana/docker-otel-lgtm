@@ -3,7 +3,7 @@ version = "1.24.1"
 backend = "core:go"
 
 [tools."go:github.com/grafana/oats"]
-version = "338027ff020799e2e16bfe301ed6352d9cab6c88"
+version = "0.2.0"
 backend = "go:github.com/grafana/oats"
 
 [tools.lychee]

@@ -1,3 +1,9 @@
+[tools]
+go = "latest"
+"go:github.com/grafana/oats" = "0.2.0"
+lychee = "latest"
+markdownlint-cli2 = "latest"
+
 [tasks.lint]
 run = "scripts/super-linter.sh"
 
@@ -9,6 +15,10 @@ run = "lychee --cache --include-fragments ."
 
 [tasks.lint-all]
 depends = ["lint", "lint-links"]
+
+[tasks.test]
+description = "Run integration tests"
+run = "scripts/run-acceptance-tests.sh"
 
 [tasks.lgtm]
 run = './run-lgtm.sh {{arg(name="tag", default="latest")}}'
@@ -30,9 +40,3 @@ run = "kubectl port-forward service/lgtm 3000:3000 4317:4317 4318:4318"
 
 [tasks.build-lgtm]
 run = './build-lgtm.sh {{arg(name="tag", default="latest")}}'
-
-[tools]
-go = "latest"
-"go:github.com/grafana/oats" = "338027ff020799e2e16bfe301ed6352d9cab6c88"
-lychee = "latest"
-markdownlint-cli2 = "latest"

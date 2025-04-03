@@ -12,10 +12,8 @@ jobs:
       - uses: jdx/mise-action@v2
         with:
           experimental: true
-      - name: Build Image for integration tests
-        run: ./build-lgtm.sh ${{ github.event.pull_request.head.sha }}
       - name: Run acceptance tests
-        run: oats -timeout 5m -lgtm-version ${{ github.event.pull_request.head.sha }} examples/
+        run: ./scripts/run-acceptance-tests.sh ${{ github.event.pull_request.head.sha }}
       - name: upload log file
         uses: actions/upload-artifact@v4
         if: failure()

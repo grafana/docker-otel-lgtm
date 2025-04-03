@@ -19,13 +19,12 @@ It's recommended to use the [mise](https://mise.jdx.dev/) for development.
 
 Acceptance test cases are defined in `oats.yaml` files in the examples directory. The test cases are run by [oats].
 
-If a test case fails (lets say "examples/jdbc/spring-boot-reactive-2"), follows these steps:
+If a test case fails (lets say `examples/nodejs`), follows these steps:
 
-1. Check out the [oats] repository
-2. Go to the oats folder
-3. `cd yaml`
-4. Install ginkgo: `go install github.com/onsi/ginkgo/v2/ginkgo`
-5. `TESTCASE_TIMEOUT=2h TESTCASE_BASE_PATH=/path/to/this/repo/examples ginkgo -v -r` (or the sub-directory you're debugging)
-6. go to <http://localhost:3000>
+1. Build a new image: `mise run build-lgtm dev1`
+2. `oats -timeout 2h -lgtm-version dev1 examples/nodejs` (automatically installed by `mise`)
+3. go to <http://localhost:3000>
+
+You can run all everything together using `mise run test`.
 
 [oats]: https://github.com/grafana/oats

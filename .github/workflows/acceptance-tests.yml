@@ -12,7 +12,6 @@ jobs:
       - uses: jdx/mise-action@v2
         with:
           experimental: true
-          install: 'false'
       - name: Run acceptance tests
         run: mise run test ${{ github.event.pull_request.head.sha }}
       - name: upload log file

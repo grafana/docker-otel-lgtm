@@ -1,8 +1,10 @@
 [tools.go]
+# renovate: datasource=github-releases depName=go packageName=golang/go
 version = "1.24.1"
 backend = "core:go"
 
 [tools."go:github.com/grafana/oats"]
+# renovate: datasource=github-releases depName=oats packageName=grafana/oats
 version = "0.2.0"
 backend = "go:github.com/grafana/oats"
 

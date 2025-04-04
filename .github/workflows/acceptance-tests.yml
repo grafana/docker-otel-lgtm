@@ -11,7 +11,6 @@ jobs:
         uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
         with:
-          experimental: true
           mise_toml: |
             [tools]
             # renovate: datasource=github-releases depName=oats packageName=grafana/oats

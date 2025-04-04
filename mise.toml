@@ -41,3 +41,7 @@ run = "kubectl port-forward service/lgtm 3000:3000 4317:4317 4318:4318"
 
 [tasks.build-lgtm]
 run = './build-lgtm.sh {{arg(name="tag", default="latest")}}'
+
+[settings]
+# to get lock file support and for go backend
+experimental = true

@@ -10,12 +10,6 @@ jobs:
       - name: Check out
         uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
-        with:
-          mise_toml: |
-            [tools]
-            # renovate: datasource=github-releases depName=oats packageName=grafana/oats
-            "go:github.com/grafana/oats" = "0.2.0"
-
       - name: Run acceptance tests
         run: ./scripts/run-acceptance-tests.sh ${{ github.event.pull_request.head.sha }}
       - name: upload log file

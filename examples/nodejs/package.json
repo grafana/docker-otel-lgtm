@@ -35,6 +35,6 @@
     "@opentelemetry/sdk-node": "^0.200.0",
     "@opentelemetry/sdk-trace-node": "^2.0.0",
     "@opentelemetry/semantic-conventions": "^1.30.0",
-    "express": "^4.21.2"
+    "express": "^5.0.0"
   }
 }

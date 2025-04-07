@@ -37,5 +37,5 @@ ingester:
     min_ready_duration: 1s
 
 frontend:
-  scheduler_dns_lookup_period: 1s
+  scheduler_dns_lookup_period: 3s
   address: 127.0.0.1

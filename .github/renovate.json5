@@ -77,7 +77,7 @@
     {
       customType: "regex",
       description: "Update mise.lock",
-      fileMatch: ["^\\mise.lock$"],
+      fileMatch: ["^mise.lock$"],
       matchStrings: [
         '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\nversion = "(?<currentValue>.+?)"',
       ],

@@ -11,6 +11,15 @@ distributor:
         http:
           endpoint: "localhost:4418"
 
+ingester:
+  lifecycler:
+    address: 127.0.0.1
+    ring:
+      kvstore:
+        store: inmemory
+      replication_factor: 1
+    min_ready_duration: 1s
+
 storage:
   trace:
     backend: local

@@ -12,9 +12,3 @@ jobs:
       - uses: jdx/mise-action@v2
       - name: Run acceptance tests
         run: ./scripts/run-acceptance-tests.sh ${{ github.event.pull_request.head.sha }}
-      - name: upload log file
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: OATs logs
-          path: build/**/*.log

@@ -1,5 +1,5 @@
 # hadolint global ignore=DL3059
-FROM redhat/ubi9:9.5-1742918310
+FROM redhat/ubi9:9.5-1744101466
 
 # renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
 ENV GRAFANA_VERSION=v11.6.0

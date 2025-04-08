@@ -12,6 +12,9 @@ ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.123.1
 # hadolint global ignore=DL3059
 FROM redhat/ubi9:9.5-1742918310 AS builder
 
+RUN mkdir /otel-lgtm
+WORKDIR /otel-lgtm
+
 ARG GRAFANA_VERSION
 ARG PROMETHEUS_VERSION
 ARG TEMPO_VERSION
@@ -25,46 +28,38 @@ ARG TARGETARCH
 ENV TARGETARCH=${TARGETARCH}
 
 # hadolint ignore=DL3033
-RUN yum install -y unzip
+RUN yum install -y unzip dos2unix
 
 RUN bash -c 'ARCHIVE=grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
     curl -sOL https://dl.grafana.com/oss/release/"${ARCHIVE}" && \
     tar xfz "${ARCHIVE}" && \
+    rm "${ARCHIVE}" && \
     mv grafana-"${GRAFANA_VERSION}" grafana/'
 
 RUN bash -c 'ARCHIVE=prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}" && \
     curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/"${ARCHIVE}".tar.gz && \
     tar xfz "${ARCHIVE}".tar.gz && \
-    mv "${ARCHIVE}" prometheus'
+    mv "${ARCHIVE}" prometheus && \
+    rm "${ARCHIVE}".tar.gz'
 
 RUN bash -c 'ARCHIVE=tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
     curl -sOL https://github.com/grafana/tempo/releases/download/"${TEMPO_VERSION}"/"${ARCHIVE}" && \
     mkdir tempo && \
-    tar xfz "${ARCHIVE}" -C tempo/'
+    tar xfz "${ARCHIVE}" -C tempo/ && \
+    rm "${ARCHIVE}"'
 
 RUN bash -c 'ARCHIVE=loki-linux-"${TARGETARCH}".zip && \
     curl -sOL https://github.com/grafana/loki/releases/download/"${LOKI_VERSION}"/"${ARCHIVE}" && \
     mkdir loki && \
-    unzip "${ARCHIVE}" -d loki/'
+    unzip "${ARCHIVE}" -d loki/ && \
+    rm "${ARCHIVE}" && \
+    mv loki/loki-linux-"${TARGETARCH}" loki/loki'
 
 RUN bash -c 'ARCHIVE=otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
     curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/"${ARCHIVE}" && \
     mkdir otelcol-contrib && \
-    tar xfz "${ARCHIVE}" -C otelcol-contrib/'
-
-FROM redhat/ubi9-minimal:9.5-1742914212
-
-RUN mkdir /otel-lgtm
-WORKDIR /otel-lgtm
-
-# hadolint ignore=DL3033
-RUN microdnf install -y jq procps dos2unix findutils && microdnf clean all
-
-COPY --from=builder /grafana /grafana
-COPY --from=builder /prometheus /prometheus
-COPY --from=builder /tempo /tempo
-COPY --from=builder /loki /loki
-COPY --from=builder /otelcol-contrib /otelcol-contrib
+    tar xfz "${ARCHIVE}" -C otelcol-contrib/ && \
+    rm "${ARCHIVE}"'
 
 COPY prometheus.yaml .
 COPY run-prometheus.sh .
@@ -85,10 +80,27 @@ COPY run-all.sh .
 # hadolint ignore=SC2038,DL4006
 RUN find . -maxdepth 1 -type f | xargs dos2unix
 
+FROM redhat/ubi9-minimal:9.5-1742914212
+
+RUN mkdir /otel-lgtm
+WORKDIR /otel-lgtm
+
+# hadolint ignore=DL3033
+RUN microdnf install -y jq procps && microdnf clean all
+
+COPY --from=builder /otel-lgtm /otel-lgtm
+
+# just for displaying the version in the startup message
 ARG GRAFANA_VERSION
 ARG PROMETHEUS_VERSION
 ARG TEMPO_VERSION
 ARG LOKI_VERSION
 ARG OPENTELEMETRY_COLLECTOR_VERSION
+
+ENV GRAFANA_VERSION=${GRAFANA_VERSION}
+ENV PROMETHEUS_VERSION=${PROMETHEUS_VERSION}
+ENV TEMPO_VERSION=${TEMPO_VERSION}
+ENV LOKI_VERSION=${LOKI_VERSION}
+ENV OPENTELEMETRY_COLLECTOR_VERSION=${OPENTELEMETRY_COLLECTOR_VERSION}
 
 CMD ["/otel-lgtm/run-all.sh"]

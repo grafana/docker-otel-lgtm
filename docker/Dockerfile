@@ -12,11 +12,11 @@ ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.123.1
 # hadolint global ignore=DL3059
 FROM redhat/ubi9:9.5-1742918310 AS builder
 
-ENV GRAFANA_VERSION=$GRAFANA_VERSION
-ENV PROMETHEUS_VERSION=${PROMETHEUS_VERSION}
-ENV TEMPO_VERSION=${TEMPO_VERSION}
-ENV LOKI_VERSION=${LOKI_VERSION}
-ENV OPENTELEMETRY_COLLECTOR_VERSION=${OPENTELEMETRY_COLLECTOR_VERSION}
+ARG GRAFANA_VERSION
+ARG PROMETHEUS_VERSION
+ARG TEMPO_VERSION
+ARG LOKI_VERSION
+ARG OPENTELEMETRY_COLLECTOR_VERSION
 
 # TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts
 # on an amd64 architecture, than the TARGETARCH will be set to `amd64`.
@@ -25,11 +25,7 @@ ARG TARGETARCH
 ENV TARGETARCH=${TARGETARCH}
 
 # hadolint ignore=DL3033
-RUN yum install -y unzip jq procps dos2unix && yum clean all
-
-# todo delete the following lines after the first build
-RUN echo "GRAFANA_VERSION=${GRAFANA_VERSION}"
-
+RUN yum install -y unzip
 
 RUN bash -c 'ARCHIVE=grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
     curl -sOL https://dl.grafana.com/oss/release/"${ARCHIVE}" && \
@@ -39,27 +35,30 @@ RUN bash -c 'ARCHIVE=grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz
 RUN bash -c 'ARCHIVE=prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}" && \
     curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/"${ARCHIVE}".tar.gz && \
     tar xfz "${ARCHIVE}".tar.gz && \
-    mv "${ARCHIVE}" prometheus
+    mv "${ARCHIVE}" prometheus'
 
 RUN bash -c 'ARCHIVE=tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
     curl -sOL https://github.com/grafana/tempo/releases/download/"${TEMPO_VERSION}"/"${ARCHIVE}" && \
     mkdir tempo && \
-    tar xfz "${ARCHIVE}" -C tempo/
+    tar xfz "${ARCHIVE}" -C tempo/'
 
 RUN bash -c 'ARCHIVE=loki-linux-"${TARGETARCH}".zip && \
     curl -sOL https://github.com/grafana/loki/releases/download/"${LOKI_VERSION}"/"${ARCHIVE}" && \
     mkdir loki && \
-    unzip "${ARCHIVE}" -d loki/
+    unzip "${ARCHIVE}" -d loki/'
 
 RUN bash -c 'ARCHIVE=otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
     curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/"${ARCHIVE}" && \
     mkdir otelcol-contrib && \
-    tar xfz "${ARCHIVE}" -C otelcol-contrib/
+    tar xfz "${ARCHIVE}" -C otelcol-contrib/'
 
 FROM redhat/ubi9-minimal:9.5-1742914212
 
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm
+
+# hadolint ignore=DL3033
+RUN microdnf install -y jq procps dos2unix findutils && microdnf clean all
 
 COPY --from=builder /grafana /grafana
 COPY --from=builder /prometheus /prometheus
@@ -86,11 +85,10 @@ COPY run-all.sh .
 # hadolint ignore=SC2038,DL4006
 RUN find . -maxdepth 1 -type f | xargs dos2unix
 
-# just for displaying the version during the startup
-ENV GRAFANA_VERSION=${GRAFANA_VERSION}
-ENV PROMETHEUS_VERSION=${PROMETHEUS_VERSION}
-ENV TEMPO_VERSION=${TEMPO_VERSION}
-ENV LOKI_VERSION=${LOKI_VERSION}
-ENV OPENTELEMETRY_COLLECTOR_VERSION=${OPENTELEMETRY_COLLECTOR_VERSION}
+ARG GRAFANA_VERSION
+ARG PROMETHEUS_VERSION
+ARG TEMPO_VERSION
+ARG LOKI_VERSION
+ARG OPENTELEMETRY_COLLECTOR_VERSION
 
 CMD ["/otel-lgtm/run-all.sh"]

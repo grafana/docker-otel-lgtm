@@ -10,7 +10,7 @@ ARG LOKI_VERSION=v3.4.3
 ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.123.1
 
 # hadolint global ignore=DL3059
-FROM redhat/ubi9:9.5-1742918310 AS builder
+FROM redhat/ubi9:9.5-1744101466 AS builder
 
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm

@@ -28,7 +28,7 @@ ARG TARGETARCH
 ENV TARGETARCH=${TARGETARCH}
 
 # hadolint ignore=DL3033
-RUN yum install -y unzip dos2unix
+RUN yum install -y unzip dos2unix jq procps
 
 RUN bash -c 'ARCHIVE=grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
     curl -sOL https://dl.grafana.com/oss/release/"${ARCHIVE}" && \
@@ -80,13 +80,33 @@ COPY run-all.sh .
 # hadolint ignore=SC2038,DL4006
 RUN find . -maxdepth 1 -type f | xargs dos2unix
 
-FROM redhat/ubi9-minimal:9.5-1742914212
+FROM redhat/ubi9-micro:9.5-1744118077
 
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm
 
-# hadolint ignore=DL3033
-RUN microdnf install -y jq procps && microdnf clean all
+COPY --from=builder --chown=0:0 /usr/bin/curl /usr/bin/
+COPY --from=builder --chown=0:0 /usr/bin/jq /usr/bin/
+COPY --from=builder --chown=0:0 /usr/bin/grep /usr/bin/
+# jq
+COPY --from=builder --chown=0:0 /usr/lib64/libjq.so.1 /lib64/libjq.so.1
+COPY --from=builder --chown=0:0 /usr/lib64/libonig.so.5 /lib64/libonig.so.5
+# curl
+COPY --from=builder --chown=0:0 /usr/lib64/libcrypto.so.3 /lib64/libcrypto.so.3
+COPY --from=builder --chown=0:0 /usr/lib64/libnghttp2.so.14 /lib64/libnghttp2.so.14
+COPY --from=builder --chown=0:0 /usr/lib64/libcurl.so.4 /lib64/libcurl.so.4
+COPY --from=builder --chown=0:0 /usr/lib64/libssl.so.3 /lib64/libssl.so.3
+COPY --from=builder --chown=0:0 /usr/lib64/libgssapi_krb5.so.2 /lib64/libgssapi_krb5.so.2
+COPY --from=builder --chown=0:0 /usr/lib64/libkrb5.so.3 /lib64/libkrb5.so.3
+COPY --from=builder --chown=0:0 /usr/lib64/libidn2.so.0 /lib64/libidn2.so.0
+COPY --from=builder --chown=0:0 /usr/lib64/libz.so.1 /lib64/libz.so.1
+COPY --from=builder --chown=0:0 /usr/lib64/libk5crypto.so.3 /lib64/libk5crypto.so.3
+COPY --from=builder --chown=0:0 /usr/lib64/libkrb5support.so.0 /lib64/libkrb5support.so.0
+COPY --from=builder --chown=0:0 /usr/lib64/libcom_err.so.2 /lib64/libcom_err.so.2
+COPY --from=builder --chown=0:0 /usr/lib64/libkeyutils.so.1 /lib64/libkeyutils.so.1
+# grep
+COPY --from=builder --chown=0:0 /usr/lib64/libpcre.so.1 /lib64/libpcre.so.1
+COPY --from=builder --chown=0:0 /usr/lib64/libsigsegv.so.2 /lib64/libsigsegv.so.2
 
 COPY --from=builder /otel-lgtm /otel-lgtm
 
@@ -96,7 +116,6 @@ ARG PROMETHEUS_VERSION
 ARG TEMPO_VERSION
 ARG LOKI_VERSION
 ARG OPENTELEMETRY_COLLECTOR_VERSION
-
 ENV GRAFANA_VERSION=${GRAFANA_VERSION}
 ENV PROMETHEUS_VERSION=${PROMETHEUS_VERSION}
 ENV TEMPO_VERSION=${TEMPO_VERSION}

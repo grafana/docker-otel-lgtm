@@ -30,18 +30,15 @@ ENV TARGETARCH=${TARGETARCH}
 # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
 ARG COSIGN_VERSION=v2.5.0
 
-RUN bash -c 'curl -O -L https://github.com/sigstore/cosign/releases/latest/download/cosign-"${COSIGN_VERSION:1}"-1.x86_64.rpm && \
+RUN bash -c 'cd /tmp && \
+    curl -O -L https://github.com/sigstore/cosign/releases/latest/download/cosign-"${COSIGN_VERSION:1}"-1.x86_64.rpm && \
     yum install -y cosign-"${COSIGN_VERSION:1}"-1.x86_64.rpm'
 
 # hadolint ignore=DL3033
 RUN yum install -y unzip dos2unix jq procps
 
-RUN bash -c 'ARCHIVE=grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
-    curl -sOL https://dl.grafana.com/oss/release/"${ARCHIVE}" && \
-    echo "$(curl -sL https://grafana.com/api/downloads/grafana/versions/\"${GRAFANA_VERSION:1}\"/packages/\"${TARGETARCH}\"/linux -H \"accept: application/json\" | jq -r \".sha256\") ${ARCHIVE}" | echo && \
-    tar xfz "${ARCHIVE}" && \
-    rm "${ARCHIVE}" && \
-    mv grafana-"${GRAFANA_VERSION}" grafana/'
+COPY download-grafana.sh /tmp
+RUN /tmp/download-grafana.sh
 
 RUN bash -c 'ARCHIVE=prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}" && \
     curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/sha256sums.txt && \

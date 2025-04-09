@@ -92,18 +92,18 @@ COPY --from=builder --chown=0:0 /usr/bin/grep /usr/bin/
 COPY --from=builder --chown=0:0 /usr/lib64/libjq.so.1 /lib64/libjq.so.1
 COPY --from=builder --chown=0:0 /usr/lib64/libonig.so.5 /lib64/libonig.so.5
 # curl
-COPY --from=builder --chown=0:0 /usr/lib64/libcrypto.so.3 /lib64/libcrypto.so.3
-COPY --from=builder --chown=0:0 /usr/lib64/libnghttp2.so.14 /lib64/libnghttp2.so.14
-COPY --from=builder --chown=0:0 /usr/lib64/libcurl.so.4 /lib64/libcurl.so.4
-COPY --from=builder --chown=0:0 /usr/lib64/libssl.so.3 /lib64/libssl.so.3
-COPY --from=builder --chown=0:0 /usr/lib64/libgssapi_krb5.so.2 /lib64/libgssapi_krb5.so.2
-COPY --from=builder --chown=0:0 /usr/lib64/libkrb5.so.3 /lib64/libkrb5.so.3
-COPY --from=builder --chown=0:0 /usr/lib64/libidn2.so.0 /lib64/libidn2.so.0
-COPY --from=builder --chown=0:0 /usr/lib64/libz.so.1 /lib64/libz.so.1
-COPY --from=builder --chown=0:0 /usr/lib64/libk5crypto.so.3 /lib64/libk5crypto.so.3
-COPY --from=builder --chown=0:0 /usr/lib64/libkrb5support.so.0 /lib64/libkrb5support.so.0
-COPY --from=builder --chown=0:0 /usr/lib64/libcom_err.so.2 /lib64/libcom_err.so.2
-COPY --from=builder --chown=0:0 /usr/lib64/libkeyutils.so.1 /lib64/libkeyutils.so.1
+COPY --from=builder --chown=0:0 /usr/lib64/libkeyutils.so* /lib64/
+COPY --from=builder --chown=0:0 /usr/lib64/libz.so* /lib64/
+COPY --from=builder --chown=0:0 /usr/lib64/libkrb5support.so* /lib64/
+COPY --from=builder --chown=0:0 /usr/lib64/libkrb5.so* /lib64/
+COPY --from=builder --chown=0:0 /usr/lib64/libk5crypto.so* /lib64/
+COPY --from=builder --chown=0:0 /usr/lib64/libgssapi_krb5.so* /lib64/
+COPY --from=builder --chown=0:0 /usr/lib64/libcom_err.so* /lib64/
+COPY --from=builder --chown=0:0 /usr/lib64/libssl.so* /lib64/
+COPY --from=builder --chown=0:0 /usr/lib64/libcrypto.so* /lib64/
+COPY --from=builder --chown=0:0 /usr/lib64/libcurl.so* /lib64/
+COPY --from=builder --chown=0:0 /usr/lib64/libnghttp2.so* /lib64/
+COPY --from=builder --chown=0:0 /usr/lib64/libresolv.so* /lib64/
 # grep
 COPY --from=builder --chown=0:0 /usr/lib64/libpcre.so.1 /lib64/libpcre.so.1
 COPY --from=builder --chown=0:0 /usr/lib64/libsigsegv.so.2 /lib64/libsigsegv.so.2

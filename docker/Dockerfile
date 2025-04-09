@@ -27,36 +27,54 @@ ARG OPENTELEMETRY_COLLECTOR_VERSION
 ARG TARGETARCH
 ENV TARGETARCH=${TARGETARCH}
 
+# renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
+ARG COSIGN_VERSION=v2.5.0
+
+RUN bash -c 'cd /tmp && \
+    curl -O -L https://github.com/sigstore/cosign/releases/latest/download/cosign-"${COSIGN_VERSION:1}"-1.x86_64.rpm && \
+    yum install -y cosign-"${COSIGN_VERSION:1}"-1.x86_64.rpm'
+
 # hadolint ignore=DL3033
 RUN yum install -y unzip dos2unix jq procps
 
-RUN bash -c 'ARCHIVE=grafana-"${GRAFANA_VERSION:1}".linux-"${TARGETARCH}".tar.gz && \
-    curl -sOL https://dl.grafana.com/oss/release/"${ARCHIVE}" && \
-    tar xfz "${ARCHIVE}" && \
-    rm "${ARCHIVE}" && \
-    mv grafana-"${GRAFANA_VERSION}" grafana/'
+COPY download-grafana.sh /tmp
+RUN /tmp/download-grafana.sh
 
 RUN bash -c 'ARCHIVE=prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}" && \
+    curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/sha256sums.txt && \
     curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/"${ARCHIVE}".tar.gz && \
+    sha256sum -c sha256sums.txt --ignore-missing && \
     tar xfz "${ARCHIVE}".tar.gz && \
     mv "${ARCHIVE}" prometheus && \
     rm "${ARCHIVE}".tar.gz'
 
 RUN bash -c 'ARCHIVE=tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
+    curl -sOL https://github.com/grafana/tempo/releases/download/"${TEMPO_VERSION}"/SHA256SUMS && \
     curl -sOL https://github.com/grafana/tempo/releases/download/"${TEMPO_VERSION}"/"${ARCHIVE}" && \
+    sha256sum -c SHA256SUMS --ignore-missing && \
     mkdir tempo && \
     tar xfz "${ARCHIVE}" -C tempo/ && \
     rm "${ARCHIVE}"'
 
 RUN bash -c 'ARCHIVE=loki-linux-"${TARGETARCH}".zip && \
+    curl -sOL https://github.com/grafana/loki/releases/download/"${LOKI_VERSION}"/SHA256SUMS && \
     curl -sOL https://github.com/grafana/loki/releases/download/"${LOKI_VERSION}"/"${ARCHIVE}" && \
+    sha256sum -c SHA256SUMS --ignore-missing && \
     mkdir loki && \
     unzip "${ARCHIVE}" -d loki/ && \
     rm "${ARCHIVE}" && \
     mv loki/loki-linux-"${TARGETARCH}" loki/loki'
 
 RUN bash -c 'ARCHIVE=otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
+    curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/"${ARCHIVE}".sig && \
+    curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/"${ARCHIVE}".pem && \
     curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/"${ARCHIVE}" && \
+    cosign verify-blob \
+        --certificate-identity-regexp github.com/open-telemetry/opentelemetry-collector-releases \
+        --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+        --certificate "${ARCHIVE}".pem \
+        --signature "${ARCHIVE}".sig \
+        "${ARCHIVE}" && \
     mkdir otelcol-contrib && \
     tar xfz "${ARCHIVE}" -C otelcol-contrib/ && \
     rm "${ARCHIVE}"'

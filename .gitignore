@@ -9,4 +9,5 @@ venv/
 .env
 opentelemetry-javaagent*.jar
 grafana-opentelemetry*.jar
+build/
 

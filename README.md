@@ -38,11 +38,12 @@ mise run lgtm
 You can enable logging for troubleshooting:
 
 | Environment Variable   | Enable Logging in       |
-| ---------------------- | ----------------------- |
+|------------------------|-------------------------|
 | ENABLE_LOGS_GRAFANA    | Grafana                 |
 | ENABLE_LOGS_LOKI       | Loki                    |
 | ENABLE_LOGS_PROMETHEUS | Prometheus              |
 | ENABLE_LOGS_TEMPO      | Tempo                   |
+| ENABLE_LOGS_PYROSCOPE  | Pyroscope               |
 | ENABLE_LOGS_OTELCOL    | OpenTelemetry Collector |
 | ENABLE_LOGS_ALL        | all of the above        |
 

@@ -35,12 +35,12 @@ ARG COSIGN_VERSION=v2.5.0
 
 COPY download-grafana.sh install-cosign.sh /tmp/
 
-RUN /tmp/install-cosign.sh
+RUN /tmp/install-cosign.sh $COSIGN_VERSION
 
 # hadolint ignore=DL3033
 RUN yum install -y unzip dos2unix jq procps
 
-RUN /tmp/download-grafana.sh
+RUN /tmp/download-grafana.sh $GRAFANA_VERSION
 
 RUN bash -c 'ARCHIVE=prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}" && \
     curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/sha256sums.txt && \

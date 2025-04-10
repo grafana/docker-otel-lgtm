@@ -16,8 +16,8 @@ FROM redhat/ubi9:9.5-1744101466 AS builder
 
 RUN mkdir /otel-lgtm
 
-COPY grafana-datasources.yaml ./grafana/conf/provisioning/datasources/
-COPY grafana-dashboards.yaml ./grafana/conf/provisioning/dashboards/
+COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
+COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/
 COPY prometheus.yaml \
  run-prometheus.sh \
  grafana-dashboard-red-metrics-classic.json \
@@ -70,7 +70,7 @@ ARG PYROSCOPE_VERSION
 ARG OPENTELEMETRY_COLLECTOR_VERSION
 
 RUN ./download-grafana.sh $GRAFANA_VERSION
-RUN ./download-prometeus.sh $PROMETHEUS_VERSION
+RUN ./download-prometheus.sh $PROMETHEUS_VERSION
 RUN ./download-tempo.sh $TEMPO_VERSION
 RUN ./download-loki.sh $LOKI_VERSION
 RUN ./download-pyroscope.sh $PYROSCOPE_VERSION

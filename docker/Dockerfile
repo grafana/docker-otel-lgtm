@@ -102,6 +102,7 @@ COPY prometheus.yaml \
  run-loki.sh \
  tempo-config.yaml \
  run-tempo.sh \
+ pyroscope-config.yaml \
  run-pyroscope.sh \
  otelcol-config*.yaml \
  run-otelcol.sh \

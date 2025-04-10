@@ -8,8 +8,6 @@ if [[ -z "${VERSION}" ]]; then
   exit 1
 fi
 
-# too complicated to have as inline script in dockerfile
-
 ARCHIVE=grafana-"${VERSION:1}".linux-"${TARGETARCH}".tar.gz
 curl -sOL https://dl.grafana.com/oss/release/"${ARCHIVE}"
 CHECKSUM_URL=https://grafana.com/api/downloads/grafana/versions/"${VERSION:1}"/packages/"${TARGETARCH}"/linux

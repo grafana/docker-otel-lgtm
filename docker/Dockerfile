@@ -15,79 +15,6 @@ ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.123.1
 FROM redhat/ubi9:9.5-1744101466 AS builder
 
 RUN mkdir /otel-lgtm
-WORKDIR /otel-lgtm
-
-ARG GRAFANA_VERSION
-ARG PROMETHEUS_VERSION
-ARG TEMPO_VERSION
-ARG LOKI_VERSION
-ARG PYROSCOPE_VERSION
-ARG OPENTELEMETRY_COLLECTOR_VERSION
-
-# TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts
-# on an amd64 architecture, than the TARGETARCH will be set to `amd64`.
-# More details on the variables can be found here: https://docs.docker.com/desktop/extensions-sdk/extensions/multi-arch/
-ARG TARGETARCH
-ENV TARGETARCH=${TARGETARCH}
-
-# renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
-ARG COSIGN_VERSION=v2.5.0
-
-COPY download-grafana.sh install-cosign.sh /tmp/
-
-RUN /tmp/install-cosign.sh $COSIGN_VERSION
-
-# hadolint ignore=DL3033
-RUN yum install -y unzip dos2unix jq procps
-
-RUN /tmp/download-grafana.sh $GRAFANA_VERSION
-
-RUN bash -c 'ARCHIVE=prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}" && \
-    curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/sha256sums.txt && \
-    curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/"${ARCHIVE}".tar.gz && \
-    sha256sum -c sha256sums.txt --ignore-missing && \
-    tar xfz "${ARCHIVE}".tar.gz && \
-    mv "${ARCHIVE}" prometheus && \
-    rm "${ARCHIVE}".tar.gz'
-
-RUN bash -c 'ARCHIVE=tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
-    curl -sOL https://github.com/grafana/tempo/releases/download/"${TEMPO_VERSION}"/SHA256SUMS && \
-    curl -sOL https://github.com/grafana/tempo/releases/download/"${TEMPO_VERSION}"/"${ARCHIVE}" && \
-    sha256sum -c SHA256SUMS --ignore-missing && \
-    mkdir tempo && \
-    tar xfz "${ARCHIVE}" -C tempo/ && \
-    rm "${ARCHIVE}"'
-
-RUN bash -c 'ARCHIVE=loki-linux-"${TARGETARCH}".zip && \
-    curl -sOL https://github.com/grafana/loki/releases/download/"${LOKI_VERSION}"/SHA256SUMS && \
-    curl -sOL https://github.com/grafana/loki/releases/download/"${LOKI_VERSION}"/"${ARCHIVE}" && \
-    sha256sum -c SHA256SUMS --ignore-missing && \
-    mkdir loki && \
-    unzip "${ARCHIVE}" -d loki/ && \
-    rm "${ARCHIVE}" && \
-    mv loki/loki-linux-"${TARGETARCH}" loki/loki'
-
-RUN bash -c 'ARCHIVE=pyroscope_"${PYROSCOPE_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
-    curl -sOL https://github.com/grafana/pyroscope/releases/download/"${PYROSCOPE_VERSION}"/checksums.txt && \
-    curl -sOL https://github.com/grafana/pyroscope/releases/download/"${PYROSCOPE_VERSION}"/"${ARCHIVE}" && \
-    sha256sum -c checksums.txt --ignore-missing && \
-    mkdir pyroscope && \
-    tar xfz "${ARCHIVE}" -C pyroscope/ && \
-    rm "${ARCHIVE}"'
-
-RUN bash -c 'ARCHIVE=otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
-    curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/"${ARCHIVE}".sig && \
-    curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/"${ARCHIVE}".pem && \
-    curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/"${ARCHIVE}" && \
-    cosign verify-blob \
-        --certificate-identity-regexp github.com/open-telemetry/opentelemetry-collector-releases \
-        --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-        --certificate "${ARCHIVE}".pem \
-        --signature "${ARCHIVE}".sig \
-        "${ARCHIVE}" && \
-    mkdir otelcol-contrib && \
-    tar xfz "${ARCHIVE}" -C otelcol-contrib/ && \
-    rm "${ARCHIVE}"'
 
 COPY grafana-datasources.yaml ./grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml ./grafana/conf/provisioning/dashboards/
@@ -106,9 +33,48 @@ COPY prometheus.yaml \
  run-pyroscope.sh \
  otelcol-config*.yaml \
  run-otelcol.sh \
- run-all.sh ./
+ run-all.sh \
+ /otel-lgtm/
+
+# hadolint ignore=DL3033
+RUN yum install -y unzip dos2unix jq procps
+
 # hadolint ignore=SC2038,DL4006
-RUN find . -maxdepth 1 -type f | xargs dos2unix
+RUN find /otel-lgtm/ -maxdepth 1 -type f | xargs dos2unix
+
+COPY download-grafana.sh \
+ download-prometheus.sh \
+ download-tempo.sh \
+ download-loki.sh \
+ download-pyroscope.sh \
+ download-otelcol.sh \
+ install-cosign.sh \
+ ./
+
+# TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts
+# on an amd64 architecture, than the TARGETARCH will be set to `amd64`.
+# More details on the variables can be found here: https://docs.docker.com/desktop/extensions-sdk/extensions/multi-arch/
+ARG TARGETARCH
+ENV TARGETARCH=${TARGETARCH}
+
+# renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
+ARG COSIGN_VERSION=v2.5.0
+
+RUN ./install-cosign.sh $COSIGN_VERSION
+
+ARG GRAFANA_VERSION
+ARG PROMETHEUS_VERSION
+ARG TEMPO_VERSION
+ARG LOKI_VERSION
+ARG PYROSCOPE_VERSION
+ARG OPENTELEMETRY_COLLECTOR_VERSION
+
+RUN ./download-grafana.sh $GRAFANA_VERSION
+RUN ./download-prometeus.sh $PROMETHEUS_VERSION
+RUN ./download-tempo.sh $TEMPO_VERSION
+RUN ./download-loki.sh $LOKI_VERSION
+RUN ./download-pyroscope.sh $PYROSCOPE_VERSION
+RUN ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
 
 FROM redhat/ubi9-micro:9.5-1744118077
 
@@ -134,7 +100,8 @@ COPY --from=builder --chown=0:0 /usr/lib64/libjq.so.1 \
  /usr/lib64/libresolv.so* \
  # grep
  /usr/lib64/libpcre.so.1 \
- /usr/lib64/libsigsegv.so.2 /lib64/libsigsegv.so.2 /lib64/
+ /usr/lib64/libsigsegv.so.2 /lib64/libsigsegv.so.2 \
+ /lib64/
 
 COPY --from=builder /otel-lgtm /otel-lgtm
 

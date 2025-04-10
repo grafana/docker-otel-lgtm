@@ -1,4 +1,10 @@
+server:
+  http_listen_address: 127.0.0.1
+  grpc_listen_address: 127.0.0.1
+  grpc_listen_port: 9097 # to avoid conflict with tempo
+
 metastore:
+  address: 127.0.0.1
   min_ready_duration: 1s
 
 distributor:

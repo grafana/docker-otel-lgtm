@@ -7,14 +7,14 @@ set -euo pipefail
 VERSION=${COSIGN_VERSION:1}
 ARCH=$(uname -m)
 if [[ "${ARCH}" == "x86_64" ]]; then
-  ARCH="x86_64"
+	ARCH="x86_64"
 elif [[ "${ARCH}" == "aarch64" ]]; then
-  ARCH="aarch64"
+	ARCH="aarch64"
 elif [[ "${ARCH}" == "arm64" ]]; then
-  ARCH="aarch64"
+	ARCH="aarch64"
 else
-  echo "Unsupported architecture: ${ARCH}"
-  exit 1
+	echo "Unsupported architecture: ${ARCH}"
+	exit 1
 fi
 ARCHIVE=cosign-"${VERSION}"-1."${ARCH}".rpm
 

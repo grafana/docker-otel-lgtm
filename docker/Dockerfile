@@ -30,14 +30,13 @@ ENV TARGETARCH=${TARGETARCH}
 # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
 ARG COSIGN_VERSION=v2.5.0
 
-RUN bash -c 'cd /tmp && \
-    curl -O -L https://github.com/sigstore/cosign/releases/latest/download/cosign-"${COSIGN_VERSION:1}"-1.x86_64.rpm && \
-    yum install -y cosign-"${COSIGN_VERSION:1}"-1.x86_64.rpm'
+COPY download-grafana.sh install-cosign.sh /tmp/
+
+RUN /tmp/install-cosign.sh
 
 # hadolint ignore=DL3033
 RUN yum install -y unzip dos2unix jq procps
 
-COPY download-grafana.sh /tmp
 RUN /tmp/download-grafana.sh
 
 RUN bash -c 'ARCHIVE=prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}" && \
@@ -79,22 +78,22 @@ RUN bash -c 'ARCHIVE=otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linu
     tar xfz "${ARCHIVE}" -C otelcol-contrib/ && \
     rm "${ARCHIVE}"'
 
-COPY prometheus.yaml .
-COPY run-prometheus.sh .
 COPY grafana-datasources.yaml ./grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml ./grafana/conf/provisioning/dashboards/
-COPY grafana-dashboard-red-metrics-classic.json .
-COPY grafana-dashboard-red-metrics-native.json .
-COPY grafana-dashboard-jvm-metrics.json .
-COPY logging.sh .
-COPY run-grafana.sh .
-COPY loki-config.yaml .
-COPY run-loki.sh .
-COPY tempo-config.yaml .
-COPY run-tempo.sh .
-COPY otelcol-config*.yaml .
-COPY run-otelcol.sh .
-COPY run-all.sh .
+COPY prometheus.yaml \
+ run-prometheus.sh \
+ grafana-dashboard-red-metrics-classic.json \
+ grafana-dashboard-red-metrics-native.json \
+ grafana-dashboard-jvm-metrics.json \
+ logging.sh \
+ run-grafana.sh \
+ loki-config.yaml \
+ run-loki.sh \
+ tempo-config.yaml \
+ run-tempo.sh \
+ otelcol-config*.yaml \
+ run-otelcol.sh \
+ run-all.sh ./
 # hadolint ignore=SC2038,DL4006
 RUN find . -maxdepth 1 -type f | xargs dos2unix
 

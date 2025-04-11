@@ -38,7 +38,7 @@ mise run lgtm
 You can enable logging for troubleshooting:
 
 | Environment Variable   | Enable Logging in       |
-|------------------------|-------------------------|
+| ---------------------- | ----------------------- |
 | ENABLE_LOGS_GRAFANA    | Grafana                 |
 | ENABLE_LOGS_LOKI       | Loki                    |
 | ENABLE_LOGS_PROMETHEUS | Prometheus              |

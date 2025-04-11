@@ -4,8 +4,8 @@ set -euo pipefail
 
 VERSION=${1:-}
 if [[ -z "${VERSION}" ]]; then
-  echo "Usage: $0 <version>"
-  exit 1
+	echo "Usage: $0 <version>"
+	exit 1
 fi
 
 ARCHIVE=tempo_"${VERSION:1}"_linux_"${TARGETARCH}".tar.gz

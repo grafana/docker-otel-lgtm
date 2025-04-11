@@ -11,7 +11,13 @@ services:
 
   otel-ebpf-profiler:
     build: .
-    command: ["-collection-agent", "otel-lgtm:4317", "-no-kernel-version-check", "-disable-tls"]
+    command:
+      [
+        "-collection-agent",
+        "otel-lgtm:4317",
+        "-no-kernel-version-check",
+        "-disable-tls",
+      ]
     hostname: ebpf-profiler
     privileged: true
     pid: "host"

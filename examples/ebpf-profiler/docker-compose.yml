@@ -2,6 +2,9 @@ services:
   otel-lgtm:
     # todo build a local version "pyroscope" change version - see README.md
     image: grafana/otel-lgtm:pyroscope
+    environment:
+      ENABLE_LOGS_OTELCOL: true
+      ENABLE_LOGS_PYROSCOPE: true
     networks:
       - otel-net
     ports:

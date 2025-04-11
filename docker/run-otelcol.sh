@@ -28,9 +28,9 @@ if [[ -v OTEL_EXPORTER_OTLP_ENDPOINT ]]; then
 		yaml_headers+="}"
 
 		# add the contents of OTEL_EXPORTER_OTLP_HEADERS to the otelcol-config-export-http.yaml file
-    printf '\n    headers: %s' "${yaml_headers}" >> otelcol-config-export-http.yaml
+		printf '\n    headers: %s' "${yaml_headers}" >>otelcol-config-export-http.yaml
 	fi
 fi
 
 run_with_logging "OpenTelemetry Collector ${OPENTELEMETRY_COLLECTOR_VERSION}" "${ENABLE_LOGS_OTELCOL:-false}" \
-  ./otelcol-contrib/otelcol-contrib --config=file:./otelcol-config.yaml ${secondary_config_file}
+	./otelcol-contrib/otelcol-contrib --config=file:./otelcol-config.yaml ${secondary_config_file}

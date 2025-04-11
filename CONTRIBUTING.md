@@ -33,10 +33,10 @@ You can run all everything together using `mise run test`.
 
 The source code for the architecture diagram is a [google slide](https://docs.google.com/presentation/d/1txMBBitezscvtJIXRHNSXnCekjMRM29GmHufUSI0NRw/edit?slide=id.g26040f0db78_0_0#slide=id.g26040f0db78_0_0).
 Take a screenshot of the slide and save it as `img/overview.png`.
-                        
+
 ## OTel Collector
-   
-### Testing the combined configuration 
+
+### Testing the combined configuration
 
 ```shell
 ./otelcol-contrib --config docker/otelcol-config.yaml --config docker/otelcol-export-http.yaml print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml

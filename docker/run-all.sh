@@ -142,6 +142,7 @@ echo "Grafana: ${elapsed_times[grafana]} seconds"
 echo "Loki: ${elapsed_times[loki]} seconds"
 echo "Prometheus: ${elapsed_times[prometheus]} seconds"
 echo "Tempo: ${elapsed_times[tempo]} seconds"
+echo "Pyroscope: ${elapsed_times[pyroscope]} seconds"
 echo "OpenTelemetry collector: ${elapsed_times[otelcol]} seconds"
 echo "Total: ${total_elapsed} seconds"
 

@@ -2,9 +2,13 @@
 
 set -euo pipefail
 
-# too complicated to have as inline script in dockerfile
+VERSION=${1:-}
+if [[ -z "${VERSION}" ]]; then
+	echo "Usage: $0 <version>"
+	exit 1
+fi
+VERSION="${VERSION:1}"
 
-VERSION=${COSIGN_VERSION:1}
 ARCH=$(uname -m)
 if [[ "${ARCH}" == "x86_64" ]]; then
 	ARCH="x86_64"

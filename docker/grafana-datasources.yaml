@@ -49,3 +49,8 @@ datasources:
           url: "$${__value.raw}"
           datasourceUid: "tempo"
           urlDisplayLabel: "Trace: $${__value.raw}"
+
+  - name: Pyroscope
+    type: grafana-pyroscope-datasource
+    uid: pyroscope
+    url: http://localhost:4040

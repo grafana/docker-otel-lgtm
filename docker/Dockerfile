@@ -35,7 +35,14 @@ COPY prometheus.yaml \
  /otel-lgtm/
 
 # hadolint ignore=DL3033
-RUN yum install -y unzip dos2unix jq procps
+RUN yum install -y unzip dos2unix jq
+
+# installs for the final image
+# see https://github.com/thomasdarimont/keycloak/blob/main/docs/guides/server/containers.adoc#installing-additional-rpm-packages
+RUN mkdir -p /mnt/rootfs
+RUN dnf install --installroot /mnt/rootfs curl-minimal jq procps --releasever 9 --setopt install_weak_deps=false --nodocs -y && \
+    dnf --installroot /mnt/rootfs clean all && \
+    rpm --root /mnt/rootfs -e --nodeps setup
 
 # hadolint ignore=SC2038,DL4006
 RUN find /otel-lgtm/ -maxdepth 1 -type f | xargs dos2unix
@@ -82,27 +89,9 @@ FROM redhat/ubi9-micro:9.5-1744118077
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm
 
-COPY --from=builder --chown=0:0 /usr/bin/curl /usr/bin/jq /usr/bin/grep /usr/bin/
-# jq
-COPY --from=builder --chown=0:0 /usr/lib64/libjq.so.1 \
- /usr/lib64/libonig.so.5 \
- # curl
- /usr/lib64/libkeyutils.so* \
- /usr/lib64/libz.so* \
- /usr/lib64/libkrb5support.so* \
- /usr/lib64/libkrb5.so* \
- /usr/lib64/libk5crypto.so* \
- /usr/lib64/libgssapi_krb5.so* \
- /usr/lib64/libcom_err.so* \
- /usr/lib64/libssl.so* \
- /usr/lib64/libcrypto.so* \
- /usr/lib64/libcurl.so* \
- /usr/lib64/libnghttp2.so* \
- /usr/lib64/libresolv.so* \
- # grep
- /usr/lib64/libpcre.so.1 \
- /usr/lib64/libsigsegv.so.2 /lib64/libsigsegv.so.2 \
- /lib64/
+COPY --from=builder /mnt/rootfs /
+# to send telemetry to an external server
+COPY --from=builder /etc/pki /etc/pki
 
 COPY --from=builder /otel-lgtm /otel-lgtm
 

@@ -29,7 +29,7 @@ exporters:
     endpoint: http://localhost:3100/otlp
     tls:
       insecure: true
-  otlphttp/profiles:
+  otlp/profiles:
     endpoint: http://localhost:4040
     tls:
       insecure: true
@@ -59,4 +59,4 @@ service:
       #exporters: [otlphttp/logs,debug/logs]
     profiles:
       receivers: [otlp]
-      exporters: [otlphttp/profiles]
+      exporters: [otlp/profiles]

@@ -1,0 +1,38 @@
+services:
+  otel-lgtm:
+    # todo build a local version "pyroscope" change version - see README.md
+    image: grafana/otel-lgtm:pyroscope
+    environment:
+      ENABLE_LOGS_OTELCOL: true
+      ENABLE_LOGS_PYROSCOPE: true
+    networks:
+      - otel-net
+    ports:
+      - "3000:3000"
+      - "4317:4317"
+      - "4318:4318"
+
+  otel-ebpf-profiler:
+    build: .
+    command:
+      [
+        "-collection-agent",
+        "otel-lgtm:4317",
+        "-no-kernel-version-check",
+        "-disable-tls",
+      ]
+    hostname: ebpf-profiler
+    privileged: true
+    pid: "host"
+    volumes:
+      - /sys/kernel/debug:/sys/kernel/debug
+      - /sys/fs/cgroup:/sys/fs/cgroup
+      - /proc:/proc
+    networks:
+      - otel-net
+    depends_on:
+      - otel-lgtm
+
+networks:
+  otel-net:
+    driver: bridge

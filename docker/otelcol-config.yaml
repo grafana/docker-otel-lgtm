@@ -29,6 +29,10 @@ exporters:
     endpoint: http://localhost:3100/otlp
     tls:
       insecure: true
+  otlp/profiles:
+    endpoint: http://localhost:4040
+    tls:
+      insecure: true
   debug/metrics:
     verbosity: detailed
   debug/traces:
@@ -53,3 +57,6 @@ service:
       processors: [batch]
       exporters: [otlphttp/logs]
       #exporters: [otlphttp/logs,debug/logs]
+    profiles:
+      receivers: [otlp]
+      exporters: [otlp/profiles]

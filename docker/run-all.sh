@@ -28,6 +28,9 @@ start_component "prometheus"
 start_component "tempo"
 ./run-tempo.sh &
 
+start_component "pyroscope"
+./run-pyroscope.sh &
+
 echo "Waiting for the OpenTelemetry collector and the Grafana LGTM stack to start up..."
 
 # Declare arrays to store service status and elapsed times
@@ -39,6 +42,7 @@ services["grafana"]="http://localhost:3000/api/health"
 services["loki"]="http://localhost:3100/ready"
 services["prometheus"]="http://localhost:9090/api/v1/status/runtimeinfo"
 services["tempo"]="http://localhost:3200/ready"
+services["pyroscope"]="http://localhost:4040/ready"
 
 # Initialize service_ready status to false for all services
 for service in "${!services[@]}"; do
@@ -138,6 +142,7 @@ echo "Grafana: ${elapsed_times[grafana]} seconds"
 echo "Loki: ${elapsed_times[loki]} seconds"
 echo "Prometheus: ${elapsed_times[prometheus]} seconds"
 echo "Tempo: ${elapsed_times[tempo]} seconds"
+echo "Pyroscope: ${elapsed_times[pyroscope]} seconds"
 echo "OpenTelemetry collector: ${elapsed_times[otelcol]} seconds"
 echo "Total: ${total_elapsed} seconds"
 

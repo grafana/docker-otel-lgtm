@@ -6,6 +6,8 @@ ARG PROMETHEUS_VERSION=v3.2.1
 ARG TEMPO_VERSION=v2.7.2
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
 ARG LOKI_VERSION=v3.4.3
+# renovate: datasource=github-releases depName=pyroscope packageName=grafana/pyroscope
+ARG PYROSCOPE_VERSION=v1.13.1
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
 ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.123.1
 
@@ -25,6 +27,8 @@ COPY prometheus.yaml \
  run-loki.sh \
  tempo-config.yaml \
  run-tempo.sh \
+ pyroscope-config.yaml \
+ run-pyroscope.sh \
  otelcol-config*.yaml \
  run-otelcol.sh \
  run-all.sh \
@@ -47,6 +51,7 @@ COPY download-grafana.sh \
  download-prometheus.sh \
  download-tempo.sh \
  download-loki.sh \
+ download-pyroscope.sh \
  download-otelcol.sh \
  install-cosign.sh \
  ./
@@ -66,12 +71,14 @@ ARG GRAFANA_VERSION
 ARG PROMETHEUS_VERSION
 ARG TEMPO_VERSION
 ARG LOKI_VERSION
+ARG PYROSCOPE_VERSION
 ARG OPENTELEMETRY_COLLECTOR_VERSION
 
 RUN ./download-grafana.sh $GRAFANA_VERSION
 RUN ./download-prometheus.sh $PROMETHEUS_VERSION
 RUN ./download-tempo.sh $TEMPO_VERSION
 RUN ./download-loki.sh $LOKI_VERSION
+RUN ./download-pyroscope.sh $PYROSCOPE_VERSION
 RUN ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
 
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
@@ -93,11 +100,13 @@ ARG GRAFANA_VERSION
 ARG PROMETHEUS_VERSION
 ARG TEMPO_VERSION
 ARG LOKI_VERSION
+ARG PYROSCOPE_VERSION
 ARG OPENTELEMETRY_COLLECTOR_VERSION
 ENV GRAFANA_VERSION=${GRAFANA_VERSION}
 ENV PROMETHEUS_VERSION=${PROMETHEUS_VERSION}
 ENV TEMPO_VERSION=${TEMPO_VERSION}
 ENV LOKI_VERSION=${LOKI_VERSION}
+ENV PYROSCOPE_VERSION=${PYROSCOPE_VERSION}
 ENV OPENTELEMETRY_COLLECTOR_VERSION=${OPENTELEMETRY_COLLECTOR_VERSION}
 
 CMD ["/otel-lgtm/run-all.sh"]

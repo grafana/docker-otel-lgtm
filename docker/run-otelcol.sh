@@ -33,4 +33,4 @@ if [[ -v OTEL_EXPORTER_OTLP_ENDPOINT ]]; then
 fi
 
 run_with_logging "OpenTelemetry Collector ${OPENTELEMETRY_COLLECTOR_VERSION}" "${ENABLE_LOGS_OTELCOL:-false}" \
-	./otelcol-contrib/otelcol-contrib --config=file:./otelcol-config.yaml ${secondary_config_file}
+	./otelcol-contrib/otelcol-contrib --feature-gates service.profilesSupport --config=file:./otelcol-config.yaml ${secondary_config_file}

@@ -1,6 +1,6 @@
 services:
   otel-ebpf-profiler:
-    build: .
+    image: otel/opentelemetry-ebpf-profiler-dev:202503260641
     command:
       [
         "-collection-agent",
@@ -26,5 +26,9 @@ services:
       OTEL_SERVICE_NAME: "rolldice"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
       OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+    ports:
+      - "8080:8082"
+    networks:
+      - otel-net
     depends_on:
       - lgtm

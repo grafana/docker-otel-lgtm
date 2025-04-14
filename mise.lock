@@ -6,7 +6,7 @@ backend = "core:go"
 "go1.24.2.linux-amd64.tar.gz" = "sha256:68097bd680839cbc9d464a0edce4f7c333975e27a90246890e9f1078c7e702ad"
 
 [tools."go:github.com/grafana/oats"]
-version = "3d5b834b67da969b8ee3ed45a179a3749d59fe41"
+version = "79e4aa260a02bda3d11badbe7974b97d88a4d1d2"
 backend = "go:github.com/grafana/oats"
 
 [tools.java]

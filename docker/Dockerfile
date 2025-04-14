@@ -47,7 +47,6 @@ COPY download-grafana.sh \
  download-prometheus.sh \
  download-tempo.sh \
  download-loki.sh \
- download-pyroscope.sh \
  download-otelcol.sh \
  install-cosign.sh \
  ./

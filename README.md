@@ -2,7 +2,7 @@
 
 An OpenTelemetry backend in a Docker image.
 
-![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana, Pyroscope](img/overview.png)
+![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana](img/overview.png)
 
 The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry that’s intended for development, demo,
 and testing environments.
@@ -43,7 +43,6 @@ You can enable logging for troubleshooting:
 | ENABLE_LOGS_LOKI       | Loki                    |
 | ENABLE_LOGS_PROMETHEUS | Prometheus              |
 | ENABLE_LOGS_TEMPO      | Tempo                   |
-| ENABLE_LOGS_PYROSCOPE  | Pyroscope               |
 | ENABLE_LOGS_OTELCOL    | OpenTelemetry Collector |
 | ENABLE_LOGS_ALL        | all of the above        |
 

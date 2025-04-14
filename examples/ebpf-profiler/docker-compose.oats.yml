@@ -21,7 +21,7 @@ services:
   python:
     build:
       context: ../python
-      dockerfile: Dockerfile
+      dockerfile: ../python/Dockerfile
     environment:
       OTEL_SERVICE_NAME: "rolldice"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317

@@ -12,7 +12,7 @@ services:
       - "4318:4318"
 
   otel-ebpf-profiler:
-    build: .
+    image: otel/opentelemetry-ebpf-profiler-dev:202503260641
     command:
       [
         "-collection-agent",

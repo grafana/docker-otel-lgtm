@@ -1,5 +1,4 @@
 [tools.go]
-# renovate: datasource=github-releases depName=go packageName=golang/go
 version = "1.24.2"
 backend = "core:go"
 
@@ -7,8 +6,7 @@ backend = "core:go"
 "go1.24.2.linux-amd64.tar.gz" = "sha256:68097bd680839cbc9d464a0edce4f7c333975e27a90246890e9f1078c7e702ad"
 
 [tools."go:github.com/grafana/oats"]
-# renovate: datasource=github-releases depName=oats packageName=grafana/oats
-version = "0.2.1"
+version = "3d5b834b67da969b8ee3ed45a179a3749d59fe41"
 backend = "go:github.com/grafana/oats"
 
 [tools.java]

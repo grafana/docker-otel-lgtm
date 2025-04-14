@@ -2,11 +2,11 @@
 
 source ./logging.sh
 
-config_file="otelcol-config.yaml"
+secondary_config_file=""
 
 if [[ -v OTEL_EXPORTER_OTLP_ENDPOINT ]]; then
 	echo "Also enabling OTLP/HTTP export to ${OTEL_EXPORTER_OTLP_ENDPOINT}"
-	config_file="otelcol-config-export-http.yaml"
+	secondary_config_file="--config=file:./otelcol-config-export-http.yaml"
 
 	if [[ -v OTEL_EXPORTER_OTLP_HEADERS ]]; then
 		echo "Adding headers from OTEL_EXPORTER_OTLP_HEADERS"
@@ -28,10 +28,9 @@ if [[ -v OTEL_EXPORTER_OTLP_ENDPOINT ]]; then
 		yaml_headers+="}"
 
 		# add the contents of OTEL_EXPORTER_OTLP_HEADERS to the otelcol-config-export-http.yaml file
-		# after "endpoint: ${env:OTEL_EXPORTER_OTLP_ENDPOINT}"
-
-		sed -i "s#.*endpoint: \${env:OTEL_EXPORTER_OTLP_ENDPOINT}.*#&\n    headers: ${yaml_headers}#" "$config_file"
+		printf '\n    headers: %s' "${yaml_headers}" >>otelcol-config-export-http.yaml
 	fi
 fi
 
-run_with_logging "OpenTelemetry Collector ${OPENTELEMETRY_COLLECTOR_VERSION}" "${ENABLE_LOGS_OTELCOL:-false}" ./otelcol-contrib/otelcol-contrib --config=file:./${config_file}
+run_with_logging "OpenTelemetry Collector ${OPENTELEMETRY_COLLECTOR_VERSION}" "${ENABLE_LOGS_OTELCOL:-false}" \
+	./otelcol-contrib/otelcol-contrib --config=file:./otelcol-config.yaml ${secondary_config_file}

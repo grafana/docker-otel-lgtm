@@ -13,73 +13,7 @@ ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.123.1
 FROM redhat/ubi9:9.5-1744101466 AS builder
 
 RUN mkdir /otel-lgtm
-WORKDIR /otel-lgtm
 
-ARG GRAFANA_VERSION
-ARG PROMETHEUS_VERSION
-ARG TEMPO_VERSION
-ARG LOKI_VERSION
-ARG OPENTELEMETRY_COLLECTOR_VERSION
-
-# TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts
-# on an amd64 architecture, than the TARGETARCH will be set to `amd64`.
-# More details on the variables can be found here: https://docs.docker.com/desktop/extensions-sdk/extensions/multi-arch/
-ARG TARGETARCH
-ENV TARGETARCH=${TARGETARCH}
-
-# renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
-ARG COSIGN_VERSION=v2.5.0
-
-COPY download-grafana.sh install-cosign.sh /tmp/
-
-RUN /tmp/install-cosign.sh
-
-# hadolint ignore=DL3033
-RUN yum install -y unzip dos2unix jq procps
-
-RUN /tmp/download-grafana.sh
-
-RUN bash -c 'ARCHIVE=prometheus-"${PROMETHEUS_VERSION:1}".linux-"${TARGETARCH}" && \
-    curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/sha256sums.txt && \
-    curl -sOL https://github.com/prometheus/prometheus/releases/download/"${PROMETHEUS_VERSION}"/"${ARCHIVE}".tar.gz && \
-    sha256sum -c sha256sums.txt --ignore-missing && \
-    tar xfz "${ARCHIVE}".tar.gz && \
-    mv "${ARCHIVE}" prometheus && \
-    rm "${ARCHIVE}".tar.gz'
-
-RUN bash -c 'ARCHIVE=tempo_"${TEMPO_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
-    curl -sOL https://github.com/grafana/tempo/releases/download/"${TEMPO_VERSION}"/SHA256SUMS && \
-    curl -sOL https://github.com/grafana/tempo/releases/download/"${TEMPO_VERSION}"/"${ARCHIVE}" && \
-    sha256sum -c SHA256SUMS --ignore-missing && \
-    mkdir tempo && \
-    tar xfz "${ARCHIVE}" -C tempo/ && \
-    rm "${ARCHIVE}"'
-
-RUN bash -c 'ARCHIVE=loki-linux-"${TARGETARCH}".zip && \
-    curl -sOL https://github.com/grafana/loki/releases/download/"${LOKI_VERSION}"/SHA256SUMS && \
-    curl -sOL https://github.com/grafana/loki/releases/download/"${LOKI_VERSION}"/"${ARCHIVE}" && \
-    sha256sum -c SHA256SUMS --ignore-missing && \
-    mkdir loki && \
-    unzip "${ARCHIVE}" -d loki/ && \
-    rm "${ARCHIVE}" && \
-    mv loki/loki-linux-"${TARGETARCH}" loki/loki'
-
-RUN bash -c 'ARCHIVE=otelcol-contrib_"${OPENTELEMETRY_COLLECTOR_VERSION:1}"_linux_"${TARGETARCH}".tar.gz && \
-    curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/"${ARCHIVE}".sig && \
-    curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/"${ARCHIVE}".pem && \
-    curl -sOL https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${OPENTELEMETRY_COLLECTOR_VERSION}"/"${ARCHIVE}" && \
-    cosign verify-blob \
-        --certificate-identity-regexp github.com/open-telemetry/opentelemetry-collector-releases \
-        --certificate-oidc-issuer https://token.actions.githubusercontent.com \
-        --certificate "${ARCHIVE}".pem \
-        --signature "${ARCHIVE}".sig \
-        "${ARCHIVE}" && \
-    mkdir otelcol-contrib && \
-    tar xfz "${ARCHIVE}" -C otelcol-contrib/ && \
-    rm "${ARCHIVE}"'
-
-COPY grafana-datasources.yaml ./grafana/conf/provisioning/datasources/
-COPY grafana-dashboards.yaml ./grafana/conf/provisioning/dashboards/
 COPY prometheus.yaml \
  run-prometheus.sh \
  grafana-dashboard-red-metrics-classic.json \
@@ -93,35 +27,64 @@ COPY prometheus.yaml \
  run-tempo.sh \
  otelcol-config*.yaml \
  run-otelcol.sh \
- run-all.sh ./
+ run-all.sh \
+ /otel-lgtm/
+
+# hadolint ignore=DL3033
+RUN yum install -y unzip dos2unix jq
+
+# installs for the final image
+# see https://github.com/thomasdarimont/keycloak/blob/main/docs/guides/server/containers.adoc#installing-additional-rpm-packages
+RUN mkdir -p /mnt/rootfs
+RUN dnf install --installroot /mnt/rootfs curl-minimal jq procps --releasever 9 --setopt install_weak_deps=false --nodocs -y && \
+    dnf --installroot /mnt/rootfs clean all && \
+    rpm --root /mnt/rootfs -e --nodeps setup
+
 # hadolint ignore=SC2038,DL4006
-RUN find . -maxdepth 1 -type f | xargs dos2unix
+RUN find /otel-lgtm/ -maxdepth 1 -type f | xargs dos2unix
+
+COPY download-grafana.sh \
+ download-prometheus.sh \
+ download-tempo.sh \
+ download-loki.sh \
+ download-otelcol.sh \
+ install-cosign.sh \
+ ./
+
+# TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts
+# on an amd64 architecture, than the TARGETARCH will be set to `amd64`.
+# More details on the variables can be found here: https://docs.docker.com/desktop/extensions-sdk/extensions/multi-arch/
+ARG TARGETARCH
+ENV TARGETARCH=${TARGETARCH}
+
+# renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
+ARG COSIGN_VERSION=v2.5.0
+
+RUN ./install-cosign.sh $COSIGN_VERSION
+
+ARG GRAFANA_VERSION
+ARG PROMETHEUS_VERSION
+ARG TEMPO_VERSION
+ARG LOKI_VERSION
+ARG OPENTELEMETRY_COLLECTOR_VERSION
+
+RUN ./download-grafana.sh $GRAFANA_VERSION
+RUN ./download-prometheus.sh $PROMETHEUS_VERSION
+RUN ./download-tempo.sh $TEMPO_VERSION
+RUN ./download-loki.sh $LOKI_VERSION
+RUN ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
+
+COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
+COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/
 
 FROM redhat/ubi9-micro:9.5-1744118077
 
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm
 
-COPY --from=builder --chown=0:0 /usr/bin/curl /usr/bin/jq /usr/bin/grep /usr/bin/
-# jq
-COPY --from=builder --chown=0:0 /usr/lib64/libjq.so.1 \
- /usr/lib64/libonig.so.5 \
- # curl
- /usr/lib64/libkeyutils.so* \
- /usr/lib64/libz.so* \
- /usr/lib64/libkrb5support.so* \
- /usr/lib64/libkrb5.so* \
- /usr/lib64/libk5crypto.so* \
- /usr/lib64/libgssapi_krb5.so* \
- /usr/lib64/libcom_err.so* \
- /usr/lib64/libssl.so* \
- /usr/lib64/libcrypto.so* \
- /usr/lib64/libcurl.so* \
- /usr/lib64/libnghttp2.so* \
- /usr/lib64/libresolv.so* \
- # grep
- /usr/lib64/libpcre.so.1 \
- /usr/lib64/libsigsegv.so.2 /lib64/libsigsegv.so.2 /lib64/
+COPY --from=builder /mnt/rootfs /
+# to send telemetry to an external server
+COPY --from=builder /etc/pki /etc/pki
 
 COPY --from=builder /otel-lgtm /otel-lgtm
 

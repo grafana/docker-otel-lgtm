@@ -12,7 +12,9 @@ services:
       - "4318:4318"
 
   otel-ebpf-profiler:
-    image: otel/opentelemetry-ebpf-profiler-dev:202503260641
+    build:
+      context: .
+      dockerfile: Dockerfile
     command:
       [
         "-collection-agent",

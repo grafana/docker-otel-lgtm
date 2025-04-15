@@ -12,7 +12,7 @@ RUN tar --strip-components=1 -C /profiler -xzf $VERSION.tar.gz
 WORKDIR /profiler
 RUN /usr/local/go/bin/go build .
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 RUN apt-get update && \
     apt-get install -y linux-headers-generic && \

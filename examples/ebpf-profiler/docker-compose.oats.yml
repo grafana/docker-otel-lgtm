@@ -1,0 +1,43 @@
+services:
+  otel-ebpf-profiler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command:
+      [
+        "-collection-agent",
+        "lgtm:4317",
+        "-no-kernel-version-check",
+        "-disable-tls",
+      ]
+    hostname: ebpf-profiler
+    privileged: true
+    pid: "host"
+    volumes:
+      - /sys/kernel/debug:/sys/kernel/debug
+      - /sys/fs/cgroup:/sys/fs/cgroup
+      - /proc:/proc
+    depends_on:
+      - lgtm
+
+  python:
+    build:
+      context: ../python
+      dockerfile: ../python/Dockerfile
+    environment:
+      OTEL_SERVICE_NAME: "rolldice"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
+      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+    depends_on:
+      - lgtm
+
+  java:
+    build:
+      context: ../java
+      dockerfile: ../java/json-logging-otlp/Dockerfile
+    environment:
+      OTEL_SERVICE_NAME: "rolldice"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+    depends_on:
+      - lgtm

@@ -1,0 +1,12 @@
+# OATS is an acceptance testing framework for OpenTelemetry - https://github.com/grafana/oats/tree/main/yaml
+docker-compose:
+  files:
+    - ./docker-compose.oats.yml
+expected:
+  profiles:
+    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name=~"python.*"}'
+      flamebearers:
+        contains: "libpython3" # not very useful, because the python function names are not in the flamegraph
+    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name="java"}'
+      flamebearers:
+        contains: "void org.springframework.boot.SpringApplication.refreshContext(org.springframework.context.ConfigurableApplicationContext)"

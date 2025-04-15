@@ -8,7 +8,7 @@ backend = "core:go"
 
 [tools."go:github.com/grafana/oats"]
 # renovate: datasource=github-releases depName=oats packageName=grafana/oats
-version = "0.2.1"
+version = "0.3.0"
 backend = "go:github.com/grafana/oats"
 
 [tools.java]

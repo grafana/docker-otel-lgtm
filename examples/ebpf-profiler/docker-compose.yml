@@ -1,0 +1,65 @@
+services:
+  otel-lgtm:
+    image: grafana/otel-lgtm
+    environment:
+      ENABLE_LOGS_OTELCOL: true
+      ENABLE_LOGS_PYROSCOPE: true
+    networks:
+      - otel-net
+    ports:
+      - "3000:3000"
+      - "4317:4317"
+      - "4318:4318"
+
+  otel-ebpf-profiler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command:
+      [
+        "-collection-agent",
+        "lgtm:4317",
+        "-no-kernel-version-check",
+        "-disable-tls",
+      ]
+    hostname: ebpf-profiler
+    privileged: true
+    pid: "host"
+    volumes:
+      - /sys/kernel/debug:/sys/kernel/debug
+      - /sys/fs/cgroup:/sys/fs/cgroup
+      - /proc:/proc
+    networks:
+      - otel-net
+    depends_on:
+      - lgtm
+
+  python:
+    build:
+      context: ../python
+      dockerfile: ../python/Dockerfile
+    environment:
+      OTEL_SERVICE_NAME: "rolldice"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
+      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+    networks:
+      - otel-net
+    depends_on:
+      - lgtm
+
+  java:
+    build:
+      context: ../java
+      dockerfile: ../java/json-logging-otlp/Dockerfile
+    environment:
+      OTEL_SERVICE_NAME: "rolldice"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+    networks:
+      - otel-net
+    depends_on:
+      - lgtm
+
+networks:
+  otel-net:
+    driver: bridge

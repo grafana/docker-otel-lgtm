@@ -7,7 +7,7 @@ ARG TEMPO_VERSION=v2.7.2
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
 ARG LOKI_VERSION=v3.4.3
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
-ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.123.1
+ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.124.0
 
 # hadolint global ignore=DL3059
 FROM redhat/ubi9:9.5-1744101466 AS builder

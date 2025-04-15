@@ -1,7 +1,6 @@
 [tools]
 go = "latest"
-# todo change to release before merge
-"go:github.com/grafana/oats" = "e717942dcdfb32ae5842992ee50755808c3ec704"
+"go:github.com/grafana/oats" = "0.3.0"
 java = "temurin-21.0.6+7.0.LTS"
 lychee = "latest"
 markdownlint-cli2 = "latest"

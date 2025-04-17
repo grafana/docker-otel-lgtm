@@ -23,7 +23,7 @@ The provided code demonstrates how to use **Testcontainers** with **Grafana's LG
 5. **Debugging with Grafana**:
    - The test outputs the Grafana URL (`lgtm.getGrafanaHttpUrl()`) to the console, allowing you to manually inspect the metrics in the Grafana UI.
 
-### Example Usage
+## Example Usage
 
 1. Start the test using `mvn test`.
 2. Check the console output for the Grafana URL.

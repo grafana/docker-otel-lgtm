@@ -2,6 +2,7 @@ package com.grafana.example;
 
 import static org.awaitility.Awaitility.await;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -9,11 +10,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Base64;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.grafana.LgtmStackContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 @Testcontainers
 public class TestcontainerTest {
@@ -29,10 +34,10 @@ public class TestcontainerTest {
   }
 
   @Test
-  void testExportMetric() {
-    // Howto:
-    // 1. The test with a really long timeout
-    // 2. Go to the Grafana UI
+  void testExportMetricsAndTraces() throws IOException, InterruptedException {
+    // How to debug:
+    // 1. Run the test with a really long timeout (update the awaitility argument)
+    // 2. Go to the Grafana UI (login with admin:admin)
     // 3. Open the Explore tab
     // 4. Select the Prometheus data source
     // 5. Find your metric by name or attribute (e.g. "tenant1")
@@ -43,25 +48,63 @@ public class TestcontainerTest {
     var app = new OtelApp();
     app.run();
 
+    HttpClient client = HttpClient.newHttpClient();
     String query =
         URLEncoder.encode(
-            "sold_items_total{job=\"otel-java-test\",service_name=\"otel-java-test\",tenant=\"tenant1\"}",
+            "sold_items_total{job=\"otel-java-test\",tenant=\"tenant1\"}",
             StandardCharsets.UTF_8);
     String prometheusHttpUrl = lgtm.getPromehteusHttpUrl() + "/api/v1/query?query=" + query;
 
-    HttpClient client = HttpClient.newHttpClient();
     HttpRequest request = HttpRequest.newBuilder().uri(URI.create(prometheusHttpUrl)).build();
 
-    // Total time: 18.448 s (for the whole test, will take longer when the image needs to be
-    // downloaded)
     await()
-        .atMost(Duration.ofSeconds(10))
+        .atMost(Duration.ofSeconds(20))
         .until(
             () -> {
               HttpResponse<String> response =
                   client.send(request, HttpResponse.BodyHandlers.ofString());
               String body = response.body();
               return response.statusCode() == 200 && body.contains("sold_items");
+            });
+
+    // Get the Tempo datasource ID so we can query traces from grafana
+    String authHeader = "Basic " + Base64.getEncoder().encodeToString("admin:admin".getBytes(StandardCharsets.UTF_8));
+    HttpRequest dsRequest = HttpRequest.newBuilder()
+        .uri(URI.create(lgtm.getGrafanaHttpUrl() + "/api/datasources"))
+        .header("Authorization", authHeader)
+        .build();
+
+    HttpResponse<String> dsResponse = client.send(dsRequest, HttpResponse.BodyHandlers.ofString());
+    String dsResponseBody = dsResponse.body();
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode rootNode = objectMapper.readTree(dsResponseBody);
+
+    assert rootNode != null;
+
+    // Parse the JSON response to extract the Tempo datasource ID
+    Integer tempoDsId = null;
+    for (JsonNode node : rootNode) {
+      if (node.get("type").asText().equals("tempo")) {
+        tempoDsId = node.get("id").asInt();
+      }
+    }
+    assert tempoDsId != null : "Tempo datasource ID not found in the response";
+
+    // Query for traces
+    String queryUrl = lgtm.getGrafanaHttpUrl() + "/api/datasources/proxy/" + tempoDsId + "/api/search?tags=service.name=otel-java-test";
+    HttpRequest queryRequest = HttpRequest.newBuilder()
+        .uri(URI.create(queryUrl))
+        .header("Authorization", authHeader)
+        .build();
+
+    await()
+        .atMost(Duration.ofSeconds(10))
+        .until(
+            () -> {
+              HttpResponse<String> response = client.send(queryRequest, HttpResponse.BodyHandlers.ofString());
+              String body = response.body();
+              return response.statusCode() == 200 && body.contains("otel-java-test");
             });
   }
 }

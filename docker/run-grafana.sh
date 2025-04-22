@@ -11,5 +11,9 @@ export GF_PATHS_HOME=/data/grafana
 export GF_PATHS_DATA=/data/grafana/data
 export GF_PATHS_PLUGINS=/data/grafana/plugins
 
+# pyroscope settings:
+# profiles drilldown connects to this plugin automatically - so we install it (even though it does nothing)
+export GF_PLUGINS_PREINSTALL=grafana-llm-app
+
 cd /otel-lgtm/grafana || exit 1
 run_with_logging "Grafana ${GRAFANA_VERSION}" "${ENABLE_LOGS_GRAFANA:-false}" ./bin/grafana server

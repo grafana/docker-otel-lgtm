@@ -8,12 +8,15 @@ backend = "core:go"
 
 [tools."go:github.com/grafana/oats"]
 # renovate: datasource=github-releases depName=oats packageName=grafana/oats
-version = "0.3.0"
+version = "0.3.1"
 backend = "go:github.com/grafana/oats"
 
 [tools.java]
-version = "temurin-21.0.6+7.0.LTS"
+version = "temurin-21.0.7+6.0.LTS"
 backend = "core:java"
+
+[tools.java.checksums]
+"OpenJDK21U-jdk_x64_linux_hotspot_21.0.7_6.tar.gz" = "sha256:974d3acef0b7193f541acb61b76e81670890551366625d4f6ca01b91ac152ce0"
 
 [tools.lychee]
 version = "0.18.1"

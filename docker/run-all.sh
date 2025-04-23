@@ -43,14 +43,12 @@ services["loki"]="http://localhost:3100/ready"
 services["prometheus"]="http://localhost:9090/api/v1/status/runtimeinfo"
 services["tempo"]="http://localhost:3200/ready"
 services["pyroscope"]="http://localhost:4040/ready"
+services["otelcol"]="http://localhost:13133/ready"
 
 # Initialize service_ready status to false for all services
 for service in "${!services[@]}"; do
 	service_ready[$service]=false
 done
-
-# Also check OpenTelemetry collector separately (since it uses a different check method)
-service_ready["otelcol"]=false
 
 # Function to check if a service is ready
 check_service_ready() {
@@ -80,29 +78,6 @@ check_service_ready() {
 	return 1
 }
 
-# Function to check if OpenTelemetry collector is ready
-check_otelcol_ready() {
-	# Skip if already marked as ready
-	if [[ ${service_ready["otelcol"]} == true ]]; then
-		return 0
-	fi
-
-	# Check if collector is ready via Prometheus metric
-	if curl -sg 'http://localhost:9090/api/v1/query?query=otelcol_process_uptime_total{}' 2>/dev/null | jq -r .data.result[0].value[1] 2>/dev/null | grep '[0-9]' >/dev/null; then
-		# Calculate and display startup time
-		end_time=$(date +%s)
-		# shellcheck disable=SC2154
-		otelcol_start_time=${start_time_otelcol}
-		elapsed=$((end_time - otelcol_start_time))
-		elapsed_times["otelcol"]=$elapsed
-		service_ready["otelcol"]=true
-		echo "OpenTelemetry collector is up and running. Startup time: ${elapsed} seconds"
-		return 0
-	fi
-
-	return 1
-}
-
 # Wait for all services to be ready
 all_ready=false
 while [[ $all_ready == false ]]; do
@@ -110,9 +85,6 @@ while [[ $all_ready == false ]]; do
 	for service in "${!services[@]}"; do
 		check_service_ready "$service" "${services[$service]}"
 	done
-
-	# Check OpenTelemetry collector
-	check_otelcol_ready
 
 	# Check if all services are ready
 	all_ready=true

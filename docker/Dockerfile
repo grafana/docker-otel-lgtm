@@ -40,7 +40,7 @@ RUN yum install -y unzip dos2unix jq
 # installs for the final image
 # see https://github.com/thomasdarimont/keycloak/blob/main/docs/guides/server/containers.adoc#installing-additional-rpm-packages
 RUN mkdir -p /mnt/rootfs
-RUN dnf install --installroot /mnt/rootfs curl-minimal jq procps --releasever 9 --setopt install_weak_deps=false --nodocs -y && \
+RUN dnf install --installroot /mnt/rootfs curl-minimal --releasever 9 --setopt install_weak_deps=false --nodocs -y && \
     dnf --installroot /mnt/rootfs clean all && \
     rpm --root /mnt/rootfs -e --nodeps setup
 

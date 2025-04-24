@@ -16,7 +16,7 @@ services:
     command:
       - '/bin/sh'
       - '-c'
-      - 'while true; do wget -nc -q http://java:8080/rolldice > /dev/null; wget -nc -q http://python:8081/rolldice; wget -nc -q http://python:8082/rolldice; wget -nc -q http://python:8083/rolldice; wget -nc -q http://python:8084/rolldice > /dev/null; sleep 1; done'
+      - 'while true; do wget -nc -q http://java:8080/rolldice > /dev/null; wget -nc -q http://go:8081/rolldice; wget -nc -q http://python:8082/rolldice; wget -nc -q http://dotnet:8083/rolldice; wget -nc -q http://nodejs:8084/rolldice > /dev/null; sleep 1; done'
     networks:
       - otel-net
     depends_on:

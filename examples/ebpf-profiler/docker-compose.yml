@@ -1,5 +1,5 @@
 services:
-  otel-lgtm:
+  lgtm:
     image: grafana/otel-lgtm
     environment:
       ENABLE_LOGS_OTELCOL: true

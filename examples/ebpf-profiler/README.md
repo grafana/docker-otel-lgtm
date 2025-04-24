@@ -31,10 +31,7 @@ docker compose down
 
 2. Access the UI:
 
-```bash
-# Access Grafana
-http://localhost:3000
-```
+Navigate to the [Pyroscope UI](http://localhost:3000/a/grafana-pyroscope-app/explore?searchText=&panelType=time-series&layout=grid&hideNoData=off&explorationType=flame-graph&var-serviceName=unknown&var-profileMetricId=process_cpu:cpu:nanoseconds:cpu:nanoseconds&var-spanSelector=undefined&var-dataSource=pyroscope&var-filters=&var-filtersBaseline=&var-filtersComparison=&var-groupBy=all&maxNodes=16384) to visualize the profiles.
 
 ## Example output
 

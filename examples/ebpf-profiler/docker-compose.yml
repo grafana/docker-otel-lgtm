@@ -12,9 +12,16 @@ services:
       - "4318:4318"
 
   generate-traffic:
-    image: ubuntu:24.04
+    image: alpine
     command:
-      - /bin/sh -c "watch 'curl -s http://localhost:8080/rolldice; curl -s http://localhost:8082/rolldice'"
+      - '/bin/sh'
+      - '-c'
+      - 'while true; do wget -nc -q http://java:8080/rolldice > /dev/null; wget -nc -q http://python:8082/rolldice > /dev/null; sleep 1; done'
+    networks:
+      - otel-net
+    depends_on:
+      - java
+      - python
 
   otel-ebpf-profiler:
     build:
@@ -41,6 +48,8 @@ services:
       OTEL_SERVICE_NAME: "rolldice"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
       OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+    ports:
+      - "8082:8082"
     networks:
       - otel-net
     depends_on:
@@ -55,6 +64,8 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
       OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
       GRAFANA_ROLL_WAIT: "2000" # 2 seconds
+    ports:
+      - "8080:8080"
     networks:
       - otel-net
     depends_on:

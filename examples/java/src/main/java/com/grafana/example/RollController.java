@@ -18,6 +18,7 @@ public class RollController {
   private final float wait;
 
   public RollController(@Value("${grafana.roll.wait:200}") float wait) {
+    logger.info("Wait time is set to {} ms", wait);
     this.wait = wait;
   }
 

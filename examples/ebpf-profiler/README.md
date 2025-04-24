@@ -23,7 +23,7 @@ These examples demonstrate:
 
 ```bash
 # Start all services
-docker compose up --build
+docker compose up --remove-orphans --build
 
 # To clean up
 docker compose down

@@ -21,8 +21,8 @@ in a Java application. Here's a step-by-step explanation:
 
 4. **Test Exporting Metrics and Traces**:
 
-- The test method `testExportMetricsAndTraces` runs the application and queries the Prometheus endpoint and grafana
-  datasources in the LGTM stack to verify that the metric (`sold_items`) and span have been exported successfully.
+- The test method `testExportMetricsAndTraces` runs the application and queries the Prometheus and Tempo endpoints
+  in the LGTM stack to verify that the metric (`sold_items`) and span have been exported successfully.
 - The `Awaitility` library is used to poll the endpoints until the telemetry is found or a timeout occurs.
 
 5. **Debugging with Grafana**:

@@ -16,10 +16,12 @@ jobs:
 
     steps:
       - id: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       - id: push-to-dockerhub
-        uses: grafana/shared-workflows/actions/build-push-to-dockerhub@main
+        uses: grafana/shared-workflows/actions/build-push-to-dockerhub@402975d84dd3fac9ba690f994f412d0ee2f51cf4 # v0.1.1
         with:
           repository: grafana/otel-lgtm
           context: docker

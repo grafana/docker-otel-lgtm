@@ -1,4 +1,5 @@
 [tools]
+rust = "stable"
 go = "latest"
 "go:github.com/grafana/oats" = "latest"
 java = "temurin-21.0.7+6.0.LTS"

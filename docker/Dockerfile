@@ -1,18 +1,18 @@
 # renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
-ARG GRAFANA_VERSION=v11.6.0
+ARG GRAFANA_VERSION=v11.6.1
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
 ARG PROMETHEUS_VERSION=v3.3.0
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
 ARG TEMPO_VERSION=v2.7.2
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
-ARG LOKI_VERSION=v3.4.3
+ARG LOKI_VERSION=v3.5.0
 # renovate: datasource=github-releases depName=pyroscope packageName=grafana/pyroscope
 ARG PYROSCOPE_VERSION=v1.13.2
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
-ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.124.1
+ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.125.0
 
 # hadolint global ignore=DL3059
-FROM redhat/ubi9:9.5-1744101466 AS builder
+FROM redhat/ubi9:9.5-1745854298 AS builder
 
 RUN mkdir /otel-lgtm
 
@@ -40,7 +40,7 @@ RUN yum install -y unzip dos2unix jq
 # installs for the final image
 # see https://github.com/thomasdarimont/keycloak/blob/main/docs/guides/server/containers.adoc#installing-additional-rpm-packages
 RUN mkdir -p /mnt/rootfs
-RUN dnf install --installroot /mnt/rootfs curl-minimal jq procps --releasever 9 --setopt install_weak_deps=false --nodocs -y && \
+RUN dnf install --installroot /mnt/rootfs curl-minimal --releasever 9 --setopt install_weak_deps=false --nodocs -y && \
     dnf --installroot /mnt/rootfs clean all && \
     rpm --root /mnt/rootfs -e --nodeps setup
 
@@ -84,7 +84,7 @@ RUN ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/
 
-FROM redhat/ubi9-micro:9.5-1744118077
+FROM redhat/ubi9-micro:9.5-1745845480
 
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm

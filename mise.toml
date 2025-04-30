@@ -1,5 +1,6 @@
 [tools]
 rust = "stable"
+"cargo:zizmor" = "latest"
 go = "latest"
 "go:github.com/grafana/oats" = "latest"
 java = "temurin-21.0.7+6.0.LTS"
@@ -15,8 +16,15 @@ run = "markdownlint-cli2 --fix ."
 [tasks.lint-links]
 run = "lychee --cache --include-fragments ."
 
+[tasks.lint-gh-actions]
+run = "zizmor .github/"
+
 [tasks.lint-all]
 depends = ["lint", "lint-links"]
+
+[tasks.lint-rest]
+description = "All lints not covered by super linter"
+depends = ["lint-links", "lint-gh-actions"]
 
 [tasks.test]
 description = "Run integration tests"

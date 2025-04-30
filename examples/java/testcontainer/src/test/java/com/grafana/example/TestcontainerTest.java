@@ -9,7 +9,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.grafana.LgtmStackContainer;
@@ -19,8 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 public class TestcontainerTest {
 
-  @Container
-  private final LgtmStackContainer lgtm = new LgtmStackContainer("grafana/otel-lgtm");
+  @Container private final LgtmStackContainer lgtm = new LgtmStackContainer("grafana/otel-lgtm");
 
   @BeforeEach
   void setUp() {
@@ -64,15 +62,17 @@ public class TestcontainerTest {
               return response.statusCode() == 200 && body.contains("sold_items");
             });
 
-    HttpRequest traceRequest = HttpRequest.newBuilder()
-        .uri(URI.create(String.format("%s/api/search", lgtm.getTempoUrl())))
-        .build();
+    HttpRequest traceRequest =
+        HttpRequest.newBuilder()
+            .uri(URI.create(String.format("%s/api/search", lgtm.getTempoUrl())))
+            .build();
 
     await()
         .atMost(Duration.ofSeconds(10))
         .until(
             () -> {
-              HttpResponse<String> response = client.send(traceRequest, HttpResponse.BodyHandlers.ofString());
+              HttpResponse<String> response =
+                  client.send(traceRequest, HttpResponse.BodyHandlers.ofString());
               String body = response.body();
               return response.statusCode() == 200 && body.contains("otel-java-test");
             });

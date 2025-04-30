@@ -9,10 +9,10 @@ ARG LOKI_VERSION=v3.5.0
 # renovate: datasource=github-releases depName=pyroscope packageName=grafana/pyroscope
 ARG PYROSCOPE_VERSION=v1.13.2
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
-ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.124.1
+ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.125.0
 
 # hadolint global ignore=DL3059
-FROM redhat/ubi9:9.5-1744101466 AS builder
+FROM redhat/ubi9:9.5-1745854298 AS builder
 
 RUN mkdir /otel-lgtm
 
@@ -84,7 +84,7 @@ RUN ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/
 
-FROM redhat/ubi9-micro:9.5-1744118077
+FROM redhat/ubi9-micro:9.5-1745845480
 
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm

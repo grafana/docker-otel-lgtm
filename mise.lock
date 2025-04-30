@@ -29,3 +29,7 @@ backend = "aqua:lycheeverse/lychee"
 [tools.markdownlint-cli2]
 version = "0.17.2"
 backend = "npm:markdownlint-cli2"
+
+[tools.rust]
+version = "stable"
+backend = "core:rust"

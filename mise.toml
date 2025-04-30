@@ -1,11 +1,11 @@
 [tools]
-rust = "stable"
 "cargo:zizmor" = "latest"
 go = "latest"
 "go:github.com/grafana/oats" = "latest"
 java = "temurin-21.0.7+6.0.LTS"
 lychee = "latest"
 markdownlint-cli2 = "latest"
+rust = "stable"
 
 [tasks.lint]
 run = "scripts/super-linter.sh"

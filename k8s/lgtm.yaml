@@ -61,6 +61,8 @@ spec:
               mountPath: /loki
             - name: p8s-storage
               mountPath: /data/prometheus
+            - name: pyroscope-storage
+              mountPath: /data/pyroscope
       volumes:
         - name: tempo-data
           emptyDir: {}
@@ -71,4 +73,6 @@ spec:
         - name: loki-storage
           emptyDir: {}
         - name: p8s-storage
+          emptyDir: {}
+        - name: pyroscope-storage
           emptyDir: {}

@@ -18,3 +18,6 @@ ingester:
         store: inmemory
       replication_factor: 1
     min_ready_duration: 1s
+
+pyroscopedb:
+  data_path: "/data/pyroscope"

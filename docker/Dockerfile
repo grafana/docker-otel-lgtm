@@ -1,5 +1,5 @@
 # renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
-ARG GRAFANA_VERSION=v11.6.1
+ARG GRAFANA_VERSION=v12.0.0
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
 ARG PROMETHEUS_VERSION=v3.3.1
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo

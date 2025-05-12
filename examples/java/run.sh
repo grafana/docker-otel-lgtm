@@ -10,7 +10,8 @@ fi
 opentelemetry_javaagent_version=2.15.0
 jar=opentelemetry-javaagent-${opentelemetry_javaagent_version}.jar
 if [[ ! -f ./${jar} ]]; then
-	curl -vL https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${opentelemetry_javaagent_version}/opentelemetry-javaagent.jar -o ${jar}
+	curl -vL https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${opentelemetry_javaagent_version}/opentelemetry-javaagent.jar -o ${jar} # editorconfig-checker-disable-line
+
 fi
 export OTEL_RESOURCE_ATTRIBUTES="service.name=rolldice,service.instance.id=localhost:8080"
 # uncomment the next line to switch to Prometheus native histograms.

@@ -73,7 +73,8 @@ func setupOTelSDK(ctx context.Context) (shutdown func(context.Context) error, er
 		return nil, err
 	}
 
-	meterProvider := metric.NewMeterProvider(metric.WithReader(metric.NewPeriodicReader(metricExporter)))
+	meterProvider :=
+		metric.NewMeterProvider(metric.WithReader(metric.NewPeriodicReader(metricExporter)))
 	if err != nil {
 		handleErr(err)
 		return

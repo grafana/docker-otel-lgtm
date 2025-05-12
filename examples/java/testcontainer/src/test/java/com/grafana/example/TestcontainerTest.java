@@ -46,7 +46,8 @@ public class TestcontainerTest {
     HttpClient client = HttpClient.newHttpClient();
     String query =
         URLEncoder.encode(
-            "sold_items_total{job=\"otel-java-test\",service_name=\"otel-java-test\",tenant=\"tenant1\"}",
+            "sold_items_total{job=\"otel-java-test\",service_name=\"otel-java-test\","
+                + "tenant=\"tenant1\"}",
             StandardCharsets.UTF_8);
     String prometheusHttpUrl = lgtm.getPrometheusHttpUrl() + "/api/v1/query?query=" + query;
 

@@ -15,8 +15,7 @@ app.get('/rolldice', (req, res) => {
     logger.log('Received request to roll dice')
     const rolls = req.query.rolls ? parseInt(req.query.rolls.toString()) : NaN
     if (isNaN(rolls)) {
-      const errorMessage =
-        "Request parameter 'rolls' is missing or not a number."
+      const errorMessage = "Request parameter 'rolls' is missing or not a number."
       span.setStatus({
         code: SpanStatusCode.ERROR,
         message: errorMessage

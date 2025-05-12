@@ -19,10 +19,7 @@
       allowedVersions: "!/operator/",
     },
     {
-      matchPackageNames: [
-        "ghcr.io/renovatebot/renovate",
-        "renovatebot/github-action",
-      ],
+      matchPackageNames: ["ghcr.io/renovatebot/renovate", "renovatebot/github-action"],
       groupName: "renovatebot",
       schedule: ["before 4am on monday"],
     },
@@ -32,13 +29,7 @@
       ignoreUnstable: false,
     },
     {
-      matchPackageNames: [
-        "grafana/grafana",
-        "prometheus/prometheus",
-        "grafana/loki",
-        "grafana/tempo",
-        "open-telemetry/opentelemetry-collector-releases",
-      ],
+      matchPackageNames: ["grafana/grafana", "prometheus/prometheus", "grafana/loki", "grafana/tempo", "open-telemetry/opentelemetry-collector-releases"],
       labels: ["docker-dependency"],
     },
   ],
@@ -53,34 +44,25 @@
       depNameTemplate: "ghcr.io/renovatebot/renovate",
       datasourceTemplate: "docker",
       fileMatch: ["^\\.github/workflows/renovate.yml$"],
-      matchStrings: [
-        "renovate-version: (?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?",
-        "RENOVATE_IMAGE=ghcr.io/renovatebot/renovate:(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?",
-      ],
+      matchStrings: ["renovate-version: (?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?", "RENOVATE_IMAGE=ghcr.io/renovatebot/renovate:(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?"],
     },
     {
       customType: "regex",
       description: "Update _VERSION variables in Dockerfiles",
       fileMatch: ["Dockerfile"],
-      matchStrings: [
-        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s",
-      ],
+      matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s"],
     },
     {
       customType: "regex",
       description: "Update _version variables in run.sh",
       fileMatch: ["run.sh$"],
-      matchStrings: [
-        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s",
-      ],
+      matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"],
     },
     {
       customType: "regex",
       description: "Update mise.lock",
       fileMatch: ["^mise.lock$"],
-      matchStrings: [
-        '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\nversion = "(?<currentValue>.+?)"',
-      ],
+      matchStrings: ['# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\nversion = "(?<currentValue>.+?)"'],
     },
   ],
 }

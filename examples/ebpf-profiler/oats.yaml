@@ -6,7 +6,8 @@ expected:
   profiles:
     - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name=~"python.*"}'
       flamebearers:
-        contains: "libpython3" # not very useful, because the python function names are not in the flamegraph
+        # not very useful, because the python function names are not in the flamegraph
+        contains: "python3"
     - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name="java"}'
       flamebearers:
         contains: "void org.springframework.boot.SpringApplication.refreshContext(org.springframework.context.ConfigurableApplicationContext)"

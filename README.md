@@ -2,17 +2,17 @@
 
 An OpenTelemetry backend in a Docker image.
 
-![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana, Pyroscope](img/overview.png)
+![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana, Pyroscope](img/overview.png) <!-- editorconfig-checker-disable-line -->
 
-The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry that’s intended for development, demo,
-and testing environments.
-If you are looking for a production-ready, out-of-the box solution to monitor applications and minimize
-MTTR (mean time to resolution) with OpenTelemetry and Prometheus,
-you should try [Grafana Cloud Application Observability](https://grafana.com/products/cloud/application-observability/).
+The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry
+that’s intended for development, demo, and testing environments.
+If you are looking for a production-ready, out-of-the box solution to monitor applications
+and minimize MTTR (mean time to resolution) with OpenTelemetry and Prometheus,
+you should try [Grafana Cloud Application Observability](https://grafana.com/products/cloud/application-observability/). <!-- editorconfig-checker-disable-line -->
 
 ## Documentation
 
-- Blog post: [An OpenTelemetry backend in a Docker image: Introducing grafana/otel-lgtm](https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/)
+- Blog post: [An OpenTelemetry backend in a Docker image: Introducing grafana/otel-lgtm](https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/) <!-- editorconfig-checker-disable-line -->
 
 ## Get the Docker image
 
@@ -54,17 +54,18 @@ This has nothing to do with the application logs, which are collected by OpenTel
 In addition to the built-in observability tools, you can also send data to vendors.
 That way, you can easily try and switch between different backends.
 
-If the [OTEL_EXPORTER_OTLP_ENDPOINT](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint)
-variable is set, the OpenTelemetry Collector will send data (logs, metrics, and traces) to the specified endpoint using "OTLP/HTTP".
+If the [OTEL_EXPORTER_OTLP_ENDPOINT](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint) <!-- editorconfig-checker-disable-line -->
+variable is set, the OpenTelemetry Collector will send data (logs, metrics, and traces)
+to the specified endpoint using "OTLP/HTTP".
 
 In addition, you can provide
-[OTEL_EXPORTER_OTLP_HEADERS](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers),
+[OTEL_EXPORTER_OTLP_HEADERS](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers), <!-- editorconfig-checker-disable-line -->
 for example, to authenticate with the backend.
 
 #### Send data to Grafana Cloud
 
 You can find the values for the environment variables in your
-[Grafana Cloud account](https://grafana.com/docs/grafana-cloud/send-data/otlp/send-data-otlp/#manual-opentelemetry-setup-for-advanced-users).
+[Grafana Cloud account](https://grafana.com/docs/grafana-cloud/send-data/otlp/send-data-otlp/#manual-opentelemetry-setup-for-advanced-users). <!-- editorconfig-checker-disable-line -->
 
 ### Persist data across container instantiation
 
@@ -115,7 +116,8 @@ mise build-lgtm
 
 ## Build and run the example app
 
-> **_NOTE:_** You can run everything together using [mise](https://mise.jdx.dev/) with `mise run all`
+> **_NOTE:_** You can run everything together using
+> [mise](https://mise.jdx.dev/) with `mise run all`
 
 Run the example REST service:
 
@@ -143,7 +145,8 @@ Generate traffic:
 mise run generate-traffic
 ```
 
-> **_NOTE:_** You can use [OTel Checker](https://github.com/grafana/otel-checker/) to check if the instrumentation is correct.
+> **_NOTE:_** You can use [OTel Checker](https://github.com/grafana/otel-checker/)
+> to check if the instrumentation is correct.
 
 ## Run example apps in different languages
 
@@ -152,7 +155,8 @@ Each example has a `run.sh` or `run.cmd` script to start the app.
 
 Every example implements a rolldice service, which returns a random number between 1 and 6.
 
-Each example uses a different application port (to be able to run all applications at the same time).
+Each example uses a different application port
+(to be able to run all applications at the same time).
 
 | Example | Service URL                           |
 | ------- | ------------------------------------- |

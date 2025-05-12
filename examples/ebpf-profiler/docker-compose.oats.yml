@@ -3,13 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command:
-      [
-        "-collection-agent",
-        "lgtm:4317",
-        "-no-kernel-version-check",
-        "-disable-tls",
-      ]
+    command: ["-collection-agent", "lgtm:4317", "-no-kernel-version-check", "-disable-tls"]
     hostname: ebpf-profiler
     privileged: true
     pid: "host"

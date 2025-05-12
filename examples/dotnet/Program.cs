@@ -20,30 +20,33 @@ appBuilder.Services.AddOpenTelemetry()
     .ConfigureResource(configureResource)
     .WithTracing(builder =>
     {
-        builder
-            .AddHttpClientInstrumentation()
-            .AddAspNetCoreInstrumentation();
+      builder
+          .AddHttpClientInstrumentation()
+          .AddAspNetCoreInstrumentation();
 
-        // Use IConfiguration binding for AspNetCore instrumentation options.
-        appBuilder.Services.Configure<AspNetCoreTraceInstrumentationOptions>(appBuilder.Configuration.GetSection("AspNetCoreInstrumentation"));
+      // Use IConfiguration binding for AspNetCore instrumentation options.
+      appBuilder.Services.Configure<AspNetCoreTraceInstrumentationOptions>(
+          appBuilder.Configuration.GetSection("AspNetCoreInstrumentation"));
 
-        builder.AddOtlpExporter(otlpOptions =>
-        {
-            // Use IConfiguration directly for Otlp exporter endpoint option.
-            otlpOptions.Endpoint = new Uri(appBuilder.Configuration.GetValue("Otlp:Endpoint", defaultValue: "http://localhost:4317")!);
-        });
+      builder.AddOtlpExporter(otlpOptions =>
+      {
+        // Use IConfiguration directly for Otlp exporter endpoint option.
+        otlpOptions.Endpoint = new Uri(appBuilder.Configuration.GetValue(
+              "Otlp:Endpoint", defaultValue: "http://localhost:4317")!);
+      });
     })
     .WithMetrics(builder =>
     {
-        builder
-            .AddHttpClientInstrumentation()
-            .AddAspNetCoreInstrumentation();
+      builder
+          .AddHttpClientInstrumentation()
+          .AddAspNetCoreInstrumentation();
 
-        builder.AddOtlpExporter(otlpOptions =>
-        {
-            // Use IConfiguration directly for Otlp exporter endpoint option.
-            otlpOptions.Endpoint = new Uri(appBuilder.Configuration.GetValue("Otlp:Endpoint", defaultValue: "http://localhost:4317")!);
-        });
+      builder.AddOtlpExporter(otlpOptions =>
+      {
+        // Use IConfiguration directly for Otlp exporter endpoint option.
+        otlpOptions.Endpoint = new Uri(appBuilder.Configuration.GetValue(
+              "Otlp:Endpoint", defaultValue: "http://localhost:4317")!);
+      });
     });
 
 // Clear default logging providers used by WebApplication host.
@@ -52,40 +55,41 @@ appBuilder.Logging.ClearProviders();
 // Configure OpenTelemetry Logging.
 appBuilder.Logging.AddOpenTelemetry(options =>
 {
-    // Note: See appsettings.json Logging:OpenTelemetry section for configuration.
+  // Note: See appsettings.json Logging:OpenTelemetry section for configuration.
 
-    var resourceBuilder = ResourceBuilder.CreateDefault();
-    configureResource(resourceBuilder);
-    options.SetResourceBuilder(resourceBuilder);
+  var resourceBuilder = ResourceBuilder.CreateDefault();
+  configureResource(resourceBuilder);
+  options.SetResourceBuilder(resourceBuilder);
 
-    options.AddOtlpExporter(otlpOptions =>
-    {
-        // Use IConfiguration directly for Otlp exporter endpoint option.
-        otlpOptions.Endpoint = new Uri(appBuilder.Configuration.GetValue("Otlp:Endpoint", defaultValue: "http://localhost:4317")!);
-    });
+  options.AddOtlpExporter(otlpOptions =>
+  {
+    // Use IConfiguration directly for Otlp exporter endpoint option.
+    otlpOptions.Endpoint = new Uri(appBuilder.Configuration.GetValue(
+          "Otlp:Endpoint", defaultValue: "http://localhost:4317")!);
+  });
 });
 
 var app = appBuilder.Build();
 
 string HandleRollDice([FromServices] ILogger<Program> logger, string? player)
 {
-    var result = RollDice();
+  var result = RollDice();
 
-    if (string.IsNullOrEmpty(player))
-    {
-        logger.LogInformation("Anonymous player is rolling the dice: {result}", result);
-    }
-    else
-    {
-        logger.LogInformation("{player} is rolling the dice: {result}", player, result);
-    }
+  if (string.IsNullOrEmpty(player))
+  {
+    logger.LogInformation("Anonymous player is rolling the dice: {result}", result);
+  }
+  else
+  {
+    logger.LogInformation("{player} is rolling the dice: {result}", player, result);
+  }
 
-    return result.ToString(CultureInfo.InvariantCulture);
+  return result.ToString(CultureInfo.InvariantCulture);
 }
 
 int RollDice()
 {
-    return Random.Shared.Next(1, 7);
+  return Random.Shared.Next(1, 7);
 }
 
 app.MapGet("/rolldice/{player?}", HandleRollDice);

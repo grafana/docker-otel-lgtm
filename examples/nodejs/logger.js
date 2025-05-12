@@ -1,14 +1,8 @@
 const { SeverityNumber } = require('@opentelemetry/api-logs')
-const {
-  LoggerProvider,
-  BatchLogRecordProcessor
-} = require('@opentelemetry/sdk-logs')
+const { LoggerProvider, BatchLogRecordProcessor } = require('@opentelemetry/sdk-logs')
 const { OTLPLogExporter } = require('@opentelemetry/exporter-logs-otlp-proto')
 const { resourceFromAttributes } = require('@opentelemetry/resources')
-const {
-  ATTR_SERVICE_NAME,
-  ATTR_SERVICE_VERSION
-} = require('@opentelemetry/semantic-conventions')
+const { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } = require('@opentelemetry/semantic-conventions')
 
 class Logger {
   context
@@ -24,9 +18,7 @@ class Logger {
       })
     })
     // Add a processor to export log record
-    loggerProvider.addLogRecordProcessor(
-      new BatchLogRecordProcessor(new OTLPLogExporter())
-    )
+    loggerProvider.addLogRecordProcessor(new BatchLogRecordProcessor(new OTLPLogExporter()))
 
     this.logger = loggerProvider.getLogger('default')
   }

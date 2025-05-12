@@ -3,8 +3,8 @@ version = "1.6.0"
 backend = "cargo:zizmor"
 
 [tools.go]
-# renovate: datasource=github-releases depName=go packageName=golang/go
-version = "1.24.2"
+# renovate: datasource=github-tags depName=go packageName=golang/go
+version = "1.24.3"
 backend = "core:go"
 
 [tools.go.checksums]

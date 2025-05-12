@@ -17,7 +17,8 @@ It's recommended to use the [mise](https://mise.jdx.dev/) for development.
 
 ## Acceptance Tests
 
-Acceptance test cases are defined in `oats.yaml` files in the examples directory. The test cases are run by [oats].
+Acceptance test cases are defined in `oats.yaml` files in the examples directory.
+The test cases are run by [oats].
 
 If a test case fails (lets say `examples/nodejs`), follows these steps:
 
@@ -31,7 +32,8 @@ You can run all everything together using `mise run test`.
 
 ## Architecture diagram
 
-The source code for the architecture diagram is a [google slide](https://docs.google.com/presentation/d/1txMBBitezscvtJIXRHNSXnCekjMRM29GmHufUSI0NRw/edit?slide=id.g26040f0db78_0_0#slide=id.g26040f0db78_0_0).
+The source code for the architecture diagram is a
+[google slide](https://docs.google.com/presentation/d/1txMBBitezscvtJIXRHNSXnCekjMRM29GmHufUSI0NRw/edit?slide=id.g26040f0db78_0_0#slide=id.g26040f0db78_0_0). <!-- editorconfig-checker-disable-line -->
 Take a screenshot of the slide and save it as `img/overview.png`.
 
 ## OTel Collector
@@ -39,5 +41,6 @@ Take a screenshot of the slide and save it as `img/overview.png`.
 ### Testing the combined configuration
 
 ```shell
-./otelcol-contrib --config docker/otelcol-config.yaml --config docker/otelcol-export-http.yaml print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml
+./otelcol-contrib --config docker/otelcol-config.yaml --config docker/otelcol-export-http.yaml \
+print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml
 ```

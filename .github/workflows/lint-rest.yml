@@ -1,12 +1,12 @@
 ---
-name: Acceptance Tests
+name: Lint what Super Linter can’t
 
 on: [pull_request]
 
 permissions: {}
 
 jobs:
-  acceptance-tests:
+  lint:
     permissions: {}
     runs-on: ubuntu-24.04
     steps:

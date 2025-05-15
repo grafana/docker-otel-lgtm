@@ -1,110 +1,68 @@
 {
-  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
-  extends: [
-    'config:recommended',
-  ],
-  branchPrefix: 'grafanarenovatebot/',
-  platformCommit: 'enabled',
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:recommended"],
+  branchPrefix: "grafanarenovatebot/",
+  platformCommit: "enabled",
   automerge: true,
   dependencyDashboard: false,
-  forkProcessing: 'enabled',
-  rebaseWhen: 'conflicted',
+  forkProcessing: "enabled",
+  rebaseWhen: "conflicted",
   ignorePaths: [],
   ignoreUnstable: true,
   packageRules: [
     {
-      matchPackageNames: [
-        'open-telemetry/opentelemetry-collector-releases',
-      ],
-      allowedVersions: '!/cmd/',
+      matchPackageNames: ["open-telemetry/opentelemetry-collector-releases"],
+      allowedVersions: "!/cmd/",
     },
     {
-      matchPackageNames: [
-        'grafana/loki',
-      ],
-      allowedVersions: '!/operator/',
+      matchPackageNames: ["grafana/loki"],
+      allowedVersions: "!/operator/",
     },
     {
-      matchPackageNames: [
-        'ghcr.io/renovatebot/renovate',
-        'renovatebot/github-action',
-      ],
-      groupName: 'renovatebot',
-      schedule: [
-        'before 4am on monday',
-      ],
+      matchPackageNames: ["ghcr.io/renovatebot/renovate", "renovatebot/github-action"],
+      groupName: "renovatebot",
+      schedule: ["before 4am on monday"],
     },
     {
-      matchDatasources: [
-        'pypi',
-      ],
-      matchDepNames: [
-        'opentelemetry-distro',
-      ],
+      matchDatasources: ["pypi"],
+      matchDepNames: ["opentelemetry-distro"],
       ignoreUnstable: false,
     },
     {
-      matchPackageNames: [
-        'grafana/grafana',
-        'prometheus/prometheus',
-        'grafana/loki',
-        'grafana/tempo',
-        'open-telemetry/opentelemetry-collector-releases',
-      ],
-      labels: [
-        'docker-dependency',
-      ],
+      matchPackageNames: ["grafana/grafana", "prometheus/prometheus", "grafana/loki", "grafana/tempo", "open-telemetry/opentelemetry-collector-releases"],
+      labels: ["docker-dependency"],
     },
   ],
   vulnerabilityAlerts: {
     enabled: true,
-    labels: [
-      'automerge-security-update',
-    ],
+    labels: ["automerge-security-update"],
   },
   osvVulnerabilityAlerts: true,
   customManagers: [
     {
-      customType: 'regex',
-      depNameTemplate: 'ghcr.io/renovatebot/renovate',
-      datasourceTemplate: 'docker',
-      managerFilePatterns: [
-        '/^\\.github/workflows/renovate.yml$/',
-      ],
-      matchStrings: [
-        'renovate-version: (?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?',
-        'RENOVATE_IMAGE=ghcr.io/renovatebot/renovate:(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?',
-      ],
+      customType: "regex",
+      depNameTemplate: "ghcr.io/renovatebot/renovate",
+      datasourceTemplate: "docker",
+      managerFilePatterns: ["/^\\.github/workflows/renovate.yml$/"],
+      matchStrings: ["renovate-version: (?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?", "RENOVATE_IMAGE=ghcr.io/renovatebot/renovate:(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?"],
     },
     {
-      customType: 'regex',
-      description: 'Update _VERSION variables in Dockerfiles',
-      managerFilePatterns: [
-        '/Dockerfile/',
-      ],
-      matchStrings: [
-        '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s',
-      ],
+      customType: "regex",
+      description: "Update _VERSION variables in Dockerfiles",
+      managerFilePatterns: ["/Dockerfile/"],
+      matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s"],
     },
     {
-      customType: 'regex',
-      description: 'Update _version variables in run.sh',
-      managerFilePatterns: [
-        '/run.sh$/',
-      ],
-      matchStrings: [
-        '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s',
-      ],
+      customType: "regex",
+      description: "Update _version variables in run.sh",
+      managerFilePatterns: ["/run.sh$/"],
+      matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"],
     },
     {
-      customType: 'regex',
-      description: 'Update mise.lock',
-      managerFilePatterns: [
-        '/^mise.lock$/',
-      ],
-      matchStrings: [
-        '# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\nversion = "(?<currentValue>.+?)"',
-      ],
+      customType: "regex",
+      description: "Update mise.lock",
+      managerFilePatterns: ["/^mise.lock$/"],
+      matchStrings: ['# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\nversion = "(?<currentValue>.+?)"'],
     },
   ],
 }

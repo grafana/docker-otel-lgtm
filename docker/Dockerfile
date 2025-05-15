@@ -12,7 +12,7 @@ ARG PYROSCOPE_VERSION=v1.13.2
 ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.126.0
 
 # hadolint global ignore=DL3059
-FROM redhat/ubi9:9.6-1745489786 AS builder
+FROM redhat/ubi9:9.6-1747219013 AS builder
 
 RUN mkdir /otel-lgtm
 
@@ -84,7 +84,7 @@ RUN ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/
 
-FROM redhat/ubi9-micro:9.5-1746002938
+FROM redhat/ubi9-micro:9.6-1745521186
 
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm

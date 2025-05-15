@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-24.04
 
     steps:

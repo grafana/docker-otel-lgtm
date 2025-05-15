@@ -49,3 +49,4 @@ jobs:
           RENOVATE_PLATFORM: github
           RENOVATE_REPOSITORIES: ${{ github.repository }}
           RENOVATE_USERNAME: GrafanaRenovateBot
+          RENOVATE_CONFIG_MIGRATION: true

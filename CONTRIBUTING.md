@@ -47,6 +47,7 @@ print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml
 
 <!-- editorconfig-checker-disable -->
 <!-- markdownlint-disable MD013 -->
+
 [architecture]: https://docs.google.com/presentation/d/1txMBBitezscvtJIXRHNSXnCekjMRM29GmHufUSI0NRw/edit?slide=id.g26040f0db78_0_0#slide=id.g26040f0db78_0_0
 [mise]: https://github.com/jdx/mise
 [oats]: https://github.com/grafana/oats

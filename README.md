@@ -2,6 +2,7 @@
 
 An OpenTelemetry backend in a Docker image.
 
+<!-- prettier-ignore -->
 <!-- markdownlint-disable-next-line MD013 -->
 ![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana, Pyroscope](img/overview.png) <!-- editorconfig-checker-disable-line -->
 
@@ -196,6 +197,7 @@ Each example uses a different application port
 
 <!-- editorconfig-checker-disable -->
 <!-- markdownlint-disable MD013 -->
+
 [app-o11y]: https://grafana.com/products/cloud/application-observability/
 [examples]: https://github.com/grafana/docker-otel-lgtm/tree/main/examples
 [mise]: https://github.com/jdx/mise

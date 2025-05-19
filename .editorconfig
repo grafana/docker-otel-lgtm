@@ -8,7 +8,7 @@ indent_size = 2
 indent_size = 4
 insert_final_newline = true
 end_of_line = crlf
-max_line_length = unset
+max_line_length = 180
 
 [*.md]
 max_line_length = 120

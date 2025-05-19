@@ -17,5 +17,6 @@ jobs:
       - uses: jdx/mise-action@c94f0bf9e520b150e34c017db785461f7e71c5fb # v2.2.2
         with:
           cache: 'false'
+          version: 2025.5.2
       - name: Lint
         run: mise run lint-rest

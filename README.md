@@ -2,17 +2,18 @@
 
 An OpenTelemetry backend in a Docker image.
 
+<!-- markdownlint-disable-next-line MD013 -->
 ![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana, Pyroscope](img/overview.png) <!-- editorconfig-checker-disable-line -->
 
 The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry
-that’s intended for development, demo, and testing environments.
+that's intended for development, demo, and testing environments.
 If you are looking for a production-ready, out-of-the box solution to monitor applications
 and minimize MTTR (mean time to resolution) with OpenTelemetry and Prometheus,
-you should try [Grafana Cloud Application Observability](https://grafana.com/products/cloud/application-observability/). <!-- editorconfig-checker-disable-line -->
+you should try [Grafana Cloud Application Observability][app-o11y].
 
 ## Documentation
 
-- Blog post: [An OpenTelemetry backend in a Docker image: Introducing grafana/otel-lgtm](https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/) <!-- editorconfig-checker-disable-line -->
+- Blog post: [_An OpenTelemetry backend in a Docker image: Introducing grafana/otel-lgtm_][otel-lgtm]
 
 ## Get the Docker image
 
@@ -20,14 +21,23 @@ The Docker image is available on Docker hub: <https://hub.docker.com/r/grafana/o
 
 ## Run the Docker image
 
+### Linux/Unix
+
 ```sh
-# Unix/Linux
 ./run-lgtm.sh
+```
 
-# Windows (PowerShell)
+### Windows (PowerShell)
+
+```powershell
 ./run-lgtm
+```
 
-# Using mise (Unix/Linux)
+### Linux/Unix Using mise
+
+You can also use [mise][mise] to run the Docker image:
+
+```sh
 mise run lgtm
 ```
 
@@ -37,52 +47,50 @@ mise run lgtm
 
 You can enable logging for troubleshooting:
 
-| Environment Variable   | Enable Logging in       |
-| ---------------------- | ----------------------- |
-| ENABLE_LOGS_GRAFANA    | Grafana                 |
-| ENABLE_LOGS_LOKI       | Loki                    |
-| ENABLE_LOGS_PROMETHEUS | Prometheus              |
-| ENABLE_LOGS_TEMPO      | Tempo                   |
-| ENABLE_LOGS_PYROSCOPE  | Pyroscope               |
-| ENABLE_LOGS_OTELCOL    | OpenTelemetry Collector |
-| ENABLE_LOGS_ALL        | all of the above        |
+| Environment Variable     | Enables Logging in:     |
+| ------------------------ | ----------------------- |
+| `ENABLE_LOGS_GRAFANA`    | Grafana                 |
+| `ENABLE_LOGS_LOKI`       | Loki                    |
+| `ENABLE_LOGS_PROMETHEUS` | Prometheus              |
+| `ENABLE_LOGS_TEMPO`      | Tempo                   |
+| `ENABLE_LOGS_PYROSCOPE`  | Pyroscope               |
+| `ENABLE_LOGS_OTELCOL`    | OpenTelemetry Collector |
+| `ENABLE_LOGS_ALL`        | All of the above        |
 
-This has nothing to do with the application logs, which are collected by OpenTelemetry.
+This has nothing to do with any application logs, which are collected by OpenTelemetry.
 
 ### Send data to vendors
 
 In addition to the built-in observability tools, you can also send data to vendors.
 That way, you can easily try and switch between different backends.
 
-If the [OTEL_EXPORTER_OTLP_ENDPOINT](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint) <!-- editorconfig-checker-disable-line -->
+If the [`OTEL_EXPORTER_OTLP_ENDPOINT`][otlp-endpoint]
 variable is set, the OpenTelemetry Collector will send data (logs, metrics, and traces)
 to the specified endpoint using "OTLP/HTTP".
 
-In addition, you can provide
-[OTEL_EXPORTER_OTLP_HEADERS](https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers), <!-- editorconfig-checker-disable-line -->
+In addition, you can provide [`OTEL_EXPORTER_OTLP_HEADERS`][otlp-headers],
 for example, to authenticate with the backend.
 
 #### Send data to Grafana Cloud
 
-You can find the values for the environment variables in your
-[Grafana Cloud account](https://grafana.com/docs/grafana-cloud/send-data/otlp/send-data-otlp/#manual-opentelemetry-setup-for-advanced-users). <!-- editorconfig-checker-disable-line -->
+You can find the values for the environment variables in your [Grafana Cloud account][otel-setup].
 
 ### Persist data across container instantiation
 
-The various components in the repository are configured to write their data to the /data
+The various components in the repository are configured to write their data to the `/data`
 directory. If you need to persist data across containers being created and destroyed,
-you can mount a volume to the /data directory. Note that this image is intended for
+you can mount a volume to the `/data` directory. Note that this image is intended for
 development, demo, and testing environments and persisting data to an external volume
 doesn't change that. However, this feature could be useful in certain cases for
 some users even in testing situations.
 
-## Run lgtm in kubernetes
+## Run lgtm in Kubernetes
 
 ```sh
-# create k8s resources
+# Create k8s resources
 kubectl apply -f k8s/lgtm.yaml
 
-# port forwarding
+# Configure port forwarding
 kubectl port-forward service/lgtm 3000:3000 4317:4317 4318:4318
 
 # Using mise
@@ -92,17 +100,17 @@ mise k8s-port-forward
 
 ## Send OpenTelemetry Data
 
-There's no need to configure anything: The Docker image works with OpenTelemetry's defaults.
+There's no need to configure anything: the Docker image works with OpenTelemetry's defaults.
 
 ```sh
-# Not needed as these are the defaults in OpenTelemetry:
+# Not needed, but these are the defaults in OpenTelemetry
 export OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
 export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
 ```
 
 ## View Grafana
 
-Log in to [http://localhost:3000](http://localhost:3000) with user _admin_ and password _admin_.
+Navigate to <http://localhost:3000> and log in with the default built-in user `admin` and password `admin`.
 
 ## Build the Docker image from scratch
 
@@ -116,41 +124,57 @@ mise build-lgtm
 
 ## Build and run the example app
 
-> **_NOTE:_** You can run everything together using
-> [mise](https://mise.jdx.dev/) with `mise run all`
+> [!TIP]
+> You can run everything together using [mise][mise] with `mise run all`.
+
+### Run
 
 Run the example REST service:
 
+#### Unix/Linux
+
 ```sh
-# Unix/Linux
 ./run-example.sh
+```
 
-# Windows (PowerShell)
+#### Windows (PowerShell)
+
+```powershell
 ./run-example
+```
 
-# Using mise (Unix/Linux)
+#### Unix/Linux Using mise
+
+```sh
 mise run example
 ```
 
-Generate traffic:
+### Generate traffic
+
+#### Unix/Linux
 
 ```sh
-# Unix/Linux
 ./generate-traffic.sh
+```
 
-# Windows (PowerShell)
+#### Windows (PowerShell)
+
+```powershell
 ./generate-traffic
+```
 
-# Using mise (Unix/Linux)
+#### Unix/Linux Using mise
+
+```sh
 mise run generate-traffic
 ```
 
-> **_NOTE:_** You can use [OTel Checker](https://github.com/grafana/otel-checker/)
-> to check if the instrumentation is correct.
+> [!TIP]
+> You can use [OTel Checker][otel-checker] to check if the instrumentation is correct.
 
 ## Run example apps in different languages
 
-The example apps are in the `examples/` directory.
+The example apps are in the [`examples/`][examples] directory.
 Each example has a `run.sh` or `run.cmd` script to start the app.
 
 Every example implements a rolldice service, which returns a random number between 1 and 6.
@@ -163,8 +187,22 @@ Each example uses a different application port
 | Java    | `curl http://localhost:8080/rolldice` |
 | Go      | `curl http://localhost:8081/rolldice` |
 | Python  | `curl http://localhost:8082/rolldice` |
-| dotnet  | `curl http://localhost:8083/rolldice` |
+| .NET    | `curl http://localhost:8083/rolldice` |
+| Node.js | `curl http://localhost:8084/rolldice` |
 
 ## Related Work
 
-- Metrics, Logs, Traces and Profiles in Grafana: <https://github.com/grafana/intro-to-mltp>
+- [Metrics, Logs, Traces and Profiles in Grafana][mltp]
+
+<!-- editorconfig-checker-disable -->
+<!-- markdownlint-disable MD013 -->
+
+[app-o11y]: https://grafana.com/products/cloud/application-observability/
+[examples]: https://github.com/grafana/docker-otel-lgtm/tree/main/examples
+[mise]: https://github.com/jdx/mise
+[mltp]: https://github.com/grafana/intro-to-mltp
+[otel-checker]: https://github.com/grafana/otel-checker/
+[otel-lgtm]: https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/
+[otel-setup]: https://grafana.com/docs/grafana-cloud/send-data/otlp/send-data-otlp/#manual-opentelemetry-setup-for-advanced-users
+[otlp-endpoint]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint
+[otlp-headers]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers

@@ -1,6 +1,6 @@
 # Contributing
 
-It's recommended to use the [mise](https://mise.jdx.dev/) for development.
+It's recommended to use the [mise][mise] for development.
 
 ## Building locally
 
@@ -20,7 +20,7 @@ It's recommended to use the [mise](https://mise.jdx.dev/) for development.
 Acceptance test cases are defined in `oats.yaml` files in the examples directory.
 The test cases are run by [oats].
 
-If a test case fails (lets say `examples/nodejs`), follows these steps:
+If a test case fails (let's say `examples/nodejs`), follow these steps:
 
 1. Build a new image: `mise run build-lgtm dev1`
 2. `oats -timeout 2h -lgtm-version dev1 examples/nodejs` (automatically installed by `mise`)
@@ -28,12 +28,12 @@ If a test case fails (lets say `examples/nodejs`), follows these steps:
 
 You can run all everything together using `mise run test`.
 
-[oats]: https://github.com/grafana/oats
-
 ## Architecture diagram
 
-The source code for the architecture diagram is a
-[google slide](https://docs.google.com/presentation/d/1txMBBitezscvtJIXRHNSXnCekjMRM29GmHufUSI0NRw/edit?slide=id.g26040f0db78_0_0#slide=id.g26040f0db78_0_0). <!-- editorconfig-checker-disable-line -->
+> [!NOTE]
+> The architecture diagram is only accessible to Grafana employees.
+
+The source code for the architecture diagram is a [Google slide][architecture].
 Take a screenshot of the slide and save it as `img/overview.png`.
 
 ## OTel Collector
@@ -44,3 +44,8 @@ Take a screenshot of the slide and save it as `img/overview.png`.
 ./otelcol-contrib --config docker/otelcol-config.yaml --config docker/otelcol-export-http.yaml \
 print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml
 ```
+
+<!-- markdownlint-disable MD013 -->
+[architecture]: https://docs.google.com/presentation/d/1txMBBitezscvtJIXRHNSXnCekjMRM29GmHufUSI0NRw/edit?slide=id.g26040f0db78_0_0#slide=id.g26040f0db78_0_0
+[mise]: https://github.com/jdx/mise
+[oats]: https://github.com/grafana/oats

@@ -1,9 +1,4 @@
-[tools."cargo:zizmor"]
-version = "1.6.0"
-backend = "cargo:zizmor"
-
 [tools.go]
-# renovate: datasource=github-tags depName=go packageName=golang/go
 version = "1.24.3"
 backend = "core:go"
 
@@ -27,7 +22,7 @@ version = "0.18.1"
 backend = "aqua:lycheeverse/lychee"
 
 [tools.markdownlint-cli2]
-version = "0.17.2"
+version = "0.18.1"
 backend = "npm:markdownlint-cli2"
 
 [tools.rust]

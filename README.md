@@ -3,7 +3,7 @@
 An OpenTelemetry backend in a Docker image.
 
 <!-- markdownlint-disable-next-line MD013 -->
-![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana, Pyroscope](img/overview.png)
+![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana, Pyroscope](img/overview.png) <!-- editorconfig-checker-disable-line -->
 
 The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry
 that's intended for development, demo, and testing environments.
@@ -127,41 +127,43 @@ mise build-lgtm
 > [!TIP]
 > You can run everything together using [mise][mise] with `mise run all`.
 
+### Run
+
 Run the example REST service:
 
-### Run on Unix/Linux
+#### Unix/Linux
 
 ```sh
 ./run-example.sh
 ```
 
-### Run on Windows (PowerShell)
+#### Windows (PowerShell)
 
 ```powershell
 ./run-example
 ```
 
-### Run with mise
+#### Unix/Linux Using mise
 
 ```sh
 mise run example
 ```
 
-Generate traffic:
+### Generate traffic
 
-### Generate on Unix/Linux
+#### Unix/Linux
 
 ```sh
 ./generate-traffic.sh
 ```
 
-### Generate on Windows (PowerShell)
+#### Windows (PowerShell)
 
 ```powershell
 ./generate-traffic
 ```
 
-### Generate with mise
+#### Unix/Linux Using mise
 
 ```sh
 mise run generate-traffic
@@ -192,6 +194,7 @@ Each example uses a different application port
 
 - [Metrics, Logs, Traces and Profiles in Grafana][mltp]
 
+<!-- editorconfig-checker-disable -->
 <!-- markdownlint-disable MD013 -->
 [app-o11y]: https://grafana.com/products/cloud/application-observability/
 [examples]: https://github.com/grafana/docker-otel-lgtm/tree/main/examples

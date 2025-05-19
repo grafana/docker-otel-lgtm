@@ -27,8 +27,5 @@ jobs:
       - name: Super-linter
         uses: super-linter/super-linter@12150456a73e248bdc94d0794898f94e23127c88 # v7.4.0
         env:
-          DOTNET_GENERATE_ASPNET_CERTIFICATE: false
-          DOTNET_NOLOGO: true
-          NUGET_XMLDOC_MODE: skip
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

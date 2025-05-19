@@ -15,7 +15,5 @@ jobs:
           persist-credentials: false
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: jdx/mise-action@c94f0bf9e520b150e34c017db785461f7e71c5fb # v2.2.2
-        with:
-          version: 2025.5.5
       - name: Lint
         run: mise run lint-rest

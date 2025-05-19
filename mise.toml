@@ -1,10 +1,9 @@
 [tools]
-"cargo:zizmor" = "latest"
-go = "latest"
-"go:github.com/grafana/oats" = "latest"
+go = "1.24.3"
+"go:github.com/grafana/oats" = "0.3.1"
 java = "temurin-21.0.7+6.0.LTS"
-lychee = "latest"
-markdownlint-cli2 = "latest"
+lychee = "0.18.1"
+markdownlint-cli2 = "0.18.1"
 rust = "stable"
 
 [tasks.lint]
@@ -16,15 +15,12 @@ run = "markdownlint-cli2 --fix ."
 [tasks.lint-links]
 run = "lychee --cache --include-fragments ."
 
-[tasks.lint-gh-actions]
-run = "zizmor .github/"
-
 [tasks.lint-all]
 depends = ["lint", "lint-links"]
 
 [tasks.lint-rest]
 description = "All lints not covered by super linter"
-depends = ["lint-links", "lint-gh-actions"]
+depends = ["lint-links"]
 
 [tasks.test]
 description = "Run integration tests"
@@ -52,5 +48,5 @@ run = "kubectl port-forward service/lgtm 3000:3000 4317:4317 4318:4318"
 run = './build-lgtm.sh {{arg(name="tag", default="latest")}}'
 
 [settings]
-# to get lock file support and for go backend
+# for go backend
 experimental = true

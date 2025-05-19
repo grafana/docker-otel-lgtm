@@ -65,7 +65,7 @@ appBuilder.Logging.AddOpenTelemetry(options =>
     {
         // Use IConfiguration directly for OTLP exporter endpoint option.
         otlpOptions.Endpoint = new Uri(
-            appBuilder.Configuration.GetValue( "Otlp:Endpoint", defaultValue: DefaultEndpoint)!);
+            appBuilder.Configuration.GetValue("Otlp:Endpoint", defaultValue: DefaultEndpoint)!);
     });
 });
 

@@ -1,7 +1,7 @@
 FROM ubuntu:24.04 AS builder
 
 ENV GO_VERSION=1.24.3
-ARG VERSION=4377c7485ec426eb1210098593e6175d2d53bcd8
+ARG VERSION=009a07f3803c33374eba0715ccae98dbfde7e225
 
 RUN apt-get update && apt-get -y install wget gcc
 RUN wget https://go.dev/dl/go$GO_VERSION.linux-amd64.tar.gz

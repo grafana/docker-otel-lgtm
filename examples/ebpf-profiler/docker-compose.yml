@@ -12,27 +12,8 @@ services:
       - "4318:4318"
 
   generate-traffic:
-#    image: ubuntu:24.04
     build:
       dockerfile: generate-traffic.Dockerfile
-#    command:
-#      - "/bin/bash"
-#      - "-c"
-#      - >
-#        watch 'curl -s http://java:8080/rolldice;
-#        curl -s http://go:8081/rolldice;
-#        curl -s http://python:8082/rolldice;
-#        curl -s http://dotnet:8083/rolldice;
-#        curl -s http://nodejs:8084/rolldice?rolls=5'
-#      - 'wget -q http://java:8080/rolldice -O /dev/null || echo "error reaching java service"'
-#      - >
-#        'while true; do
-#        wget -q http://java:8080/rolldice -O /dev/null || echo "error reaching java service";
-#        wget -q http://go:8081/rolldice -O /dev/null || echo "error reaching go service";
-#        wget -q http://python:8082/rolldice -O /dev/null || echo "error reaching python service";
-#        wget -q http://dotnet:8083/rolldice -O /dev/null || echo "error reaching dotnet service";
-#        wget -q http://nodejs:8084/rolldice -O /dev/null || echo "error reaching nodejs service";
-#        sleep 1; done'
     networks:
       - otel-net
     depends_on:

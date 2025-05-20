@@ -40,17 +40,18 @@ services:
     depends_on:
       - lgtm
 
-  java:
+  # instrumented applications - sorted alphabetically by language
+
+  dotnet:
     build:
-      context: ../java
-      dockerfile: ../java/Dockerfile
+      context: ../dotnet
+      dockerfile: ../dotnet/Dockerfile
     environment:
       OTEL_SERVICE_NAME: "rolldice"
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
       OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
-      GRAFANA_ROLL_WAIT: "2000" # 2 seconds
     ports:
-      - "8080:8080"
+      - "8083:8083"
     networks:
       - otel-net
     depends_on:
@@ -71,31 +72,17 @@ services:
     depends_on:
       - lgtm
 
-  python:
+  java:
     build:
-      context: ../python
-      dockerfile: ../python/Dockerfile
+      context: ../java
+      dockerfile: ../java/Dockerfile
     environment:
       OTEL_SERVICE_NAME: "rolldice"
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
       OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+      GRAFANA_ROLL_WAIT: "2000" # 2 seconds
     ports:
-      - "8082:8082"
-    networks:
-      - otel-net
-    depends_on:
-      - lgtm
-
-  dotnet:
-    build:
-      context: ../dotnet
-      dockerfile: ../dotnet/Dockerfile
-    environment:
-      OTEL_SERVICE_NAME: "rolldice"
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
-      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
-    ports:
-      - "8083:8083"
+      - "8080:8080"
     networks:
       - otel-net
     depends_on:
@@ -111,6 +98,21 @@ services:
       OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
     ports:
       - "8084:8084"
+    networks:
+      - otel-net
+    depends_on:
+      - lgtm
+
+  python:
+    build:
+      context: ../python
+      dockerfile: ../python/Dockerfile
+    environment:
+      OTEL_SERVICE_NAME: "rolldice"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
+      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+    ports:
+      - "8082:8082"
     networks:
       - otel-net
     depends_on:

@@ -24,32 +24,32 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
       OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
     ports:
-      - "8081:8081"
+      - "8080:8081"
     depends_on:
       - lgtm
-
-  java:
-    build:
-      context: ../java
-      dockerfile: ../java/json-logging-otlp/Dockerfile
-    environment:
-      OTEL_SERVICE_NAME: "rolldice"
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
-      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
-    ports:
-      - "8080:8080"
-    depends_on:
-      - lgtm
-
-  python:
-    build:
-      context: ../python
-      dockerfile: ../python/Dockerfile
-    environment:
-      OTEL_SERVICE_NAME: "rolldice"
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
-      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
-    ports:
-      - "8082:8082"
-    depends_on:
-      - lgtm
+#
+#  java:
+#    build:
+#      context: ../java
+#      dockerfile: ../java/json-logging-otlp/Dockerfile
+#    environment:
+#      OTEL_SERVICE_NAME: "rolldice"
+#      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+#      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - lgtm
+#
+#  python:
+#    build:
+#      context: ../python
+#      dockerfile: ../python/Dockerfile
+#    environment:
+#      OTEL_SERVICE_NAME: "rolldice"
+#      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
+#      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+#    ports:
+#      - "8082:8082"
+#    depends_on:
+#      - lgtm

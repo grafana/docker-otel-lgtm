@@ -3,6 +3,8 @@
 docker-compose:
   files:
     - ./docker-compose.oats.yml
+input:
+  - path: /rolldice
 expected:
   profiles:
     # go

@@ -11,6 +11,18 @@ services:
       - "4317:4317"
       - "4318:4318"
 
+  generate-traffic:
+    build:
+      dockerfile: generate-traffic.Dockerfile
+    networks:
+      - otel-net
+    depends_on:
+      - java
+      - python
+      - dotnet
+      - go
+      - nodejs
+
   otel-ebpf-profiler:
     build:
       context: .
@@ -28,14 +40,33 @@ services:
     depends_on:
       - lgtm
 
-  python:
+  # instrumented applications - sorted alphabetically by language
+
+  dotnet:
     build:
-      context: ../python
-      dockerfile: ../python/Dockerfile
+      context: ../dotnet
+      dockerfile: ../dotnet/Dockerfile
     environment:
       OTEL_SERVICE_NAME: "rolldice"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
       OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+    ports:
+      - "8083:8083"
+    networks:
+      - otel-net
+    depends_on:
+      - lgtm
+
+  go:
+    build:
+      context: ../go
+      dockerfile: ../go/Dockerfile
+    environment:
+      OTEL_SERVICE_NAME: "rolldice"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+    ports:
+      - "8081:8081"
     networks:
       - otel-net
     depends_on:
@@ -44,11 +75,44 @@ services:
   java:
     build:
       context: ../java
-      dockerfile: ../java/json-logging-otlp/Dockerfile
+      dockerfile: ../java/Dockerfile
     environment:
       OTEL_SERVICE_NAME: "rolldice"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
       OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+      GRAFANA_ROLL_WAIT: "2000" # 2 seconds
+    ports:
+      - "8080:8080"
+    networks:
+      - otel-net
+    depends_on:
+      - lgtm
+
+  nodejs:
+    build:
+      context: ../nodejs
+      dockerfile: ../nodejs/Dockerfile
+    environment:
+      OTEL_SERVICE_NAME: "rolldice"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+    ports:
+      - "8084:8084"
+    networks:
+      - otel-net
+    depends_on:
+      - lgtm
+
+  python:
+    build:
+      context: ../python
+      dockerfile: ../python/Dockerfile
+    environment:
+      OTEL_SERVICE_NAME: "rolldice"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
+      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
+    ports:
+      - "8082:8082"
     networks:
       - otel-net
     depends_on:

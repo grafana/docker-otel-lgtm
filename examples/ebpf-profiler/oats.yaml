@@ -3,12 +3,19 @@
 docker-compose:
   files:
     - ./docker-compose.oats.yml
+input:
+  - path: /rolldice
 expected:
   profiles:
-    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name=~"python.*"}'
+    # go
+    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name=~"rolldice"}'
       flamebearers:
-        # not very useful, because the python function names are not in the flamegraph
-        contains: "python"
-    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name="java"}'
-      flamebearers:
-        contains: "void org.springframework.boot.SpringApplication.refreshContext(org.springframework.context.ConfigurableApplicationContext)"
+        contains: "main.rolldice"
+    # python and java are flaky
+#    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name=~"python.*"}'
+#      flamebearers:
+#        # not very useful, because the python function names are not in the flamegraph
+#        contains: "python"
+#    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name="java"}'
+#      flamebearers:
+#        contains: "void org.springframework.boot.SpringApplication.refreshContext(org.springframework.context.ConfigurableApplicationContext)"

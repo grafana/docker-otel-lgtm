@@ -1,5 +1,9 @@
 # Blog Post
 
+## Authors 
+
+Gregor Zeitlinger, Matt Hensley
+
 ## Title
 
 Observability in Under 5 Seconds: grafana/otel-lgtm turns 1 year old!
@@ -8,6 +12,8 @@ Observability in Under 5 Seconds: grafana/otel-lgtm turns 1 year old!
 
 Happy Birthday to `grafana/otel-lgtm`! Over the past year, it has achieved 1k stars, celebrated version 0.11.1, and made observability just one docker command away.
 
+![birthday](img/birthday.png)
+
 `grafana/otel-lgtm` is a Docker image that provides a complete Open Source OpenTelemetry solution. It bundles several key tools to cover all aspects of observability:
 *   **[OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)**: Receives and forwards telemetry signals to observability backends.
 *   **[Prometheus](https://github.com/prometheus/prometheus)**: Stores and queries your application's metrics (e.g., request rates, error counts, system health).
@@ -15,6 +21,8 @@ Happy Birthday to `grafana/otel-lgtm`! Over the past year, it has achieved 1k st
 *   **[Tempo](https://github.com/grafana/tempo/)**: Stores and queries traces, which show the path of a request as it journeys through your different services.
 *   **[Pyroscope](https://github.com/grafana/pyroscope)**: Stores and queries profiles, helping you understand which parts of your code are consuming the most resources (like CPU time or memory).
 *   **[Grafana](https://github.com/grafana/grafana)**: Visualizes all this data in dashboards, allowing you to see metrics, logs, traces, and profiles in one place.
+
+![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana, Pyroscope](img/overview.png)
 
 ### Quickstart
 
@@ -87,6 +95,8 @@ These changes are optimized for fast startup, not for high scalability.
 #### Grafana Pyroscope Integration
 
 Profiling is the latest OpenTelemetry signal, and we’ve added [Grafana Pyroscope](https://github.com/grafana/pyroscope) as the fourth database. Profiling helps you understand which parts of your code are consuming the most resources (like CPU time or memory). This is crucial for identifying performance bottlenecks and optimizing your application. This allows you to seamlessly blend traces and profiles to optimize your critical paths.
+
+![Pyroscope](img/ebpf-profiler.png)
 
 To try the [eBPF profiler example](https://github.com/grafana/docker-otel-lgtm/tree/main/examples/ebpf-profiler):
 1. Navigate to the example directory: `cd examples/ebpf-profiler`

@@ -90,9 +90,11 @@ To try the [eBPF profiler example](https://github.com/grafana/docker-otel-lgtm/t
 
 ### Conclusion
 
-Here at Grafana Labs, we’re [fully committed to the OpenTelemetry project](https://grafana.com/blog/2024/01/31/opentelemetry-and-grafana-labs-whats-new-and-whats-next/) and community. We continually focus on building compatibility into both our open source projects and products, and on helping our users combine OpenTelemetry and Grafana to advance their observability strategies. 
+Over the past year, `grafana/otel-lgtm` has simplified observability setups, enabling developers to get a complete OpenTelemetry stack running in under 5 seconds with a single Docker command. With integrations for metrics, logs, traces, and now profiles via Grafana Pyroscope, it has become a go-to solution for demos, development, and testing, as evidenced by its growing community and notable adopters.
 
-Try out [grafana/docker-otel-lgtm](https://github.com/grafana/docker-otel-lgtm/) today!
+Grafana Labs remains dedicated to the OpenTelemetry project, continuously enhancing `grafana/otel-lgtm` and other tools to empower users in their observability journey.
+
+Experience the ease of observability: try [grafana/docker-otel-lgtm](https://github.com/grafana/docker-otel-lgtm/) today and see for yourself!
 
 # Next steps
 

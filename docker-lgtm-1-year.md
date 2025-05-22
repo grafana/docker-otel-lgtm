@@ -46,6 +46,9 @@ Grafana is pre-configured with these data sources and exposes its Web UI on port
 
 4. Open [http://localhost:3000/](http://localhost:3000/) in your browser to view metrics, logs, traces, and profiles.
 
+You can read more about using `grafana/otel-lgtm` in the 
+[announcement blog post](https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/) from last year.
+
 {{< admonition type="note" >}}
 The `grafana/otel-lgtm` Docker image is for development, demo, and testing. For production, refer to [Grafana Cloud Application Observability](https://grafana.com/products/cloud/application-observability/).
 {{< /admonition >}}
@@ -68,7 +71,7 @@ A big thank you to the community for contributions like:
 - [Publishing on GitHub Registry](https://github.com/grafana/docker-otel-lgtm/pull/160)
 
 {{< admonition type="note" >}}
-[OATs](https://github.com/grafana/oats) is a no-code test framework based on `grafana/otel-lgtm`. Test your application using YAML. Example:
+[OATs](https://github.com/grafana/oats) is a no-code test framework based on `grafana/otel-lgtm` to test your application using YAML. Example:
 
 ```yaml
 expected:
@@ -99,7 +102,7 @@ Profiling is the latest OpenTelemetry signal, and we’ve added [Grafana Pyrosco
 ![Pyroscope](img/ebpf-profiler.png)
 
 To try the [eBPF profiler example](https://github.com/grafana/docker-otel-lgtm/tree/main/examples/ebpf-profiler):
-1. Navigate to the example directory: `cd examples/ebpf-profiler`
+1. Change to the example directory: `cd examples/ebpf-profiler`
 2. Start the stack: `docker compose up --remove-orphans --build`
 3. Open [Drilldown Profiles](http://localhost:3000/a/grafana-pyroscope-app/explore) in Grafana.
 4. Filter by `process_executable_name = rolldice` and explore the Flame Graph.

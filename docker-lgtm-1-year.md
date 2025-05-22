@@ -8,7 +8,13 @@ Observability in Under 5 Seconds: grafana/otel-lgtm turns 1 year old!
 
 Happy Birthday to `grafana/otel-lgtm`! Over the past year, it has achieved 1k stars, celebrated version 0.11.1, and made observability just one docker command away.
 
-`grafana/otel-lgtm` is a Docker image that provides a complete Open Source OpenTelemetry solution. It integrates the [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/), [Prometheus](https://github.com/prometheus/prometheus), [Loki](https://github.com/grafana/loki/), [Tempo](https://github.com/grafana/tempo/), [Pyroscope](https://github.com/grafana/pyroscope), and [Grafana](https://github.com/grafana/grafana).
+`grafana/otel-lgtm` is a Docker image that provides a complete Open Source OpenTelemetry solution. It bundles several key tools to cover all aspects of observability:
+*   **[OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)**: Receives and forwards telemetry signals to observability backends.
+*   **[Prometheus](https://github.com/prometheus/prometheus)**: Stores and queries your application's metrics (e.g., request rates, error counts, system health).
+*   **[Loki](https://github.com/grafana/loki/)**: Stores and queries your application's logs.
+*   **[Tempo](https://github.com/grafana/tempo/)**: Stores and queries traces, which show the path of a request as it journeys through your different services.
+*   **[Pyroscope](https://github.com/grafana/pyroscope)**: Stores and queries profiles, helping you understand which parts of your code are consuming the most resources (like CPU time or memory).
+*   **[Grafana](https://github.com/grafana/grafana)**: Visualizes all this data in dashboards, allowing you to see metrics, logs, traces, and profiles in one place.
 
 ### Quickstart
 
@@ -80,7 +86,7 @@ These changes are optimized for fast startup, not for high scalability.
 
 #### Grafana Pyroscope Integration
 
-Profiling is the latest OpenTelemetry signal, and we’ve added [Grafana Pyroscope](https://github.com/grafana/pyroscope) as the fourth database. This allows you to seamlessly blend traces and profiles to optimize your critical paths.
+Profiling is the latest OpenTelemetry signal, and we’ve added [Grafana Pyroscope](https://github.com/grafana/pyroscope) as the fourth database. Profiling helps you understand which parts of your code are consuming the most resources (like CPU time or memory). This is crucial for identifying performance bottlenecks and optimizing your application. This allows you to seamlessly blend traces and profiles to optimize your critical paths.
 
 To try the [eBPF profiler example](https://github.com/grafana/docker-otel-lgtm/tree/main/examples/ebpf-profiler):
 1. Navigate to the example directory: `cd examples/ebpf-profiler`

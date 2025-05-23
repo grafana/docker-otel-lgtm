@@ -1,11 +1,8 @@
-FROM ubuntu:24.04 AS builder
+FROM golang:1.24.3 AS builder
 
-ENV GO_VERSION=1.24.3
 ARG VERSION=009a07f3803c33374eba0715ccae98dbfde7e225
 
 RUN apt-get update && apt-get -y install wget gcc
-RUN wget https://go.dev/dl/go$GO_VERSION.linux-amd64.tar.gz
-RUN tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz
 RUN wget https://github.com/open-telemetry/opentelemetry-ebpf-profiler/archive/$VERSION.tar.gz
 RUN mkdir /profiler
 RUN tar --strip-components=1 -C /profiler -xzf $VERSION.tar.gz

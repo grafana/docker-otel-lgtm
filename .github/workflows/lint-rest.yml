@@ -17,3 +17,5 @@ jobs:
       - uses: jdx/mise-action@c94f0bf9e520b150e34c017db785461f7e71c5fb # v2.2.2
       - name: Lint
         run: mise run lint-rest
+        env:
+          MISE_ENABLE_TOOLS: lychee

@@ -5,8 +5,6 @@
   platformCommit: "enabled",
   automerge: true,
   dependencyDashboard: false,
-  forkProcessing: "enabled",
-  rebaseWhen: "conflicted",
   ignorePaths: [],
   ignoreUnstable: true,
   packageRules: [
@@ -57,12 +55,6 @@
       description: "Update _version variables in run.sh",
       managerFilePatterns: ["/run.sh$/"],
       matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"],
-    },
-    {
-      customType: "regex",
-      description: "Update mise.lock",
-      managerFilePatterns: ["/^mise.lock$/"],
-      matchStrings: ['# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\nversion = "(?<currentValue>.+?)"'],
     },
   ],
 }

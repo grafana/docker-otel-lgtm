@@ -7,9 +7,9 @@ distributor:
     otlp:
       protocols:
         grpc:
-          endpoint: "localhost:4417"
+          endpoint: "127.0.0.1:4417"
         http:
-          endpoint: "localhost:4418"
+          endpoint: "127.0.0.1:4418"
 
 ingester:
   trace_idle_period: 1s
@@ -25,7 +25,7 @@ ingester:
 
 querier:
   frontend_worker:
-    frontend_address: localhost:9096
+    frontend_address: 127.0.0.1:9096
 
 storage:
   trace:
@@ -49,7 +49,7 @@ metrics_generator:
   storage:
     path: /data/tempo/generator/wal
     remote_write:
-      - url: http://localhost:9090/api/v1/write
+      - url: http://127.0.0.1:9090/api/v1/write
         send_exemplars: true
 
 overrides:

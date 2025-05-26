@@ -13,7 +13,7 @@ Action<ResourceBuilder> configureResource = r => r.AddService(
     serviceVersion: typeof(Program).Assembly.GetName().Version?.ToString() ?? "unknown",
     serviceInstanceId: Environment.MachineName);
 
-const string DefaultEndpoint = "http://localhost:4317";
+const string DefaultEndpoint = "http://127.0.0.1:4317";
 
 // Configure OpenTelemetry tracing and metrics with auto-start using the
 // AddOpenTelemetry() extension method from the OpenTelemetry.Extensions.Hosting package.

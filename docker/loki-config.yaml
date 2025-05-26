@@ -26,7 +26,7 @@ schema_config:
         period: 24h
 
 ruler:
-  alertmanager_url: http://localhost:9093
+  alertmanager_url: http://127.0.0.1:9093
 
 pattern_ingester:
   lifecycler:

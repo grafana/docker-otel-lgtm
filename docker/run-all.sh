@@ -38,12 +38,12 @@ declare -A service_ready elapsed_times
 
 # Define services and their health check URLs
 declare -A services
-services["grafana"]="http://localhost:3000/api/health"
-services["loki"]="http://localhost:3100/ready"
-services["prometheus"]="http://localhost:9090/api/v1/status/runtimeinfo"
-services["tempo"]="http://localhost:3200/ready"
-services["pyroscope"]="http://localhost:4040/ready"
-services["otelcol"]="http://localhost:13133/ready"
+services["grafana"]="http://127.0.0.1:3000/api/health"
+services["loki"]="http://127.0.0.1:3100/ready"
+services["prometheus"]="http://127.0.0.1:9090/api/v1/status/runtimeinfo"
+services["tempo"]="http://127.0.0.1:3200/ready"
+services["pyroscope"]="http://127.0.0.1:4040/ready"
+services["otelcol"]="http://127.0.0.1:13133/ready"
 
 # Initialize service_ready status to false for all services
 for service in "${!services[@]}"; do

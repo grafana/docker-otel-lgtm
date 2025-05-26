@@ -43,3 +43,21 @@ test OpenTelemetry metrics in a Java application. Here's a step-by-step explanat
 
 This setup is useful for validating OpenTelemetry instrumentation and ensuring metrics are correctly
 exported to a monitoring system.
+
+## Alternative Approach
+
+If you prefer declarative tests, you can use [OpenTelemetry Acceptance Tests (OATs)](https://github.com/grafana/oats),
+where the test would look like this:
+
+```yaml
+docker-compose:
+  files:
+    - ./docker-compose.yaml
+expected:
+  metrics:
+    - promql: 'uptime_seconds_total{}'
+      value: '>= 0'
+```
+
+OATs provides support for traces, logs, profiles, and metrics.
+

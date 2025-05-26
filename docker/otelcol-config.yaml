@@ -14,7 +14,7 @@ receivers:
         - job_name: "opentelemetry-collector"
           scrape_interval: 1s
           static_configs:
-            - targets: ["localhost:8888"]
+            - targets: ["127.0.0.1:8888"]
 
 extensions:
   health_check:
@@ -26,19 +26,19 @@ processors:
 
 exporters:
   otlphttp/metrics:
-    endpoint: http://localhost:9090/api/v1/otlp
+    endpoint: http://127.0.0.1:9090/api/v1/otlp
     tls:
       insecure: true
   otlphttp/traces:
-    endpoint: http://localhost:4418
+    endpoint: http://127.0.0.1:4418
     tls:
       insecure: true
   otlphttp/logs:
-    endpoint: http://localhost:3100/otlp
+    endpoint: http://127.0.0.1:3100/otlp
     tls:
       insecure: true
   otlp/profiles:
-    endpoint: http://localhost:4040
+    endpoint: http://127.0.0.1:4040
     tls:
       insecure: true
   debug/metrics:

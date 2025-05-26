@@ -48,7 +48,7 @@ mise run lgtm
 You can enable logging for troubleshooting:
 
 | Environment Variable     | Enables Logging in:     |
-| ------------------------ | ----------------------- |
+|--------------------------|-------------------------|
 | `ENABLE_LOGS_GRAFANA`    | Grafana                 |
 | `ENABLE_LOGS_LOKI`       | Loki                    |
 | `ENABLE_LOGS_PROMETHEUS` | Prometheus              |
@@ -105,12 +105,12 @@ There's no need to configure anything: the Docker image works with OpenTelemetry
 ```sh
 # Not needed, but these are the defaults in OpenTelemetry
 export OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
-export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
+export OTEL_EXPORTER_OTLP_ENDPOINT=http://127.0.0.1:4318
 ```
 
 ## View Grafana
 
-Navigate to <http://localhost:3000> and log in with the default built-in user `admin` and password `admin`.
+Navigate to <http://127.0.0.1:3000> and log in with the default built-in user `admin` and password `admin`.
 
 ## Build the Docker image from scratch
 
@@ -183,12 +183,12 @@ Each example uses a different application port
 (to be able to run all applications at the same time).
 
 | Example | Service URL                           |
-| ------- | ------------------------------------- |
-| Java    | `curl http://localhost:8080/rolldice` |
-| Go      | `curl http://localhost:8081/rolldice` |
-| Python  | `curl http://localhost:8082/rolldice` |
-| .NET    | `curl http://localhost:8083/rolldice` |
-| Node.js | `curl http://localhost:8084/rolldice` |
+|---------|---------------------------------------|
+| Java    | `curl http://127.0.0.1:8080/rolldice` |
+| Go      | `curl http://127.0.0.1:8081/rolldice` |
+| Python  | `curl http://127.0.0.1:8082/rolldice` |
+| .NET    | `curl http://127.0.0.1:8083/rolldice` |
+| Node.js | `curl http://127.0.0.1:8084/rolldice` |
 
 ## Related Work
 

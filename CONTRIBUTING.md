@@ -24,7 +24,7 @@ If a test case fails (let's say `examples/nodejs`), follow these steps:
 
 1. Build a new image: `mise run build-lgtm dev1`
 2. `oats -timeout 2h -lgtm-version dev1 examples/nodejs` (automatically installed by `mise`)
-3. go to <http://localhost:3000>
+3. go to <http://127.0.0.1:3000>
 
 You can run all everything together using `mise run test`.
 

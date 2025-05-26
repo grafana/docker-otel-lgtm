@@ -4,7 +4,7 @@ datasources:
   - name: Prometheus
     type: prometheus
     uid: prometheus
-    url: http://localhost:9090
+    url: http://127.0.0.1:9090
     editable: true
     jsonData:
       timeInterval: 60s
@@ -16,7 +16,7 @@ datasources:
   - name: Tempo
     type: tempo
     uid: tempo
-    url: http://localhost:3200
+    url: http://127.0.0.1:3200
     editable: true
     jsonData:
       tracesToLogsV2:
@@ -39,7 +39,7 @@ datasources:
   - name: Loki
     type: loki
     uid: loki
-    url: http://localhost:3100
+    url: http://127.0.0.1:3100
     editable: true
     jsonData:
       derivedFields:
@@ -53,4 +53,4 @@ datasources:
   - name: Pyroscope
     type: grafana-pyroscope-datasource
     uid: pyroscope
-    url: http://localhost:4040
+    url: http://127.0.0.1:4040

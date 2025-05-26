@@ -15,5 +15,7 @@ jobs:
           persist-credentials: false
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: jdx/mise-action@c94f0bf9e520b150e34c017db785461f7e71c5fb # v2.2.2
+        env:
+          MISE_ENABLE_TOOLS: oats
       - name: Run acceptance tests
         run: ./scripts/run-acceptance-tests.sh ${{ github.event.pull_request.head.sha }}

@@ -44,38 +44,45 @@ public class TestcontainerTest {
     app.run();
 
     HttpClient client = HttpClient.newHttpClient();
-    String query =
-        URLEncoder.encode(
-            "sold_items_total{job=\"otel-java-test\",service_name=\"otel-java-test\","
-                + "tenant=\"tenant1\"}",
-            StandardCharsets.UTF_8);
-    String prometheusHttpUrl = lgtm.getPrometheusHttpUrl() + "/api/v1/query?query=" + query;
 
-    HttpRequest request = HttpRequest.newBuilder().uri(URI.create(prometheusHttpUrl)).build();
-
-    await()
-        .atMost(Duration.ofSeconds(10))
-        .until(
-            () -> {
-              HttpResponse<String> response =
-                  client.send(request, HttpResponse.BodyHandlers.ofString());
-              String body = response.body();
-              return response.statusCode() == 200 && body.contains("sold_items");
-            });
-
-    HttpRequest traceRequest =
-        HttpRequest.newBuilder()
-            .uri(URI.create(String.format("%s/api/search", lgtm.getTempoUrl())))
-            .build();
+    var requestConfigs = new RequestConfig[] {
+      new RequestConfig(
+        lgtm.getPrometheusHttpUrl() + "/api/v1/query",
+          "sold_items_total{job=\"otel-java-test\",service_name=\"otel-java-test\",tenant=\"tenant1\"}",
+        "sold_items"),
+      new RequestConfig(
+        lgtm.getTempoUrl() + "/api/search",
+        null,
+        "otel-java-test"),
+      new RequestConfig(
+        lgtm.getLokiUrl() + "/loki/api/v1/query_range",
+        "{service_name=\"otel-java-test\"}",
+        "Test log!")
+    };
 
     await()
-        .atMost(Duration.ofSeconds(10))
-        .until(
-            () -> {
-              HttpResponse<String> response =
-                  client.send(traceRequest, HttpResponse.BodyHandlers.ofString());
-              String body = response.body();
-              return response.statusCode() == 200 && body.contains("otel-java-test");
-            });
+      .atMost(Duration.ofSeconds(1000))
+      .untilAsserted(() -> {
+        for (RequestConfig config : requestConfigs) {
+          HttpResponse<String> response = executeRequest(client, config);
+          assert response.statusCode() == 200 && response.body().contains(config.expectedContent);
+        }
+      });
+
+    client.close();
   }
+
+  private HttpResponse<String> executeRequest(HttpClient client, RequestConfig config) throws Exception {
+    URI uri;
+    if (config.queryValue != null) {
+      uri = URI.create(String.format("%s?query=%s", config.baseUrl, URLEncoder.encode(config.queryValue, StandardCharsets.UTF_8)));
+    } else {
+      uri = URI.create(config.baseUrl);
+    }
+
+    HttpRequest request = HttpRequest.newBuilder().uri(uri).build();
+    return client.send(request, HttpResponse.BodyHandlers.ofString());
+  }
+
+  private record RequestConfig(String baseUrl, String queryValue, String expectedContent) {}
 }

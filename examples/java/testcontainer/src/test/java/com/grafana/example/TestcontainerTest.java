@@ -30,7 +30,7 @@ public class TestcontainerTest {
   }
 
   @Test
-  void testExportSignals() throws InterruptedException {
+  void testExportSignals() {
     // How to debug:
     // 1. Run the test with a really long timeout (update the awaitility argument)
     // 2. Go to the Grafana UI
@@ -45,12 +45,14 @@ public class TestcontainerTest {
 
     HttpClient client = HttpClient.newHttpClient();
 
+    String prometheusQuery =
+        "sold_items_total{job=\"otel-java-test\","
+            + "service_name=\"otel-java-test\",tenant=\"tenant1\"}";
+
     var requestConfigs =
         new RequestConfig[] {
           new RequestConfig(
-              lgtm.getPrometheusHttpUrl() + "/api/v1/query",
-              "sold_items_total{job=\"otel-java-test\",service_name=\"otel-java-test\",tenant=\"tenant1\"}",
-              "sold_items"),
+              lgtm.getPrometheusHttpUrl() + "/api/v1/query", prometheusQuery, "sold_items"),
           new RequestConfig(lgtm.getTempoUrl() + "/api/search", null, "otel-java-test"),
           new RequestConfig(
               lgtm.getLokiUrl() + "/loki/api/v1/query_range",
@@ -68,8 +70,6 @@ public class TestcontainerTest {
                     && response.body().contains(config.expectedContent);
               }
             });
-
-    client.close();
   }
 
   private HttpResponse<String> executeRequest(HttpClient client, RequestConfig config)

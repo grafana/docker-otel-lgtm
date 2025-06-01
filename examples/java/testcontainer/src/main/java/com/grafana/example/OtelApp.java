@@ -33,9 +33,9 @@ public class OtelApp {
         .startAndRun(() -> counter.add(42, attributes));
 
     logger
-      .logRecordBuilder()
-      .setBody("Test log!")
-      .setAttribute(AttributeKey.stringKey("job"), "test-job")
-      .emit();
+        .logRecordBuilder()
+        .setBody("Test log!")
+        .setAttribute(AttributeKey.stringKey("job"), "test-job")
+        .emit();
   }
 }

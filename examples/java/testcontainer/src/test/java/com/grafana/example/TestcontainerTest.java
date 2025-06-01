@@ -30,7 +30,7 @@ public class TestcontainerTest {
   }
 
   @Test
-  void testExportMetricsAndTraces() throws InterruptedException {
+  void testExportSignals() throws InterruptedException {
     // How to debug:
     // 1. Run the test with a really long timeout (update the awaitility argument)
     // 2. Go to the Grafana UI
@@ -45,37 +45,42 @@ public class TestcontainerTest {
 
     HttpClient client = HttpClient.newHttpClient();
 
-    var requestConfigs = new RequestConfig[] {
-      new RequestConfig(
-        lgtm.getPrometheusHttpUrl() + "/api/v1/query",
-          "sold_items_total{job=\"otel-java-test\",service_name=\"otel-java-test\",tenant=\"tenant1\"}",
-        "sold_items"),
-      new RequestConfig(
-        lgtm.getTempoUrl() + "/api/search",
-        null,
-        "otel-java-test"),
-      new RequestConfig(
-        lgtm.getLokiUrl() + "/loki/api/v1/query_range",
-        "{service_name=\"otel-java-test\"}",
-        "Test log!")
-    };
+    var requestConfigs =
+        new RequestConfig[] {
+          new RequestConfig(
+              lgtm.getPrometheusHttpUrl() + "/api/v1/query",
+              "sold_items_total{job=\"otel-java-test\",service_name=\"otel-java-test\",tenant=\"tenant1\"}",
+              "sold_items"),
+          new RequestConfig(lgtm.getTempoUrl() + "/api/search", null, "otel-java-test"),
+          new RequestConfig(
+              lgtm.getLokiUrl() + "/loki/api/v1/query_range",
+              "{service_name=\"otel-java-test\"}",
+              "Test log!")
+        };
 
     await()
-      .atMost(Duration.ofSeconds(1000))
-      .untilAsserted(() -> {
-        for (RequestConfig config : requestConfigs) {
-          HttpResponse<String> response = executeRequest(client, config);
-          assert response.statusCode() == 200 && response.body().contains(config.expectedContent);
-        }
-      });
+        .atMost(Duration.ofSeconds(10))
+        .untilAsserted(
+            () -> {
+              for (RequestConfig config : requestConfigs) {
+                HttpResponse<String> response = executeRequest(client, config);
+                assert response.statusCode() == 200
+                    && response.body().contains(config.expectedContent);
+              }
+            });
 
     client.close();
   }
 
-  private HttpResponse<String> executeRequest(HttpClient client, RequestConfig config) throws Exception {
+  private HttpResponse<String> executeRequest(HttpClient client, RequestConfig config)
+      throws Exception {
     URI uri;
     if (config.queryValue != null) {
-      uri = URI.create(String.format("%s?query=%s", config.baseUrl, URLEncoder.encode(config.queryValue, StandardCharsets.UTF_8)));
+      uri =
+          URI.create(
+              String.format(
+                  "%s?query=%s",
+                  config.baseUrl, URLEncoder.encode(config.queryValue, StandardCharsets.UTF_8)));
     } else {
       uri = URI.create(config.baseUrl);
     }

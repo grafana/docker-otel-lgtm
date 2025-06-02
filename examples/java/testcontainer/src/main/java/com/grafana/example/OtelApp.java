@@ -3,6 +3,7 @@ package com.grafana.example;
 import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.incubator.trace.ExtendedTracer;
+import io.opentelemetry.api.logs.Logger;
 import io.opentelemetry.api.metrics.LongCounter;
 import io.opentelemetry.sdk.autoconfigure.AutoConfiguredOpenTelemetrySdk;
 
@@ -10,6 +11,7 @@ public class OtelApp {
 
   private final ExtendedTracer tracer;
   private final LongCounter counter;
+  private final Logger logger;
 
   public static void main(String[] args) {
     new OtelApp().run();
@@ -20,6 +22,7 @@ public class OtelApp {
     var meter = openTelemetry.getMeter("my-app");
     tracer = (ExtendedTracer) openTelemetry.tracerBuilder("my-app").build();
     counter = meter.counterBuilder("sold_items").build();
+    logger = openTelemetry.getSdkLoggerProvider().loggerBuilder("my-app").build();
   }
 
   public void run() {
@@ -28,5 +31,11 @@ public class OtelApp {
         .spanBuilder("sell_item")
         .setAllAttributes(attributes)
         .startAndRun(() -> counter.add(42, attributes));
+
+    logger
+        .logRecordBuilder()
+        .setBody("Test log!")
+        .setAttribute(AttributeKey.stringKey("job"), "test-job")
+        .emit();
   }
 }

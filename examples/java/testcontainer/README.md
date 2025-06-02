@@ -17,13 +17,13 @@ test OpenTelemetry metrics in a Java application. Here's a step-by-step explanat
 3. **Run the Application**:
 
 - The `OtelApp` class initializes OpenTelemetry and generates a custom metric (`sold_items`)
-  with attributes (e.g., `tenant`) as well as a span representing the block the code.
+  with attributes (e.g., `tenant`), a span representing the block of code, and emits a log.
 
 4. **Test Exporting Metrics and Traces**:
 
-- The test method `testExportMetricsAndTraces` runs the application and queries the Prometheus and
-  Tempo endpoints in the LGTM stack to verify that the metric (`sold_items`) and span have been
-  exported successfully.
+- The test method `testExportSignals` runs the application and queries the Prometheus, Loki, and
+  Tempo endpoints in the LGTM stack to verify that the metric (`sold_items`), span, and log have
+  been exported successfully.
 - The `Awaitility` library is used to poll the endpoints until the telemetry is found or a timeout
   occurs.
 
@@ -37,9 +37,9 @@ test OpenTelemetry metrics in a Java application. Here's a step-by-step explanat
 
 1. Start the test using `mvn test`.
 2. Check the console output for the Grafana URL.
-3. Open the Grafana UI, navigate to the Explore tab, and query the metrics or traces.
-4. The test will pass if the metric and span are successfully exported and found in Prometheus and
-   Tempo.
+3. Open the Grafana UI, navigate to the Explore tab, and query the metrics, traces or logs.
+4. The test will pass if the metric, log, and span are successfully exported and found in Prometheus,
+   Loki, and Tempo.
 
 This setup is useful for validating OpenTelemetry instrumentation and ensuring metrics are correctly
 exported to a monitoring system.

@@ -1,6 +1,6 @@
 FROM otel/opentelemetry-ebpf-profiler-dev:202505301459 AS builder
 
-ARG VERSION=4ca781dd6178859924ffb5a08b1c163ef0f4c7ee
+ARG VERSION=ea803d6bb9fd4c3aa77e0b0056d098547fa581ac
 RUN wget https://github.com/open-telemetry/opentelemetry-ebpf-profiler/archive/$VERSION.tar.gz
 RUN mkdir /profiler
 RUN tar --strip-components=1 -C /profiler -xzf $VERSION.tar.gz

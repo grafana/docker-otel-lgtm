@@ -3,7 +3,7 @@
   extends: [
     "config:recommended",
     "customManagers:dockerfileVersions",
-    "customManagers:githubActionsVersions",
+    "customManagers:githubActionsVersions"
   ],
   branchPrefix: "grafanarenovatebot/",
   platformCommit: "enabled",

@@ -1,6 +1,6 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["config:recommended"],
+  extends: ["config:recommended", "customManagers:dockerfileVersions", "customManagers:githubActionsVersions"],
   branchPrefix: "grafanarenovatebot/",
   platformCommit: "enabled",
   automerge: true,
@@ -43,12 +43,6 @@
       datasourceTemplate: "docker",
       managerFilePatterns: ["/^\\.github/workflows/renovate.yml$/"],
       matchStrings: ["renovate-version: (?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?", "RENOVATE_IMAGE=ghcr.io/renovatebot/renovate:(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?"],
-    },
-    {
-      customType: "regex",
-      description: "Update _VERSION variables in Dockerfiles",
-      managerFilePatterns: ["/Dockerfile/"],
-      matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s(?:ENV|ARG) .+?_VERSION=(?<currentValue>.+?)\\s"],
     },
     {
       customType: "regex",

@@ -3,7 +3,7 @@ ARG GRAFANA_VERSION=v12.0.2
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
 ARG PROMETHEUS_VERSION=v3.4.1
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
-ARG TEMPO_VERSION=v2.8.0
+ARG TEMPO_VERSION=v2.8.1
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
 ARG LOKI_VERSION=v3.5.1
 # renovate: datasource=github-releases depName=pyroscope packageName=grafana/pyroscope

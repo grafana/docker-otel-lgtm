@@ -1,10 +1,11 @@
+# pin all versions to avoid GitHub rate litit
 [tools]
 go = "1.24.4"
 "go:github.com/grafana/oats" = "0.3.2"
 java = "temurin-21.0.7+6.0.LTS"
 lychee = "0.18.1"
 markdownlint-cli2 = "0.18.1"
-rust = "stable"
+rust = "1.87.0"
 
 [tasks.lint]
 run = "scripts/super-linter.sh"

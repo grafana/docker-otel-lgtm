@@ -10,7 +10,7 @@
     <name>Hello World REST Service</name>
 
     <properties>
-        <spring.version>3.5.1</spring.version>
+        <spring.version>3.5.2</spring.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>

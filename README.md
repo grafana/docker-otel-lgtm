@@ -45,7 +45,7 @@ mise run lgtm
 
 ### Enable logging
 
-You can enable logging for troubleshooting:
+You can enable logging in the .env file for troubleshooting:
 
 | Environment Variable     | Enables Logging in:     |
 |--------------------------|-------------------------|

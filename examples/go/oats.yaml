@@ -14,5 +14,5 @@ expected:
           attributes:
             otel.library.name: go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
   metrics:
-    - promql: "process_runtime_go_goroutines{}"
+    - promql: "go_goroutine_count{}"
       value: "> 0"

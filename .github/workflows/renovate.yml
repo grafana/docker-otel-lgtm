@@ -39,10 +39,10 @@ jobs:
           owner: ${{ github.repository_owner }}
 
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@248bf5a619694187930adc80b9343c37761c173f # v43.0.1
+        uses: renovatebot/github-action@13da59cf7cfbd3bfea72ce26752ed22edf747ce9 # v43.0.2
         with:
           # editorconfig-checker-disable-next-line
-          renovate-version: 41.17.2@sha256:1d94e028341c652cfab2434febd80e2a5e3a0e58f3145c7e9c042c77f847baf4
+          renovate-version: 41.23.2@sha256:b93b155f9bf916de8494c99a2b771a566cd986a74b0cba6fb2b26a2df2a10a2c
           token: "${{ steps.app-token.outputs.token }}"
         env:
           LOG_LEVEL: debug

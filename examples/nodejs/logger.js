@@ -15,11 +15,12 @@ class Logger {
       resource: resourceFromAttributes({
         [ATTR_SERVICE_NAME]: process.env.OTEL_SERVICE_NAME,
         [ATTR_SERVICE_VERSION]: process.env.OTEL_SERVICE_VERSION
-      })
+      }),
+      processors: [
+        // Add a processor to export log record
+        new BatchLogRecordProcessor(new OTLPLogExporter())
+      ]
     })
-    // Add a processor to export log record
-    loggerProvider.addLogRecordProcessor(new BatchLogRecordProcessor(new OTLPLogExporter()))
-
     this.logger = loggerProvider.getLogger('default')
   }
 

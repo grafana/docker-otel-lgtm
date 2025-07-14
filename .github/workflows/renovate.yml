@@ -42,7 +42,7 @@ jobs:
         uses: renovatebot/github-action@13da59cf7cfbd3bfea72ce26752ed22edf747ce9 # v43.0.2
         with:
           # editorconfig-checker-disable-next-line
-          renovate-version: 41.23.2@sha256:b93b155f9bf916de8494c99a2b771a566cd986a74b0cba6fb2b26a2df2a10a2c
+          renovate-version: 41.32.1@sha256:589cae7f5bf27ce483e99c7d976ca84229084aadf96d08ac7aadb91e678a5aca
           token: "${{ steps.app-token.outputs.token }}"
         env:
           LOG_LEVEL: debug

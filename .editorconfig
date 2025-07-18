@@ -14,7 +14,7 @@ max_line_length = 180
 max_line_length = 120
 
 [renovate.json5]
-max_line_length = 300
+max_line_length = 400
 
 [Dockerfile]
 max_line_length = 200

@@ -4,7 +4,7 @@
   branchPrefix: "grafanarenovatebot/",
   platformCommit: "enabled",
   automerge: true,
-  dependencyDashboard: false,
+  dependencyDashboard: true,
   ignorePaths: [],
   ignoreUnstable: true,
   packageRules: [
@@ -49,6 +49,11 @@
       description: "Update _version variables in run.sh",
       managerFilePatterns: ["/run.sh$/"],
       matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"],
+    },
+    {
+      customType: "regex",
+      managerFilePatterns: ["/(^|/)(workflow-templates|\\.(?:github|gitea|forgejo)/(?:workflows|actions))/.+\\.ya?ml$/", "/(^|/)action\\.ya?ml$/"],
+      matchStrings: ["# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)(?::(?<currentValue>.*?))?(?: (?:lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?\\s+[A-Za-z0-9_]+?_SHA256\\s*:\\s*[\"']?(?<currentDigest>.+?)[\"']?\\s"],
     },
   ],
 }

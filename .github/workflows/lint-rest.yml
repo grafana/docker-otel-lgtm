@@ -3,6 +3,12 @@ name: Lint what Super Linter can’t
 
 on: [pull_request]
 
+env:
+  # renovate: datasource=github-releases depName=mise packageName=jdx/mise
+  MISE_VERSION: "2025.7.11"
+  # renovate: datasource=github-release-attachments depName=mise packageName=jdx/mise
+  MISE_SHA256: "fe2d4c5c681c942b2f52bf0c71d04429ba4a5e090973514bde466a411190cd00"
+
 permissions: {}
 
 jobs:
@@ -16,7 +22,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: jdx/mise-action@bfb9fa0b029db830a8c570757cee683df207a6c5 # v2.4.0
         with:
-          # renovate: datasource=github-releases depName=mise packageName=jdx/mise
-          version: 2025.7.11
+          version: ${{ env.MISE_VERSION }}
+          sha256: ${{ env.MISE_SHA256 }}
       - name: Lint
         run: mise run lint-rest

@@ -6,8 +6,8 @@ It's recommended to use the [mise][mise] for development.
 
 `dev1` is an example of a tag to test locally.
 
-- `mise run build-lgtm dev1` will build the docker image locally.
-- `mise run lgtm dev1` will run the docker image locally.
+- `mise run build-lgtm dev1` will build the Docker image locally.
+- `mise run lgtm dev1` will run the Docker image locally.
 
 ## Linting
 

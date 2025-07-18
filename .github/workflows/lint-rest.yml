@@ -23,6 +23,6 @@ jobs:
       - uses: jdx/mise-action@bfb9fa0b029db830a8c570757cee683df207a6c5 # v2.4.0
         with:
           version: ${{ env.MISE_VERSION }}
-          sha256: ${ env.MISE_SHA256 }
+          sha256: ${{ env.MISE_SHA256 }}
       - name: Lint
         run: mise run lint-rest

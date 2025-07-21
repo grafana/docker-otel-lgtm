@@ -7,7 +7,7 @@ if [[ ! -f ./target/rolldice.jar ]]; then
 fi
 
 # renovate: datasource=github-releases depName=opentelemetry-java-instrumentation packageName=open-telemetry/opentelemetry-java-instrumentation
-opentelemetry_javaagent_version=2.18.0
+opentelemetry_javaagent_version=2.18.1
 jar=opentelemetry-javaagent-${opentelemetry_javaagent_version}.jar
 if [[ ! -f ./${jar} ]]; then
 	curl -vL https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v${opentelemetry_javaagent_version}/opentelemetry-javaagent.jar -o ${jar} # editorconfig-checker-disable-line

@@ -3,7 +3,7 @@
 go = "1.24.5"
 "go:github.com/grafana/oats" = "0.4.0"
 java = "temurin-21.0.8+9.0.LTS"
-lychee = "0.18.1"
+lychee = "0.19.1"
 markdownlint-cli2 = "0.18.1"
 rust = "1.88.0"
 

@@ -4,7 +4,6 @@
   branchPrefix: "grafanarenovatebot/",
   platformCommit: "enabled",
   automerge: true,
-  dependencyDashboard: true,
   ignorePaths: [],
   ignoreUnstable: true,
   packageRules: [

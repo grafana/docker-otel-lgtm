@@ -84,6 +84,11 @@ development, demo, and testing environments and persisting data to an external v
 doesn't change that. However, this feature could be useful in certain cases for
 some users even in testing situations.
 
+### Pre-install Grafana plugins
+
+You can pre-install Grafana plugins by adding them to the `GF_PLUGINS_PREINSTALL` environment variable.
+See the [Grafana documentation][grafana-preinstall-plugins] for more information.
+
 ## Run lgtm in Kubernetes
 
 ```sh
@@ -200,6 +205,7 @@ Each example uses a different application port
 
 [app-o11y]: https://grafana.com/products/cloud/application-observability/
 [examples]: https://github.com/grafana/docker-otel-lgtm/tree/main/examples
+[grafana-preinstall-plugins]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/#install-plugins-in-the-docker-container
 [mise]: https://github.com/jdx/mise
 [mltp]: https://github.com/grafana/intro-to-mltp
 [otel-checker]: https://github.com/grafana/otel-checker/

@@ -21,8 +21,7 @@ jobs:
           persist-credentials: false
 
       - id: push-to-dockerhub
-        # editorconfig-checker-disable-next-line
-        uses: grafana/shared-workflows/actions/build-push-to-dockerhub@402975d84dd3fac9ba690f994f412d0ee2f51cf4 # v0.1.1
+        uses: grafana/shared-workflows/actions/build-push-to-dockerhub@v0.1.1
         with:
           repository: grafana/otel-lgtm
           context: docker

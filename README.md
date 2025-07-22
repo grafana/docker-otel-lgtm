@@ -84,6 +84,10 @@ development, demo, and testing environments and persisting data to an external v
 doesn't change that. However, this feature could be useful in certain cases for
 some users even in testing situations.
 
+### Pre-install Grafana plugins
+
+You can pre-install Grafana plugins by adding them to the `GF_PLUGINS_PREINSTALL` environment variable. See the [Grafana documentation][https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/#install-plugins-in-the-docker-container] for more information.
+
 ## Run lgtm in Kubernetes
 
 ```sh

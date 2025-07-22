@@ -10,4 +10,5 @@ changelog:
         - "*"
       exclude:
         authors:
-          - grafanarenovatebot
+          - grafanarenovatebot[bot]
+          - renovatebot[bot]

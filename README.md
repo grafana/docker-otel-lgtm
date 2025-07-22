@@ -86,7 +86,8 @@ some users even in testing situations.
 
 ### Pre-install Grafana plugins
 
-You can pre-install Grafana plugins by adding them to the `GF_PLUGINS_PREINSTALL` environment variable. See the [Grafana documentation][grafana-preinstall-plugins] for more information.
+You can pre-install Grafana plugins by adding them to the `GF_PLUGINS_PREINSTALL` environment variable.
+See the [Grafana documentation][grafana-preinstall-plugins] for more information.
 
 ## Run lgtm in Kubernetes
 

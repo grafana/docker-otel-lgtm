@@ -34,6 +34,10 @@
       matchPackageNames: ["grafana/grafana", "prometheus/prometheus", "grafana/loki", "grafana/tempo", "open-telemetry/opentelemetry-collector-releases"],
       labels: ["docker-dependency"],
     },
+    {
+      matchPackageNames: ["grafana/shared-workflows"],
+      versioning: "regex:^[a-z-]+-v(?<versionMajor>\\d+)\\.(?<versionMinor>\\d+)(?:\\.(?<versionPatch>\\d+))?$",
+    },
   ],
   vulnerabilityAlerts: {
     enabled: true,

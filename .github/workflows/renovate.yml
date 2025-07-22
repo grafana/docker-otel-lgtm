@@ -20,7 +20,7 @@ jobs:
 
       - name: retrieve secrets
         id: get-secrets
-        uses: grafana/shared-workflows/actions/get-vault-secrets@v1.0.0
+        uses: grafana/shared-workflows/actions/get-vault-secrets@get-vault-secrets-v1.0.0
         with:
           common_secrets: |
             GRAFANA_RENOVATE_APP_ID=grafana-renovate-app:app-id

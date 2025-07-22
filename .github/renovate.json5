@@ -21,6 +21,11 @@
       schedule: ["before 4am on monday"],
     },
     {
+      matchPackageNames: ["jdx/mise"],
+      groupName: "mise",
+      schedule: ["before 4am on monday"],
+    },
+    {
       matchDatasources: ["pypi"],
       matchDepNames: ["opentelemetry-distro"],
       ignoreUnstable: false,

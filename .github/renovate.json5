@@ -36,7 +36,7 @@
     },
     {
       matchPackageNames: ["grafana/shared-workflows"],
-      versioning: "regex:^[a-z-]+-v(?<versionMajor>\\d+)\\.(?<versionMinor>\\d+)(?:\\.(?<versionPatch>\\d+))?$",
+      versioning: "regex:^(?<compatibility>[a-z-]+)-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)?$",
     },
   ],
   vulnerabilityAlerts: {

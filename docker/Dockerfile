@@ -5,7 +5,7 @@ ARG PROMETHEUS_VERSION=v3.5.0
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
 ARG TEMPO_VERSION=v2.8.1
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
-ARG LOKI_VERSION=v3.5.2
+ARG LOKI_VERSION=v3.5.3
 # renovate: datasource=github-releases depName=pyroscope packageName=grafana/pyroscope
 ARG PYROSCOPE_VERSION=v1.14.0
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases

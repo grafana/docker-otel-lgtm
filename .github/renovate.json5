@@ -2,7 +2,7 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: ["config:recommended", "customManagers:dockerfileVersions", "customManagers:githubActionsVersions"],
   branchPrefix: "grafanarenovatebot/",
-  dependencyDashboardIssue: 668,
+  dependencyDashboard: false,
   platformCommit: "enabled",
   automerge: true,
   ignorePaths: [],

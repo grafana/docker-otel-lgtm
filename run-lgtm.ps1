@@ -32,7 +32,7 @@ $runCommand = @(
     '-ti',
     '-v', "${path}/container/grafana:/data/grafana"
     '-v', "${path}/container/prometheus:/data/prometheus"
-    '-v', "${path}/loki:/loki"
+    '-v', "${path}/container/loki:/data/loki"
     '-e', "GF_PATHS_DATA=/data/grafana"
     $image
 )

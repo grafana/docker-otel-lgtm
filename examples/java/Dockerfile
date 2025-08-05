@@ -1,6 +1,6 @@
 FROM ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:2.18.1 AS agent
 
-FROM eclipse-temurin:21.0.7_6-jdk AS builder
+FROM eclipse-temurin:21.0.8_9-jdk AS builder
 
 WORKDIR /usr/src/app/
 
@@ -9,7 +9,7 @@ COPY ./.mvn ./.mvn
 COPY ./src ./src
 RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests
 
-FROM eclipse-temurin:21.0.7_6-jre
+FROM eclipse-temurin:21.0.8_9-jre
 
 WORKDIR /usr/src/app/
 

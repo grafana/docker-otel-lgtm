@@ -16,4 +16,3 @@ RUN apt-get update && \
 COPY --from=builder /profiler/ebpf-profiler /usr/local/bin/
 
 ENTRYPOINT ["/usr/local/bin/ebpf-profiler"]
-

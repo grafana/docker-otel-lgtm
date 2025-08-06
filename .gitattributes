@@ -1,0 +1,4 @@
+* text=auto
+mvnw eol=lf
+*.sh eol=lf
+Dockerfile eol=lf

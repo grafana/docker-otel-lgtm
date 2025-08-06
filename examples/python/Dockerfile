@@ -26,6 +26,3 @@ ENV OTEL_LOGS_EXPORTER=otlp
 EXPOSE 8082
 
 CMD ["opentelemetry-instrument", "flask", "run", "--host", "0.0.0.0", "--port", "8082"]
-
-
-

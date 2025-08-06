@@ -4,6 +4,9 @@ root = true
 max_line_length = 100
 indent_size = 2
 
+[*Dockerfile*]
+end_of_line = lf
+
 [*.cs]
 indent_size = 4
 insert_final_newline = true

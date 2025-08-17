@@ -1,0 +1,58 @@
+---
+# OATS (OpenTelemetry Acceptance Testing Specification)
+# Configuration for the Elixir Phoenix example
+
+tests:
+  - name: elixir_phx_health_check
+    description: Test health check endpoint generates traces
+    request:
+      url: http://elixir_phx:4000/api/health
+      method: GET
+    expected:
+      - traces:
+          - spans:
+              - name: "GET /api/health"
+                attributes:
+                  http.method: GET
+                  http.route: "/api/health"
+                  http.status_code: 200
+
+  - name: elixir_phx_dice_roll
+    description: Test dice roll endpoint generates traces with custom spans
+    request:
+      url: http://elixir_phx:4000/api/dice
+      method: GET
+    expected:
+      - traces:
+          - spans:
+              - name: "GET /api/dice"
+                attributes:
+                  http.method: GET
+                  http.route: "/api/dice"
+                  http.status_code: 200
+              - name: "dice.generate_random"
+                attributes:
+                  dice.sides: 6
+                  operation.type: "random_generation"
+
+  - name: elixir_phx_dice_roll_custom_sides
+    description: Test dice roll with custom sides generates detailed traces
+    request:
+      url: http://elixir_phx:4000/api/dice/20
+      method: POST
+    expected:
+      - traces:
+          - spans:
+              - name: "POST /api/dice/:sides"
+                attributes:
+                  http.method: POST
+                  http.route: "/api/dice/:sides"
+                  http.status_code: 200
+              - name: "dice.roll_with_sides"
+                attributes:
+                  dice.sides: 20
+                  dice.type: "custom"
+              - name: "dice.generate_random"
+                attributes:
+                  dice.sides: 20
+                  operation.type: "random_generation"

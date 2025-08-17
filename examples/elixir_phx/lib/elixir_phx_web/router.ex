@@ -9,16 +9,9 @@ defmodule ElixirPhxWeb.Router do
     pipe_through :api
 
     get "/", HealthController, :check
-  end
-
-  scope "/api", ElixirPhxWeb do
-    pipe_through :api
-
-    # Health check endpoint
-    get "/health", HealthController, :check
 
     # Dice roll endpoint for generating traces
-    get "/dice", DiceController, :roll
-    post "/dice/:sides", DiceController, :roll_with_sides
+    get "/rolldice", DiceController, :roll
+    post "/rolldice/:sides", DiceController, :roll_with_sides
   end
 end

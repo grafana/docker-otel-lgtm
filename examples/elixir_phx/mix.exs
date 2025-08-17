@@ -20,7 +20,12 @@ defmodule ElixirPhx.MixProject do
   def application do
     [
       mod: {ElixirPhx.Application, []},
-      extra_applications: [:logger, :runtime_tools, :opentelemetry, :opentelemetry_exporter]
+      extra_applications: [
+        :logger,
+        :runtime_tools,
+        :opentelemetry_exporter,
+        :opentelemetry
+      ]
     ]
   end
 
@@ -53,10 +58,11 @@ defmodule ElixirPhx.MixProject do
       {:opentelemetry, "~> 1.5"},
       {:opentelemetry_api, "~> 1.4"},
       {:opentelemetry_exporter, "~> 1.8"},
-      {:opentelemetry_phoenix, "~> 1.2"},
+      {:opentelemetry_phoenix, "~> 2.0"},
       {:opentelemetry_ecto, "~> 1.2"},
       {:opentelemetry_cowboy, "~> 0.3"},
-      {:opentelemetry_bandit, "~> 0.1"}
+      {:opentelemetry_bandit, "~> 0.2"},
+      {:opentelemetry_semantic_conventions, "~> 1.0"}
     ]
   end
 

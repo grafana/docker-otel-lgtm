@@ -4,9 +4,16 @@ defmodule ElixirPhx.Application do
   @moduledoc false
 
   use Application
+  require OpentelemetryPhoenix
+  require OpentelemetryEcto
 
   @impl true
   def start(_type, _args) do
+    # Setup OpenTelemetry instrumentation
+    OpentelemetryBandit.setup()
+    OpentelemetryPhoenix.setup(adapter: :bandit)
+    OpentelemetryEcto.setup([:elixir_phx, :repo])
+
     children = [
       ElixirPhxWeb.Telemetry,
       ElixirPhx.Repo,

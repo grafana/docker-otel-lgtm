@@ -6,17 +6,19 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: dev
     environment:
       OTEL_SERVICE_NAME: 'elixir-phx-dice-server'
       OTEL_SERVICE_VERSION: '0.1.0'
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318/v1/traces
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
       OTEL_METRIC_EXPORT_INTERVAL: '5000' # so we don't have to wait 60s for metrics
       MIX_ENV: dev
       PHX_SERVER: true
+      ERL_AFLAGS: -kernel shell_history enabled
       # Database is optional for this example, but keeping for completeness
-      DATABASE_URL: ecto://postgres:postgres@db:5432/elixir_phx_dev
+      # DATABASE_URL: ecto://postgres:postgres@db:5432/elixir_phx_dev
     ports:
-      - '8080:4000'
+      - '4000:4000'
     depends_on:
       - db
   

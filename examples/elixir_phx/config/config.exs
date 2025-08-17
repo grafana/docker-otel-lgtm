@@ -32,6 +32,8 @@ config :phoenix, :json_library, Jason
 
 # OpenTelemetry configuration
 config :opentelemetry,
+  span_processor: :batch,
+  traces_exporter: :otlp,
   resource: [
     service: [
       name: "elixir_phx",
@@ -39,13 +41,14 @@ config :opentelemetry,
     ]
   ]
 
-config :opentelemetry, :processors,
-  otel_batch_processor: %{
-    exporter: :otel_exporter_http
-  }
+# config :opentelemetry, :processors,
+#   otel_batch_processor: %{
+#     exporter: :otel_exporter_http
+#   }
 
 # Configure the OpenTelemetry HTTP exporter to send to local collector
 config :opentelemetry_exporter,
+  otlp_protocol: :http_protobuf,
   otlp_endpoint: System.get_env("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318/v1/traces"),
   otlp_headers: [],
   otlp_compression: :gzip

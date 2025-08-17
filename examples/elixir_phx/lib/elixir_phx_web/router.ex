@@ -5,6 +5,12 @@ defmodule ElixirPhxWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/", ElixirPhxWeb do
+    pipe_through :api
+
+    get "/", HealthController, :check
+  end
+
   scope "/api", ElixirPhxWeb do
     pipe_through :api
 

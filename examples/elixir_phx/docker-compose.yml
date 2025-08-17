@@ -15,18 +15,28 @@ services:
       MIX_ENV: dev
       PHX_SERVER: true
       ERL_AFLAGS: -kernel shell_history enabled
+      DB_HOST: db
       # Database is optional for this example, but keeping for completeness
       # DATABASE_URL: ecto://postgres:postgres@db:5432/elixir_phx_dev
     ports:
       - '4000:4000'
     depends_on:
-      - db
-  
+      db:
+        condition: service_healthy
+
+  # docker compose exec -it db psql -U postgres
+  # docker compose up db --remove-orphans -d
   db:
     image: postgres:15-alpine
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: elixir_phx_dev
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER']
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

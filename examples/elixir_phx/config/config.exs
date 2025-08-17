@@ -30,6 +30,26 @@ config :logger, :default_formatter,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# OpenTelemetry configuration
+config :opentelemetry,
+  resource: [
+    service: [
+      name: "elixir_phx",
+      version: "0.1.0"
+    ]
+  ]
+
+config :opentelemetry, :processors,
+  otel_batch_processor: %{
+    exporter: :otel_exporter_http
+  }
+
+# Configure the OpenTelemetry HTTP exporter to send to local collector
+config :opentelemetry_exporter,
+  otlp_endpoint: System.get_env("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318/v1/traces"),
+  otlp_headers: [],
+  otlp_compression: :gzip
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

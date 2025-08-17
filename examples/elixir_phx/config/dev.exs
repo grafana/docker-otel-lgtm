@@ -2,10 +2,10 @@ import Config
 
 # Configure your database
 config :elixir_phx, ElixirPhx.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "elixir_phx_dev",
+  username: System.get_env("DB_USERNAME", "postgres"),
+  password: System.get_env("DB_PASSWORD", "postgres"),
+  hostname: System.get_env("DB_HOST", "localhost"),
+  database: System.get_env("DB_NAME", "elixir_phx_dev"),
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -61,3 +61,19 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# OpenTelemetry development configuration
+config :opentelemetry_exporter,
+  otlp_endpoint: System.get_env("OTEL_EXPORTER_OTLP_ENDPOINT", "http://localhost:4318/v1/traces"),
+  otlp_headers: [],
+  otlp_compression: :gzip
+
+# Enable more detailed tracing in development
+config :opentelemetry,
+  resource: [
+    service: [
+      name: "elixir_phx_dev",
+      version: "0.1.0",
+      namespace: "development"
+    ]
+  ]

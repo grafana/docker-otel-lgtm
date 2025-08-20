@@ -12,7 +12,7 @@ ARG PYROSCOPE_VERSION=v1.14.0
 ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.132.4
 
 # hadolint global ignore=DL3059
-FROM redhat/ubi9:9.6-1754586119 AS builder
+FROM redhat/ubi9:9.6-1755678605 AS builder
 
 RUN mkdir /otel-lgtm
 

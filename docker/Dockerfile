@@ -9,7 +9,7 @@ ARG LOKI_VERSION=v3.5.3
 # renovate: datasource=github-releases depName=pyroscope packageName=grafana/pyroscope
 ARG PYROSCOPE_VERSION=v1.14.0
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
-ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.132.4
+ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.133.0
 
 # hadolint global ignore=DL3059
 FROM redhat/ubi9:9.6-1755678605@sha256:b68c21b2dd3e72abcf2f8dcfc77580e4030564d1243bfcb7cd64ccc5aa3e0a25 AS builder

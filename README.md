@@ -7,9 +7,11 @@ An OpenTelemetry backend in a Docker image.
 
 The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry
 that's intended for development, demo, and testing environments.
-If you are looking for a production-ready, out-of-the box solution to monitor applications
-and minimize MTTR (mean time to resolution) with OpenTelemetry and Prometheus,
-you should try [Grafana Cloud Application Observability][app-o11y].
+
+> [!IMPORTANT]
+> If you are looking for a **production-ready**, out-of-the box solution to monitor applications
+> and minimize MTTR (mean time to resolution) with OpenTelemetry and Prometheus,
+> you should try [Grafana Cloud Application Observability][app-o11y].
 
 ## Documentation
 

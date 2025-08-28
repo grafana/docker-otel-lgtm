@@ -1,3 +1,4 @@
+using OpenTelemetry;
 using OpenTelemetry.Instrumentation.AspNetCore;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
@@ -13,12 +14,11 @@ Action<ResourceBuilder> configureResource = r => r.AddService(
     serviceVersion: typeof(Program).Assembly.GetName().Version?.ToString() ?? "unknown",
     serviceInstanceId: Environment.MachineName);
 
-const string DefaultEndpoint = "http://127.0.0.1:4317";
-
 // Configure OpenTelemetry tracing and metrics with auto-start using the
 // AddOpenTelemetry() extension method from the OpenTelemetry.Extensions.Hosting package.
 appBuilder.Services.AddOpenTelemetry()
     .ConfigureResource(configureResource)
+    .UseOtlpExporter()
     .WithTracing(builder =>
     {
         builder
@@ -28,26 +28,12 @@ appBuilder.Services.AddOpenTelemetry()
         // Use IConfiguration binding for AspNetCore instrumentation options.
         appBuilder.Services.Configure<AspNetCoreTraceInstrumentationOptions>(
             appBuilder.Configuration.GetSection("AspNetCoreInstrumentation"));
-
-        builder.AddOtlpExporter(otlpOptions =>
-        {
-            // Use IConfiguration directly for OTLP exporter endpoint option.
-            otlpOptions.Endpoint = new Uri(
-                appBuilder.Configuration.GetValue("Otlp:Endpoint", defaultValue: DefaultEndpoint)!);
-        });
     })
     .WithMetrics(builder =>
     {
         builder
             .AddHttpClientInstrumentation()
             .AddAspNetCoreInstrumentation();
-
-        builder.AddOtlpExporter(otlpOptions =>
-        {
-            // Use IConfiguration directly for OTLP exporter endpoint option.
-            otlpOptions.Endpoint = new Uri(
-                appBuilder.Configuration.GetValue("Otlp:Endpoint", defaultValue: DefaultEndpoint)!);
-        });
     });
 
 // Clear default logging providers used by WebApplication host.
@@ -60,13 +46,6 @@ appBuilder.Logging.AddOpenTelemetry(options =>
     var resourceBuilder = ResourceBuilder.CreateDefault();
     configureResource(resourceBuilder);
     options.SetResourceBuilder(resourceBuilder);
-
-    options.AddOtlpExporter(otlpOptions =>
-    {
-        // Use IConfiguration directly for OTLP exporter endpoint option.
-        otlpOptions.Endpoint = new Uri(
-            appBuilder.Configuration.GetValue("Otlp:Endpoint", defaultValue: DefaultEndpoint)!);
-    });
 });
 
 var app = appBuilder.Build();

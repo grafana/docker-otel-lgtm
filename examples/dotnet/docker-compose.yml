@@ -8,7 +8,9 @@ services:
     ports:
       - 8083:8083
     environment:
-      - Otlp__Endpoint=http://otel-lgtm:4317
+      - Otlp__Endpoint=http://otel-lgtm:4318
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-lgtm:4318
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
       - OTEL_METRIC_EXPORT_INTERVAL=5000 # so we don't have to wait 60s for metrics
     depends_on:
       - otel-lgtm

@@ -12,6 +12,5 @@ services:
       OTEL_SERVICE_NAME: 'dice-server'
       OTEL_SERVICE_VERSION: '0.1.0'
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
-      OTEL_METRIC_EXPORT_INTERVAL: '5000' # so we don't have to wait 60s for metrics
     ports:
       - '8080:8084'

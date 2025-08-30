@@ -9,4 +9,3 @@ services:
       - 8080:8083
     environment:
       - Otlp__Endpoint=http://lgtm:4317
-      - OTEL_METRIC_EXPORT_INTERVAL=5000 # so we don't have to wait 60s for metrics

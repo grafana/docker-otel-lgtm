@@ -49,7 +49,6 @@ services:
     environment:
       OTEL_SERVICE_NAME: "rolldice"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
-      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
     ports:
       - "8083:8083"
     networks:
@@ -79,7 +78,6 @@ services:
     environment:
       OTEL_SERVICE_NAME: "rolldice"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
-      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
       GRAFANA_ROLL_WAIT: "2000" # 2 seconds
     ports:
       - "8080:8080"

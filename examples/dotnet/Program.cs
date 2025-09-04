@@ -1,6 +1,5 @@
 using OpenTelemetry;
 using OpenTelemetry.Instrumentation.AspNetCore;
-using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;

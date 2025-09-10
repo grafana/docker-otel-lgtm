@@ -25,6 +25,7 @@ const schemaName = "https://github.com/grafana/docker-otel-lgtm"
 var (
 	tracer = otel.Tracer(schemaName)
 	logger = otelslog.NewLogger(schemaName)
+	meter  = otel.Meter(schemaName)
 )
 
 // setupOTelSDK bootstraps the OpenTelemetry pipeline.

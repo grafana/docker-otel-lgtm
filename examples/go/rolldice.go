@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
 )
 
@@ -27,10 +28,10 @@ func rolldice(w http.ResponseWriter, r *http.Request) {
 	}
 
 	histogram, err := meter.Int64Histogram("dice.roll", metric.WithDescription("The result of the dice roll"))
-	if err != nil {
+	if success := (err == nil); !success {
 		logger.ErrorContext(ctx, "Histogram instantiation failed: %v\n", slog.Any("error", err))
 	} else {
-		histogram.Record(ctx, int64(roll), metric.WithAttributes())
+		histogram.Record(ctx, int64(roll), metric.WithAttributes(attribute.Bool("result.success", success)))
 	}
 }
 

@@ -27,12 +27,12 @@ func rolldice(w http.ResponseWriter, r *http.Request) {
 		logger.ErrorContext(ctx, "Write failed: %v\n", slog.Any("error", err))
 	}
 
-	histogram, err := meter.Int64Histogram("dice.roll", metric.WithDescription("The result of the dice roll"))
+	h, err := meter.Int64Histogram("dice.roll", metric.WithDescription("The result of the dice roll"))
 	success := (err == nil)
 	if !success {
 		logger.ErrorContext(ctx, "Histogram instantiation failed: %v\n", slog.Any("error", err))
-	} 
-	histogram.Record(ctx, int64(roll), metric.WithAttributes(attribute.Bool("result.success", success)))
+	}
+	h.Record(ctx, int64(roll), metric.WithAttributes(attribute.Bool("result.success", success)))
 }
 
 func roll() int {

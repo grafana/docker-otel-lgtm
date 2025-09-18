@@ -8,6 +8,7 @@ services:
     ports:
       - 8080:8083
     environment:
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://lgtm:4318
+      - OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp-gateway-dev-us-east-0.grafana-dev.net/otlp
       - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
       - OTEL_METRIC_EXPORT_INTERVAL=5000 # so we don't have to wait 60s for metrics
+      - OTEL_EXPORTER_OTLP_HEADERS=Authorization=Basic YOUR_TOKEN_HERE

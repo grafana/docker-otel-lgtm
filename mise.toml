@@ -5,7 +5,7 @@ go = "1.25.1"
 java = "temurin-21.0.8+9.0.LTS"
 lychee = "0.20.1"
 markdownlint-cli2 = "0.18.1"
-rust = "1.89.0"
+rust = "1.90.0"
 
 [tasks.lint]
 run = "scripts/super-linter.sh"

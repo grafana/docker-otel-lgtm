@@ -23,7 +23,7 @@ fi
 ARCHIVE=cosign-"${VERSION}"-1."${ARCH}".rpm
 
 cd /tmp
-curl -O -L https://github.com/sigstore/cosign/releases/download/"${VERSION}"/"${ARCHIVE}"
-curl -O -L https://github.com/sigstore/cosign/releases/download/"${VERSION}"/cosign_checksums.txt
+curl -O -L https://github.com/sigstore/cosign/releases/download/v"${VERSION}"/"${ARCHIVE}"
+curl -O -L https://github.com/sigstore/cosign/releases/download/v"${VERSION}"/cosign_checksums.txt
 sha256sum -c cosign_checksums.txt --ignore-missing
 yum install -y "${ARCHIVE}"

@@ -1,18 +1,24 @@
 # ElixirPhx
 
-## Setup
+## Dependecies
+
+- Docker
+- watch
+
+`cd examples/elixir_phx`
 
 ## Local Startup
 
 Start psql
 
 ```bash
-docker compose up db --remove-orphans
+./run.sh
 ```
 
-To start your Phoenix server:
+Now you can visit [`http://localhost:4000/rolldice`](http://localhost:4000/rolldice) from your browser
 
-* Run `mix setup` to install and setup dependencies
-* Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+## Generate Traffic
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+```bash
+ab -n 100 -c 5 http://127.0.0.1:4000/rolldice
+```

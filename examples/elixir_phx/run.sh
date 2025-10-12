@@ -1,20 +1,9 @@
 #!/bin/bash
 
 # Exit on any error
-set -e
+set -euo pipefail
 
 echo "Starting Elixir Phoenix OpenTelemetry example..."
-
-# Check if Docker is running
-if ! docker info > /dev/null 2>&1; then
-    echo "Error: Docker is not running. Please start Docker and try again."
-    exit 1
-fi
-
-# Get dependencies and compile
-echo "Installing dependencies..."
-mix deps.get
-mix compile
 
 # Set environment variables for local development
 export OTEL_SERVICE_NAME="elixir-phx-dice-server"
@@ -23,14 +12,35 @@ export OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318/v1/traces"
 export PHX_SERVER=true
 export MIX_ENV=dev
 
+# Check if Docker is running
+#Open Docker, only if is not running
+if (! docker stats --no-stream &>/dev/null ); then
+  # On Mac OS this would be the terminal command to launch Docker
+  open /Applications/Docker.app
+ #Wait until Docker daemon is running and has completed initialisation
+while (! docker stats --no-stream &>/dev/null ); do
+  # Docker takes a few seconds to initialize
+  echo "Waiting for Docker to launch..."
+  sleep 1
+done
+fi
+
+
+echo "Starting PostgreSQL database using Docker..."
+docker compose up db --remove-orphans -d
+
+# Get dependencies and compile
+echo "Setting up the Elixir Phoenix application..."
+mix setup
+
+
 echo "Starting Phoenix server with OpenTelemetry..."
 echo "Server will be available at: http://localhost:4000"
-echo "Health check: http://localhost:4000/api/health"
-echo "Dice roll: http://localhost:4000/api/dice"
+echo "Dice roll: http://localhost:4000/rolldice"
 echo "Custom dice: http://localhost:4000/api/dice/20"
 echo ""
 echo "Make sure the LGTM stack is running (run '../docker/run-all.sh' from the docker directory)"
 echo ""
 
 # Start the Phoenix server
-mix phx.server
+iex -S mix phx.server

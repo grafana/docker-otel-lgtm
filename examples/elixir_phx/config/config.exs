@@ -33,13 +33,7 @@ config :phoenix, :json_library, Jason
 # OpenTelemetry configuration
 config :opentelemetry,
   traces_exporter: :otlp,
-  span_processor: :batch,
-  resource: [
-    service: [
-      # name: "elixir_phx_WORKS",
-      version: "0.1.0"
-    ]
-  ]
+  span_processor: :batch
 
 # config :opentelemetry, traces_exporter: {:otel_exporter_stdout, []}
 

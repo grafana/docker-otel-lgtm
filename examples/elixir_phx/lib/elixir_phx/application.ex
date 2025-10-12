@@ -31,7 +31,7 @@ defmodule ElixirPhx.Application do
   defp setup_opentelemetry do
     OpentelemetryBandit.setup()
     OpentelemetryPhoenix.setup(adapter: :bandit)
-    OpentelemetryEcto.setup([:elixir_phx, :repo])
+    # OpentelemetryEcto.setup([:elixir_phx, :repo])
   end
 
   # Tell Phoenix to update the endpoint configuration

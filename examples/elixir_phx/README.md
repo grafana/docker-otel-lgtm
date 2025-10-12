@@ -1,5 +1,15 @@
 # ElixirPhx
 
+## Setup
+
+## Local Startup
+
+Start psql
+
+```bash
+docker compose up db --remove-orphans
+```
+
 To start your Phoenix server:
 
 * Run `mix setup` to install and setup dependencies

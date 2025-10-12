@@ -69,11 +69,11 @@ config :phoenix, :plug_init_mode, :runtime
 #   otlp_compression: :gzip
 
 # Enable more detailed tracing in development
-# config :opentelemetry,
-#   resource: [
-#     service: [
-#       name: "elixir_phx_dev",
-#       version: "0.1.0",
-#       namespace: "development"
-#     ]
-#   ]
+config :opentelemetry,
+  resource: [
+    service: [
+      name: "elixir_phx_dev",
+      version: "0.1.0",
+      namespace: "development"
+    ]
+  ]

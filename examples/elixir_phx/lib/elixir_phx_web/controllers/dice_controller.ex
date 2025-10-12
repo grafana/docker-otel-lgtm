@@ -2,7 +2,8 @@ defmodule ElixirPhxWeb.DiceController do
   use ElixirPhxWeb, :controller
   require OpenTelemetry.Tracer, as: Tracer
 
-  def roll(conn, _params) do
+  def roll(conn, params) do
+    IO.inspect(params, label: "/rolldice params")
     result = roll_dice(6)
 
     conn
@@ -21,11 +22,13 @@ defmodule ElixirPhxWeb.DiceController do
       ])
 
       result = roll_dice(sides_int)
+      sleep_time = Enum.take_every(100..1000, 100) |> Enum.random()
 
       Tracer.set_attribute("dice.result", result)
+      Tracer.set_attribute("process.sleep", sleep_time)
 
       # Simulate some processing time
-      :timer.sleep(Enum.random(10..100))
+      Process.sleep(sleep_time)
 
       conn
       |> put_status(:ok)

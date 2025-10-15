@@ -37,6 +37,9 @@ The Docker image is available on Docker hub: <https://hub.docker.com/r/grafana/o
 
 ### Linux/Unix Using mise
 
+
+
+
 You can also use [mise][mise] to run the Docker image:
 
 ```sh

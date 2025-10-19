@@ -84,7 +84,7 @@ RUN ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/
 
-FROM redhat/ubi9-micro:9.6-1758714456
+FROM redhat/ubi9-micro:9.6-1760515026@sha256:aff810919642215e15c993b9bbc110dbcc446608730ad24499dafd9df7a8f8f4
 
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm

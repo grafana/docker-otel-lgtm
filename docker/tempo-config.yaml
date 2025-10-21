@@ -25,6 +25,7 @@ ingester:
 
 memberlist:
   bind_addr: [127.0.0.1]
+  bind_port: 7947
 
 querier:
   frontend_worker:

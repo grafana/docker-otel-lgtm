@@ -23,6 +23,9 @@ ingester:
       replication_factor: 1
     min_ready_duration: 1s
 
+memberlist:
+  bind_addr: [127.0.0.1]
+
 querier:
   frontend_worker:
     frontend_address: 127.0.0.1:9096

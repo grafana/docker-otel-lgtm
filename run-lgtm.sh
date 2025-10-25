@@ -4,6 +4,9 @@ RELEASE=${1:-latest}
 
 docker pull docker.io/grafana/otel-lgtm:"${RELEASE}"
 
+# Create necessary directories for volume mounts
+mkdir -p container/grafana container/prometheus container/loki
+
 touch .env
 
 docker run \

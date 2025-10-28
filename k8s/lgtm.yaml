@@ -1,9 +1,23 @@
-# this is intended for demo / testing purposes only, not for production usage
+# LGTM (Loki, Grafana, Tempo, Mimir/Prometheus) Stack for Kubernetes
+# OpenTelemetry 백엔드 - 개발/테스트 환경용
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+---
+# Service를 UI와 OTLP로 분리하는 이유:
+# 1. UI (3000): 사람이 브라우저로 접속 → Ingress를 통한 도메인 기반 접근 (ClusterIP)
+# 2. OTLP (4317, 4318): 애플리케이션이 텔레메트리 데이터 전송 → NodePort로 직접 접근
+# 용도가 다르므로 논리적으로 분리하여 보안성과 관리 효율성 향상
+# Grafana UI 서비스 (ClusterIP - Ingress 전용)
 apiVersion: v1
 kind: Service
 metadata:
-  name: lgtm
+  name: lgtm-ui
+  namespace: monitoring
 spec:
+  type: ClusterIP
   selector:
     app: lgtm
   ports:
@@ -11,19 +25,57 @@ spec:
       protocol: TCP
       port: 3000
       targetPort: 3000
+---
+# OpenTelemetry 데이터 수신 서비스 (NodePort - 직접 접근)
+apiVersion: v1
+kind: Service
+metadata:
+  name: lgtm-otlp
+  namespace: monitoring
+spec:
+  type: NodePort
+  selector:
+    app: lgtm
+  ports:
     - name: otel-grpc
       protocol: TCP
       port: 4317
       targetPort: 4317
+      nodePort: 30317  # OpenTelemetry gRPC 수신: http://<node-ip>:30317
     - name: otel-http
       protocol: TCP
       port: 4318
       targetPort: 4318
+      nodePort: 30318  # OpenTelemetry HTTP 수신: http://<node-ip>:30318
+---
+# Grafana UI를 도메인으로 접근하기 위한 Ingress 설정
+# http://grafana.dead-whale.org → Grafana UI (포트 없이 접근)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lgtm-ingress
+  namespace: monitoring
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"  # HTTP 허용 (필요시 true로 변경)
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: grafana.dead-whale.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lgtm-ui
+                port:
+                  number: 3000
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: lgtm
+  namespace: monitoring
 spec:
   replicas: 1
   selector:
@@ -34,22 +86,44 @@ spec:
       labels:
         app: lgtm
     spec:
+      # role=monitoring 레이블을 가진 노드에 배포
+      nodeSelector:
+        role: monitoring
       containers:
         - name: lgtm
           image: grafana/otel-lgtm:latest
+          imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 3000
-            - containerPort: 4317
-            - containerPort: 4318
+            - name: grafana
+              containerPort: 3000
+            - name: otel-grpc
+              containerPort: 4317
+            - name: otel-http
+              containerPort: 4318
+          # 컨테이너 준비 상태 체크
           readinessProbe:
             exec:
               command:
                 - cat
                 - /tmp/ready
-          # NOTE: By default OpenShift does not allow writing the root directory.
-          # Thats why the data dirs for grafana, prometheus and loki can not be
-          # created and the pod never becomes ready.
-          # See: https://github.com/grafana/docker-otel-lgtm/issues/132
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          # 컨테이너 활성 상태 체크
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          # 리소스 할당 (모니터링 워크로드용)
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "2000m"
+          # 각 컴포넌트별 데이터 저장 경로 (emptyDir - 파드 재시작 시 초기화됨)
           volumeMounts:
             - name: tempo-data
               mountPath: /data/tempo
@@ -64,15 +138,20 @@ spec:
             - name: pyroscope-storage
               mountPath: /data/pyroscope
       volumes:
+        # emptyDir: Pod 재시작 시 데이터 삭제
+        # 영구 저장이 필요한 경우 hostPath로 변경:
+        # hostPath:
+        #   path: /mnt/data/lgtm/tempo
+        #   type: DirectoryOrCreate
         - name: tempo-data
-          emptyDir: {}
+          emptyDir: { }
         - name: loki-data
-          emptyDir: {}
+          emptyDir: { }
         - name: grafana-data
-          emptyDir: {}
+          emptyDir: { }
         - name: loki-storage
-          emptyDir: {}
+          emptyDir: { }
         - name: p8s-storage
-          emptyDir: {}
+          emptyDir: { }
         - name: pyroscope-storage
-          emptyDir: {}
+          emptyDir: { }

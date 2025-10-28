@@ -12,7 +12,7 @@ ARG PYROSCOPE_VERSION=v1.15.0
 ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.138.0
 
 # hadolint global ignore=DL3059
-FROM redhat/ubi9:9.6-1760340943@sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc AS builder
+FROM docker.io/redhat/ubi9:9.6-1760340943@sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc AS builder
 
 RUN mkdir /otel-lgtm
 
@@ -57,7 +57,7 @@ COPY download-grafana.sh \
  ./
 
 # TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts
-# on an amd64 architecture, than the TARGETARCH will be set to `amd64`.
+# on an amd64 architecture, then the TARGETARCH will be set to `amd64`.
 # More details on the variables can be found here: https://docs.docker.com/desktop/extensions-sdk/extensions/multi-arch/
 ARG TARGETARCH
 ENV TARGETARCH=${TARGETARCH}
@@ -84,7 +84,7 @@ RUN ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/
 
-FROM redhat/ubi9-micro:9.6-1760515026@sha256:aff810919642215e15c993b9bbc110dbcc446608730ad24499dafd9df7a8f8f4
+FROM docker.io/redhat/ubi9-micro:9.6-1760515026@sha256:aff810919642215e15c993b9bbc110dbcc446608730ad24499dafd9df7a8f8f4
 
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm

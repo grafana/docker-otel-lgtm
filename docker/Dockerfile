@@ -109,4 +109,25 @@ ENV LOKI_VERSION=${LOKI_VERSION}
 ENV PYROSCOPE_VERSION=${PYROSCOPE_VERSION}
 ENV OPENTELEMETRY_COLLECTOR_VERSION=${OPENTELEMETRY_COLLECTOR_VERSION}
 
+# Re-label the final image, overriding any existing labels from the base image
+LABEL description="An open source backend for OpenTelemetry that's intended for development, demo, and testing environments."
+LABEL io.k8s.description="An open source backend for OpenTelemetry that's intended for development, demo, and testing environments."
+LABEL io.k8s.display-name="Grafana LGTM"
+LABEL maintainer="Grafana Labs"
+LABEL name="grafana/otel-lgtm"
+LABEL org.opencontainers.image.ref.name="grafana/otel-lgtm"
+LABEL summary="An OpenTelemetry backend in a Docker image"
+LABEL url="https://github.com/grafana/docker-otel-lgtm"
+LABEL vendor="Grafana Labs"
+
+# Blank out labels inherited from the base image that we don't want
+LABEL cpe=""
+LABEL io.buildah.version=""
+LABEL release=""
+
+# TODO These should match the values of org.opencontainers.image.revision and org.opencontainers.image.version
+# Need https://github.com/grafana/shared-workflows/pull/1471 to allow passing these values in during build.
+LABEL vcs-ref=""
+LABEL version=""
+
 CMD ["/otel-lgtm/run-all.sh"]

@@ -30,7 +30,7 @@ if (-Not (Test-Path -Path ".env")) {
 if ($UseLocalImage) {
     if ($containerCommand -eq 'podman') {
         $image = "localhost/grafana/otel-lgtm:${ReleaseTag}"
-    } 
+    }
     else {
         $image = "grafana/otel-lgtm:${ReleaseTag}"
     }

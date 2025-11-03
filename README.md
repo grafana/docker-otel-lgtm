@@ -129,6 +129,10 @@ docker build . -t grafana/otel-lgtm
 mise build-lgtm
 ```
 
+> [!TIP]
+> If you built your image locally, you can use the `run-lgtm` scripts with
+> the parameters `latest true` to run your local image.
+
 ## Build and run the example app
 
 > [!TIP]

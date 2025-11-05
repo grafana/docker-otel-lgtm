@@ -49,6 +49,10 @@ jobs:
         uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5.8.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          labels: |-
+            org.opencontainers.image.ref.name=${{ github.ref_name }}
+            vcs-ref=${{ github.sha }}
+            version=${{ github.ref_name }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action

@@ -21,7 +21,7 @@ jobs:
           persist-credentials: false
 
       - id: push-to-dockerhub
-        uses: grafana/shared-workflows/actions/build-push-to-dockerhub@1acd69f48c01d7aef5f209f94048dfeb789026db # build-push-to-dockerhub/v0.2.0
+        uses: grafana/shared-workflows/actions/build-push-to-dockerhub@74b7ce2ebd577c25266d972683e376d9f62d0b07 # build-push-to-dockerhub/v0.4.0
         with:
           repository: grafana/otel-lgtm
           context: docker

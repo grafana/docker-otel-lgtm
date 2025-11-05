@@ -109,4 +109,23 @@ ENV LOKI_VERSION=${LOKI_VERSION}
 ENV PYROSCOPE_VERSION=${PYROSCOPE_VERSION}
 ENV OPENTELEMETRY_COLLECTOR_VERSION=${OPENTELEMETRY_COLLECTOR_VERSION}
 
+# Re-label the final image, overriding any existing labels from the base image
+LABEL description="An open source backend for OpenTelemetry that's intended for development, demo, and testing environments."
+LABEL io.k8s.description="An open source backend for OpenTelemetry that's intended for development, demo, and testing environments."
+LABEL io.k8s.display-name="Grafana LGTM"
+LABEL maintainer="Grafana Labs"
+LABEL name="grafana/otel-lgtm"
+LABEL org.opencontainers.image.authors="Grafana Labs"
+LABEL org.opencontainers.image.documentation="https://github.com/grafana/docker-otel-lgtm/blob/main/README.md"
+LABEL org.opencontainers.image.vendor="Grafana Labs"
+LABEL org.opencontainers.image.title="Grafana OpenTelemetry LGTM"
+LABEL summary="An OpenTelemetry backend in a Docker image"
+LABEL url="https://github.com/grafana/docker-otel-lgtm"
+LABEL vendor="Grafana Labs"
+
+# Blank out labels inherited from the base image that we don't want
+LABEL cpe=""
+LABEL io.buildah.version=""
+LABEL release=""
+
 CMD ["/otel-lgtm/run-all.sh"]

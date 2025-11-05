@@ -30,3 +30,7 @@ jobs:
           tags: |-
             type=match,pattern=v(.*),group=1
             latest
+          labels: |-
+            org.opencontainers.image.ref.name=${{ github.ref_name }}
+            vcs-ref=${{ github.sha }}
+            version=${{ github.ref_name }}

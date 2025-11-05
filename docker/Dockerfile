@@ -117,7 +117,6 @@ LABEL maintainer="Grafana Labs"
 LABEL name="grafana/otel-lgtm"
 LABEL org.opencontainers.image.authors="Grafana Labs"
 LABEL org.opencontainers.image.documentation="https://github.com/grafana/docker-otel-lgtm/blob/main/README.md"
-LABEL org.opencontainers.image.ref.name="main"
 LABEL org.opencontainers.image.vendor="Grafana Labs"
 LABEL org.opencontainers.image.title="Grafana OpenTelemetry LGTM"
 LABEL summary="An OpenTelemetry backend in a Docker image"
@@ -128,10 +127,5 @@ LABEL vendor="Grafana Labs"
 LABEL cpe=""
 LABEL io.buildah.version=""
 LABEL release=""
-
-# TODO These should match the values of org.opencontainers.image.revision and org.opencontainers.image.version
-# Need https://github.com/grafana/shared-workflows/pull/1471 to allow passing these values in during build.
-LABEL vcs-ref=""
-LABEL version=""
 
 CMD ["/otel-lgtm/run-all.sh"]

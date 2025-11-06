@@ -204,7 +204,7 @@ Each example uses a different application port
 ## Verifying Container Image Signatures
 
 The container images that are published are signed using [cosign][cosign]. You
-can verify the signatures using the following command:
+can verify the signatures using a command similar to the following example:
 
 ```sh
 VERSION="0.11.16"

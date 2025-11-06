@@ -6,13 +6,20 @@ on:
     tags:
       - "v*.*.*"
 
-permissions:
-  contents: read
-  id-token: write
+permissions: {}
 
 jobs:
   release:
     runs-on: ubuntu-24.04
+
+    env:
+      # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
+      COSIGN_VERSION: v3.0.2
+
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
 
     steps:
       - id: checkout
@@ -35,3 +42,21 @@ jobs:
             org.opencontainers.image.ref.name=${{ github.ref_name }}
             vcs-ref=${{ github.sha }}
             version=${{ github.ref_name }}
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.0.0
+        with:
+          push-to-registry: true
+          subject-name: docker.io/grafana/otel-lgtm
+          subject-digest: ${{ steps.push-to-dockerhub.outputs.digest }}
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad # v4.0.0
+        with:
+          cosign-release: ${{ env.COSIGN_VERSION }}
+
+      - name: Sign container images
+        env:
+          DIGEST: ${{ steps.push-to-dockerhub.outputs.digest }}
+          TAGS: ${{ steps.push-to-dockerhub.outputs.tags }}
+        run: echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}"

@@ -27,7 +27,7 @@ jobs:
           context: docker
           push: true
           platforms: linux/amd64,linux/arm64
-          registries: 'dockerhub'
+          registries: "dockerhub"
           tags: |-
             type=match,pattern=v(.*),group=1
             latest

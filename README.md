@@ -221,7 +221,8 @@ that are published to the [GitHub Container Registry][ghcr]. For example for the
 ```sh
 VERSION="main"
 IMAGE="ghcr.io/grafana/docker-otel-lgtm:${VERSION}"
-IDENTITY="https://github.com/grafana/docker-otel-lgtm/.github/workflows/ghcr-image-build-and-publish.yml@refs/heads/${VERSION}"
+WORKFLOW="ghcr-image-build-and-publish.yml"
+IDENTITY="https://github.com/grafana/docker-otel-lgtm/.github/workflows/${WORKFLOW}$@refs/heads/${VERSION}"
 OIDC_ISSUER="https://token.actions.githubusercontent.com"
 
 cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-issuer ${OIDC_ISSUER}

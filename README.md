@@ -1,5 +1,8 @@
 # docker-otel-lgtm
 
+[![Docker latest][docker-latest]][docker-hub]
+[![Docker pulls][docker-pulls]][docker-hub]
+
 An OpenTelemetry backend in a Docker image.
 
 <!-- markdownlint-disable-next-line MD013 -->
@@ -19,7 +22,11 @@ that's intended for development, demo, and testing environments.
 
 ## Get the Docker image
 
-The Docker image is available on Docker hub: <https://hub.docker.com/r/grafana/otel-lgtm>
+The Docker image is available on [Docker Hub][docker-hub].
+
+```sh
+docker pull grafana/otel-lgtm:latest
+```
 
 ## Run the Docker image
 
@@ -238,6 +245,9 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 
 [app-o11y]: https://grafana.com/products/cloud/application-observability/
 [cosign]: https://github.com/sigstore/cosign "Cosign on GitHub"
+[docker-hub]: https://hub.docker.com/r/grafana/otel-lgtm
+[docker-latest]: https://img.shields.io/docker/v/grafana/otel-lgtm?logo=docker&label=latest&color=blue
+[docker-pulls]: https://img.shields.io/docker/pulls/grafana/otel-lgtm?logo=docker&label=pulls
 [examples]: https://github.com/grafana/docker-otel-lgtm/tree/main/examples
 [ghcr]: https://github.com/grafana/docker-otel-lgtm/pkgs/container/docker-otel-lgtm
 [grafana-preinstall-plugins]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/#install-plugins-in-the-docker-container

@@ -201,6 +201,33 @@ Each example uses a different application port
 | .NET    | `curl http://127.0.0.1:8083/rolldice` |
 | Node.js | `curl http://127.0.0.1:8084/rolldice` |
 
+## Verifying Container Image Signatures
+
+The container images that are published are signed using [cosign][cosign]. You
+can verify the signatures using a command similar to the following example:
+
+```sh
+VERSION="0.11.16"
+IMAGE="docker.io/grafana/otel-lgtm:${VERSION}"
+IDENTITY="https://github.com/grafana/docker-otel-lgtm/.github/workflows/release.yml@refs/tags/v${VERSION}"
+OIDC_ISSUER="https://token.actions.githubusercontent.com"
+
+cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-issuer ${OIDC_ISSUER}
+```
+
+It is also possible to verify the signatures of images from our continuous integration
+that are published to the [GitHub Container Registry][ghcr]. For example for the `main` branch:
+
+```sh
+VERSION="main"
+IMAGE="ghcr.io/grafana/docker-otel-lgtm:${VERSION}"
+WORKFLOW="ghcr-image-build-and-publish.yml"
+IDENTITY="https://github.com/grafana/docker-otel-lgtm/.github/workflows/${WORKFLOW}@refs/heads/${VERSION}"
+OIDC_ISSUER="https://token.actions.githubusercontent.com"
+
+cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-issuer ${OIDC_ISSUER}
+```
+
 ## Related Work
 
 - [Metrics, Logs, Traces and Profiles in Grafana][mltp]
@@ -210,7 +237,9 @@ Each example uses a different application port
 <!-- markdownlint-disable MD013 -->
 
 [app-o11y]: https://grafana.com/products/cloud/application-observability/
+[cosign]: https://github.com/sigstore/cosign "Cosign on GitHub"
 [examples]: https://github.com/grafana/docker-otel-lgtm/tree/main/examples
+[ghcr]: https://github.com/grafana/docker-otel-lgtm/pkgs/container/docker-otel-lgtm
 [grafana-preinstall-plugins]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/#install-plugins-in-the-docker-container
 [mise]: https://github.com/jdx/mise
 [mltp]: https://github.com/grafana/intro-to-mltp

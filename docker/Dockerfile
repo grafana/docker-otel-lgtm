@@ -124,6 +124,7 @@ LABEL url="https://github.com/grafana/docker-otel-lgtm"
 LABEL vendor="Grafana Labs"
 
 # Blank out labels inherited from the base image that we don't want
+LABEL build-date=""
 LABEL cpe=""
 LABEL io.buildah.version=""
 LABEL release=""

@@ -40,6 +40,7 @@ jobs:
             latest
           labels: |-
             org.opencontainers.image.ref.name=${{ github.ref_name }}
+            org.opencontainers.image.revision=${{ github.sha }}
             vcs-ref=${{ github.sha }}
             version=${{ github.ref_name }}
 

@@ -22,7 +22,7 @@ that's intended for development, demo, and testing environments.
 
 ## Get the Docker image
 
-The Docker image is available on [Docker hub][docker-hub].
+The Docker image is available on [Docker Hub][docker-hub].
 
 ```sh
 docker pull grafana/otel-lgtm:latest

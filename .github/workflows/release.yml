@@ -22,13 +22,20 @@ jobs:
       id-token: write
 
     steps:
-      - id: checkout
+      - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
 
+      - name: Get Git commit timestamp
+        shell: bash
+        run: echo "GIT_COMMIT_EPOCH=$(git log -1 --pretty=%ct)" >> "${GITHUB_ENV}"
+
       - id: push-to-dockerhub
         uses: grafana/shared-workflows/actions/docker-build-push-image@c658f0fe8393e31c39d266684ef273c6538ed0e1 # docker-build-push-image/v0.1.0
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
+          SOURCE_DATE_EPOCH: ${{ env.GIT_COMMIT_EPOCH }}
         with:
           dockerhub-repository: grafana/otel-lgtm
           context: docker

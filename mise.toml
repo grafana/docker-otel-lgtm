@@ -31,6 +31,7 @@ run = './scripts/run-acceptance-tests.sh {{arg(name="tag", default="latest")}}'
 run = './run-lgtm.sh {{arg(name="tag", default="latest")}}'
 
 [tasks.local-lgtm]
+description = "Run locally built LGTM image"
 run = './run-lgtm.sh latest true'
 
 [tasks.example]

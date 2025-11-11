@@ -124,6 +124,6 @@ echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running.
 echo "Open ports:"
 echo " - 4317: OpenTelemetry GRPC endpoint"
 echo " - 4318: OpenTelemetry HTTP endpoint"
-echo " - http://localhost:3000: Grafana. User: admin, password: admin"
+echo " - http://localhost:3000 : Grafana. User: admin, password: admin"
 
 sleep infinity

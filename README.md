@@ -138,7 +138,7 @@ mise build-lgtm
 
 > [!TIP]
 > If you built your image locally, you can use the `run-lgtm` scripts with
-> the parameters `latest true` to run your local image.
+> the parameters `latest true` to run your local image (or `mise run local-lgtm`).
 
 ## Build and run the example app
 

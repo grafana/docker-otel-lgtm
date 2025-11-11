@@ -30,6 +30,9 @@ run = './scripts/run-acceptance-tests.sh {{arg(name="tag", default="latest")}}'
 [tasks.lgtm]
 run = './run-lgtm.sh {{arg(name="tag", default="latest")}}'
 
+[tasks.local-lgtm]
+run = './run-lgtm.sh latest true'
+
 [tasks.example]
 run = "./run-example.sh"
 

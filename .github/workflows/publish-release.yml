@@ -4,15 +4,15 @@ on:
   workflow_dispatch:
     inputs:
       draft:
-        description: 'If true, creates the release as a draft.'
+        description: "If true, creates the release as a draft."
         required: false
         type: boolean
         default: false
       version:
-        description: 'The optional version number to use for the release.'
+        description: "The optional version number to use for the release."
         required: false
         type: string
-        default: ''
+        default: ""
 
 permissions: {}
 

@@ -19,7 +19,7 @@ permissions: {}
 
 jobs:
   release:
-    runs-on: [ ubuntu-latest ]
+    runs-on: [ubuntu-latest]
 
     concurrency:
       group: ${{ github.workflow }}
@@ -30,7 +30,6 @@ jobs:
       id-token: write
 
     steps:
-
       - name: Get GitHub token
         id: get-token
         uses: grafana/shared-workflows/actions/create-github-app-token@ae92934a14a48b94494dbc06d74a81d47fe08a40 # v0.2.2

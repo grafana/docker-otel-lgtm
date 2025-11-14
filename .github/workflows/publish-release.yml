@@ -1,3 +1,4 @@
+---
 name: publish-release
 
 on:
@@ -47,7 +48,12 @@ jobs:
           if (-Not [string]::IsNullOrEmpty(${env:NEXT_VERSION})) {
             $nextVersion = [System.Version]::new(${env:NEXT_VERSION}.TrimStart('v'))
           } else {
-            $latest = (Invoke-RestMethod -Uri "${env:GITHUB_API_URL}/repos/${env:GITHUB_REPOSITORY}/releases/latest" -Headers @{ Authorization = "Bearer ${env:GH_TOKEN}"; Accept = "application/vnd.github+json" } -ErrorAction Stop).tag_name.TrimStart('v')
+            $latestUrl = "${env:GITHUB_API_URL}/repos/${env:GITHUB_REPOSITORY}/releases/latest"
+            $headers = @{
+              Authorization = "Bearer ${env:GH_TOKEN}";
+              Accept = "application/vnd.github+json";
+            }
+            $latest = (Invoke-RestMethod -Uri $latestUrl -Headers $headers -ErrorAction Stop).tag_name.TrimStart('v')
             $currentVersion = [System.Version]::new($latest)
             $nextVersion = [System.Version]::new($currentVersion.Major, $currentVersion.Minor, $currentVersion.Build + 1)
           }

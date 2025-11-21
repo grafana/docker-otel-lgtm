@@ -104,3 +104,20 @@ jobs:
           DIGEST: ${{ steps.push.outputs.digest }}
           TAGS: ${{ steps.meta.outputs.tags }}
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}"
+
+  test-permissions:
+    runs-on: [ubuntu-latest]
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Get GitHub token
+        id: get-token
+        uses: grafana/shared-workflows/actions/create-github-app-token@ae92934a14a48b94494dbc06d74a81d47fe08a40 # v0.2.2
+        with:
+          github_app: grafana-otel-bot
+          permission_set: default
+      - name: Show token permissions
+        run: |
+          echo "${{ steps.get-token.outputs.token }}" | gh auth login --with-token
+          gh auth status

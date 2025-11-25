@@ -1,5 +1,5 @@
 ---
-name: publish-release
+name: Publish Release
 
 on:
   workflow_dispatch:

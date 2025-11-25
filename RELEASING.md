@@ -1,6 +1,6 @@
 # Releasing
 
-1. Open the [publish-release workflow][publish-release]
+1. Open the [Publish Release workflow][publish-release]
 2. Click on the **Run workflow** button
 3. If required, enter a specific version number (e.g. `1.2.3`) in the version field. If left
    blank, the version will be auto-incremented to the next patch version based on the

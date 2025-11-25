@@ -14,15 +14,11 @@ on:
         required: false
         type: string
         default: ""
-  # TODO Remove before merge
-  pull_request:
-    branches: ["main"]
 
 permissions: {}
 
 jobs:
   release:
-    if: false # TODO Remove before merge
     runs-on: [ubuntu-latest]
 
     concurrency:
@@ -91,22 +87,3 @@ jobs:
             });
 
             core.notice(`Created release ${release.name}: ${release.html_url}`);
-
-  # TODO Remove before merge
-  test-permissions:
-    if: github.event_name == 'pull_request'
-    runs-on: [ubuntu-latest]
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: Get GitHub token
-        id: get-token
-        uses: grafana/shared-workflows/actions/create-github-app-token@ae92934a14a48b94494dbc06d74a81d47fe08a40 # v0.2.2
-        with:
-          github_app: grafana-otel-bot
-          permission_set: default
-      - name: Show token permissions
-        run: |
-          echo "${{ steps.get-token.outputs.token }}" | gh auth login --with-token
-          gh auth status

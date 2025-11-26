@@ -125,5 +125,7 @@ echo "Open ports:"
 echo " - 4317: OpenTelemetry GRPC endpoint"
 echo " - 4318: OpenTelemetry HTTP endpoint"
 echo " - 3000: Grafana (http://localhost:3000). User: admin, password: admin"
+echo " - 4040: Pyroscope endpoint"
+echo " - 9090: Prometheus endpoint"
 
 sleep infinity

@@ -11,6 +11,10 @@ spec:
       protocol: TCP
       port: 3000
       targetPort: 3000
+    - name: pyroscope
+      protocol: TCP
+      port: 4040
+      targetPort: 4040
     - name: otel-grpc
       protocol: TCP
       port: 4317
@@ -51,6 +55,7 @@ spec:
           image: grafana/otel-lgtm:latest
           ports:
             - containerPort: 3000
+            - containerPort: 4040
             - containerPort: 4317
             - containerPort: 4318
             - containerPort: 9090 # needed for automated tests

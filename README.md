@@ -105,7 +105,7 @@ See the [Grafana documentation][grafana-preinstall-plugins] for more information
 kubectl apply -f k8s/lgtm.yaml
 
 # Configure port forwarding
-kubectl port-forward service/lgtm 3000:3000 4317:4317 4318:4318
+kubectl port-forward service/lgtm 3000:3000 4040:4040 4317:4317 4318:4318 9090:9090
 
 # Using mise
 mise k8s-apply

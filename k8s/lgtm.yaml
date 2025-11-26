@@ -11,6 +11,10 @@ spec:
       protocol: TCP
       port: 3000
       targetPort: 3000
+    - name: pyroscope
+      protocol: TCP
+      port: 4040
+      targetPort: 4040
     - name: otel-grpc
       protocol: TCP
       port: 4317
@@ -19,6 +23,10 @@ spec:
       protocol: TCP
       port: 4318
       targetPort: 4318
+    - name: prometheus
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -39,8 +47,10 @@ spec:
           image: grafana/otel-lgtm:latest
           ports:
             - containerPort: 3000
+            - containerPort: 4040
             - containerPort: 4317
             - containerPort: 4318
+            - containerPort: 9090
           readinessProbe:
             exec:
               command:

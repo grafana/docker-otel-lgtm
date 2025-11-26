@@ -47,7 +47,7 @@ depends = ["lgtm", "example", "generate-traffic"]
 run = "kubectl apply -f k8s/lgtm.yaml"
 
 [tasks.k8s-port-forward]
-run = "kubectl port-forward service/lgtm 3000:3000 4317:4317 4318:4318"
+run = "kubectl port-forward service/lgtm 3000:3000 4040:4040 4317:4317 4318:4318 9090:9090"
 
 [tasks.build-lgtm]
 run = './build-lgtm.sh {{arg(name="tag", default="latest")}}'

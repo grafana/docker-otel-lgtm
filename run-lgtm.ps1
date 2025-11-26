@@ -44,8 +44,10 @@ $runCommand = @(
     'container', 'run'
     '--name', 'lgtm',
     '-p', '3000:3000'
+    '-p', '4040:4040'
     '-p', '4317:4317'
     '-p', '4318:4318'
+    '-p', '9090:9090'
     '--rm'
     '-ti',
     '-v', "${path}/container/grafana:/data/grafana"

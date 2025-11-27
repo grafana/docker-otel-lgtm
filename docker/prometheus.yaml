@@ -29,7 +29,7 @@ otlp:
     - postgresql.table.name
     - postgresql.index.name
     - database # used by otelcol/receiver/mongodb
-   - kafka.cluster.alias
+    - kafka.cluster.alias
 storage:
   tsdb:
     # A 10min time window is enough because it can easily absorb retries and network delays.

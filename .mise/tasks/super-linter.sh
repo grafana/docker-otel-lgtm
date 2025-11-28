@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#MISE description="Run Super-Linter on the repository"
 
 set -euo pipefail
 

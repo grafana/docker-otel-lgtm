@@ -23,10 +23,6 @@ depends = ["lint", "lint-links"]
 description = "All lints not covered by super linter"
 depends = ["lint-links"]
 
-[tasks.test]
-description = "Run integration tests"
-run = './scripts/run-acceptance-tests.sh {{arg(name="tag", default="latest")}}'
-
 [tasks.lgtm]
 run = './run-lgtm.sh {{arg(name="tag", default="latest")}}'
 

@@ -8,7 +8,7 @@ on:
         description: "If true, creates the release as a draft."
         required: false
         type: boolean
-        default: false
+        default: true
       version:
         description: "The optional version number to use for the release."
         required: false

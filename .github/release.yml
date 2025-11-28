@@ -12,5 +12,5 @@ changelog:
         authors:
           - dependabot[bot]
           - grafanarenovatebot[bot]
-          - renovate-sh-app[not]
+          - renovate-sh-app[bot]
           - renovatebot[bot]

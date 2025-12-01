@@ -18,4 +18,4 @@ expected:
       value: ">= 0"
   logs:
     - logql: '{service_name="rolldice"} |~ `Anonymous player is rolling the dice.*`'
-      regexp: "Anonymous player is rolling the dice.*"
+      regexp: "Anonymous player is rolling the dice"

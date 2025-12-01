@@ -1,4 +1,4 @@
-# pin all versions to avoid GitHub rate litit
+# pin all versions to avoid GitHub rate limit
 [tools]
 go = "1.25.4"
 "go:github.com/grafana/oats" = "0.6.0"

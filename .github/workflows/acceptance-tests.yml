@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
       - uses: jdx/mise-action@146a28175021df8ca24f8ee1828cc2a60f980bd5 # v3.5.1
         with:
-          version: v2025.11.7
-          sha256: b2fb7d4c8dad559ede4fb346fb12171298a8ec8648f7923730abcd92e9dda15c
+          version: v2025.11.10
+          sha256: 6231d2fb730d60fcf2806019d19ab09f0a4051b3b486bae91f77b0c68583b5c7
       - name: Run acceptance tests
         run: ./scripts/run-acceptance-tests.sh ${{ github.event.pull_request.head.sha }}

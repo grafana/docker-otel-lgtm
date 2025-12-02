@@ -82,12 +82,7 @@ jobs:
             $next    = Get-Component-Versions "ghcr.io/grafana/docker-otel-lgtm:main"
 
             # Get the current release version from the latest GitHub release
-            $latestUrl = "${env:GITHUB_API_URL}/repos/${env:GITHUB_REPOSITORY}/releases/latest"
-            $headers = @{
-              Authorization = "Bearer ${env:GH_TOKEN}";
-              Accept = "application/vnd.github+json";
-            }
-            $latest = (Invoke-RestMethod -Uri $latestUrl -Headers $headers -ErrorAction Stop).tag_name.TrimStart('v')
+            $latest = (gh api "/repos/${env:GITHUB_REPOSITORY}/releases/latest" --jq .tag_name).TrimStart('v')
             $currentVersion = [System.Version]::new($latest)
 
             # Determine if any components have major or minor version changes

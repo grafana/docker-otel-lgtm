@@ -1,5 +1,6 @@
 # OATS is an acceptance testing framework for OpenTelemetry
 # https://github.com/grafana/oats/tree/main/yaml
+oats-schema-version: 2
 docker-compose:
   files:
     - ./docker-compose.oats.yml
@@ -8,15 +9,13 @@ input:
 expected:
   traces:
     - traceql: '{ span.http.route = "/rolldice/{player?}" }'
-      spans:
-        - name: "GET /rolldice/{player?}" # should be "GET /rolldice"
-          attributes:
-            otel.library.name: Microsoft.AspNetCore
+      equals: "GET /rolldice/{player?}" # should be "GET /rolldice"
+      attributes:
+        otel.library.name: Microsoft.AspNetCore
   # https://opentelemetry.io/docs/specs/semconv/dotnet/dotnet-http-metrics/#metric-httpclientactive_requests
   metrics:
     - promql: 'http_server_active_requests{http_request_method="GET"}'
       value: ">= 0"
   logs:
     - logql: '{service_name="rolldice"} |~ `Anonymous player is rolling the dice.*`'
-      contains:
-        - "Anonymous player is rolling the dice"
+      regexp: "Anonymous player is rolling the dice"

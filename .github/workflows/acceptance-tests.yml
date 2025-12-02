@@ -19,4 +19,4 @@ jobs:
           version: v2025.11.10
           sha256: 6231d2fb730d60fcf2806019d19ab09f0a4051b3b486bae91f77b0c68583b5c7
       - name: Run acceptance tests
-        run: ./scripts/run-acceptance-tests.sh ${{ github.event.pull_request.head.sha }}
+        run: mise run acceptance-tests ${{ github.event.pull_request.head.sha }}

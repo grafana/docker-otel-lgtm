@@ -1,7 +1,7 @@
-# pin all versions to avoid GitHub rate litit
+# pin all versions to avoid GitHub rate limit
 [tools]
 go = "1.25.4"
-"go:github.com/grafana/oats" = "0.4.1"
+"go:github.com/grafana/oats" = "0.6.0"
 java = "temurin-25.0.1+8.0.LTS"
 lychee = "0.20.1"
 markdownlint-cli2 = "0.19.1"
@@ -23,10 +23,6 @@ depends = ["lint", "lint-links"]
 description = "All lints not covered by super linter"
 depends = ["lint-links"]
 
-[tasks.test]
-description = "Run integration tests"
-run = './scripts/run-acceptance-tests.sh {{arg(name="tag", default="latest")}}'
-
 [tasks.lgtm]
 run = './run-lgtm.sh {{arg(name="tag", default="latest")}}'
 
@@ -35,7 +31,24 @@ description = "Run locally built LGTM image"
 run = './run-lgtm.sh latest true'
 
 [tasks.example]
+alias = "example-java"
 run = "./run-example.sh"
+
+[tasks.example-nodejs]
+dir = "examples/nodejs"
+run = "./run.sh"
+
+[tasks.example-python]
+dir = "examples/python"
+run = "./run.sh"
+
+[tasks.example-go]
+dir = "examples/go"
+run = "./run.sh"
+
+[tasks.example-dotnet]
+dir = "examples/dotnet"
+run = "./run.sh"
 
 [tasks.generate-traffic]
 run = "./generate-traffic.sh"

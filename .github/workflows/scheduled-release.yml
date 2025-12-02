@@ -29,7 +29,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          LATEST="$(gh api /repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)"
+          LATEST="$(gh api "/repos/${GITHUB_REPOSITORY}/releases/latest" --jq .tag_name)"
           CHANGED_FILES="$(git diff --name-only "${LATEST}" -- docker || true)"
           if [ -n "${CHANGED_FILES}" ]; then
             echo "docker/ has changes since ${LATEST}"

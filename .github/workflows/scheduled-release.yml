@@ -45,4 +45,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo '{"draft":false}' | gh workflow run publish-release.yml --json
+          echo '{"draft":true}' | gh workflow run publish-release.yml --json

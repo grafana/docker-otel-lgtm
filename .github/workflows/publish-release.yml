@@ -48,6 +48,7 @@ jobs:
           function Get-Component-Versions {
             param([string]$Image)
 
+            docker pull $Image 2>&1 | Out-Null
             $vars = docker image inspect --format '{{json .Config.Env}}' $Image | ConvertFrom-Json
 
             $result = [ordered]@{}
@@ -91,6 +92,14 @@ jobs:
 
             foreach ($key in $current.Keys) {
               if ($null -eq $next[$key]) {
+                # If we remove a component, consider it a major change
+                $major = $true
+                continue
+              }
+
+              if ($null -eq $current[$key]) {
+                # If we add a component, consider it a major change
+                $major = $true
                 continue
               }
 

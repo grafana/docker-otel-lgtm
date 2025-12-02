@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 10
 
     permissions:
-      contents: write
+      actions: write
 
     steps:
       - name: Checkout repository
@@ -45,4 +45,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo '{"draft":true}' | gh workflow run publish-release.yml --json
+          gh workflow run publish-release.yml --field draft=true

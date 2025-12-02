@@ -1,0 +1,48 @@
+---
+name: Scheduled Release
+
+on:
+  #schedule:
+  #  - cron: '0 9 * * FRI'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Get changes since last release
+        id: get-changes
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LATEST="$(gh api /repos/${GITHUB_REPOSITORY}/releases/latest --jq .tag_name)"
+          CHANGED_FILES="$(git diff --name-only "${LATEST}" -- docker || true)"
+          if [ -n "${CHANGED_FILES}" ]; then
+            echo "docker/ has changes since ${LATEST}"
+            echo "has-changes=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "docker/ has no changes since ${LATEST}"
+            echo "has-changes=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Publish release
+        if: steps.get-changes.outputs.has-changes == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo '{"draft":false}' | gh workflow run publish-release.yml --json

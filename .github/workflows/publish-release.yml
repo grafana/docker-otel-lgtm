@@ -86,12 +86,6 @@ jobs:
                 continue
               }
 
-              if ($null -eq $Current[$key]) {
-                # If we add a component, consider it a major change
-                $major = $true
-                continue
-              }
-
               $currentComponent = $Current[$key]
               $nextComponent = $Next[$key]
 
@@ -102,6 +96,14 @@ jobs:
 
               if ($nextComponent.Minor -gt $currentComponent.Minor) {
                 $minor = $true
+              }
+            }
+
+            foreach ($key in $Next.Keys) {
+              if ($null -eq $Current[$key]) {
+                # If we add a component, consider it a major change
+                $major = $true
+                continue
               }
             }
 

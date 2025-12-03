@@ -68,6 +68,55 @@ jobs:
             $result
           }
 
+          function Get-Next-Version {
+            param(
+              [System.Version]$Version,
+              [hashtable]$Current,
+              [hashtable]$Next
+            )
+
+            # Determine if any components have major or minor version changes
+            $major = $false
+            $minor = $false
+
+            foreach ($key in $Current.Keys) {
+              if ($null -eq $Next[$key]) {
+                # If we remove a component, consider it a major change
+                $major = $true
+                continue
+              }
+
+              if ($null -eq $Current[$key]) {
+                # If we add a component, consider it a major change
+                $major = $true
+                continue
+              }
+
+              $currentComponent = $Current[$key]
+              $nextComponent = $Next[$key]
+
+              if ($nextComponent.Major -gt $currentComponent.Major) {
+                $major = $true
+                break
+              }
+
+              if ($nextComponent.Minor -gt $currentComponent.Minor) {
+                $minor = $true
+              }
+            }
+
+            # For major or minor changes, bump the minor version and reset the patch version.
+            # For any other changes, just bump the patch version.
+            if ($major -or $minor) {
+              $nextVersion = [System.Version]::new($Version.Major, $Version.Minor + 1, 0)
+            }
+            else {
+              $nextVersion = [System.Version]::new($Version.Major, $Version.Minor, $Version.Build + 1)
+            }
+
+            $nextVersion.ToString()
+          }
+
           function Get-Next-LGTM-Version {
 
             param([string]$NextVersion)
@@ -86,44 +135,7 @@ jobs:
             $latest = (gh api "/repos/${env:GITHUB_REPOSITORY}/releases/latest" --jq .tag_name).TrimStart('v')
             $currentVersion = [System.Version]::new($latest)
 
-            # Determine if any components have major or minor version changes
-            $major = $false
-            $minor = $false
-
-            foreach ($key in $current.Keys) {
-              if ($null -eq $next[$key]) {
-                # If we remove a component, consider it a major change
-                $major = $true
-                continue
-              }
-
-              if ($null -eq $current[$key]) {
-                # If we add a component, consider it a major change
-                $major = $true
-                continue
-              }
-
-              $currentComponent = $current[$key]
-              $nextComponent = $next[$key]
-
-              if ($nextComponent.Major -gt $currentComponent.Major) {
-                $major = $true
-                break
-              }
-
-              if ($nextComponent.Minor -gt $currentComponent.Minor) {
-                $minor = $true
-              }
-            }
-
-            # For major or minor changes, bump the minor version and reset the patch version.
-            # For any other changes, just bump the patch version.
-            if ($major -or $minor) {
-              $nextVersion = [System.Version]::new($currentVersion.Major, $currentVersion.Minor + 1, 0)
-            }
-            else {
-              $nextVersion = [System.Version]::new($currentVersion.Major, $currentVersion.Minor, $currentVersion.Build + 1)
-            }
+            $nextVersion = Get-Next-Version $currentVersion $current $next
 
             $nextVersion.ToString()
           }

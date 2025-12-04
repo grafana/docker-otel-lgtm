@@ -3,7 +3,7 @@ name: Scheduled Release
 
 on:
   schedule:
-    - cron: '0 9 * * FRI'
+    - cron: "0 9 * * FRI"
   workflow_dispatch:
 
 permissions: {}

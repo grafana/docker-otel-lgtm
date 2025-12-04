@@ -37,27 +37,112 @@ jobs:
           github_app: grafana-otel-bot
           permission_set: default
 
-      - name: Get version
+      - name: Determine next version
         id: get-version
         shell: pwsh
         env:
           GH_TOKEN: ${{ steps.get-token.outputs.token }}
           NEXT_VERSION: ${{ inputs.version }}
         run: |
-          if (-Not [string]::IsNullOrEmpty(${env:NEXT_VERSION})) {
-            $nextVersion = [System.Version]::new(${env:NEXT_VERSION}.TrimStart('v'))
-          } else {
-            $latestUrl = "${env:GITHUB_API_URL}/repos/${env:GITHUB_REPOSITORY}/releases/latest"
-            $headers = @{
-              Authorization = "Bearer ${env:GH_TOKEN}";
-              Accept = "application/vnd.github+json";
+          # Get the component versions from the container image environment variables
+          function Get-Component-Versions {
+            param([string]$Image)
+
+            docker pull $Image 2>&1 | Out-Null
+            $vars = docker image inspect --format '{{json .Config.Env}}' $Image | ConvertFrom-Json
+
+            $result = [ordered]@{}
+            $suffix = "_VERSION"
+
+            foreach ($var in $vars | Sort-Object) {
+              $parts = $var -split '=', 2
+
+              $key = $parts[0]
+              $value = $parts[1]
+
+              if ($key.EndsWith($suffix)) {
+                $result[$key.Substring(0, $key.Length - $suffix.Length)] = [System.Version]::new($value.TrimStart("v"))
+              }
             }
-            $latest = (Invoke-RestMethod -Uri $latestUrl -Headers $headers -ErrorAction Stop).tag_name.TrimStart('v')
-            $currentVersion = [System.Version]::new($latest)
-            $nextVersion = [System.Version]::new($currentVersion.Major, $currentVersion.Minor, $currentVersion.Build + 1)
+
+            $result
           }
 
-          $releaseVersion = $nextVersion.ToString()
+          function Get-Next-Version {
+            param(
+              [System.Version]$Version,
+              [hashtable]$Current,
+              [hashtable]$Next
+            )
+
+            # Determine if any components have major or minor version changes
+            $major = $false
+            $minor = $false
+
+            foreach ($key in $Current.Keys) {
+              if ($null -eq $Next[$key]) {
+                # If we remove a component, consider it a major change
+                $major = $true
+                continue
+              }
+
+              $currentComponent = $Current[$key]
+              $nextComponent = $Next[$key]
+
+              if ($nextComponent.Major -gt $currentComponent.Major) {
+                $major = $true
+                break
+              }
+
+              if ($nextComponent.Minor -gt $currentComponent.Minor) {
+                $minor = $true
+              }
+            }
+
+            foreach ($key in $Next.Keys) {
+              if ($null -eq $Current[$key]) {
+                # If we add a component, consider it a major change
+                $major = $true
+                continue
+              }
+            }
+
+            # For major or minor changes, bump the minor version and reset the patch version.
+            # For any other changes, just bump the patch version.
+            if ($major -or $minor) {
+              $nextVersion = [System.Version]::new($Version.Major, $Version.Minor + 1, 0)
+            }
+            else {
+              $nextVersion = [System.Version]::new($Version.Major, $Version.Minor, $Version.Build + 1)
+            }
+
+            $nextVersion.ToString()
+          }
+
+          function Get-Next-LGTM-Version {
+
+            param([string]$NextVersion)
+
+            # Use the version as provided
+            if (-Not [string]::IsNullOrEmpty($NextVersion)) {
+              [System.Version]::new($NextVersion.TrimStart('v')).ToString()
+              return
+            }
+
+            # Get the versions of the components in the latest release and the main branch
+            $current = Get-Component-Versions "docker.io/grafana/otel-lgtm:latest"
+            $next    = Get-Component-Versions "ghcr.io/grafana/docker-otel-lgtm:main"
+
+            # Get the current release version from the latest GitHub release
+            $latest = (gh api "/repos/${env:GITHUB_REPOSITORY}/releases/latest" --jq .tag_name).TrimStart('v')
+            $currentVersion = [System.Version]::new($latest)
+
+            $nextVersion = Get-Next-Version $currentVersion $current $next
+
+            $nextVersion.ToString()
+          }
+
+          $releaseVersion = Get-Next-LGTM-Version ${env:NEXT_VERSION}
           "version=${releaseVersion}" >> ${env:GITHUB_OUTPUT}
 
       - name: Create release

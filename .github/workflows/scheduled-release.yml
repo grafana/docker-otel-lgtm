@@ -2,8 +2,8 @@
 name: Scheduled Release
 
 on:
-  #schedule:
-  #  - cron: '0 9 * * FRI'
+  schedule:
+    - cron: '0 9 * * FRI'
   workflow_dispatch:
 
 permissions: {}
@@ -45,4 +45,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh workflow run publish-release.yml --field draft=true
+          gh workflow run publish-release.yml --field draft=false

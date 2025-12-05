@@ -10,8 +10,13 @@ permissions: {}
 
 jobs:
   release:
+    if: github.event.repository.fork == false
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+
+    concurrency:
+      group: ${{ github.workflow }}
+      cancel-in-progress: false
 
     permissions:
       actions: write

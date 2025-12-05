@@ -24,6 +24,11 @@ env:
 jobs:
   build:
     runs-on: ubuntu-24.04
+
+    concurrency:
+      group: "${{ github.workflow }}-${{ github.sha }}"
+      cancel-in-progress: false
+
     permissions:
       attestations: write
       contents: read

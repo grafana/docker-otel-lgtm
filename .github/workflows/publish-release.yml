@@ -44,12 +44,24 @@ jobs:
           GH_TOKEN: ${{ steps.get-token.outputs.token }}
           NEXT_VERSION: ${{ inputs.version }}
         run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
           # Get the component versions from the container image environment variables
           function Get-Component-Versions {
             param([string]$Image)
 
             docker pull $Image 2>&1 | Out-Null
+
+            if ($LASTEXITCODE -ne 0) {
+              throw "Failed to pull image $Image"
+            }
+
             $vars = docker image inspect --format '{{json .Config.Env}}' $Image | ConvertFrom-Json
+
+            if ($LASTEXITCODE -ne 0) {
+              throw "Failed to inspect image $Image"
+            }
 
             $result = [ordered]@{}
             $suffix = "_VERSION"
@@ -135,6 +147,11 @@ jobs:
 
             # Get the current release version from the latest GitHub release
             $latest = (gh api "/repos/${env:GITHUB_REPOSITORY}/releases/latest" --jq .tag_name).TrimStart('v')
+
+            if ($LASTEXITCODE -ne 0) {
+              throw "Failed to get latest release version"
+            }
+
             $currentVersion = [System.Version]::new($latest)
 
             $nextVersion = Get-Next-Version $currentVersion $current $next

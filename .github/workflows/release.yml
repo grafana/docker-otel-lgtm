@@ -12,6 +12,10 @@ jobs:
   release:
     runs-on: ubuntu-24.04
 
+    concurrency:
+      group: "${{ github.workflow }}-${{ github.ref }}"
+      cancel-in-progress: false
+
     env:
       # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
       COSIGN_VERSION: v3.0.2

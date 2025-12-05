@@ -19,13 +19,23 @@ else
 	exit 1
 fi
 
-$RUNTIME image pull ghcr.io/super-linter/super-linter:latest
+# Extract super-linter version from GitHub Actions workflow
+# Format: uses: super-linter/super-linter@<SHA> # <tag>
+# We use the version tag (e.g., v8.2.1) from the comment
+SUPER_LINTER_VERSION=$(grep -E "super-linter/super-linter@" .github/workflows/super-linter.yml | sed -E 's/.*# (v[0-9]+\.[0-9]+\.[0-9]+).*/\1/' | head -1)
+
+if [ -z "$SUPER_LINTER_VERSION" ]; then
+	echo "Error: Could not extract super-linter version from .github/workflows/super-linter.yml"
+	exit 1
+fi
+
+$RUNTIME image pull "ghcr.io/super-linter/super-linter:${SUPER_LINTER_VERSION}"
 
 $RUNTIME container run --rm \
 	-e RUN_LOCAL=true \
 	-e DEFAULT_BRANCH=main \
 	--env-file ".github/super-linter.env" \
 	-v "$(pwd)":/tmp/lint:"${MOUNT_OPTS}" \
-	ghcr.io/super-linter/super-linter:latest
+	"ghcr.io/super-linter/super-linter:${SUPER_LINTER_VERSION}"
 
 popd

@@ -44,6 +44,9 @@ jobs:
           GH_TOKEN: ${{ steps.get-token.outputs.token }}
           NEXT_VERSION: ${{ inputs.version }}
         run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
           # Get the component versions from the container image environment variables
           function Get-Component-Versions {
             param([string]$Image)

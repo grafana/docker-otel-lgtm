@@ -1,4 +1,6 @@
 ---
+global:
+  scrape_native_histograms: true
 otlp:
   keep_identifying_resource_attributes: true
   # Recommended attributes to be promoted to labels.

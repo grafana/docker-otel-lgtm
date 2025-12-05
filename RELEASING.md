@@ -1,7 +1,8 @@
 # Releasing
 
 > [!IMPORTANT]
-> Releases are immutable and cannot be changed or their associated tag deleted once published.
+> Releases are [immutable][immutable-releases] and cannot be changed or their associated tag
+> deleted once published.
 >
 > However, the description can still be edited to fix any mistakes or omissions after publishing.
 
@@ -13,7 +14,7 @@ and will publish a new release if any changes have been made in the [`docker/` d
 since the [latest release][latest-release].
 
 The version will be auto-incremented to the next minor or patch version based on the changes to
-the installed components in the container image since the [latest release][latest-release].
+the installed components in the container image, if any.
 
 ## Manual Releases
 
@@ -32,6 +33,7 @@ the installed components in the container image since the [latest release][lates
 <!-- markdownlint-disable MD013 -->
 
 [docker]: ./docker
+[immutable-releases]: https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/immutable-releases
 [latest-release]: https://github.com/grafana/docker-otel-lgtm/releases/latest
 [publish-release]: https://github.com/grafana/docker-otel-lgtm/actions/workflows/publish-release.yml
 [scheduled-release]: https://github.com/grafana/docker-otel-lgtm/blob/main/.github/workflows/scheduled-release.yml

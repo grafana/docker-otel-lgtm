@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-pushd "$(dirname "$0")/.."
+pushd "$(dirname "$0")/../.."
 
 if command -v docker >/dev/null 2>&1; then
 	RUNTIME=docker

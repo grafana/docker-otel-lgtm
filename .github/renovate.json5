@@ -65,7 +65,7 @@
     },
     {
       customType: "regex",
-      description: "Update _version variables in shell scripts",
+      description: "Update _VERSION variables in shell scripts",
       managerFilePatterns: ["/run.sh$/", "/\\.mise/tasks/.+\\.sh$/"],
       matchStrings: ['# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_VERSION="?(?<currentValue>.+?)"?\\s'],
     },

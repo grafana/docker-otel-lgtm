@@ -256,7 +256,7 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 [mise]: https://github.com/jdx/mise
 [mltp]: https://github.com/grafana/intro-to-mltp
 [otel-checker]: https://github.com/grafana/otel-checker/
-[otel-lgtm]: https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/
+[otel-lgtm]: https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana-otel-lgtm
 [otel-setup]: https://grafana.com/docs/grafana-cloud/send-data/otlp/send-data-otlp/#manual-opentelemetry-setup-for-advanced-users
 [otlp-endpoint]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint
 [otlp-headers]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers

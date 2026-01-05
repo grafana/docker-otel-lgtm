@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-#MISE description="Run Super-Linter on the repository"
+#MISE description="Run Super-Linter with auto-fix on the repository"
 
-set -euo pipefail
+set -xeuo pipefail
 
-pushd "$(dirname "$0")/.."
+pushd "$(dirname "$0")/../.."
 
 if command -v docker >/dev/null 2>&1; then
 	RUNTIME=docker

@@ -20,7 +20,7 @@ that's intended for development, demo, and testing environments.
 
 - Blog posts: 
   - [_An OpenTelemetry backend in a Docker image: Introducing grafana/otel-lgtm_][otel-lgtm]
-  - [_Observability in under 5 seconds: Reflecting on a year of grafana/otel-lgtm_](https://grafana.com/blog/2025/07/08/observability-in-under-5-seconds-reflecting-on-a-year-of-grafana/otel-lgtm/)
+  - [_Observability in under 5 seconds: Reflecting on a year of grafana/otel-lgtm_](https://grafana.com/blog/2025/07/08/observability-in-under-5-seconds-reflecting-on-a-year-of-grafana-otel-lgtm/)
 
 ## Get the Docker image
 

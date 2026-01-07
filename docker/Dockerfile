@@ -12,7 +12,7 @@ ARG PYROSCOPE_VERSION=v1.18.0-dev
 ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.142.0
 
 # TODO: Switch to this when released: FROM grafana/pyroscope:${PYROSCOPE_VERSION} AS pyroscope-binary
-FROM simonswine/pyroscope:20260107_update-otlp-3e644339d AS pyroscope-image
+FROM simonswine/pyroscope:20260107_update-otlp-3e644339d-WIP AS pyroscope-image
 
 # hadolint global ignore=DL3059
 FROM docker.io/redhat/ubi9:9.6-1760340943@sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc AS builder

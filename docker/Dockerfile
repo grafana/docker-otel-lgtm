@@ -7,9 +7,12 @@ ARG TEMPO_VERSION=v2.9.0
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
 ARG LOKI_VERSION=v3.6.2
 # renovate: datasource=github-releases depName=pyroscope packageName=grafana/pyroscope
-ARG PYROSCOPE_VERSION=v1.17.0
+ARG PYROSCOPE_VERSION=v1.18.0-dev
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
 ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.142.0
+
+# TODO: Switch to this when released: FROM grafana/pyroscope:${PYROSCOPE_VERSION} AS pyroscope-binary
+FROM simonswine/pyroscope:20260107_update-otlp-3e644339d AS pyroscope-image
 
 # hadolint global ignore=DL3059
 FROM docker.io/redhat/ubi9:9.6-1760340943@sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc AS builder
@@ -51,7 +54,6 @@ COPY download-grafana.sh \
  download-prometheus.sh \
  download-tempo.sh \
  download-loki.sh \
- download-pyroscope.sh \
  download-otelcol.sh \
  install-cosign.sh \
  ./
@@ -78,8 +80,9 @@ RUN ./download-grafana.sh $GRAFANA_VERSION
 RUN ./download-prometheus.sh $PROMETHEUS_VERSION
 RUN ./download-tempo.sh $TEMPO_VERSION
 RUN ./download-loki.sh $LOKI_VERSION
-RUN ./download-pyroscope.sh $PYROSCOPE_VERSION
 RUN ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
+
+COPY --from=pyroscope-image /usr/bin/pyroscope /otel-lgtm/pyroscope/pyroscope
 
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/

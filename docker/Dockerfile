@@ -1,7 +1,7 @@
 # renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
 ARG GRAFANA_VERSION=v12.3.1
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
-ARG PROMETHEUS_VERSION=v3.8.1
+ARG PROMETHEUS_VERSION=v3.9.1
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
 ARG TEMPO_VERSION=v2.9.0
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
@@ -9,7 +9,7 @@ ARG LOKI_VERSION=v3.6.3
 # renovate: datasource=github-releases depName=pyroscope packageName=grafana/pyroscope
 ARG PYROSCOPE_VERSION=v1.16.0
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
-ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.142.0
+ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.143.1
 
 # hadolint global ignore=DL3059
 FROM docker.io/redhat/ubi9:9.6-1760340943@sha256:dec374e05cc13ebbc0975c9f521f3db6942d27f8ccdf06b180160490eef8bdbc AS builder

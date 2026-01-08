@@ -1,7 +1,7 @@
-FROM otel/opentelemetry-ebpf-profiler-dev:202508261505@sha256:6ab9b5ff6c2a457be97a389887caf9f3cd5344f760fdab0101b9965236bbb2db AS builder
+FROM otel/opentelemetry-ebpf-profiler-dev:202601021410@sha256:1d78b71cfc84beafdb321a11375628c2cb8c2d5ca544e34ddf50e3478eff8e6f AS builder
 
 # renovate: datasource=github-tags depName=opentelemetry-ebpf-profiler packageName=open-telemetry/opentelemetry-ebpf-profiler
-ARG VERSION=7cdeb21f984fd0e003bc6ad07a9057a3f3c1f4da
+ARG VERSION=v0.0.202601
 RUN wget https://github.com/open-telemetry/opentelemetry-ebpf-profiler/archive/$VERSION.tar.gz
 RUN mkdir /profiler
 RUN tar --strip-components=1 -C /profiler -xzf $VERSION.tar.gz

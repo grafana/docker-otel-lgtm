@@ -13,5 +13,6 @@ services:
       OTEL_SERVICE_VERSION: '0.1.0'
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
       OTEL_METRIC_EXPORT_INTERVAL: '5000' # so we don't have to wait 60s for metrics
+      OTEL_METRIC_EXPORT_TIMEOUT: '5000' # Workaround for https://github.com/open-telemetry/opentelemetry-js/issues/5550
     ports:
       - '8080:8084'

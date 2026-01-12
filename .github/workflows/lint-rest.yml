@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - uses: jdx/mise-action@146a28175021df8ca24f8ee1828cc2a60f980bd5 # v3.5.1
         with:
-          version: v2025.12.0
-          sha256: 5b7b9992950b65569b4f6f1c78b05abceea2506f15b750a4b9781f33c6cc1ae4
+          version: v2025.12.13
+          sha256: 2134c55725d08547cddc921f84ddac05c9de1700115c32817563435072cae5ed
       - name: Lint
         run: mise run lint-rest

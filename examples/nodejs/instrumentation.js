@@ -10,7 +10,7 @@ const sdk = new NodeSDK({
     exporter: new OTLPMetricExporter(),
     // HACK Workaround for https://github.com/open-telemetry/opentelemetry-js/issues/5550
     exportIntervalMillis: 60000,
-    exportTimeoutMillis: 30000,
+    exportTimeoutMillis: 30000
   }),
   instrumentations: [
     getNodeAutoInstrumentations({

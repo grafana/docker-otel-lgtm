@@ -7,10 +7,7 @@ const { OTLPMetricExporter } = require('@opentelemetry/exporter-metrics-otlp-pro
 const sdk = new NodeSDK({
   traceExporter: new OTLPTraceExporter(),
   metricReader: new PeriodicExportingMetricReader({
-    exporter: new OTLPMetricExporter(),
-    // HACK Workaround for https://github.com/open-telemetry/opentelemetry-js/issues/5550
-    exportIntervalMillis: 60000,
-    exportTimeoutMillis: 30000
+    exporter: new OTLPMetricExporter()
   }),
   instrumentations: [
     getNodeAutoInstrumentations({

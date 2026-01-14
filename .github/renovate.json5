@@ -27,6 +27,10 @@
       schedule: ["before 4am on monday"],
     },
     {
+      matchPackageNames: ["super-linter/super-linter", "ghcr.io/super-linter/super-linter"],
+      groupName: "super-linter",
+    },
+    {
       matchDatasources: ["pypi"],
       matchDepNames: ["opentelemetry-distro"],
       ignoreUnstable: false,
@@ -61,9 +65,9 @@
     },
     {
       customType: "regex",
-      description: "Update _version variables in run.sh",
-      managerFilePatterns: ["/run.sh$/"],
-      matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"],
+      description: "Update _VERSION variables in shell scripts",
+      managerFilePatterns: ["/run.sh$/", "/\\.mise/tasks/.+\\.sh$/"],
+      matchStrings: ['# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_VERSION="?(?<currentValue>.+?)"?\\s'],
     },
     {
       customType: "regex",

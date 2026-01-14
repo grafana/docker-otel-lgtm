@@ -8,7 +8,7 @@ markdownlint-cli2 = "0.20.0"
 rust = "1.92.0"
 
 [tasks.lint]
-run = "scripts/super-linter.sh"
+run = ".mise/tasks/super-linter.sh"
 
 [tasks.lint-markdown]
 run = "markdownlint-cli2 --fix ."

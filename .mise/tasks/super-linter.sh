@@ -19,13 +19,15 @@ else
 	exit 1
 fi
 
-$RUNTIME image pull ghcr.io/super-linter/super-linter:latest
+# renovate: datasource=docker depName=ghcr.io/super-linter/super-linter
+SUPER_LINTER_VERSION="v8.2.1@sha256:6331793e23be44827ade3bfcd27c2c3f0870c663fb2b118db38035f4e59ab136"
 
-$RUNTIME container run --rm \
+$RUNTIME image pull --platform linux/amd64 "ghcr.io/super-linter/super-linter:${SUPER_LINTER_VERSION}"
+
+$RUNTIME container run --rm --platform linux/amd64 \
 	-e RUN_LOCAL=true \
 	-e DEFAULT_BRANCH=main \
 	--env-file ".github/super-linter.env" \
 	-v "$(pwd)":/tmp/lint:"${MOUNT_OPTS}" \
-	ghcr.io/super-linter/super-linter:latest
-
+	"ghcr.io/super-linter/super-linter:${SUPER_LINTER_VERSION}"
 popd

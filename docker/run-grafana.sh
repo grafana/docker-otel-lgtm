@@ -7,7 +7,7 @@ export GF_AUTH_ANONYMOUS_ENABLED="${GF_AUTH_ANONYMOUS_ENABLED:-true}"
 
 # Only set anonymous org role when anonymous auth is enabled
 if [ "${GF_AUTH_ANONYMOUS_ENABLED}" != "false" ]; then
-  export GF_AUTH_ANONYMOUS_ORG_ROLE="${GF_AUTH_ANONYMOUS_ORG_ROLE:-Admin}"
+	export GF_AUTH_ANONYMOUS_ORG_ROLE="${GF_AUTH_ANONYMOUS_ORG_ROLE:-Admin}"
 fi
 
 export GF_PATHS_HOME=/data/grafana

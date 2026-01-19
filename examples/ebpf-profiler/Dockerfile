@@ -8,7 +8,7 @@ RUN tar --strip-components=1 -C /profiler -xzf $VERSION.tar.gz
 WORKDIR /profiler
 RUN /bin/bash -euo pipefail -c "source /etc/profile && make ebpf-profiler"
 
-FROM ubuntu:24.04@sha256:7a398144c5a2fa7dbd9362e460779dc6659bd9b19df50f724250c62ca7812eb3
+FROM ubuntu:24.04@sha256:cd1dba651b3080c3686ecf4e3c4220f026b521fb76978881737d24f200828b2b
 
 RUN apt-get update && \
     apt-get install -y linux-headers-generic && \

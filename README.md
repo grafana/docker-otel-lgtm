@@ -72,7 +72,7 @@ This has nothing to do with any application logs, which are collected by OpenTel
 
 ### Configure storage limits (optional)
 
-For development or constrained environments (for example Raspberry Pi), you can optionally limit disk usage for metrics, logs, and traces using environment variables.
+For development or constrained environments (for example Raspberry Pi), you can optionally limit disk usage for metrics using environment variables. Currently only metrics retention is configurable; support for logs and traces may be added later.
 
 By default, no limits are applied and existing behavior is preserved.
 

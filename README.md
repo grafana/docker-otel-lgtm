@@ -70,6 +70,19 @@ You can enable logging in the .env file for troubleshooting:
 
 This has nothing to do with any application logs, which are collected by OpenTelemetry.
 
+### Configure storage limits (optional)
+
+For development or constrained environments (for example Raspberry Pi), you can optionally limit disk usage for metrics, logs, and traces using environment variables.
+
+By default, no limits are applied and existing behavior is preserved.
+
+| Component     | Environment Variable              | Description |
+|---------------|-----------------------------------|-------------|
+| Prometheus    | `PROM_RETENTION_TIME`             | Metrics retention duration (for example `2d`, `7d`) |
+| Prometheus    | `PROM_RETENTION_SIZE`             | Maximum disk usage for metrics (for example `1GB`) |
+
+Retention and deletion are only enabled when explicitly configured.
+
 ### Send data to vendors
 
 In addition to the built-in observability tools, you can also send data to vendors.

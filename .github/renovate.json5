@@ -6,6 +6,7 @@
   platformCommit: "enabled",
   automerge: true,
   ignorePaths: [],
+  ignorePresets: [":ignoreModulesAndTests"],
   ignoreUnstable: true,
   packageRules: [
     {

@@ -6,6 +6,7 @@
   platformCommit: "enabled",
   automerge: true,
   ignorePaths: [],
+  ignorePresets: [":ignoreModulesAndTests"],
   ignoreUnstable: true,
   packageRules: [
     {
@@ -36,7 +37,7 @@
       ignoreUnstable: false,
     },
     {
-      matchPackageNames: ["grafana/grafana", "prometheus/prometheus", "grafana/loki", "grafana/tempo", "open-telemetry/opentelemetry-collector-releases"],
+      matchPackageNames: ["grafana/grafana", "grafana/loki", "grafana/pyroscope", "grafana/tempo", "open-telemetry/opentelemetry-collector-releases", "prometheus/prometheus"],
       labels: ["docker-dependency"],
     },
     {

@@ -7,6 +7,7 @@ PROM_ARGS=(
 	--web.enable-otlp-receiver
 	--enable-feature=exemplar-storage
 	--storage.tsdb.path=/data/prometheus
+	--config.file=./prometheus.yaml
 )
 
 if [ -n "${PROM_RETENTION_TIME:-}" ]; then

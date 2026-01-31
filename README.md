@@ -72,16 +72,16 @@ This has nothing to do with any application logs, which are collected by OpenTel
 
 ### Configure storage limits (optional)
 
-For development or constrained environments (for example Raspberry Pi), you can optionally limit disk usage for metrics using environment variables. Currently only metrics retention is configurable; support for logs and traces may be added later.
+For development or constrained environments (for example Raspberry Pi), you can optionally override Prometheus's metrics retention settings using environment variables. Currently only metrics retention is configurable; support for logs and traces may be added later.
 
-By default, no limits are applied and existing behavior is preserved.
+By default, this image uses Prometheus's built-in retention and deletion behavior as configured by the bundled Prometheus version. The following environment variables let you override those defaults:
 
 | Component     | Environment Variable              | Description |
 |---------------|-----------------------------------|-------------|
 | Prometheus    | `PROM_RETENTION_TIME`             | Metrics retention duration (for example `2d`, `7d`) |
 | Prometheus    | `PROM_RETENTION_SIZE`             | Maximum disk usage for metrics (for example `1GB`) |
 
-Retention and deletion are only enabled when explicitly configured.
+Setting these variables changes the retention limits; it does not enable retention from an otherwise disabled state.
 
 ### Send data to vendors
 

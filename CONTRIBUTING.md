@@ -11,9 +11,9 @@ It's recommended to use the [mise][mise] for development.
 
 ## Linting
 
-- Markdown lint: `mise run lint-markdown`
-- Markdown link checker: `mise run lint-links`
-- Run all checks: `mise run lint-all`
+- Markdown lint: `mise run lint:markdown`
+- Markdown link checker: `mise run lint:links`
+- Run all checks: `mise run lint:all`
 
 ## Acceptance Tests
 

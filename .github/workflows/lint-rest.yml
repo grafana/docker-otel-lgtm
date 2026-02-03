@@ -19,4 +19,4 @@ jobs:
           version: v2026.1.9
           sha256: a1f5024228f4989595c1d22eaf861d5fb77716145050db5edb2474de8c25f4a2
       - name: Lint
-        run: mise run lint-rest
+        run: mise run lint:rest

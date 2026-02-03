@@ -7,6 +7,10 @@ lychee = "0.20.1"
 markdownlint-cli2 = "0.20.0"
 rust = "1.93.0"
 
+[env]
+# renovate: datasource=docker depName=ghcr.io/super-linter/super-linter
+SUPER_LINTER_VERSION="v8.2.1@sha256:6331793e23be44827ade3bfcd27c2c3f0870c663fb2b118db38035f4e59ab136"
+
 [tasks.lint]
 run = ".mise/tasks/super-linter.sh"
 

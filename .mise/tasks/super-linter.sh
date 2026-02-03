@@ -3,6 +3,12 @@
 
 set -xeuo pipefail
 
+# check for SUPER_LINTER_VERSION env var, otherwise exit with error
+if [ -z "${SUPER_LINTER_VERSION:-}" ]; then
+  echo "SUPER_LINTER_VERSION environment variable is not set. Exiting."
+  exit 1
+fi
+
 pushd "$(dirname "$0")/../.."
 
 if command -v docker >/dev/null 2>&1; then
@@ -18,9 +24,6 @@ else
 	echo "Unable to find a suitable container runtime such as Docker or Podman. Exiting."
 	exit 1
 fi
-
-# renovate: datasource=docker depName=ghcr.io/super-linter/super-linter
-SUPER_LINTER_VERSION="v8.2.1@sha256:6331793e23be44827ade3bfcd27c2c3f0870c663fb2b118db38035f4e59ab136"
 
 $RUNTIME image pull --platform linux/amd64 "ghcr.io/super-linter/super-linter:${SUPER_LINTER_VERSION}"
 

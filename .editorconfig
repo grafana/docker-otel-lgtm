@@ -22,7 +22,7 @@ max_line_length = 400
 [Dockerfile]
 max_line_length = 200
 
-[{*.sh,.gitignore,go.work.sum,mise.lock,*.yml,*.yaml,pom.xml,*.cmd,maven-wrapper.properties,go.sum,package-lock.json}]
+[{*.sh,.gitignore,go.work.sum,mise.toml,*.yml,*.yaml,pom.xml,*.cmd,maven-wrapper.properties,go.sum,package-lock.json}]
 max_line_length = 150
 
 [{grafana-dashboard-jvm-metrics.json,grafana-dashboard-red-metrics-classic.json,grafana-dashboard-red-metrics-native.json,.editorconfig}]

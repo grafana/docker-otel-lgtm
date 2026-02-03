@@ -7,21 +7,22 @@ lychee = "0.20.1"
 markdownlint-cli2 = "0.20.0"
 rust = "1.93.0"
 
-[tasks.lint]
-run = ".mise/tasks/super-linter.sh"
+[env]
+# renovate: datasource=docker depName=ghcr.io/super-linter/super-linter
+SUPER_LINTER_VERSION="v8.2.1@sha256:6331793e23be44827ade3bfcd27c2c3f0870c663fb2b118db38035f4e59ab136"
 
-[tasks.lint-markdown]
+[tasks."lint:markdown"]
 run = "markdownlint-cli2 --fix ."
 
-[tasks.lint-links]
+[tasks."lint:links"]
 run = "lychee --cache --include-fragments ."
 
-[tasks.lint-all]
-depends = ["lint", "lint-links"]
+[tasks."lint:all"]
+depends = ["lint:super-linter", "lint:links"]
 
-[tasks.lint-rest]
+[tasks."lint:rest"]
 description = "All lints not covered by super linter"
-depends = ["lint-links"]
+depends = ["lint:links"]
 
 [tasks.lgtm]
 run = './run-lgtm.sh {{arg(name="tag", default="latest")}}'

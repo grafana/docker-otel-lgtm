@@ -67,8 +67,14 @@
     {
       customType: "regex",
       description: "Update _VERSION variables in shell scripts",
-      managerFilePatterns: ["/run.sh$/", "/\\.mise/tasks/.+\\.sh$/"],
+      managerFilePatterns: ["/run.sh$/"],
       matchStrings: ['# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_VERSION="?(?<currentValue>.+?)"?\\s'],
+    },
+    {
+      customType: "regex",
+      description: "Update _VERSION variables in mise.toml",
+      managerFilePatterns: ["/^mise\\.toml$/"],
+      matchStrings: ['# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_VERSION="?(?<currentValue>[^@"]+?)(?:@(?<currentDigest>sha256:[a-f0-9]+))?"?\\s'],
     },
     {
       customType: "regex",

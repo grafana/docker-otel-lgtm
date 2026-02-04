@@ -28,7 +28,7 @@
       schedule: ["before 4am on monday"],
     },
     {
-      matchPackageNames: ["super-linter/super-linter", "ghcr.io/super-linter/super-linter"],
+      matchPackageNames: ["/^(ghcr.io/)?super-linter/super-linter$/"],
       groupName: "super-linter",
     },
     {

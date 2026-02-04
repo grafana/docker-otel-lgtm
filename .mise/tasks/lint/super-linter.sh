@@ -3,13 +3,18 @@
 
 set -xeuo pipefail
 
-# check for SUPER_LINTER_VERSION env var, otherwise exit with error
+# check for required env vars, otherwise exit with error
 if [ -z "${SUPER_LINTER_VERSION:-}" ]; then
 	echo "SUPER_LINTER_VERSION environment variable is not set. Exiting."
 	exit 1
 fi
 
-pushd "$(dirname "$0")/../../.."
+if [ -z "${MISE_PROJECT_ROOT:-}" ]; then
+	echo "MISE_PROJECT_ROOT environment variable is not set. Exiting."
+	exit 1
+fi
+
+cd "${MISE_PROJECT_ROOT}"
 
 if command -v podman >/dev/null 2>&1; then
 	RUNTIME=podman
@@ -33,4 +38,3 @@ $RUNTIME container run --rm --platform linux/amd64 \
 	--env-file ".github/config/super-linter.env" \
 	-v "$(pwd)":/tmp/lint:"${MOUNT_OPTS}" \
 	"ghcr.io/super-linter/super-linter:${SUPER_LINTER_VERSION}"
-popd

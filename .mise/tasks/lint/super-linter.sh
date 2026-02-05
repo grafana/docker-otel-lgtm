@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-#MISE description="Run Super-Linter with auto-fix on the repository"
+#MISE description="Run Super-Linter on the repository"
+#USAGE flag "--no-fix" help="Disable auto-fix (for CI)"
 
 set -xeuo pipefail
 
@@ -30,11 +31,20 @@ else
 	exit 1
 fi
 
+ENV_FILE=".github/config/super-linter.env"
+if [ "${usage_no_fix:-}" = "true" ]; then
+	# Filter out FIX_* and comment lines for CI mode
+	FILTERED_ENV_FILE=$(mktemp)
+	trap 'rm -f "$FILTERED_ENV_FILE"' EXIT
+	grep -v '^#' "$ENV_FILE" | grep -v '^FIX_' >"$FILTERED_ENV_FILE"
+	ENV_FILE="$FILTERED_ENV_FILE"
+fi
+
 $RUNTIME image pull --platform linux/amd64 "ghcr.io/super-linter/super-linter:${SUPER_LINTER_VERSION}"
 
 $RUNTIME container run --rm --platform linux/amd64 \
 	-e RUN_LOCAL=true \
 	-e DEFAULT_BRANCH=main \
-	--env-file ".github/config/super-linter.env" \
+	--env-file "$ENV_FILE" \
 	-v "$(pwd)":/tmp/lint:"${MOUNT_OPTS}" \
 	"ghcr.io/super-linter/super-linter:${SUPER_LINTER_VERSION}"

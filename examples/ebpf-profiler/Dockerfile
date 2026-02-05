@@ -10,10 +10,6 @@ RUN /bin/bash -euo pipefail -c "source /etc/profile && make ebpf-profiler"
 
 FROM ubuntu:24.04@sha256:cd1dba651b3080c3686ecf4e3c4220f026b521fb76978881737d24f200828b2b
 
-RUN apt-get update && \
-    apt-get install -y linux-headers-generic && \
-    rm -rf /var/lib/apt/lists/*
-
 COPY --from=builder /profiler/ebpf-profiler /usr/local/bin/
 
 ENTRYPOINT ["/usr/local/bin/ebpf-profiler"]

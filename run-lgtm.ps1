@@ -7,7 +7,7 @@ $supportedContainerRuntime = 'podman', 'docker'
 $containers = 'grafana', 'prometheus', 'loki'
 $image = "docker.io/grafana/otel-lgtm:${ReleaseTag}"
 
-# prefilled pwd var to avoid repeted calls in build string.moved to top init section or logic
+# prefilled pwd var to avoid repeated calls in build string.moved to top init section or logic
 $path = (Get-Location).Path
 
 $containerCommand = $supportedContainerRuntime | ForEach-Object {

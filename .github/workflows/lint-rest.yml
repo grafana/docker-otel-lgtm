@@ -3,9 +3,6 @@ name: Lint What Super Linter Can't
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
 
 permissions:
   contents: read
@@ -22,7 +19,6 @@ jobs:
       - uses: jdx/mise-action@6d1e696aa24c1aa1bcc1adea0212707c71ab78a8 # v3.6.1
 
       - name: Lint for pull requests
-        if: github.event_name == 'pull_request'
         env:
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_BASE_REF: ${{ github.base_ref }}

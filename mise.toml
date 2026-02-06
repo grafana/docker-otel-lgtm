@@ -35,6 +35,10 @@ depends = ["lint:super-linter", "lint:rest"]
 description = "All lints not covered by super linter"
 depends = ["lint:local-links", "lint:links-in-modified-files-local"]
 
+[tasks."lint:rest-ci"]
+description = "All lints not covered by super linter (CI configuration)"
+depends = ["lint:local-links", "lint:links-in-modified-files-ci"]
+
 [tasks.lgtm]
 usage = 'arg "<tag>" default="latest"'
 run = './run-lgtm.sh ${usage_tag?}'

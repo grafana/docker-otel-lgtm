@@ -1,3 +1,4 @@
+ARG LGTM_VERSION=development
 # renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
 ARG GRAFANA_VERSION=v12.3.2
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
@@ -96,12 +97,14 @@ COPY --from=builder /etc/pki /etc/pki
 COPY --from=builder /otel-lgtm /otel-lgtm
 
 # just for displaying the version in the startup message
+ARG LGTM_VERSION
 ARG GRAFANA_VERSION
 ARG PROMETHEUS_VERSION
 ARG TEMPO_VERSION
 ARG LOKI_VERSION
 ARG PYROSCOPE_VERSION
 ARG OPENTELEMETRY_COLLECTOR_VERSION
+ENV LGTM_VERSION=${LGTM_VERSION}
 ENV GRAFANA_VERSION=${GRAFANA_VERSION}
 ENV PROMETHEUS_VERSION=${PROMETHEUS_VERSION}
 ENV TEMPO_VERSION=${TEMPO_VERSION}

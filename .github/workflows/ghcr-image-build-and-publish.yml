@@ -82,6 +82,7 @@ jobs:
           SOURCE_DATE_EPOCH: ${{ env.GIT_COMMIT_EPOCH }}
         with:
           annotations: ${{ steps.meta.outputs.annotations }}
+          build-args: --build-arg LGTM_VERSION=${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           context: docker/

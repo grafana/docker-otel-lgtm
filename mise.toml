@@ -4,7 +4,6 @@ go = "1.25.6"
 "go:github.com/grafana/oats" = "0.6.0"
 java = "temurin-25.0.1+8.0.LTS"
 lychee = "0.22.0"
-markdownlint-cli2 = "0.20.0"
 rust = "1.93.0"
 
 [env]

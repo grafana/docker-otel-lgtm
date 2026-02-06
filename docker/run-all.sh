@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Starting grafana/otel-lgtm ${LGTM_VERSION}"
+
 # Record global start time
 start_time_global=$(date +%s)
 

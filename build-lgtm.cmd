@@ -20,9 +20,9 @@ echo Please install Podman or docker
 goto:EOF
 
 :use_podman
-podman buildx build -f docker/Dockerfile docker --tag grafana/otel-lgtm:%release_tag%
+podman buildx build -f docker/Dockerfile docker --tag grafana/otel-lgtm:%release_tag% --build-arg LGTM_VERSION=%release_tag%
 goto:EOF
 
 :use_docker
-docker buildx build -f docker/Dockerfile docker --tag grafana/otel-lgtm:%release_tag%
+docker buildx build -f docker/Dockerfile docker --tag grafana/otel-lgtm:%release_tag% --build-arg LGTM_VERSION=%release_tag%
 goto:EOF

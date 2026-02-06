@@ -13,4 +13,4 @@ else
 	exit 1
 fi
 
-$RUNTIME buildx build -f docker/Dockerfile docker --tag grafana/otel-lgtm:"${RELEASE}"
+$RUNTIME buildx build -f docker/Dockerfile docker --tag grafana/otel-lgtm:"${RELEASE}" --build-arg LGTM_VERSION="${RELEASE}"

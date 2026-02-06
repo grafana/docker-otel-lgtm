@@ -18,11 +18,6 @@
       allowedVersions: "!/operator/",
     },
     {
-      matchPackageNames: ["ghcr.io/renovatebot/renovate", "renovatebot/github-action"],
-      groupName: "renovatebot",
-      schedule: ["before 4am on monday"],
-    },
-    {
       matchDatasources: ["pypi"],
       matchDepNames: ["opentelemetry-distro"],
       ignoreUnstable: false,

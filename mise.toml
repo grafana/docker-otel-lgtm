@@ -11,13 +11,13 @@ rust = "1.93.0"
 SUPER_LINTER_VERSION="v8.4.0@sha256:c5e3307932203ff9e1e8acfe7e92e894add6266605b5d7fb525fb371a59a26f4"
 
 [tasks."lint:links"]
-file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/refs/heads/main/.mise/tasks/lint/links.sh"
+file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/v1.53.0/.mise/tasks/lint/links.sh"
 
 [tasks."lint:local-links"]
-file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/refs/heads/main/.mise/tasks/lint/local-links.sh"
+file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/v1.53.0/.mise/tasks/lint/local-links.sh"
 
 [tasks."lint:links-in-modified-files"]
-file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/refs/heads/main/.mise/tasks/lint/links-in-modified-files.sh"
+file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/v1.53.0/.mise/tasks/lint/links-in-modified-files.sh"
 
 [tasks."lint:links-in-modified-files-ci"]
 description = "Lint links in modified files (CI configuration)"
@@ -40,7 +40,7 @@ depends = ["lint:local-links", "lint:links-in-modified-files-ci"]
 
 [tasks.lgtm]
 usage = 'arg "<tag>" default="latest"'
-run = './run-lgtm.sh ${usage_tag?}'
+run = './run-lgtm.sh ${usage_tag}'
 
 [tasks.local-lgtm]
 description = "Run locally built LGTM image"
@@ -80,7 +80,7 @@ run = "kubectl port-forward service/lgtm 3000:3000 4040:4040 4317:4317 4318:4318
 
 [tasks.build-lgtm]
 usage = 'arg "<tag>" default="latest"'
-run = './build-lgtm.sh ${usage_tag?}'
+run = './build-lgtm.sh ${usage_tag}'
 
 [settings]
 # for go backend

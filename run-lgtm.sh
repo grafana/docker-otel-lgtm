@@ -13,6 +13,25 @@ done
 
 test -f .env || touch .env
 
+# Check if Beyla is enabled (from environment or .env file)
+BEYLA_FLAGS=""
+BEYLA_ENV_FLAGS=""
+if [[ ${ENABLE_BEYLA:-} == "true" ]] || grep -qE '^ENABLE_BEYLA=true$' .env 2>/dev/null; then
+	echo "Beyla eBPF auto-instrumentation enabled. Adding --pid=host --privileged flags."
+	BEYLA_FLAGS="--pid=host --privileged"
+	# Forward Beyla-related env vars into the container (they are not in .env by default)
+	BEYLA_ENV_FLAGS="-e ENABLE_BEYLA=true"
+	for var in $(compgen -v | grep -E '^(BEYLA_|ENABLE_LOGS_BEYLA)' | grep -v '^BEYLA_FLAGS$\|^BEYLA_ENV_FLAGS$'); do
+		BEYLA_ENV_FLAGS="$BEYLA_ENV_FLAGS -e $var=${!var}"
+	done
+fi
+
+# Allocate TTY only if stdin is a terminal
+TTY_FLAG="-i"
+if test -t 0; then
+	TTY_FLAG="-ti"
+fi
+
 if command -v podman >/dev/null 2>&1; then
 	RUNTIME=podman
 	# Fedora, by default, runs with SELinux on. We require the "z" option for bind mounts.
@@ -39,15 +58,18 @@ else
 	$RUNTIME image pull "$IMAGE"
 fi
 
+# shellcheck disable=SC2086
 $RUNTIME container run \
 	--name lgtm \
+	${BEYLA_FLAGS} \
+	${BEYLA_ENV_FLAGS} \
 	-p 3000:3000 \
 	-p 4040:4040 \
 	-p 4317:4317 \
 	-p 4318:4318 \
 	-p 9090:9090 \
 	--rm \
-	-ti \
+	"${TTY_FLAG}" \
 	-v "${LOCAL_VOLUME}"/grafana:/data/grafana:"${MOUNT_OPTS}" \
 	-v "${LOCAL_VOLUME}"/prometheus:/data/prometheus:"${MOUNT_OPTS}" \
 	-v "${LOCAL_VOLUME}"/loki:/data/loki:"${MOUNT_OPTS}" \

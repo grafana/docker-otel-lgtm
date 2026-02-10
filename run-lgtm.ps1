@@ -40,9 +40,28 @@ else {
     & $containerCommand image pull $image
 }
 
+# Check if Beyla is enabled (from environment or .env file)
+$beylaFlags = @()
+$beylaEnabled = $env:ENABLE_BEYLA -eq 'true'
+if (-Not $beylaEnabled -and (Test-Path -Path ".env")) {
+    $beylaEnabled = (Get-Content ".env" | Select-String -Pattern '^ENABLE_BEYLA=true$' -Quiet)
+}
+if ($beylaEnabled) {
+    Write-Output "Beyla eBPF auto-instrumentation enabled. Adding --pid=host --privileged flags."
+    $beylaFlags = @('--pid=host', '--privileged')
+    # Forward Beyla-related env vars into the container (they are not in .env by default)
+    $beylaFlags += '-e', 'ENABLE_BEYLA=true'
+    Get-ChildItem env: |
+        Where-Object { $_.Name -match '^(BEYLA_|ENABLE_LOGS_BEYLA)' } |
+        ForEach-Object {
+        $beylaFlags += '-e', "$($_.Name)=$($_.Value)"
+    }
+}
+
 $runCommand = @(
     'container', 'run'
     '--name', 'lgtm',
+    $beylaFlags
     '-p', '3000:3000'
     '-p', '4040:4040'
     '-p', '4317:4317'

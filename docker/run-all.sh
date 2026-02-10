@@ -33,6 +33,11 @@ start_component "tempo"
 start_component "pyroscope"
 ./run-pyroscope.sh &
 
+if [[ ${ENABLE_BEYLA:-false} == "true" ]]; then
+	start_component "beyla"
+	./run-beyla.sh &
+fi
+
 echo "Waiting for the OpenTelemetry collector and the Grafana LGTM stack to start up..."
 
 # Declare arrays to store service status and elapsed times
@@ -118,10 +123,31 @@ echo "Prometheus: ${elapsed_times[prometheus]} seconds"
 echo "Tempo: ${elapsed_times[tempo]} seconds"
 echo "Pyroscope: ${elapsed_times[pyroscope]} seconds"
 echo "OpenTelemetry collector: ${elapsed_times[otelcol]} seconds"
+if [[ ${ENABLE_BEYLA:-false} == "true" ]]; then
+	echo "Beyla: (opt-in, not in health check)"
+fi
 echo "Total: ${total_elapsed} seconds"
 
 touch /tmp/ready
 echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
+
+if [[ ${ENABLE_BEYLA:-false} == "true" ]]; then
+	# Non-blocking check — don't delay readiness if Beyla fails (e.g. missing capabilities)
+	if curl -o /dev/null -sg "http://127.0.0.1:6060/metrics" -w "%{response_code}" 2>/dev/null | grep -q "200"; then
+		echo "Beyla is up and running."
+	else
+		echo "Warning: Beyla internal metrics endpoint is not responding. This may indicate missing eBPF capabilities (--pid=host --privileged)."
+	fi
+	if [[ -n ${BEYLA_TARGET:-} ]]; then
+		echo "Beyla: monitoring '${BEYLA_TARGET}' processes"
+	elif [[ -n ${BEYLA_EXECUTABLE_NAME:-} ]]; then
+		echo "Beyla: monitoring processes matching executable name '${BEYLA_EXECUTABLE_NAME}'"
+	elif [[ -n ${BEYLA_OPEN_PORT:-} ]]; then
+		echo "Beyla: monitoring processes on ports ${BEYLA_OPEN_PORT}"
+	else
+		echo "Beyla: monitoring processes on default open ports (80, 443, 8080-8099, 3000-3999, 5000-5999)"
+	fi
+fi
 
 echo "Open ports:"
 echo " - 4317: OpenTelemetry GRPC endpoint"
@@ -129,5 +155,8 @@ echo " - 4318: OpenTelemetry HTTP endpoint"
 echo " - 3000: Grafana (http://localhost:3000). User: admin, password: admin"
 echo " - 4040: Pyroscope endpoint"
 echo " - 9090: Prometheus endpoint"
+if [[ ${ENABLE_BEYLA:-false} == "true" ]]; then
+	echo " - 6060: Beyla internal metrics"
+fi
 
 sleep infinity

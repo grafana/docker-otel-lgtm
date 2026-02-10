@@ -155,8 +155,5 @@ echo " - 4318: OpenTelemetry HTTP endpoint"
 echo " - 3000: Grafana (http://localhost:3000). User: admin, password: admin"
 echo " - 4040: Pyroscope endpoint"
 echo " - 9090: Prometheus endpoint"
-if [[ ${ENABLE_BEYLA:-false} == "true" ]]; then
-	echo " - 6060: Beyla internal metrics"
-fi
 
 sleep infinity

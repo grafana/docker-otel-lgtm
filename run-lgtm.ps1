@@ -54,21 +54,29 @@ if ($beylaEnabled) {
     Get-ChildItem env: |
         Where-Object { $_.Name -match '^(BEYLA_|ENABLE_LOGS_BEYLA)' } |
         ForEach-Object {
-        $beylaFlags += '-e', "$($_.Name)=$($_.Value)"
-    }
+            $beylaFlags += '-e', "$($_.Name)=$($_.Value)"
+        }
 }
 
 $runCommand = @(
     'container', 'run'
-    '--name', 'lgtm',
-    $beylaFlags
+    '--name', 'lgtm'
+)
+
+# Append Beyla-related flags (if any) so each flag is a separate argument
+if ($beylaFlags.Count -gt 0) {
+    $runCommand += $beylaFlags
+}
+
+# Append the remaining fixed arguments
+$runCommand += @(
     '-p', '3000:3000'
     '-p', '4040:4040'
     '-p', '4317:4317'
     '-p', '4318:4318'
     '-p', '9090:9090'
     '--rm'
-    '-ti',
+    '-ti'
     '-v', "${path}/container/grafana:/data/grafana"
     '-v', "${path}/container/prometheus:/data/prometheus"
     '-v', "${path}/container/loki:/data/loki"

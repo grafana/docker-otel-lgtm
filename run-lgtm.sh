@@ -14,15 +14,15 @@ done
 test -f .env || touch .env
 
 # Check if Beyla is enabled (from environment or .env file)
-BEYLA_FLAGS=""
-BEYLA_ENV_FLAGS=""
+BEYLA_FLAGS=()
+BEYLA_ENV_FLAGS=()
 if [[ ${ENABLE_BEYLA:-} == "true" ]] || grep -qE '^ENABLE_BEYLA=true$' .env 2>/dev/null; then
 	echo "Beyla eBPF auto-instrumentation enabled. Adding --pid=host --privileged flags."
-	BEYLA_FLAGS="--pid=host --privileged"
+	BEYLA_FLAGS=(--pid=host --privileged)
 	# Forward Beyla-related env vars into the container (they are not in .env by default)
-	BEYLA_ENV_FLAGS="-e ENABLE_BEYLA=true"
+	BEYLA_ENV_FLAGS=(-e ENABLE_BEYLA=true)
 	for var in $(compgen -v | grep -E '^(BEYLA_|ENABLE_LOGS_BEYLA)' | grep -v '^BEYLA_FLAGS$\|^BEYLA_ENV_FLAGS$'); do
-		BEYLA_ENV_FLAGS="$BEYLA_ENV_FLAGS -e $var=${!var}"
+		BEYLA_ENV_FLAGS+=(-e "$var=${!var}")
 	done
 fi
 
@@ -58,11 +58,10 @@ else
 	$RUNTIME image pull "$IMAGE"
 fi
 
-# shellcheck disable=SC2086
 $RUNTIME container run \
 	--name lgtm \
-	${BEYLA_FLAGS} \
-	${BEYLA_ENV_FLAGS} \
+	"${BEYLA_FLAGS[@]}" \
+	"${BEYLA_ENV_FLAGS[@]}" \
 	-p 3000:3000 \
 	-p 4040:4040 \
 	-p 4317:4317 \

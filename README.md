@@ -73,7 +73,7 @@ This has nothing to do with any application logs, which are collected by OpenTel
 
 ### Enable Beyla (eBPF auto-instrumentation)
 
-[Grafana Beyla][beyla] uses eBPF to automatically generate traces and RED metrics
+[Grafana Beyla][beyla] uses eBPF to automatically generate traces and [RED][red-method] metrics
 for HTTP/gRPC services — with zero code changes.
 
 To enable Beyla, add `ENABLE_BEYLA=true` to your `.env` file or pass it as an
@@ -118,11 +118,11 @@ ENABLE_BEYLA=true BEYLA_OPEN_PORT=8080,9090 ./run-lgtm.sh
 
 <!-- editorconfig-checker-disable -->
 
-| Variable                | Purpose                                                                                         |
-|-------------------------|-------------------------------------------------------------------------------------------------|
-| `BEYLA_TARGET`          | Friendly language target: `java`, `python`, `node`, `dotnet`, `ruby`, or any regular expression |
-| `BEYLA_OPEN_PORT`       | Override ports to monitor (native Beyla env var)                                                |
-| `BEYLA_EXECUTABLE_NAME` | Executable name pattern (native Beyla env var, set automatically by `BEYLA_TARGET`)             |
+| Variable                | Purpose                                                                                          |
+|-------------------------|--------------------------------------------------------------------------------------------------|
+| `BEYLA_TARGET`          | Friendly language target: `java`, `python`, `node`, `dotnet`, `ruby`, or any regular expression  |
+| `BEYLA_OPEN_PORT`       | Override ports to monitor (native Beyla environment variable)                                    |
+| `BEYLA_EXECUTABLE_NAME` | Executable name pattern (native Beyla environment variable, set automatically by `BEYLA_TARGET`) |
 
 <!-- editorconfig-checker-enable -->
 
@@ -319,3 +319,4 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 [otlp-endpoint]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint
 [otlp-headers]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers
 [oats]: https://github.com/grafana/oats
+[red-method]: https://grafana.com/blog/the-red-method-how-to-instrument-your-services/ "The RED Method"

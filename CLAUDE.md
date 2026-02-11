@@ -1,0 +1,102 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+docker-otel-lgtm is an all-in-one OpenTelemetry backend Docker image for development, demo, and testing. It bundles Grafana, Prometheus, Tempo, Loki, Pyroscope, OpenTelemetry Collector, and OBI (eBPF Instrumentation) into a single container.
+
+## Build & Run Commands
+
+All development tasks use [mise](https://github.com/jdx/mise) as the task runner. Tool versions (Go, Java, Rust, lychee) are pinned in `mise.toml`.
+
+```bash
+# Build Docker image (tag defaults to "latest")
+mise run build-lgtm dev1
+
+# Run Docker image
+mise run lgtm dev1
+
+# Run with OBI eBPF auto-instrumentation
+mise run lgtm-obi dev1
+
+# Run locally built image
+mise run local-lgtm
+```
+
+The build script (`build-lgtm.sh`) auto-detects Docker or Podman.
+
+## Testing
+
+Acceptance tests use [OATS](https://github.com/grafana/oats) (OpenTelemetry Acceptance Tests). Test cases are defined in `examples/*/oats.yaml` files and validate traces (TraceQL), metrics (PromQL), and logs (LogQL).
+
+```bash
+# Run all acceptance tests
+mise run test
+
+# Run a single example's tests (build first)
+mise run build-lgtm dev1
+oats -timeout 2h -lgtm-version dev1 examples/nodejs
+```
+
+## Linting
+
+```bash
+# All lints
+mise run lint:all
+
+# Markdown link checker only
+mise run lint:links
+
+# Links in modified files (local)
+mise run lint:links-in-modified-files-local
+
+# Super-linter (Docker-based, runs all language linters)
+mise run lint:super-linter
+```
+
+Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`. EditorConfig rules in `.editorconfig`.
+
+## Architecture
+
+### Docker Image (docker/)
+
+The Dockerfile is a multi-stage build on `redhat/ubi9`. The builder stage downloads each component via individual `download-*.sh` scripts with cosign verification. Each component has a `run-*.sh` script and a `*-config.yaml` configuration file. `run-all.sh` is the container entrypoint that starts all services.
+
+### Example Applications (examples/)
+
+Language-specific demo apps that emit OpenTelemetry data:
+- **java** (port 8080) - Maven + OTel Java Agent
+- **go** (port 8081) - Go workspace (`go.work` at repo root)
+- **python** (port 8082) - Python + auto-instrumentation
+- **dotnet** (port 8083) - .NET/C#
+- **nodejs** (port 8084) - Node.js
+
+Each example has its own `docker-compose.yaml`, `run.sh`, and `oats.yaml` for acceptance tests.
+
+### Key Ports
+
+| Service | Port |
+|---------|------|
+| Grafana | 3000 |
+| OTLP gRPC | 4317 |
+| OTLP HTTP | 4318 |
+| Pyroscope | 4040 |
+| Prometheus | 9090 |
+
+### OTel Collector Configuration
+
+The collector config is split across `otelcol-config.yaml` (base) and `otelcol-export-http.yaml` (external export). To test the merged config:
+
+```bash
+./otelcol-contrib --config docker/otelcol-config.yaml --config docker/otelcol-export-http.yaml \
+  print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml
+```
+
+## Component Versions
+
+All component versions are declared as `ARG` directives in `docker/Dockerfile` with Renovate annotations for automated dependency updates. Version bumps are made there, not elsewhere.
+
+## Release Process
+
+Releases are automated weekly (Friday 09:00 UTC) via GitHub Actions if `docker/` has changed. Version auto-increments based on component changes. Releases are immutable once published.

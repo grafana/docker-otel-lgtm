@@ -40,21 +40,21 @@ else {
     & $containerCommand image pull $image
 }
 
-# Check if Beyla is enabled (from environment or .env file)
-$beylaFlags = @()
-$beylaEnabled = $env:ENABLE_BEYLA -eq 'true'
-if (-Not $beylaEnabled -and (Test-Path -Path ".env")) {
-    $beylaEnabled = (Get-Content ".env" | Select-String -Pattern '^ENABLE_BEYLA=true$' -Quiet)
+# Check if OBI is enabled (from environment or .env file)
+$obiFlags = @()
+$obiEnabled = $env:ENABLE_OBI -eq 'true'
+if (-Not $obiEnabled -and (Test-Path -Path ".env")) {
+    $obiEnabled = (Get-Content ".env" | Select-String -Pattern '^ENABLE_OBI=true$' -Quiet)
 }
-if ($beylaEnabled) {
-    Write-Output "Beyla eBPF auto-instrumentation enabled. Adding --pid=host --privileged flags."
-    $beylaFlags = @('--pid=host', '--privileged')
-    # Forward Beyla-related env vars into the container (they are not in .env by default)
-    $beylaFlags += '-e', 'ENABLE_BEYLA=true'
+if ($obiEnabled) {
+    Write-Output "OBI eBPF auto-instrumentation enabled. Adding --pid=host --privileged flags."
+    $obiFlags = @('--pid=host', '--privileged')
+    # Forward OBI-related env vars into the container (they are not in .env by default)
+    $obiFlags += '-e', 'ENABLE_OBI=true'
     Get-ChildItem env: |
-        Where-Object { $_.Name -match '^(BEYLA_|ENABLE_LOGS_BEYLA)' } |
+        Where-Object { $_.Name -match '^(OBI_TARGET|OTEL_EBPF_|ENABLE_LOGS_OBI)' } |
         ForEach-Object {
-            $beylaFlags += '-e', "$($_.Name)=$($_.Value)"
+            $obiFlags += '-e', "$($_.Name)=$($_.Value)"
         }
 }
 
@@ -63,9 +63,9 @@ $runCommand = @(
     '--name', 'lgtm'
 )
 
-# Append Beyla-related flags (if any) so each flag is a separate argument
-if ($beylaFlags.Count -gt 0) {
-    $runCommand += $beylaFlags
+# Append OBI-related flags (if any) so each flag is a separate argument
+if ($obiFlags.Count -gt 0) {
+    $runCommand += $obiFlags
 }
 
 # Append the remaining fixed arguments

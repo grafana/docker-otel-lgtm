@@ -13,16 +13,16 @@ done
 
 test -f .env || touch .env
 
-# Check if Beyla is enabled (from environment or .env file)
-BEYLA_FLAGS=()
-BEYLA_ENV_FLAGS=()
-if [[ ${ENABLE_BEYLA:-} == "true" ]] || grep -qE '^ENABLE_BEYLA=true$' .env 2>/dev/null; then
-	echo "Beyla eBPF auto-instrumentation enabled. Adding --pid=host --privileged flags."
-	BEYLA_FLAGS=(--pid=host --privileged)
-	# Forward Beyla-related env vars into the container (they are not in .env by default)
-	BEYLA_ENV_FLAGS=(-e ENABLE_BEYLA=true)
-	for var in $(compgen -v | grep -E '^(BEYLA_|ENABLE_LOGS_BEYLA)' | grep -v '^BEYLA_FLAGS$\|^BEYLA_ENV_FLAGS$'); do
-		BEYLA_ENV_FLAGS+=(-e "$var=${!var}")
+# Check if OBI is enabled (from environment or .env file)
+OBI_FLAGS=()
+OBI_ENV_FLAGS=()
+if [[ ${ENABLE_OBI:-} == "true" ]] || grep -qE '^ENABLE_OBI=true$' .env 2>/dev/null; then
+	echo "OBI eBPF auto-instrumentation enabled. Adding --pid=host --privileged flags."
+	OBI_FLAGS=(--pid=host --privileged)
+	# Forward OBI-related env vars into the container (they are not in .env by default)
+	OBI_ENV_FLAGS=(-e ENABLE_OBI=true)
+	for var in $(compgen -v | grep -E '^(OBI_TARGET|OTEL_EBPF_|ENABLE_LOGS_OBI)' | grep -v '^OBI_FLAGS$\|^OBI_ENV_FLAGS$'); do
+		OBI_ENV_FLAGS+=(-e "$var=${!var}")
 	done
 fi
 
@@ -60,8 +60,8 @@ fi
 
 $RUNTIME container run \
 	--name lgtm \
-	"${BEYLA_FLAGS[@]}" \
-	"${BEYLA_ENV_FLAGS[@]}" \
+	"${OBI_FLAGS[@]}" \
+	"${OBI_ENV_FLAGS[@]}" \
 	-p 3000:3000 \
 	-p 4040:4040 \
 	-p 4317:4317 \

@@ -66,63 +66,63 @@ You can enable logging in the .env file for troubleshooting:
 | `ENABLE_LOGS_TEMPO`      | Tempo                   |
 | `ENABLE_LOGS_PYROSCOPE`  | Pyroscope               |
 | `ENABLE_LOGS_OTELCOL`    | OpenTelemetry Collector |
-| `ENABLE_LOGS_BEYLA`      | Beyla                   |
+| `ENABLE_LOGS_OBI`        | OBI                     |
 | `ENABLE_LOGS_ALL`        | All of the above        |
 
 This has nothing to do with any application logs, which are collected by OpenTelemetry.
 
-### Enable Beyla (eBPF auto-instrumentation)
+### Enable OBI (eBPF auto-instrumentation)
 
-[Grafana Beyla][beyla] uses eBPF to automatically generate traces and [RED][red-method] metrics
-for HTTP/gRPC services — with zero code changes.
+[OpenTelemetry eBPF Instrumentation (OBI)][obi] uses eBPF to automatically generate traces and
+[RED][red-method] metrics for HTTP/gRPC services — with zero code changes.
 
-To enable Beyla, add `ENABLE_BEYLA=true` to your `.env` file or pass it as an
+To enable OBI, add `ENABLE_OBI=true` to your `.env` file or pass it as an
 environment variable:
 
 ```sh
-ENABLE_BEYLA=true ./run-lgtm.sh
+ENABLE_OBI=true ./run-lgtm.sh
 
 # Using mise
-mise run lgtm-beyla
+mise run lgtm-obi
 ```
 
 **Requirements:** Linux kernel 5.8+ with BTF support. The `run-lgtm.sh` and
 `run-lgtm.ps1` scripts automatically add the required `--pid=host` and
-`--privileged` Docker flags when Beyla is enabled. If you run `docker run`
+`--privileged` Docker flags when OBI is enabled. If you run `docker run`
 directly, you must add these flags manually.
 
 > [!NOTE]
 > The `--pid=host` flag shares the host's PID namespace with the container,
-> so Beyla can discover and instrument processes running on the host — not just
-> inside the container. For example, `BEYLA_TARGET=java` will instrument Java
+> so OBI can discover and instrument processes running on the host — not just
+> inside the container. For example, `OBI_TARGET=java` will instrument Java
 > processes running on the host as well.
 
 #### Target specific applications
 
-By default, Beyla discovers services on common ports (80, 443, 8080-8099,
+By default, OBI discovers services on common ports (80, 443, 8080-8099,
 3000-3999, 5000-5999). You can target specific applications:
 
 ```sh
 # Monitor all Java processes
-ENABLE_BEYLA=true BEYLA_TARGET=java ./run-lgtm.sh
+ENABLE_OBI=true OBI_TARGET=java ./run-lgtm.sh
 
 # Monitor all Python processes
-ENABLE_BEYLA=true BEYLA_TARGET=python ./run-lgtm.sh
+ENABLE_OBI=true OBI_TARGET=python ./run-lgtm.sh
 
 # Monitor a specific executable by name
-ENABLE_BEYLA=true BEYLA_TARGET=myapp ./run-lgtm.sh
+ENABLE_OBI=true OBI_TARGET=myapp ./run-lgtm.sh
 
 # Monitor specific ports
-ENABLE_BEYLA=true BEYLA_OPEN_PORT=8080,9090 ./run-lgtm.sh
+ENABLE_OBI=true OTEL_EBPF_OPEN_PORT=8080,9090 ./run-lgtm.sh
 ```
 
 <!-- editorconfig-checker-disable -->
 
-| Variable                | Purpose                                                                                          |
-|-------------------------|--------------------------------------------------------------------------------------------------|
-| `BEYLA_TARGET`          | Friendly language target: `java`, `python`, `node`, `dotnet`, `ruby`, or any regular expression  |
-| `BEYLA_OPEN_PORT`       | Override ports to monitor (native Beyla environment variable)                                    |
-| `BEYLA_EXECUTABLE_NAME` | Executable name pattern (native Beyla environment variable, set automatically by `BEYLA_TARGET`) |
+| Variable                   | Purpose                                                                                         |
+|----------------------------|-------------------------------------------------------------------------------------------------|
+| `OBI_TARGET`               | Friendly language target: `java`, `python`, `node`, `dotnet`, `ruby`, or any regular expression |
+| `OTEL_EBPF_OPEN_PORT`     | Override ports to monitor (native OBI environment variable)                                     |
+| `OTEL_EBPF_AUTO_TARGET_EXE` | Executable name pattern (native OBI environment variable, set automatically by `OBI_TARGET`)  |
 
 <!-- editorconfig-checker-enable -->
 
@@ -302,7 +302,7 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 <!-- markdownlint-disable MD013 -->
 
 [app-o11y]: https://grafana.com/products/cloud/application-observability/
-[beyla]: https://grafana.com/oss/beyla-ebpf/ "Grafana Beyla"
+[obi]: https://opentelemetry.io/docs/zero-code/obi/ "OpenTelemetry eBPF Instrumentation"
 [cosign]: https://github.com/sigstore/cosign "Cosign on GitHub"
 [docker-hub]: https://hub.docker.com/r/grafana/otel-lgtm
 [docker-latest]: https://img.shields.io/docker/v/grafana/otel-lgtm?logo=docker&label=latest&color=blue

@@ -4,6 +4,6 @@ otel_traces_export:
 otel_metrics_export:
   endpoint: http://127.0.0.1:4318
 
-internal_metrics:
-  prometheus:
-    port: 6060
+prometheus_export:
+  port: 6060
+  path: /metrics

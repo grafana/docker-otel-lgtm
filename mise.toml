@@ -52,10 +52,10 @@ description = "Run LGTM image"
 usage = 'arg "<tag>" default="latest"'
 run = './run-lgtm.sh ${usage_tag}'
 
-[tasks.lgtm-beyla]
-description = "Run LGTM with Beyla eBPF auto-instrumentation"
+[tasks.lgtm-obi]
+description = "Run LGTM with OBI eBPF auto-instrumentation"
 usage = 'arg "<tag>" default="latest"'
-env = { ENABLE_BEYLA = "true" }
+env = { ENABLE_OBI = "true" }
 run = './run-lgtm.sh ${usage_tag}'
 
 [tasks.local-lgtm]

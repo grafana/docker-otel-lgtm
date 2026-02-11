@@ -54,9 +54,12 @@ run = './run-lgtm.sh ${usage_tag}'
 
 [tasks.lgtm-obi]
 description = "Run LGTM with OBI eBPF auto-instrumentation"
-usage = 'arg "<tag>" default="latest"'
+usage = '''
+flag "--local" help="Use locally built image"
+arg "<tag>" default="latest"
+'''
 env = { ENABLE_OBI = "true" }
-run = './run-lgtm.sh ${usage_tag}'
+run = 'if [ "$usage_local" = "true" ]; then ./run-lgtm.sh latest true; else ./run-lgtm.sh ${usage_tag}; fi'
 
 [tasks.local-lgtm]
 description = "Run locally built LGTM image"

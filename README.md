@@ -118,11 +118,11 @@ ENABLE_OBI=true OTEL_EBPF_OPEN_PORT=8080,9090 ./run-lgtm.sh
 
 <!-- editorconfig-checker-disable -->
 
-| Variable                   | Purpose                                                                                         |
-|----------------------------|-------------------------------------------------------------------------------------------------|
-| `OBI_TARGET`               | Friendly language target: `java`, `python`, `node`, `dotnet`, `ruby`, or any regular expression |
-| `OTEL_EBPF_OPEN_PORT`     | Override ports to monitor (native OBI environment variable)                                     |
-| `OTEL_EBPF_AUTO_TARGET_EXE` | Executable name pattern (native OBI environment variable, set automatically by `OBI_TARGET`)  |
+| Variable                    | Purpose                                                                                         |
+|-----------------------------|-------------------------------------------------------------------------------------------------|
+| `OBI_TARGET`                | Friendly language target: `java`, `python`, `node`, `dotnet`, `ruby`, or any regular expression |
+| `OTEL_EBPF_OPEN_PORT`       | Override ports to monitor (native OBI environment variable)                                     |
+| `OTEL_EBPF_AUTO_TARGET_EXE` | Executable name pattern (native OBI environment variable, set automatically by `OBI_TARGET`)    |
 
 <!-- editorconfig-checker-enable -->
 

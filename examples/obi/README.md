@@ -13,28 +13,32 @@ works at the kernel level and can instrument any application regardless of langu
 
 ## How it works
 
+<!-- editorconfig-checker-disable -->
+
+```text
++--------------------------------------------------------------------+
+|  lgtm container (privileged, pid: host)                            |
+|                                                                    |
+|  +-----------+  +------------+  +-------+  +------+  +----------+  |
+|  | OBI (eBPF)|->| OTel       |->| Tempo |  | Loki |  |Prometheus|  |
+|  |           |  | Collector  |  +-------+  +------+  +----------+  |
+|  +-----+-----+  +------------+       ^                     ^       |
+|        |              |               +---------------------+      |
+|        | eBPF hooks   |                    Grafana :3000           |
++--------+--------------+--------------------------------------------+
+         | observes     |
+    +----+--------------+------------------------------------------+
+    |              Host kernel (shared via pid: host)              |
+    +--------+------+--------+---------+-----------+               |
+    |  Java  |  Go  | Python | Node.js |  .NET     |               |
+    |  :8080 |:8081 | :8082  |  :8084  |  :8083    |               |
+    |        |      |        |         |           |               |
+    |  (no OTel SDK, agent, or distro in any app)  |               |
+    +--------+------+--------+---------+-----------+               |
+    +--------------------------------------------------------------+
 ```
-┌────────────────────────────────────────────────────────────────────┐
-│  lgtm container (privileged, pid: host)                            │
-│                                                                    │
-│  ┌───────────┐  ┌────────────┐  ┌───────┐  ┌──────┐  ┌──────────┐  │
-│  │ OBI (eBPF)│→ │ OTel       │→ │ Tempo │  │ Loki │  │Prometheus│  │
-│  │           │  │ Collector  │  └───────┘  └──────┘  └──────────┘  │
-│  └─────┬─────┘  └────────────┘       ↑                     ↑       │
-│        │              │              └─────────────────────┘       │
-│        │ eBPF hooks   │                    Grafana :3000           │
-└────────┼──────────────┼────────────────────────────────────────────┘
-         │ observes     │
-    ┌────┴──────────────┴────────────────────────────────────┐
-    │              Host kernel (shared via pid: host)        │
-    ├────────┬──────┬────────┬─────────┬───────────┐         │
-    │  Java  │  Go  │ Python │ Node.js │  .NET     │         │
-    │  :8080 │:8081 │ :8082  │  :8084  │  :8083    │         │
-    │        │      │        │         │           │         │
-    │  (no OTel SDK, agent, or distro in any app)  │         │
-    └────────┴──────┴────────┴─────────┴───────────┘         │
-    └────────────────────────────────────────────────────────┘
-```
+
+<!-- editorconfig-checker-enable -->
 
 1. The `lgtm` container runs with `privileged: true` and `pid: "host"`, giving OBI access
    to the host kernel and all container processes.

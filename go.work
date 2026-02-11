@@ -1,6 +1,3 @@
 go 1.24.0
 
-use (
-	./examples/go
-	./examples/obi/go
-)
+use ./examples/go

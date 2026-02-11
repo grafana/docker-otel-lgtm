@@ -10,7 +10,7 @@ node) export OTEL_EBPF_AUTO_TARGET_EXE="node" ;;
 dotnet) export OTEL_EBPF_AUTO_TARGET_EXE="dotnet" ;;
 ruby) export OTEL_EBPF_AUTO_TARGET_EXE="ruby" ;;
 go) echo "Note: Go binaries have no common executable name. Use OTEL_EBPF_OPEN_PORT or OTEL_EBPF_AUTO_TARGET_EXE with your binary name." ;;
-"") ;;                                                      # use default port-based discovery (see below)
+"") ;;                                                 # use default port-based discovery (see below)
 *) export OTEL_EBPF_AUTO_TARGET_EXE="${OBI_TARGET}" ;; # pass through as regex
 esac
 

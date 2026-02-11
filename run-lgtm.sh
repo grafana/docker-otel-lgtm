@@ -13,7 +13,7 @@ done
 
 test -f .env || touch .env
 
-  if command -v podman >/dev/null 2>&1; then
+if command -v podman >/dev/null 2>&1; then
 	RUNTIME=podman
 	# Fedora, by default, runs with SELinux on. We require the "z" option for bind mounts.
 	# See: https://docs.docker.com/engine/storage/bind-mounts/#configure-the-selinux-label

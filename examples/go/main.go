@@ -66,18 +66,11 @@ func run() (err error) {
 func newHTTPHandler() http.Handler {
 	mux := http.NewServeMux()
 
-	// handleFunc is a replacement for mux.HandleFunc
-	// which enriches the handler's HTTP instrumentation with the pattern as the http.route.
-	handleFunc := func(pattern string, handlerFunc func(http.ResponseWriter, *http.Request)) {
-		// Configure the "http.route" for the HTTP instrumentation.
-		handler := otelhttp.WithRouteTag(pattern, http.HandlerFunc(handlerFunc))
-		mux.Handle(pattern, handler)
-	}
-
 	// Register handlers.
-	handleFunc("/rolldice", rolldice)
+	mux.HandleFunc("/rolldice", rolldice)
 
 	// Add HTTP instrumentation for the whole server.
+	// Since Go 1.22+, otelhttp automatically extracts the route from ServeMux patterns.
 	handler := otelhttp.NewHandler(mux, "/")
 	return handler
 }

@@ -22,15 +22,15 @@ if [[ ${ENABLE_OBI:-} == "true" ]] || grep -qE '^ENABLE_OBI=true$' .env 2>/dev/n
 	# Forward OBI-specific env vars into the container (they are not in .env by default).
 	# General OTLP vars (OTEL_EXPORTER_OTLP_ENDPOINT, etc.) are forwarded via --env-file .env.
 	OBI_ENV_FLAGS=(-e ENABLE_OBI=true)
-	for var in $(compgen -v | grep -E '^(OBI_TARGET|OTEL_EBPF_|ENABLE_LOGS_OBI)' | grep -v '^OBI_FLAGS$\|^OBI_ENV_FLAGS$'); do
+	for var in $(compgen -v | grep -E '^(OBI_TARGET|OTEL_EBPF_|ENABLE_LOGS_OBI)' | grep -vE '^(OBI_FLAGS|OBI_ENV_FLAGS)$'); do
 		OBI_ENV_FLAGS+=(-e "$var=${!var}")
 	done
 fi
 
 # Allocate TTY only if stdin is a terminal
-TTY_FLAG="-i"
+TTY_FLAGS=()
 if test -t 0; then
-	TTY_FLAG="-ti"
+	TTY_FLAGS=(-t -i)
 fi
 
 if command -v podman >/dev/null 2>&1; then
@@ -69,7 +69,7 @@ $RUNTIME container run \
 	-p 4318:4318 \
 	-p 9090:9090 \
 	--rm \
-	"${TTY_FLAG}" \
+	"${TTY_FLAGS[@]}" \
 	-v "${LOCAL_VOLUME}"/grafana:/data/grafana:"${MOUNT_OPTS}" \
 	-v "${LOCAL_VOLUME}"/prometheus:/data/prometheus:"${MOUNT_OPTS}" \
 	-v "${LOCAL_VOLUME}"/loki:/data/loki:"${MOUNT_OPTS}" \

@@ -5,6 +5,9 @@ oats-schema-version: 2
 docker-compose:
   files:
     - ./docker-compose.oats.yml
+# No input: section — OATS only supports a single application port, but this
+# test exercises 5 services on different ports. The generate-traffic sidecar
+# sends requests to all services instead.
 expected:
   traces:
     # Java (port 8080) - reuses ../java source, no OTel agent

@@ -60,7 +60,7 @@ if ($obiEnabled) {
 }
 
 # Allocate TTY only if stdin is interactive
-$ttyFlag = @('-i')
+$ttyFlag = @()
 if ([Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
     $ttyFlag = @('-t', '-i')
 }

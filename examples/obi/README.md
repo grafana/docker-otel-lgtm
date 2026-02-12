@@ -113,7 +113,7 @@ OBI is configured via environment variables on the `lgtm` container:
 - `ENABLE_OBI: "true"` — enables OBI inside the LGTM container
 - `OTEL_EXPORTER_OTLP_ENDPOINT` — where OBI sends telemetry (defaults to local collector)
 
-See the [OBI documentation](https://grafana.com/docs/grafana-cloud/monitor-applications/beyla/)
+See the [OBI documentation](https://opentelemetry.io/docs/zero-code/obi/)
 for additional configuration options like route decoration, service name mapping, and filtering.
 
 ## Limitations

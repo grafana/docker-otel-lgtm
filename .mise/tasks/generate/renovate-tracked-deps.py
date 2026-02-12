@@ -10,7 +10,12 @@ from collections import defaultdict
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-OUTPUT_FILE = Path(sys.argv[1]) if len(sys.argv) > 1 else REPO_ROOT / ".github" / "renovate-tracked-deps.json"
+OUTPUT_FILE = (
+    Path(sys.argv[1])
+    if len(sys.argv) > 1
+    else REPO_ROOT / ".github" / "renovate-tracked-deps.json"
+)
+
 
 def build_minimal_config(tmpdir):
     """Convert .github/renovate.json5 to a minimal JSON config with only extends + customManagers.
@@ -48,7 +53,13 @@ def run_renovate(tmpdir, config_path):
     }
     with open(log_path, "w") as log_file:
         subprocess.run(
-            ["npx", "--yes", "renovate", "--platform=local", "--require-config=ignored"],
+            [
+                "npx",
+                "--yes",
+                "renovate",
+                "--platform=local",
+                "--require-config=ignored",
+            ],
             env=env,
             stdout=log_file,
             stderr=subprocess.STDOUT,
@@ -68,7 +79,10 @@ def extract_deps(log_path):
                 config = entry.get("config", {})
 
     if config is None:
-        print("ERROR: 'packageFiles with updates' message not found in Renovate log.", file=sys.stderr)
+        print(
+            "ERROR: 'packageFiles with updates' message not found in Renovate log.",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     # Skip reasons that mean "not a real dep" vs "real dep but can't check updates locally"

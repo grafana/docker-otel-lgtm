@@ -20,7 +20,8 @@ description = "Check local links"
 file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/v1.53.0/.mise/tasks/lint/local-links.sh"
 
 [tasks."lint:links-in-modified-files"]
-description = "Check links in modified files"
+description = "Check links in modified files (only used as a base for the other two lint:links-in-modified-files tasks)"
+hide = true
 file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/v1.53.0/.mise/tasks/lint/links-in-modified-files.sh"
 
 [tasks."lint:links-in-modified-files-ci"]
@@ -31,16 +32,17 @@ run = "mise run lint:links-in-modified-files --base origin/$GITHUB_BASE_REF --he
 description = "Lint links in modified files (local configuration)"
 run = "mise run lint:links-in-modified-files --base origin/main --head HEAD"
 
-[tasks."lint:all"]
+[tasks."lint"]
 description = "Run all lints"
 depends = ["lint:super-linter", "lint:rest"]
 
 [tasks."lint:rest"]
 description = "All lints not covered by super linter"
-depends = ["lint:local-links", "lint:links-in-modified-files-local", "lint:renovate-deps"]
+depends = ["lint:local-links", "lint:links-in-modified-files-local", "generate:renovate-tracked-deps"]
 
 [tasks."lint:rest-ci"]
 description = "All lints not covered by super linter (CI configuration)"
+hide = true
 depends = ["lint:local-links", "lint:links-in-modified-files-ci", "lint:renovate-deps"]
 
 [tasks.lgtm]

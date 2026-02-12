@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# MISE description="Verify renovate-tracked-deps.json is up to date"
+# [MISE] description="Verify renovate-tracked-deps.json is up to date"
 
 import subprocess
 import sys

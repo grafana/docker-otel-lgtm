@@ -66,7 +66,7 @@ to all 5 apps automatically).
 
 ## What you'll see in Grafana
 
-Open [http://localhost:3000](http://localhost:3000) (no login required).
+Open <http://127.0.0.1:3000> (no login required).
 
 ### Traces (Tempo)
 

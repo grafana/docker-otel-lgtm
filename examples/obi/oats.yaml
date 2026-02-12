@@ -5,8 +5,6 @@ oats-schema-version: 2
 docker-compose:
   files:
     - ./docker-compose.oats.yml
-input:
-  - path: /rolldice
 expected:
   traces:
     # Java (port 8080) - reuses ../java source, no OTel agent
@@ -25,5 +23,5 @@ expected:
     - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8084 }'
       equals: "GET /rolldice"
   metrics:
-    - promql: 'http_server_request_duration_seconds_count{url_path="/rolldice"}'
+    - promql: 'http_server_request_duration_seconds_count{http_route="/rolldice"}'
       value: "> 0"

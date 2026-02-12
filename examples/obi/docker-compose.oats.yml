@@ -6,6 +6,7 @@ services:
   lgtm:
     environment:
       ENABLE_OBI: "true"
+      ENABLE_LOGS_OBI: "true"
     privileged: true
     pid: "host"
 

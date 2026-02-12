@@ -11,6 +11,7 @@
   },
   "docker/Dockerfile": {
     "dockerfile": [
+      "docker.io/otel/ebpf-instrument",
       "docker.io/redhat/ubi9",
       "docker.io/redhat/ubi9-micro"
     ],
@@ -18,6 +19,7 @@
       "cosign",
       "grafana",
       "loki",
+      "obi",
       "opentelemetry-collector",
       "prometheus",
       "pyroscope",
@@ -166,6 +168,42 @@
       "@opentelemetry/sdk-node",
       "@opentelemetry/sdk-trace-node",
       "@opentelemetry/semantic-conventions",
+      "express"
+    ]
+  },
+  "examples/obi/dotnet/Dockerfile": {
+    "dockerfile": [
+      "mcr.microsoft.com/dotnet/aspnet",
+      "mcr.microsoft.com/dotnet/sdk"
+    ]
+  },
+  "examples/obi/generate-traffic.Dockerfile": {
+    "dockerfile": [
+      "ubuntu"
+    ]
+  },
+  "examples/obi/go/Dockerfile": {
+    "dockerfile": [
+      "golang"
+    ]
+  },
+  "examples/obi/go/go.mod": {
+    "gomod": [
+      "go"
+    ]
+  },
+  "examples/obi/java.Dockerfile": {
+    "dockerfile": [
+      "eclipse-temurin"
+    ]
+  },
+  "examples/obi/nodejs/Dockerfile": {
+    "dockerfile": [
+      "node"
+    ]
+  },
+  "examples/obi/nodejs/package.json": {
+    "npm": [
       "express"
     ]
   },

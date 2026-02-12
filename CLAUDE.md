@@ -29,8 +29,8 @@ The build script (`build-lgtm.sh`) auto-detects Docker or Podman.
 ## Testing
 
 Acceptance tests use [OATS](https://github.com/grafana/oats) (OpenTelemetry
-Acceptance Tests). Test cases are defined in `examples/*/oats.yaml` files and
-validate traces (TraceQL), metrics (PromQL), and logs (LogQL).
+Acceptance Tests). Most examples have an `oats.yaml` that validates traces
+(TraceQL), metrics (PromQL), and logs (LogQL).
 
 ```bash
 # Run all acceptance tests
@@ -66,9 +66,8 @@ Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`. Editor
 The Dockerfile is a multi-stage build on `redhat/ubi9`. The builder stage
 downloads each component via individual `download-*.sh` scripts, using cosign
 verification for the OpenTelemetry Collector and SHA256 checksum verification
-for other components. Each component has a `run-*.sh` script and a
-`*-config.yaml` configuration file. `run-all.sh` is the container entrypoint
-that starts all services.
+for other components. Each component has a `run-*.sh` startup script.
+`run-all.sh` is the container entrypoint that starts all services.
 
 ### Example Applications (examples/)
 
@@ -79,8 +78,7 @@ Language-specific demo apps that emit OpenTelemetry data:
 - `examples/dotnet` (port 8083) - .NET/C#
 - `examples/nodejs` (port 8084) - Node.js
 
-Each example has its own OATS docker-compose file (`docker-compose.oats.yml`,
-and in some cases also `docker-compose.yml`), plus a `run.sh` script and an
+Most examples have a `docker-compose.oats.yml`, a `run.sh` script, and an
 `oats.yaml` for acceptance tests.
 
 ### Key Ports
@@ -97,12 +95,15 @@ and in some cases also `docker-compose.yml`), plus a `run.sh` script and an
 
 The collector config is split across `docker/otelcol-config.yaml` (base) and
 `docker/otelcol-config-export-http.yaml` (external export). To test the merged
-config (inside the built container image, or with the `otelcol-contrib` binary
-extracted from it):
+config (run inside the container where the binary is at
+`/otel-lgtm/otelcol-contrib/otelcol-contrib`):
 
 ```bash
-otelcol-contrib --config docker/otelcol-config.yaml --config docker/otelcol-config-export-http.yaml \
-  print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml
+/otel-lgtm/otelcol-contrib/otelcol-contrib \
+  --config docker/otelcol-config.yaml \
+  --config docker/otelcol-config-export-http.yaml \
+  print-initial-config \
+  --feature-gates otelcol.printInitialConfig > merged.yaml
 ```
 
 ## Component Versions

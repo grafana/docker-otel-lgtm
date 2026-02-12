@@ -3,6 +3,7 @@
 # [MISE] description="Verify renovate-tracked-deps.json is up to date"
 """Verify renovate-tracked-deps.json is up to date."""
 
+import json
 import subprocess
 import sys
 import tempfile
@@ -25,16 +26,23 @@ def main():
             print("ERROR: generator failed.", file=sys.stderr)
             sys.exit(1)
 
-        diff = subprocess.run(
-            ["diff", "-u", str(COMMITTED), str(generated)],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
+        committed_data = json.loads(COMMITTED.read_text())
+        generated_data = json.loads(generated.read_text())
 
-        if diff.returncode == 0:
+        if committed_data == generated_data:
             print("renovate-tracked-deps.json is up to date.")
-        elif diff.returncode == 1:
+        else:
+            normalize = lambda d: json.dumps(d, indent=2, sort_keys=True) + "\n"
+            norm_committed = Path(tmpdir) / "committed.json"
+            norm_generated = Path(tmpdir) / "generated.json"
+            norm_committed.write_text(normalize(committed_data))
+            norm_generated.write_text(normalize(generated_data))
+            diff = subprocess.run(
+                ["diff", "-u", str(norm_committed), str(norm_generated)],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
             print(diff.stdout)
             print("ERROR: renovate-tracked-deps.json is out of date.", file=sys.stderr)
             print(
@@ -42,10 +50,6 @@ def main():
                 file=sys.stderr,
             )
             sys.exit(1)
-        else:
-            print(diff.stderr, file=sys.stderr)
-            print("ERROR: diff failed.", file=sys.stderr)
-            sys.exit(diff.returncode)
 
 
 if __name__ == "__main__":

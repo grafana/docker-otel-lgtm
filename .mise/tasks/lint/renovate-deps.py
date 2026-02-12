@@ -3,6 +3,7 @@
 # [MISE] description="Verify renovate-tracked-deps.json is up to date"
 """Verify renovate-tracked-deps.json is up to date."""
 
+import difflib
 import json
 import subprocess
 import sys
@@ -36,17 +37,13 @@ def main():
             def normalize(d):
                 return json.dumps(d, indent=2, sort_keys=True) + "\n"
 
-            norm_committed = Path(tmpdir) / "committed.json"
-            norm_generated = Path(tmpdir) / "generated.json"
-            norm_committed.write_text(normalize(committed_data))
-            norm_generated.write_text(normalize(generated_data))
-            diff = subprocess.run(
-                ["diff", "-u", str(norm_committed), str(norm_generated)],
-                capture_output=True,
-                text=True,
-                check=False,
+            diff = difflib.unified_diff(
+                normalize(committed_data).splitlines(keepends=True),
+                normalize(generated_data).splitlines(keepends=True),
+                fromfile=str(COMMITTED),
+                tofile="generated",
             )
-            print(diff.stdout)
+            print("".join(diff))
             print("ERROR: renovate-tracked-deps.json is out of date.", file=sys.stderr)
             print(
                 "Run 'mise run generate:renovate-tracked-deps' and commit the result.",

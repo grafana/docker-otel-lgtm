@@ -4,19 +4,26 @@ go = "1.25.7"
 "go:github.com/grafana/oats" = "0.6.0"
 java = "temurin-25.0.1+8.0.LTS"
 lychee = "0.22.0"
+node = "24.13.1"
+"npm:renovate" = "43.8.5"
 rust = "1.93.0"
 
 [env]
+RENOVATE_TRACKED_DEPS_EXCLUDE="github-actions,github-runners"
 # renovate: datasource=docker depName=ghcr.io/super-linter/super-linter
 SUPER_LINTER_VERSION="v8.4.0@sha256:c5e3307932203ff9e1e8acfe7e92e894add6266605b5d7fb525fb371a59a26f4"
 
 [tasks."lint:links"]
+description = "Check all links"
 file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/v1.53.0/.mise/tasks/lint/links.sh"
 
 [tasks."lint:local-links"]
+description = "Check local links"
 file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/v1.53.0/.mise/tasks/lint/local-links.sh"
 
 [tasks."lint:links-in-modified-files"]
+description = "Check links in modified files (only used as a base for the other two lint:links-in-modified-files tasks)"
+hide = true
 file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/v1.53.0/.mise/tasks/lint/links-in-modified-files.sh"
 
 [tasks."lint:links-in-modified-files-ci"]
@@ -27,18 +34,21 @@ run = "mise run lint:links-in-modified-files --base origin/$GITHUB_BASE_REF --he
 description = "Lint links in modified files (local configuration)"
 run = "mise run lint:links-in-modified-files --base origin/main --head HEAD"
 
-[tasks."lint:all"]
+[tasks."lint"]
+description = "Run all lints"
 depends = ["lint:super-linter", "lint:rest"]
 
 [tasks."lint:rest"]
 description = "All lints not covered by super linter"
-depends = ["lint:local-links", "lint:links-in-modified-files-local"]
+depends = ["lint:local-links", "lint:links-in-modified-files-local", "generate:renovate-tracked-deps"]
 
 [tasks."lint:rest-ci"]
 description = "All lints not covered by super linter (CI configuration)"
-depends = ["lint:local-links", "lint:links-in-modified-files-ci"]
+hide = true
+depends = ["lint:local-links", "lint:links-in-modified-files-ci", "lint:renovate-deps"]
 
 [tasks.lgtm]
+description = "Run LGTM image"
 usage = 'arg "<tag>" default="latest"'
 run = './run-lgtm.sh ${usage_tag}'
 
@@ -47,38 +57,48 @@ description = "Run locally built LGTM image"
 run = './run-lgtm.sh latest true'
 
 [tasks.example]
+description = "Run Java example"
 alias = "example-java"
 run = "./run-example.sh"
 
 [tasks.example-nodejs]
+description = "Run Node.js example"
 dir = "examples/nodejs"
 run = "./run.sh"
 
 [tasks.example-python]
+description = "Run Python example"
 dir = "examples/python"
 run = "./run.sh"
 
 [tasks.example-go]
+description = "Run Go example"
 dir = "examples/go"
 run = "./run.sh"
 
 [tasks.example-dotnet]
+description = "Run .NET example"
 dir = "examples/dotnet"
 run = "./run.sh"
 
 [tasks.generate-traffic]
+description = "Generate traffic for the running example"
 run = "./generate-traffic.sh"
 
 [tasks.all]
+description = "Run LGTM, example, and generate traffic"
 depends = ["lgtm", "example", "generate-traffic"]
 
 [tasks.k8s-apply]
+description = "Apply LGTM Kubernetes manifest"
 run = "kubectl apply -f k8s/lgtm.yaml"
 
 [tasks.k8s-port-forward]
+description = "Port-forward LGTM Kubernetes service"
 run = "kubectl port-forward service/lgtm 3000:3000 4040:4040 4317:4317 4318:4318 9090:9090"
 
 [tasks.build-lgtm]
+description = "Build LGTM image"
 usage = 'arg "<tag>" default="latest"'
 run = './build-lgtm.sh ${usage_tag}'
 

@@ -13,17 +13,17 @@ done
 
 test -f .env || touch .env
 
-if command -v docker >/dev/null 2>&1; then
-	RUNTIME=docker
-	MOUNT_OPTS=rw
-elif command -v podman >/dev/null 2>&1; then
+if command -v podman >/dev/null 2>&1; then
 	RUNTIME=podman
 	# Fedora, by default, runs with SELinux on. We require the "z" option for bind mounts.
 	# See: https://docs.docker.com/engine/storage/bind-mounts/#configure-the-selinux-label
 	# See: https://docs.podman.io/en/stable/markdown/podman-run.1.html section "Labeling Volume Mounts"
 	MOUNT_OPTS="rw,z"
+elif command -v docker >/dev/null 2>&1; then
+	RUNTIME=docker
+	MOUNT_OPTS=rw
 else
-	echo "Unable to find a suitable container runtime such as Docker or Podman. Exiting."
+	echo "Unable to find a suitable container runtime such as Podman or Docker. Exiting."
 	exit 1
 fi
 

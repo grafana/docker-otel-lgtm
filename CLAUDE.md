@@ -34,7 +34,7 @@ validate traces (TraceQL), metrics (PromQL), and logs (LogQL).
 
 ```bash
 # Run all acceptance tests
-mise run test
+mise run acceptance-tests
 
 # Run a single example's tests (build first)
 mise run build-lgtm dev1

@@ -20,28 +20,24 @@ OUTPUT_FILE = (
 
 
 def build_minimal_config(tmpdir):
-    """Convert .github/renovate.json5 to a minimal JSON config with only extends + customManagers.
-
-    Uses node + json5 package since node is already required for npx renovate.
-    """
-    subprocess.run(
-        ["npm", "install", "--silent", "--prefix", tmpdir, "json5"],
+    """Convert .github/renovate.json5 to a minimal JSON config."""
+    in_path = REPO_ROOT / ".github" / "renovate.json5"
+    result = subprocess.run(
+        ["json5", str(in_path)],
         check=True,
         capture_output=True,
+        text=True,
     )
+    full = json.loads(result.stdout)
+    minimal = {}
+    if "extends" in full:
+        minimal["extends"] = full["extends"]
+    if "customManagers" in full:
+        minimal["customManagers"] = full["customManagers"]
+
     config_path = os.path.join(tmpdir, "renovate.json")
-    in_path = str(REPO_ROOT / ".github" / "renovate.json5")
-    script = f"""\
-const fs = require('fs');
-const JSON5 = require('json5');
-const full = JSON5.parse(fs.readFileSync({json.dumps(in_path)}, 'utf8'));
-const minimal = {{}};
-if (full.extends) minimal.extends = full.extends;
-if (full.customManagers) minimal.customManagers = full.customManagers;
-fs.writeFileSync({json.dumps(config_path)}, JSON.stringify(minimal, null, 2));
-"""
-    env = {**os.environ, "NODE_PATH": os.path.join(tmpdir, "node_modules")}
-    subprocess.run(["node", "-e", script], check=True, env=env)
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump(minimal, f, indent=2)
     return config_path
 
 
@@ -76,8 +72,15 @@ def run_renovate(tmpdir, config_path):
     return log_path
 
 
+EXCLUDED_MANAGERS = {
+    m.strip()
+    for m in os.environ.get("RENOVATE_TRACKED_DEPS_EXCLUDE", "").split(",")
+    if m.strip()
+}
+
+
 def extract_deps(log_path):
-    """Parse Renovate log and return deps grouped by file."""
+    """Parse Renovate log and return deps grouped by file and manager."""
     config = None
     with open(log_path, encoding="utf-8") as f:
         for line in f:
@@ -102,8 +105,11 @@ def extract_deps(log_path):
         "invalid-version",
     }
 
-    deps_by_file = defaultdict(set)
-    for manager_files in config.values():
+    # {file_path: {manager: set(dep_names)}}
+    deps_by_file = defaultdict(lambda: defaultdict(set))
+    for manager, manager_files in config.items():
+        if manager in EXCLUDED_MANAGERS:
+            continue
         for pkg_file in manager_files:
             file_path = pkg_file.get("packageFile", "")
             for dep in pkg_file.get("deps", []):
@@ -111,9 +117,13 @@ def extract_deps(log_path):
                     continue
                 dep_name = dep.get("depName")
                 if dep_name:
-                    deps_by_file[file_path].add(dep_name)
+                    deps_by_file[file_path][manager].add(dep_name)
 
-    return {k: sorted(v) for k, v in sorted(deps_by_file.items())}
+    result = {}
+    for file_path in sorted(deps_by_file):
+        managers = deps_by_file[file_path]
+        result[file_path] = {m: sorted(managers[m]) for m in sorted(managers)}
+    return result
 
 
 def main():

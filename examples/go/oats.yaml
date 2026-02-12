@@ -10,7 +10,7 @@ input:
 expected:
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'
-      equals: "/" # should be "GET /rolldice"
+      equals: "/rolldice"
       attributes:
         otel.library.name: go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
   metrics:

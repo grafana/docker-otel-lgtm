@@ -4,11 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-docker-otel-lgtm is an all-in-one OpenTelemetry backend Docker image for development, demo, and testing. It bundles Grafana, Prometheus, Tempo, Loki, Pyroscope, and OpenTelemetry Collector into a single container.
+docker-otel-lgtm is an all-in-one OpenTelemetry backend Docker image for
+development, demo, and testing. It bundles Grafana, Prometheus, Tempo, Loki,
+Pyroscope, and OpenTelemetry Collector into a single container.
 
 ## Build & Run Commands
 
-All development tasks use [mise](https://github.com/jdx/mise) as the task runner. Tool versions (Go, Java, Rust, lychee) are pinned in `mise.toml`.
+All development tasks use [mise](https://github.com/jdx/mise) as the task
+runner. Tool versions (Go, Java, Rust, lychee) are pinned in `mise.toml`.
 
 ```bash
 # Build Docker image (tag defaults to "latest")
@@ -25,7 +28,9 @@ The build script (`build-lgtm.sh`) auto-detects Docker or Podman.
 
 ## Testing
 
-Acceptance tests use [OATS](https://github.com/grafana/oats) (OpenTelemetry Acceptance Tests). Test cases are defined in `examples/*/oats.yaml` files and validate traces (TraceQL), metrics (PromQL), and logs (LogQL).
+Acceptance tests use [OATS](https://github.com/grafana/oats) (OpenTelemetry
+Acceptance Tests). Test cases are defined in `examples/*/oats.yaml` files and
+validate traces (TraceQL), metrics (PromQL), and logs (LogQL).
 
 ```bash
 # Run all acceptance tests
@@ -58,7 +63,12 @@ Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`. Editor
 
 ### Docker Image (docker/)
 
-The Dockerfile is a multi-stage build on `redhat/ubi9`. The builder stage downloads each component via individual `download-*.sh` scripts, using cosign verification for the OpenTelemetry Collector and SHA256 checksum verification for other components. Each component has a `run-*.sh` script and a `*-config.yaml` configuration file. `run-all.sh` is the container entrypoint that starts all services.
+The Dockerfile is a multi-stage build on `redhat/ubi9`. The builder stage
+downloads each component via individual `download-*.sh` scripts, using cosign
+verification for the OpenTelemetry Collector and SHA256 checksum verification
+for other components. Each component has a `run-*.sh` script and a
+`*-config.yaml` configuration file. `run-all.sh` is the container entrypoint
+that starts all services.
 
 ### Example Applications (examples/)
 
@@ -69,7 +79,9 @@ Language-specific demo apps that emit OpenTelemetry data:
 - **dotnet** (port 8083) - .NET/C#
 - **nodejs** (port 8084) - Node.js
 
-Each example has its own OATS docker-compose file (`docker-compose.oats.yml`, and in some cases also `docker-compose.yml`), plus a `run.sh` script and an `oats.yaml` for acceptance tests.
+Each example has its own OATS docker-compose file (`docker-compose.oats.yml`,
+and in some cases also `docker-compose.yml`), plus a `run.sh` script and an
+`oats.yaml` for acceptance tests.
 
 ### Key Ports
 
@@ -83,7 +95,10 @@ Each example has its own OATS docker-compose file (`docker-compose.oats.yml`, an
 
 ### OTel Collector Configuration
 
-The collector config is split across `docker/otelcol-config.yaml` (base) and `docker/otelcol-config-export-http.yaml` (external export). To test the merged config (inside the built container image, or with the `otelcol-contrib` binary extracted from it):
+The collector config is split across `docker/otelcol-config.yaml` (base) and
+`docker/otelcol-config-export-http.yaml` (external export). To test the merged
+config (inside the built container image, or with the `otelcol-contrib` binary
+extracted from it):
 
 ```bash
 otelcol-contrib --config docker/otelcol-config.yaml --config docker/otelcol-config-export-http.yaml \
@@ -92,8 +107,12 @@ otelcol-contrib --config docker/otelcol-config.yaml --config docker/otelcol-conf
 
 ## Component Versions
 
-All component versions are declared as `ARG` directives in `docker/Dockerfile` with Renovate annotations for automated dependency updates. Version bumps are made there, not elsewhere.
+All component versions are declared as `ARG` directives in `docker/Dockerfile`
+with Renovate annotations for automated dependency updates. Version bumps are
+made there, not elsewhere.
 
 ## Release Process
 
-Releases are automated weekly (Friday 09:00 UTC) via GitHub Actions if `docker/` has changed. Version auto-increments based on component changes. Releases are immutable once published.
+Releases are automated weekly (Friday 09:00 UTC) via GitHub Actions if
+`docker/` has changed. Version auto-increments based on component changes.
+Releases are immutable once published.

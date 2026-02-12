@@ -75,7 +75,7 @@ func newHTTPHandler() http.Handler {
 	// http.route attribute is read at span creation time, before the ServeMux has
 	// routed the request and populated r.Pattern. WithRouteTag is still needed.
 	handleFunc := func(pattern string, handlerFunc func(http.ResponseWriter, *http.Request)) {
-		handler := otelhttp.WithRouteTag(pattern, http.HandlerFunc(handlerFunc)) //nolint:staticcheck // see comment above
+		handler := otelhttp.WithRouteTag(pattern, http.HandlerFunc(handlerFunc)) //nolint:staticcheck
 		mux.Handle(pattern, handler)
 	}
 

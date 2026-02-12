@@ -33,6 +33,11 @@ start_component "tempo"
 start_component "pyroscope"
 ./run-pyroscope.sh &
 
+if [[ ${ENABLE_OBI:-false} == "true" ]]; then
+	start_component "obi"
+	./run-obi.sh &
+fi
+
 echo "Waiting for the OpenTelemetry collector and the Grafana LGTM stack to start up..."
 
 # Declare arrays to store service status and elapsed times
@@ -118,10 +123,31 @@ echo "Prometheus: ${elapsed_times[prometheus]} seconds"
 echo "Tempo: ${elapsed_times[tempo]} seconds"
 echo "Pyroscope: ${elapsed_times[pyroscope]} seconds"
 echo "OpenTelemetry collector: ${elapsed_times[otelcol]} seconds"
+if [[ ${ENABLE_OBI:-false} == "true" ]]; then
+	echo "OBI: (opt-in, not in health check)"
+fi
 echo "Total: ${total_elapsed} seconds"
 
 touch /tmp/ready
 echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
+
+if [[ ${ENABLE_OBI:-false} == "true" ]]; then
+	# Non-blocking check — don't delay readiness if OBI fails (e.g. missing capabilities)
+	if curl -o /dev/null -sg "http://127.0.0.1:6060/metrics" -w "%{response_code}" 2>/dev/null | grep -q "200"; then
+		echo "OBI is up and running."
+	else
+		echo "Warning: OBI internal metrics endpoint is not responding. This may indicate missing eBPF capabilities (--pid=host --privileged)."
+	fi
+	if [[ -n ${OBI_TARGET:-} ]]; then
+		echo "OBI: monitoring '${OBI_TARGET}' processes"
+	elif [[ -n ${OTEL_EBPF_AUTO_TARGET_EXE:-} ]]; then
+		echo "OBI: monitoring processes matching executable name '${OTEL_EBPF_AUTO_TARGET_EXE}'"
+	elif [[ -n ${OTEL_EBPF_OPEN_PORT:-} ]]; then
+		echo "OBI: monitoring processes on ports ${OTEL_EBPF_OPEN_PORT}"
+	else
+		echo "OBI: monitoring processes on default open ports (80, 443, 8080-8099, 3000-3999, 5000-5999)"
+	fi
+fi
 
 echo "Open ports:"
 echo " - 4317: OpenTelemetry GRPC endpoint"

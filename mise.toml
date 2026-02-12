@@ -1,7 +1,7 @@
 # pin all versions to avoid GitHub rate limit
 [tools]
 go = "1.25.7"
-"go:github.com/grafana/oats" = "0.6.0"
+"go:github.com/grafana/oats" = "0.6.1"
 java = "temurin-25.0.1+8.0.LTS"
 lychee = "0.22.0"
 node = "24.13.1"
@@ -51,6 +51,15 @@ depends = ["lint:local-links", "lint:links-in-modified-files-ci", "lint:renovate
 description = "Run LGTM image"
 usage = 'arg "<tag>" default="latest"'
 run = './run-lgtm.sh ${usage_tag}'
+
+[tasks.lgtm-obi]
+description = "Run LGTM with OBI eBPF auto-instrumentation"
+usage = '''
+flag "--local" help="Use locally built image"
+arg "<tag>" default="latest"
+'''
+env = { ENABLE_OBI = "true" }
+run = 'if [ "$usage_local" = "true" ]; then ./run-lgtm.sh ${usage_tag} true; else ./run-lgtm.sh ${usage_tag}; fi'
 
 [tasks.local-lgtm]
 description = "Run locally built LGTM image"

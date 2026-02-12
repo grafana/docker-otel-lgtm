@@ -66,9 +66,65 @@ You can enable logging in the .env file for troubleshooting:
 | `ENABLE_LOGS_TEMPO`      | Tempo                   |
 | `ENABLE_LOGS_PYROSCOPE`  | Pyroscope               |
 | `ENABLE_LOGS_OTELCOL`    | OpenTelemetry Collector |
+| `ENABLE_LOGS_OBI`        | OBI                     |
 | `ENABLE_LOGS_ALL`        | All of the above        |
 
 This has nothing to do with any application logs, which are collected by OpenTelemetry.
+
+### Enable OBI (eBPF auto-instrumentation)
+
+[OpenTelemetry eBPF Instrumentation (OBI)][obi] uses eBPF to automatically generate traces and
+[RED][red-method] metrics for HTTP/gRPC services — with zero code changes.
+
+To enable OBI, add `ENABLE_OBI=true` to your `.env` file or pass it as an
+environment variable:
+
+```sh
+ENABLE_OBI=true ./run-lgtm.sh
+
+# Using mise
+mise run lgtm-obi
+```
+
+**Requirements:** Linux kernel 5.8+ with BTF support. The `run-lgtm.sh` and
+`run-lgtm.ps1` scripts automatically add the required `--pid=host` and
+`--privileged` Docker flags when OBI is enabled. If you run `docker run`
+directly, you must add these flags manually.
+
+> [!NOTE]
+> The `--pid=host` flag shares the host's PID namespace with the container,
+> so OBI can discover and instrument processes running on the host — not just
+> inside the container. For example, `OBI_TARGET=java` will instrument Java
+> processes running on the host as well.
+
+#### Target specific applications
+
+By default, OBI discovers services on common ports (80, 443, 8080-8099,
+3000-3999, 5000-5999). You can target specific applications:
+
+```sh
+# Monitor all Java processes
+ENABLE_OBI=true OBI_TARGET=java ./run-lgtm.sh
+
+# Monitor all Python processes
+ENABLE_OBI=true OBI_TARGET=python ./run-lgtm.sh
+
+# Monitor a specific executable by name
+ENABLE_OBI=true OBI_TARGET=myapp ./run-lgtm.sh
+
+# Monitor specific ports
+ENABLE_OBI=true OTEL_EBPF_OPEN_PORT=8080,9090 ./run-lgtm.sh
+```
+
+<!-- editorconfig-checker-disable -->
+
+| Variable                    | Purpose                                                                                         |
+|-----------------------------|-------------------------------------------------------------------------------------------------|
+| `OBI_TARGET`                | Friendly language target: `java`, `python`, `node`, `dotnet`, `ruby`, or any regular expression |
+| `OTEL_EBPF_OPEN_PORT`       | Override ports to monitor (native OBI environment variable)                                     |
+| `OTEL_EBPF_AUTO_TARGET_EXE` | Executable name pattern (native OBI environment variable, set automatically by `OBI_TARGET`)    |
+
+<!-- editorconfig-checker-enable -->
 
 ### Send data to vendors
 
@@ -246,6 +302,7 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 <!-- markdownlint-disable MD013 -->
 
 [app-o11y]: https://grafana.com/products/cloud/application-observability/
+[obi]: https://opentelemetry.io/docs/zero-code/obi/ "OpenTelemetry eBPF Instrumentation"
 [cosign]: https://github.com/sigstore/cosign "Cosign on GitHub"
 [docker-hub]: https://hub.docker.com/r/grafana/otel-lgtm
 [docker-latest]: https://img.shields.io/docker/v/grafana/otel-lgtm?logo=docker&label=latest&color=blue
@@ -262,3 +319,4 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 [otlp-endpoint]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint
 [otlp-headers]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers
 [oats]: https://github.com/grafana/oats
+[red-method]: https://grafana.com/blog/the-red-method-how-to-instrument-your-services/ "The RED Method"

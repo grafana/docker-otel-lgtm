@@ -17,17 +17,143 @@
       "tempo"
     ]
   },
-  "mise.toml": {
-    "mise": [
+  "examples/dotnet/Dockerfile": {
+    "dockerfile": ["mcr.microsoft.com/dotnet/aspnet", "mcr.microsoft.com/dotnet/sdk"]
+  },
+  "examples/dotnet/rolldice.csproj": {
+    "nuget": [
+      "OpenTelemetry.Exporter.Console",
+      "OpenTelemetry.Exporter.OpenTelemetryProtocol",
+      "OpenTelemetry.Extensions.Hosting",
+      "OpenTelemetry.Instrumentation.AspNetCore",
+      "OpenTelemetry.Instrumentation.Http"
+    ]
+  },
+  "examples/ebpf-profiler/Dockerfile": {
+    "dockerfile": ["otel/opentelemetry-ebpf-profiler-dev", "ubuntu"]
+  },
+  "examples/ebpf-profiler/generate-traffic.Dockerfile": {
+    "dockerfile": ["ubuntu"]
+  },
+  "examples/go/Dockerfile": {
+    "dockerfile": ["golang"]
+  },
+  "examples/go/go.mod": {
+    "gomod": [
+      "github.com/cenkalti/backoff/v5",
+      "github.com/cespare/xxhash/v2",
+      "github.com/felixge/httpsnoop",
+      "github.com/go-logr/logr",
+      "github.com/go-logr/stdr",
+      "github.com/google/uuid",
+      "github.com/grpc-ecosystem/grpc-gateway/v2",
       "go",
-      "go:github.com/grafana/oats",
-      "java",
-      "lychee",
-      "node",
-      "npm:json5",
-      "npm:renovate",
-      "rust"
-    ],
+      "go.opentelemetry.io/auto/sdk",
+      "go.opentelemetry.io/contrib/bridges/otelslog",
+      "go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp",
+      "go.opentelemetry.io/contrib/instrumentation/runtime",
+      "go.opentelemetry.io/otel",
+      "go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp",
+      "go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp",
+      "go.opentelemetry.io/otel/exporters/otlp/otlptrace",
+      "go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp",
+      "go.opentelemetry.io/otel/log",
+      "go.opentelemetry.io/otel/metric",
+      "go.opentelemetry.io/otel/sdk",
+      "go.opentelemetry.io/otel/sdk/log",
+      "go.opentelemetry.io/otel/sdk/metric",
+      "go.opentelemetry.io/otel/trace",
+      "go.opentelemetry.io/proto/otlp",
+      "golang.org/x/net",
+      "golang.org/x/sys",
+      "golang.org/x/text",
+      "google.golang.org/genproto/googleapis/api",
+      "google.golang.org/genproto/googleapis/rpc",
+      "google.golang.org/grpc",
+      "google.golang.org/protobuf"
+    ]
+  },
+  "examples/java/.mvn/wrapper/maven-wrapper.properties": {
+    "maven-wrapper": ["maven"]
+  },
+  "examples/java/Dockerfile": {
+    "dockerfile": [
+      "eclipse-temurin",
+      "ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java"
+    ]
+  },
+  "examples/java/json-logging-ecs/Dockerfile": {
+    "dockerfile": ["eclipse-temurin"]
+  },
+  "examples/java/json-logging-logback/Dockerfile": {
+    "dockerfile": ["eclipse-temurin"]
+  },
+  "examples/java/json-logging-otlp/Dockerfile": {
+    "dockerfile": [
+      "eclipse-temurin",
+      "ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java"
+    ]
+  },
+  "examples/java/mvnw": {
+    "maven-wrapper": ["maven-wrapper"]
+  },
+  "examples/java/mvnw.cmd": {
+    "maven-wrapper": ["maven-wrapper"]
+  },
+  "examples/java/pom.xml": {
+    "maven": ["org.springframework.boot:spring-boot-dependencies"]
+  },
+  "examples/java/run.sh": {
+    "regex": ["opentelemetry-java-instrumentation"]
+  },
+  "examples/java/testcontainer/pom.xml": {
+    "maven": [
+      "io.opentelemetry:opentelemetry-bom-alpha",
+      "org.assertj:assertj-core",
+      "org.awaitility:awaitility",
+      "org.junit.jupiter:junit-jupiter",
+      "org.testcontainers:testcontainers-bom"
+    ]
+  },
+  "examples/nodejs/Dockerfile": {
+    "dockerfile": ["docker/dockerfile", "node"]
+  },
+  "examples/nodejs/package.json": {
+    "npm": [
+      "@opentelemetry/api",
+      "@opentelemetry/api-logs",
+      "@opentelemetry/auto-instrumentations-node",
+      "@opentelemetry/exporter-logs-otlp-proto",
+      "@opentelemetry/exporter-metrics-otlp-proto",
+      "@opentelemetry/exporter-trace-otlp-proto",
+      "@opentelemetry/resources",
+      "@opentelemetry/sdk-logs",
+      "@opentelemetry/sdk-metrics",
+      "@opentelemetry/sdk-node",
+      "@opentelemetry/sdk-trace-node",
+      "@opentelemetry/semantic-conventions",
+      "express"
+    ]
+  },
+  "examples/python/Dockerfile": {
+    "regex": ["opentelemetry-distro"]
+  },
+  "examples/python/requirements.txt": {
+    "pip_requirements": [
+      "Flask",
+      "Jinja2",
+      "MarkupSafe",
+      "Werkzeug",
+      "blinker",
+      "click",
+      "itsdangerous"
+    ]
+  },
+  "examples/python/run.sh": {
+    "regex": ["opentelemetry-distro"]
+  },
+  "mise.toml": {
+    "mise": ["go", "go:github.com/grafana/oats", "java", "lychee", "node", "npm:renovate", "rust"],
     "regex": ["ghcr.io/super-linter/super-linter"]
   }
 }

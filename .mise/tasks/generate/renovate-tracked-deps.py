@@ -19,30 +19,9 @@ OUTPUT_FILE = (
 )
 
 
-def build_minimal_config(tmpdir):
-    """Convert .github/renovate.json5 to a minimal JSON config."""
-    in_path = REPO_ROOT / ".github" / "renovate.json5"
-    result = subprocess.run(
-        ["json5", str(in_path)],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    full = json.loads(result.stdout)
-    minimal = {}
-    if "extends" in full:
-        minimal["extends"] = full["extends"]
-    if "customManagers" in full:
-        minimal["customManagers"] = full["customManagers"]
-
-    config_path = os.path.join(tmpdir, "renovate.json")
-    with open(config_path, "w", encoding="utf-8") as f:
-        json.dump(minimal, f, indent=2)
-    return config_path
-
-
-def run_renovate(tmpdir, config_path):
+def run_renovate(tmpdir):
     """Run Renovate locally and return the log path."""
+    config_path = str(REPO_ROOT / ".github" / "renovate.json5")
     log_path = os.path.join(tmpdir, "renovate.log")
     env = {
         **os.environ,
@@ -129,8 +108,7 @@ def extract_deps(log_path):
 def main():
     """Generate renovate-tracked-deps.json."""
     with tempfile.TemporaryDirectory() as tmpdir:
-        config_path = build_minimal_config(tmpdir)
-        log_path = run_renovate(tmpdir, config_path)
+        log_path = run_renovate(tmpdir)
         result = extract_deps(log_path)
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)

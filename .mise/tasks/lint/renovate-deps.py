@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+# pylint: disable=invalid-name
 # [MISE] description="Verify renovate-tracked-deps.json is up to date"
+"""Verify renovate-tracked-deps.json is up to date."""
 
 import subprocess
 import sys
@@ -11,12 +13,13 @@ COMMITTED = REPO_ROOT / ".github" / "renovate-tracked-deps.json"
 
 
 def main():
+    """Verify renovate-tracked-deps.json is up to date."""
     with tempfile.TemporaryDirectory() as tmpdir:
         generated = Path(tmpdir) / "renovate-tracked-deps.json"
 
         result = subprocess.run(
             ["mise", "run", "generate:renovate-tracked-deps", str(generated)],
-            capture_output=False,
+            check=False,
         )
         if result.returncode != 0:
             print("ERROR: generator failed.", file=sys.stderr)
@@ -26,6 +29,7 @@ def main():
             ["diff", "-u", str(COMMITTED), str(generated)],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         if diff.returncode == 0:

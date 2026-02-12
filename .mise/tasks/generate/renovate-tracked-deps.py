@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+# pylint: disable=invalid-name
 # [MISE] description="Generate renovate-tracked-deps.json from Renovate's local analysis"
+"""Generate renovate-tracked-deps.json from Renovate's local analysis."""
 
 import json
 import os
@@ -44,6 +46,7 @@ fs.writeFileSync({json.dumps(config_path)}, JSON.stringify(minimal, null, 2));
 
 
 def run_renovate(tmpdir, config_path):
+    """Run Renovate locally and return the log path."""
     log_path = os.path.join(tmpdir, "renovate.log")
     env = {
         **os.environ,
@@ -51,7 +54,7 @@ def run_renovate(tmpdir, config_path):
         "LOG_FORMAT": "json",
         "RENOVATE_CONFIG_FILE": config_path,
     }
-    with open(log_path, "w") as log_file:
+    with open(log_path, "w", encoding="utf-8") as log_file:
         result = subprocess.run(
             [
                 "renovate",
@@ -61,10 +64,12 @@ def run_renovate(tmpdir, config_path):
             env=env,
             stdout=log_file,
             stderr=subprocess.STDOUT,
+            check=False,
         )
     if result.returncode != 0:
         print(
-            f"ERROR: Renovate failed with exit code {result.returncode}. See log file for details: {log_path}",
+            f"ERROR: Renovate failed (exit {result.returncode})."
+            f" See log: {log_path}",
             file=sys.stderr,
         )
         sys.exit(result.returncode)
@@ -72,8 +77,9 @@ def run_renovate(tmpdir, config_path):
 
 
 def extract_deps(log_path):
+    """Parse Renovate log and return deps grouped by file."""
     config = None
-    with open(log_path) as f:
+    with open(log_path, encoding="utf-8") as f:
         for line in f:
             try:
                 entry = json.loads(line)
@@ -89,15 +95,19 @@ def extract_deps(log_path):
         )
         sys.exit(1)
 
-    # Skip reasons that mean "not a real dep" vs "real dep but can't check updates locally"
-    SKIP_REASONS_TO_EXCLUDE = {"contains-variable", "invalid-value", "invalid-version"}
+    # Skip reasons that mean "not a real dep"
+    skip_reasons_to_exclude = {
+        "contains-variable",
+        "invalid-value",
+        "invalid-version",
+    }
 
     deps_by_file = defaultdict(set)
     for manager_files in config.values():
         for pkg_file in manager_files:
             file_path = pkg_file.get("packageFile", "")
             for dep in pkg_file.get("deps", []):
-                if dep.get("skipReason") in SKIP_REASONS_TO_EXCLUDE:
+                if dep.get("skipReason") in skip_reasons_to_exclude:
                     continue
                 dep_name = dep.get("depName")
                 if dep_name:
@@ -107,13 +117,14 @@ def extract_deps(log_path):
 
 
 def main():
+    """Generate renovate-tracked-deps.json."""
     with tempfile.TemporaryDirectory() as tmpdir:
         config_path = build_minimal_config(tmpdir)
         log_path = run_renovate(tmpdir, config_path)
         result = extract_deps(log_path)
 
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_FILE, "w") as f:
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
         f.write("\n")
 

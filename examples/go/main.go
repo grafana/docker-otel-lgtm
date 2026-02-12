@@ -66,11 +66,23 @@ func run() (err error) {
 func newHTTPHandler() http.Handler {
 	mux := http.NewServeMux()
 
+	// handleFunc is a replacement for mux.HandleFunc
+	// which enriches the handler's HTTP instrumentation with the pattern as the http.route.
+	//
+	// NOTE: otelhttp.WithRouteTag is marked deprecated, claiming that http.route is
+	// automatically extracted from http.Request.Pattern (Go 1.22+). However, as of
+	// otelhttp v0.64.0 this does not work when otelhttp wraps a ServeMux: the
+	// http.route attribute is read at span creation time, before the ServeMux has
+	// routed the request and populated r.Pattern. WithRouteTag is still needed.
+	handleFunc := func(pattern string, handlerFunc func(http.ResponseWriter, *http.Request)) {
+		handler := otelhttp.WithRouteTag(pattern, http.HandlerFunc(handlerFunc))
+		mux.Handle(pattern, handler)
+	}
+
 	// Register handlers.
-	mux.HandleFunc("/rolldice", rolldice)
+	handleFunc("/rolldice", rolldice)
 
 	// Add HTTP instrumentation for the whole server.
-	// Since Go 1.22+, otelhttp automatically extracts the route from ServeMux patterns.
 	handler := otelhttp.NewHandler(mux, "/")
 	return handler
 }

@@ -59,7 +59,7 @@ flag "--local" help="Use locally built image"
 arg "<tag>" default="latest"
 '''
 env = { ENABLE_OBI = "true" }
-run = 'if [ "$usage_local" = "true" ]; then ./run-lgtm.sh latest true; else ./run-lgtm.sh ${usage_tag}; fi'
+run = 'if [ "$usage_local" = "true" ]; then ./run-lgtm.sh ${usage_tag} true; else ./run-lgtm.sh ${usage_tag}; fi'
 
 [tasks.local-lgtm]
 description = "Run locally built LGTM image"

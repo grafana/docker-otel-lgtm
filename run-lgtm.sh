@@ -19,7 +19,8 @@ OBI_ENV_FLAGS=()
 if [[ ${ENABLE_OBI:-} == "true" ]] || grep -qE '^ENABLE_OBI=true$' .env 2>/dev/null; then
 	echo "OBI eBPF auto-instrumentation enabled. Adding --pid=host --privileged flags."
 	OBI_FLAGS=(--pid=host --privileged)
-	# Forward OBI-related env vars into the container (they are not in .env by default)
+	# Forward OBI-specific env vars into the container (they are not in .env by default).
+	# General OTLP vars (OTEL_EXPORTER_OTLP_ENDPOINT, etc.) are forwarded via --env-file .env.
 	OBI_ENV_FLAGS=(-e ENABLE_OBI=true)
 	for var in $(compgen -v | grep -E '^(OBI_TARGET|OTEL_EBPF_|ENABLE_LOGS_OBI)' | grep -v '^OBI_FLAGS$\|^OBI_ENV_FLAGS$'); do
 		OBI_ENV_FLAGS+=(-e "$var=${!var}")

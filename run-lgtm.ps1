@@ -49,7 +49,8 @@ if (-Not $obiEnabled -and (Test-Path -Path ".env")) {
 if ($obiEnabled) {
     Write-Output "OBI eBPF auto-instrumentation enabled. Adding --pid=host --privileged flags."
     $obiFlags = @('--pid=host', '--privileged')
-    # Forward OBI-related env vars into the container (they are not in .env by default)
+    # Forward OBI-specific env vars into the container (they are not in .env by default).
+    # General OTLP vars (OTEL_EXPORTER_OTLP_ENDPOINT, etc.) are forwarded via --env-file .env.
     $obiFlags += '-e', 'ENABLE_OBI=true'
     Get-ChildItem env: |
         Where-Object { $_.Name -match '^(OBI_TARGET|OTEL_EBPF_|ENABLE_LOGS_OBI)' } |

@@ -45,7 +45,7 @@ oats -timeout 2h -lgtm-version dev1 examples/nodejs
 
 ```bash
 # All lints
-mise run lint:all
+mise run lint
 
 # Markdown link checker only
 mise run lint:links
@@ -73,11 +73,11 @@ that starts all services.
 ### Example Applications (examples/)
 
 Language-specific demo apps that emit OpenTelemetry data:
-- **java** (port 8080) - Maven + OTel Java Agent
-- **go** (port 8081) - Go workspace (`go.work` at repo root)
-- **python** (port 8082) - Python + auto-instrumentation
-- **dotnet** (port 8083) - .NET/C#
-- **nodejs** (port 8084) - Node.js
+- `examples/java` (port 8080) - Maven + OTel Java Agent
+- `examples/go` (port 8081) - Go workspace (`go.work` at repository root)
+- `examples/python` (port 8082) - Python + auto-instrumentation
+- `examples/dotnet` (port 8083) - .NET/C#
+- `examples/nodejs` (port 8084) - Node.js
 
 Each example has its own OATS docker-compose file (`docker-compose.oats.yml`,
 and in some cases also `docker-compose.yml`), plus a `run.sh` script and an
@@ -85,12 +85,12 @@ and in some cases also `docker-compose.yml`), plus a `run.sh` script and an
 
 ### Key Ports
 
-| Service | Port |
-|---------|------|
-| Grafana | 3000 |
-| OTLP gRPC | 4317 |
-| OTLP HTTP | 4318 |
-| Pyroscope | 4040 |
+| Service    | Port |
+|------------|------|
+| Grafana    | 3000 |
+| OTLP gRPC  | 4317 |
+| OTLP HTTP  | 4318 |
+| Pyroscope  | 4040 |
 | Prometheus | 9090 |
 
 ### OTel Collector Configuration

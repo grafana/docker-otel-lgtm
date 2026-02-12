@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-docker-otel-lgtm is an all-in-one OpenTelemetry backend Docker image for development, demo, and testing. It bundles Grafana, Prometheus, Tempo, Loki, Pyroscope, OpenTelemetry Collector, and OBI (eBPF Instrumentation) into a single container.
+docker-otel-lgtm is an all-in-one OpenTelemetry backend Docker image for development, demo, and testing. It bundles Grafana, Prometheus, Tempo, Loki, Pyroscope, and OpenTelemetry Collector into a single container.
 
 ## Build & Run Commands
 
@@ -16,9 +16,6 @@ mise run build-lgtm dev1
 
 # Run Docker image
 mise run lgtm dev1
-
-# Run with OBI eBPF auto-instrumentation
-mise run lgtm-obi dev1
 
 # Run locally built image
 mise run local-lgtm
@@ -61,7 +58,7 @@ Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`. Editor
 
 ### Docker Image (docker/)
 
-The Dockerfile is a multi-stage build on `redhat/ubi9`. The builder stage downloads each component via individual `download-*.sh` scripts with cosign verification. Each component has a `run-*.sh` script and a `*-config.yaml` configuration file. `run-all.sh` is the container entrypoint that starts all services.
+The Dockerfile is a multi-stage build on `redhat/ubi9`. The builder stage downloads each component via individual `download-*.sh` scripts, using cosign verification for the OpenTelemetry Collector and SHA256 checksum verification for other components. Each component has a `run-*.sh` script and a `*-config.yaml` configuration file. `run-all.sh` is the container entrypoint that starts all services.
 
 ### Example Applications (examples/)
 
@@ -72,7 +69,7 @@ Language-specific demo apps that emit OpenTelemetry data:
 - **dotnet** (port 8083) - .NET/C#
 - **nodejs** (port 8084) - Node.js
 
-Each example has its own `docker-compose.yaml`, `run.sh`, and `oats.yaml` for acceptance tests.
+Each example has its own OATS docker-compose file (`docker-compose.oats.yml`, and in some cases also `docker-compose.yml`), plus a `run.sh` script and an `oats.yaml` for acceptance tests.
 
 ### Key Ports
 
@@ -86,10 +83,10 @@ Each example has its own `docker-compose.yaml`, `run.sh`, and `oats.yaml` for ac
 
 ### OTel Collector Configuration
 
-The collector config is split across `otelcol-config.yaml` (base) and `otelcol-export-http.yaml` (external export). To test the merged config:
+The collector config is split across `docker/otelcol-config.yaml` (base) and `docker/otelcol-config-export-http.yaml` (external export). To test the merged config (inside the built container image, or with the `otelcol-contrib` binary extracted from it):
 
 ```bash
-./otelcol-contrib --config docker/otelcol-config.yaml --config docker/otelcol-export-http.yaml \
+otelcol-contrib --config docker/otelcol-config.yaml --config docker/otelcol-config-export-http.yaml \
   print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml
 ```
 

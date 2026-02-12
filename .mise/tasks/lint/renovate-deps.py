@@ -32,6 +32,7 @@ def main():
         if committed_data == generated_data:
             print("renovate-tracked-deps.json is up to date.")
         else:
+
             def normalize(d):
                 return json.dumps(d, indent=2, sort_keys=True) + "\n"
 

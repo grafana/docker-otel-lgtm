@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# MISE description="Generate renovate-tracked-deps.json from Renovate's local analysis"
+# [MISE] description="Generate renovate-tracked-deps.json from Renovate's local analysis"
 
 import json
 import os
@@ -52,10 +52,8 @@ def run_renovate(tmpdir, config_path):
         "RENOVATE_CONFIG_FILE": config_path,
     }
     with open(log_path, "w") as log_file:
-        subprocess.run(
+        result = subprocess.run(
             [
-                "npx",
-                "--yes",
                 "renovate",
                 "--platform=local",
                 "--require-config=ignored",
@@ -64,6 +62,12 @@ def run_renovate(tmpdir, config_path):
             stdout=log_file,
             stderr=subprocess.STDOUT,
         )
+    if result.returncode != 0:
+        print(
+            f"ERROR: Renovate failed with exit code {result.returncode}. See log file for details: {log_path}",
+            file=sys.stderr,
+        )
+        sys.exit(result.returncode)
     return log_path
 
 

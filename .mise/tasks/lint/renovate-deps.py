@@ -30,7 +30,7 @@ def main():
 
         if diff.returncode == 0:
             print("renovate-tracked-deps.json is up to date.")
-        else:
+        elif diff.returncode == 1:
             print(diff.stdout)
             print("ERROR: renovate-tracked-deps.json is out of date.", file=sys.stderr)
             print(
@@ -38,6 +38,10 @@ def main():
                 file=sys.stderr,
             )
             sys.exit(1)
+        else:
+            print(diff.stderr, file=sys.stderr)
+            print("ERROR: diff failed.", file=sys.stderr)
+            sys.exit(diff.returncode)
 
 
 if __name__ == "__main__":

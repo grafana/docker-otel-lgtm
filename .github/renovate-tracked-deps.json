@@ -1,5 +1,9 @@
 {
-  ".github/workflows/acceptance-tests.yml": ["actions/checkout", "jdx/mise-action", "ubuntu"],
+  ".github/workflows/acceptance-tests.yml": [
+    "actions/checkout",
+    "jdx/mise-action",
+    "ubuntu"
+  ],
   ".github/workflows/ghcr-image-build-and-publish.yml": [
     "actions/attest-build-provenance",
     "actions/checkout",
@@ -11,8 +15,15 @@
     "sigstore/cosign-installer",
     "ubuntu"
   ],
-  ".github/workflows/lint-rest.yml": ["actions/checkout", "jdx/mise-action", "ubuntu"],
-  ".github/workflows/publish-release.yml": ["actions/github-script", "grafana/shared-workflows"],
+  ".github/workflows/lint-rest.yml": [
+    "actions/checkout",
+    "jdx/mise-action",
+    "ubuntu"
+  ],
+  ".github/workflows/publish-release.yml": [
+    "actions/github-script",
+    "grafana/shared-workflows"
+  ],
   ".github/workflows/release.yml": [
     "actions/attest-build-provenance",
     "actions/checkout",
@@ -21,8 +32,15 @@
     "sigstore/cosign-installer",
     "ubuntu"
   ],
-  ".github/workflows/scheduled-release.yml": ["actions/checkout", "ubuntu"],
-  ".github/workflows/super-linter.yml": ["actions/checkout", "jdx/mise-action", "ubuntu"],
+  ".github/workflows/scheduled-release.yml": [
+    "actions/checkout",
+    "ubuntu"
+  ],
+  ".github/workflows/super-linter.yml": [
+    "actions/checkout",
+    "jdx/mise-action",
+    "ubuntu"
+  ],
   "docker/Dockerfile": [
     "cosign",
     "docker.io/redhat/ubi9",
@@ -41,6 +59,7 @@
     "java",
     "lychee",
     "node",
+    "npm:renovate",
     "rust"
   ]
 }

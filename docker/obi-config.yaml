@@ -1,3 +1,6 @@
+ebpf:
+  context_propagation: all
+
 otel_traces_export:
   endpoint: http://127.0.0.1:4318
 

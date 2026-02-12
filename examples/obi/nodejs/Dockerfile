@@ -4,10 +4,12 @@ ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
-RUN npm install --omit=dev
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-COPY app.js .
+COPY --chown=node:node app.js .
+
+USER node
 
 EXPOSE 8084
 

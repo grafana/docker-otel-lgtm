@@ -59,6 +59,12 @@ if ($obiEnabled) {
         }
 }
 
+# Allocate TTY only if stdin is interactive
+$ttyFlag = @('-i')
+if ([Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
+    $ttyFlag = @('-t', '-i')
+}
+
 $runCommand = @(
     'container', 'run'
     '--name', 'lgtm'
@@ -77,7 +83,11 @@ $runCommand += @(
     '-p', '4318:4318'
     '-p', '9090:9090'
     '--rm'
-    '-ti'
+)
+
+$runCommand += $ttyFlag
+
+$runCommand += @(
     '-v', "${path}/container/grafana:/data/grafana"
     '-v', "${path}/container/prometheus:/data/prometheus"
     '-v', "${path}/container/loki:/data/loki"

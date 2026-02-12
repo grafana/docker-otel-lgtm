@@ -32,7 +32,9 @@ def main():
         if committed_data == generated_data:
             print("renovate-tracked-deps.json is up to date.")
         else:
-            normalize = lambda d: json.dumps(d, indent=2, sort_keys=True) + "\n"
+            def normalize(d):
+                return json.dumps(d, indent=2, sort_keys=True) + "\n"
+
             norm_committed = Path(tmpdir) / "committed.json"
             norm_generated = Path(tmpdir) / "generated.json"
             norm_committed.write_text(normalize(committed_data))

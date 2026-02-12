@@ -40,6 +40,7 @@ def run_renovate(tmpdir):
             stdout=log_file,
             stderr=subprocess.STDOUT,
             check=False,
+            cwd=REPO_ROOT,
         )
     if result.returncode != 0:
         print(

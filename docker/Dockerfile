@@ -46,8 +46,10 @@ RUN yum install -y unzip dos2unix jq
 
 # installs for the final image
 # see https://github.com/thomasdarimont/keycloak/blob/main/docs/guides/server/containers.adoc#installing-additional-rpm-packages
+# Use tsflags=noscripts to skip RPM scriptlets that need /bin/sh inside the installroot,
+# which fails under QEMU emulation (arm64 cross-build). CA certs come from the builder image.
 RUN mkdir -p /mnt/rootfs
-RUN dnf install --installroot /mnt/rootfs curl-minimal --releasever 9 --setopt install_weak_deps=false --nodocs -y && \
+RUN dnf install --installroot /mnt/rootfs curl-minimal --releasever 9 --setopt install_weak_deps=false --setopt tsflags=noscripts --nodocs -y && \
     dnf --installroot /mnt/rootfs clean all && \
     rpm --root /mnt/rootfs -e --nodeps setup
 

@@ -8,4 +8,4 @@ set -euo pipefail
 
 eval "lychee_args=(${usage_lychee_args:-})"
 # shellcheck disable=SC2154,SC2086 # usage_*/lychee_args are set by mise; intentional word splitting
-lychee --scheme file --include-fragments --config .github/config/lychee.toml "${lychee_args[@]+"${lychee_args[@]}"}" $usage_file
+lychee --scheme file --include-fragments --config .github/config/lychee.toml "${lychee_args[@]+"${lychee_args[@]}"}" -- $usage_file

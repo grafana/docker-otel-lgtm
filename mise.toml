@@ -15,26 +15,12 @@ SUPER_LINTER_VERSION="v8.4.0@sha256:c5e3307932203ff9e1e8acfe7e92e894add6266605b5
 
 [tasks."lint"]
 description = "Run all lints"
-depends = ["lint:super-linter", "lint:rest"]
+depends = ["lint:super-linter", "lint:local-links", "lint:links-in-modified-files", "generate:renovate-tracked-deps"]
 
 [tasks."lint:ci"]
 description = "Run all lints (CI configuration)"
 hide = true
-depends = ["lint:super-linter-ci", "lint:rest-ci"]
-
-[tasks."lint:super-linter-ci"]
-description = "Run super-linter without auto-fix (CI configuration)"
-hide = true
-run = "mise run lint:super-linter --no-fix"
-
-[tasks."lint:rest"]
-description = "All lints not covered by super linter - updates renovate-tracked-deps.json file as part of the process"
-depends = ["lint:local-links", "lint:links-in-modified-files", "generate:renovate-tracked-deps"]
-
-[tasks."lint:rest-ci"]
-description = "All lints not covered by super linter (CI configuration)"
-hide = true
-depends = ["lint:local-links", "lint:links-in-modified-files", "lint:renovate-deps"]
+depends = ["lint:super-linter", "lint:local-links", "lint:links-in-modified-files", "lint:renovate-deps"]
 
 [tasks.lgtm]
 description = "Run LGTM image"

@@ -32,7 +32,8 @@ else
 fi
 
 ENV_FILE=".github/config/super-linter.env"
-if [ "${usage_no_fix:-}" = "true" ]; then
+no_fix="${usage_no_fix:-${CI:-false}}"
+if [ "$no_fix" = "true" ]; then
 	# Filter out FIX_* and comment lines for CI mode
 	FILTERED_ENV_FILE=$(mktemp)
 	trap 'rm -f "$FILTERED_ENV_FILE"' EXIT

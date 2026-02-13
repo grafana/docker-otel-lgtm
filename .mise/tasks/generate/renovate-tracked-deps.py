@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# pylint: disable=invalid-name
+# pylint: disable=invalid-name,duplicate-code
 # [MISE] description="Generate renovate-tracked-deps.json from Renovate's local analysis"
 """Generate renovate-tracked-deps.json from Renovate's local analysis."""
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# pylint: disable=invalid-name
+# pylint: disable=invalid-name,duplicate-code
 # [MISE] description="Verify renovate-tracked-deps.json is up to date"
 """Verify renovate-tracked-deps.json is up to date."""
 

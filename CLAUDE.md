@@ -44,31 +44,26 @@ oats -timeout 2h -lgtm-version dev1 examples/nodejs
 ## Linting
 
 ```bash
-# All lints
+# Auto-fix and verify (recommended dev workflow)
+mise run fix
+
+# Verify only (same command used in CI)
 mise run lint
-
-# Markdown link checker only
-mise run lint:links
-
-# Links in modified files (local)
-mise run lint:links-in-modified-files-local
-
-# Super-linter (Docker-based, runs all language linters)
-mise run lint:super-linter
 ```
 
-Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`. EditorConfig rules in `.editorconfig`.
+After running `fix`, always review the changed files before committing —
+auto-fixes may produce unexpected results.
+
+Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`.
+EditorConfig rules in `.editorconfig`.
 
 ### Renovate Tracked Deps Linter
 
-A CI lint (`mise run lint:renovate-deps`) verifies that
-`.github/renovate-tracked-deps.json` stays in sync with what Renovate actually
-tracks. This catches dependencies that Renovate silently drops (e.g., a broken
-`# renovate:` annotation or a moved file) — something the Dependency Dashboard
-cannot show. If the snapshot is stale, run
-`mise run generate:renovate-tracked-deps` and commit the result. See
-[`.github/renovate-tracked-deps.md`](.github/renovate-tracked-deps.md) for
-details.
+`mise run lint` verifies that `.github/renovate-tracked-deps.json` stays in
+sync with what Renovate actually tracks. If the snapshot is stale, run
+`mise run fix` (or `mise run generate:renovate-tracked-deps`) and commit the
+result. See [`.github/renovate-tracked-deps.md`](.github/renovate-tracked-deps.md)
+for details.
 
 ## Architecture
 

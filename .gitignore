@@ -11,3 +11,4 @@ opentelemetry-javaagent*.jar
 grafana-opentelemetry*.jar
 build/
 obj/
+examples/go/dice

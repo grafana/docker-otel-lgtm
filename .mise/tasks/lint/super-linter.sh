@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-#MISE description="Run Super-Linter on the repository - applying auto-fixes unless disabled with --no-fix"
-#USAGE flag "--no-fix" help="Disable auto-fix (for CI)"
+#MISE description="Run Super-Linter on the repository"
 
-set -xeuo pipefail
+set -euo pipefail
 
 # check for required env vars, otherwise exit with error
 if [ -z "${SUPER_LINTER_VERSION:-}" ]; then
@@ -32,15 +31,15 @@ else
 fi
 
 ENV_FILE=".github/config/super-linter.env"
-if [ "${usage_no_fix:-}" = "true" ]; then
-	# Filter out FIX_* and comment lines for CI mode
+if [ "${AUTOFIX:-}" != "true" ]; then
+	# Filter out FIX_* and comment lines when not auto-fixing
 	FILTERED_ENV_FILE=$(mktemp)
 	trap 'rm -f "$FILTERED_ENV_FILE"' EXIT
 	grep -v '^#' "$ENV_FILE" | grep -v '^FIX_' >"$FILTERED_ENV_FILE"
 	ENV_FILE="$FILTERED_ENV_FILE"
 fi
 
-$RUNTIME image pull --platform linux/amd64 "ghcr.io/super-linter/super-linter:${SUPER_LINTER_VERSION}"
+$RUNTIME image pull -q --platform linux/amd64 "ghcr.io/super-linter/super-linter:${SUPER_LINTER_VERSION}" >/dev/null
 
 $RUNTIME container run --rm --platform linux/amd64 \
 	-e RUN_LOCAL=true \

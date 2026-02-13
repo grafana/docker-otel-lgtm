@@ -3,10 +3,12 @@
 [![Docker latest][docker-latest]][docker-hub]
 [![Docker pulls][docker-pulls]][docker-hub]
 
-An OpenTelemetry backend in a Docker image.
+An OpenTelemetry backend in a Docker image. It bundles the **OpenTelemetry Collector**,
+**Prometheus** (metrics), **Tempo** (traces), **Loki** (logs), **Pyroscope** (profiles),
+and **Grafana** into a single container — with optional **OBI** (eBPF auto-instrumentation).
 
 <!-- markdownlint-disable-next-line MD013 -->
-![Components included in the Docker image: OpenTelemetry collector, Prometheus, Tempo, Loki, Grafana, Pyroscope](img/overview.png) <!-- editorconfig-checker-disable-line -->
+![Overview of telemetry flow: applications, optionally auto-instrumented with OBI for traces and metrics, send telemetry to the OpenTelemetry Collector, which routes metrics to Prometheus, traces to Tempo, logs to Loki, and profiles to Pyroscope, with all signals visualized in Grafana](img/overview.png) <!-- editorconfig-checker-disable-line -->
 
 The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry
 that's intended for development, demo, and testing environments.

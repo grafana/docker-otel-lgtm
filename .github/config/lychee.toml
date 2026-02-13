@@ -9,8 +9,6 @@ max_concurrency = 4
 # Check link anchors
 include_fragments = true
 
-base_url = "https://github.com/grafana/docker-otel-lgtm/blob/main/"
-
 remap = [
   # workaround for https://github.com/lycheeverse/lychee/issues/1729
   "https://github.com/(.*?)/(.*?)/blob/(.*?)/(.*#.*)$ https://raw.githubusercontent.com/$1/$2/$3/$4"

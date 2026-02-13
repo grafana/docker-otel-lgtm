@@ -13,19 +13,6 @@ RENOVATE_TRACKED_DEPS_EXCLUDE="github-actions,github-runners"
 # renovate: datasource=docker depName=ghcr.io/super-linter/super-linter
 SUPER_LINTER_VERSION="v8.4.0@sha256:c5e3307932203ff9e1e8acfe7e92e894add6266605b5d7fb525fb371a59a26f4"
 
-[tasks."lint:links"]
-description = "Check all links"
-file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/v1.53.0/.mise/tasks/lint/links.sh"
-
-[tasks."lint:local-links"]
-description = "Check local links"
-file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/v1.53.0/.mise/tasks/lint/local-links.sh"
-
-[tasks."lint:links-in-modified-files"]
-description = "Check links in modified files (only used as a base for the other two lint:links-in-modified-files tasks)"
-hide = true
-file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-contrib/v1.53.0/.mise/tasks/lint/links-in-modified-files.sh"
-
 [tasks."lint:links-in-modified-files-ci"]
 description = "Lint links in modified files (CI configuration)"
 hide = true
@@ -38,6 +25,16 @@ run = "mise run lint:links-in-modified-files --base origin/main --head HEAD"
 [tasks."lint"]
 description = "Run all lints"
 depends = ["lint:super-linter", "lint:rest"]
+
+[tasks."lint:ci"]
+description = "Run all lints (CI configuration)"
+hide = true
+depends = ["lint:super-linter-ci", "lint:rest-ci"]
+
+[tasks."lint:super-linter-ci"]
+description = "Run super-linter without auto-fix (CI configuration)"
+hide = true
+run = "mise run lint:super-linter --no-fix"
 
 [tasks."lint:rest"]
 description = "All lints not covered by super linter - updates renovate-tracked-deps.json file as part of the process"

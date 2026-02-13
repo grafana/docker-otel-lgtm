@@ -2,7 +2,7 @@
 #MISE description="Run Super-Linter on the repository - applying auto-fixes unless disabled with --no-fix"
 #USAGE flag "--no-fix" help="Disable auto-fix (for CI)"
 
-set -xeuo pipefail
+set -euo pipefail
 
 # check for required env vars, otherwise exit with error
 if [ -z "${SUPER_LINTER_VERSION:-}" ]; then
@@ -40,7 +40,7 @@ if [ "${usage_no_fix:-}" = "true" ]; then
 	ENV_FILE="$FILTERED_ENV_FILE"
 fi
 
-$RUNTIME image pull --platform linux/amd64 "ghcr.io/super-linter/super-linter:${SUPER_LINTER_VERSION}"
+$RUNTIME image pull -q --platform linux/amd64 "ghcr.io/super-linter/super-linter:${SUPER_LINTER_VERSION}" >/dev/null
 
 $RUNTIME container run --rm --platform linux/amd64 \
 	-e RUN_LOCAL=true \

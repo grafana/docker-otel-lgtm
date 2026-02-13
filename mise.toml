@@ -21,6 +21,10 @@ depends = ["lint:super-linter", "lint:local-links", "lint:links-in-modified-file
 description = "Auto-fix lint issues and regenerate tracked deps"
 run = "AUTOFIX=true mise run lint:super-linter && mise run generate:renovate-tracked-deps"
 
+[tasks."fix-and-lint"]
+description = "Auto-fix, then verify all lints pass"
+run = "mise run fix && mise run lint"
+
 [tasks.lgtm]
 description = "Run LGTM image"
 usage = 'arg "<tag>" default="latest"'

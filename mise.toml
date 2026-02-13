@@ -18,12 +18,8 @@ description = "Run all lints"
 depends = ["lint:super-linter", "lint:local-links", "lint:links-in-modified-files", "lint:renovate-deps"]
 
 [tasks.fix]
-description = "Auto-fix lint issues and regenerate tracked deps"
-run = "AUTOFIX=true mise run lint:super-linter && mise run generate:renovate-tracked-deps"
-
-[tasks."fix-and-lint"]
-description = "Auto-fix, then verify all lints pass"
-run = "mise run fix && mise run lint"
+description = "Auto-fix lint issues, regenerate tracked deps, then verify"
+run = "AUTOFIX=true mise run lint:super-linter && mise run generate:renovate-tracked-deps && mise run lint"
 
 [tasks.lgtm]
 description = "Run LGTM image"

@@ -45,17 +45,14 @@ oats -timeout 2h -lgtm-version dev1 examples/nodejs
 
 ```bash
 # Auto-fix and verify (recommended dev workflow)
-mise run fix-and-lint
+mise run fix
 
 # Verify only (same command used in CI)
 mise run lint
-
-# Auto-fix only (super-linter fixes + regenerate tracked deps)
-mise run fix
 ```
 
-After running `fix-and-lint` or `fix`, always review the changed files before
-committing — auto-fixes may produce unexpected results.
+After running `fix`, always review the changed files before committing —
+auto-fixes may produce unexpected results.
 
 Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`.
 EditorConfig rules in `.editorconfig`.

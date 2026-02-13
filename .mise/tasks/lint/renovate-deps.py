@@ -11,7 +11,14 @@ import sys
 import tempfile
 from pathlib import Path
 
-REPO_ROOT = Path(os.environ["MISE_PROJECT_ROOT"])
+_repo_root_env = os.environ.get("MISE_PROJECT_ROOT")
+if _repo_root_env is None:
+    print(
+        "ERROR: MISE_PROJECT_ROOT is not set. Run this script via 'mise run'.",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+REPO_ROOT = Path(_repo_root_env)
 COMMITTED = REPO_ROOT / ".github" / "renovate-tracked-deps.json"
 
 

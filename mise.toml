@@ -28,6 +28,7 @@ file = "https://raw.githubusercontent.com/open-telemetry/opentelemetry-java-cont
 
 [tasks."lint:links-in-modified-files-ci"]
 description = "Lint links in modified files (CI configuration)"
+hide = true
 run = "mise run lint:links-in-modified-files --base origin/$GITHUB_BASE_REF --head $GITHUB_HEAD_SHA"
 
 [tasks."lint:links-in-modified-files-local"]
@@ -39,7 +40,7 @@ description = "Run all lints"
 depends = ["lint:super-linter", "lint:rest"]
 
 [tasks."lint:rest"]
-description = "All lints not covered by super linter"
+description = "All lints not covered by super linter - updates renovate-tracked-deps.json file as part of the process"
 depends = ["lint:local-links", "lint:links-in-modified-files-local", "generate:renovate-tracked-deps"]
 
 [tasks."lint:rest-ci"]

@@ -11,7 +11,7 @@ import tempfile
 from collections import defaultdict
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = Path(os.environ["MISE_PROJECT_ROOT"])
 OUTPUT_FILE = (
     Path(sys.argv[1])
     if len(sys.argv) > 1

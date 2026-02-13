@@ -5,12 +5,13 @@
 
 import difflib
 import json
+import os
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = Path(os.environ["MISE_PROJECT_ROOT"])
 COMMITTED = REPO_ROOT / ".github" / "renovate-tracked-deps.json"
 
 

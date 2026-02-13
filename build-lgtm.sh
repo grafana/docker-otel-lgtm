@@ -4,10 +4,12 @@ set -euo pipefail
 
 RELEASE=${1:-latest}
 
-if command -v docker >/dev/null 2>&1; then
-	RUNTIME=docker
-elif command -v podman >/dev/null 2>&1; then
+echo "Building the Grafana OTEL-LGTM image with release ${RELEASE}..."
+
+if command -v podman >/dev/null 2>&1; then
 	RUNTIME=podman
+elif command -v docker >/dev/null 2>&1; then
+	RUNTIME=docker
 else
 	echo "Unable to find a suitable container runtime such as Docker or Podman. Exiting."
 	exit 1

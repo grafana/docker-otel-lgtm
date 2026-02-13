@@ -13,5 +13,5 @@ curl -sOL https://github.com/grafana/loki/releases/download/"${VERSION}"/SHA256S
 curl -sOL https://github.com/grafana/loki/releases/download/"${VERSION}"/"${ARCHIVE}"
 sha256sum -c SHA256SUMS --ignore-missing
 mkdir /otel-lgtm/loki
-unzip "${ARCHIVE}" -d /loki/
-mv loki/loki-linux-"${TARGETARCH}" /otel-lgtm/loki/loki
+unzip "${ARCHIVE}" -d /otel-lgtm/loki/
+mv /otel-lgtm/loki/loki-linux-"${TARGETARCH}" /otel-lgtm/loki/loki

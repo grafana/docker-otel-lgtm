@@ -5,6 +5,8 @@ if not "%~1"=="" (
 	SET release_tag=%1
 )
 
+echo Building the Grafana OTEL-LGTM image with release %release_tag%...
+
 WHERE /Q podman
 if not ERRORLEVEL 1 (
 	goto use_podman

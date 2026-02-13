@@ -15,12 +15,11 @@ SUPER_LINTER_VERSION="v8.4.0@sha256:c5e3307932203ff9e1e8acfe7e92e894add6266605b5
 
 [tasks."lint"]
 description = "Run all lints"
-depends = ["lint:super-linter", "lint:local-links", "lint:links-in-modified-files", "generate:renovate-tracked-deps"]
-
-[tasks."lint:ci"]
-description = "Run all lints (CI configuration)"
-hide = true
 depends = ["lint:super-linter", "lint:local-links", "lint:links-in-modified-files", "lint:renovate-deps"]
+
+[tasks.fix]
+description = "Auto-fix lint issues and regenerate tracked deps"
+run = "AUTOFIX=true mise run lint:super-linter && mise run generate:renovate-tracked-deps"
 
 [tasks.lgtm]
 description = "Run LGTM image"

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Run Super-Linter on the repository - applying auto-fixes unless disabled with --no-fix"
-#USAGE flag "--no-fix" help="Disable auto-fix (for CI)"
+#MISE description="Run Super-Linter on the repository"
 
 set -euo pipefail
 
@@ -32,9 +31,8 @@ else
 fi
 
 ENV_FILE=".github/config/super-linter.env"
-no_fix="${usage_no_fix:-${CI:-false}}"
-if [ "$no_fix" = "true" ]; then
-	# Filter out FIX_* and comment lines for CI mode
+if [ "${AUTOFIX:-}" != "true" ]; then
+	# Filter out FIX_* and comment lines when not auto-fixing
 	FILTERED_ENV_FILE=$(mktemp)
 	trap 'rm -f "$FILTERED_ENV_FILE"' EXIT
 	grep -v '^#' "$ENV_FILE" | grep -v '^FIX_' >"$FILTERED_ENV_FILE"

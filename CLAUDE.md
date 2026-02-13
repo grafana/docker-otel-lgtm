@@ -59,6 +59,8 @@ mise run lint:super-linter
 
 Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`. EditorConfig rules in `.editorconfig`.
 
+Always run `mise run lint:super-linter` after making changes to verify formatting is correct.
+
 ### Renovate Tracked Deps Linter
 
 A CI lint (`mise run lint:renovate-deps`) verifies that

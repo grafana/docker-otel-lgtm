@@ -7,8 +7,8 @@ version reference (typo in a comment annotation, unsupported syntax, moved
 file, etc.). When that happens, the dependency freezes in place with no PR and
 no dashboard entry — it simply disappears from Renovate's radar.
 
-The Dependency Dashboard catches *known* deps that are pending or in error, but
-it cannot show you a dep that Renovate no longer sees at all. This linter
+The Dependency Dashboard catches *known* dependencies that are pending or in error, but
+it cannot show you a dependency that Renovate no longer sees at all. This linter
 closes that gap by keeping a committed snapshot of every dependency Renovate
 tracks and failing CI when the two diverge.
 
@@ -24,13 +24,13 @@ tracks and failing CI when the two diverge.
    (`.mise/tasks/lint/renovate-deps.py`)
    Re-generates the snapshot into a temp directory and diffs it against the
    committed `.github/renovate-tracked-deps.json`. If they differ, CI fails
-   with a unified diff showing exactly which deps were added or dropped.
+   with a unified diff showing exactly which dependencies were added or removed.
 
 ## Typical workflow
 
 - **A dependency disappears** (e.g., someone removes a `# renovate:` comment
   or changes a file that Renovate was matching) → CI fails, showing the
-  removed dep in the diff. The author can then decide whether the removal was
+  removed dependency in the diff. The author can then decide whether the removal was
   intentional or accidental.
 
 - **A new dependency is added** → CI fails because the committed snapshot is
@@ -43,7 +43,7 @@ tracks and failing CI when the two diverge.
 
 ## Configuration
 
-The `RENOVATE_TRACKED_DEPS_EXCLUDE` env var (set in `mise.toml`) lists
+The `RENOVATE_TRACKED_DEPS_EXCLUDE` environment variable (set in `mise.toml`) lists
 Renovate managers to exclude from tracking (comma-separated). Currently
 `github-actions` and `github-runners` are excluded because their churn adds
 noise without much risk of silent loss.

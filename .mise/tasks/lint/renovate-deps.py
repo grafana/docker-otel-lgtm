@@ -1,16 +1,24 @@
 #!/usr/bin/env python3
-# pylint: disable=invalid-name
+# pylint: disable=invalid-name,duplicate-code
 # [MISE] description="Verify renovate-tracked-deps.json is up to date"
 """Verify renovate-tracked-deps.json is up to date."""
 
 import difflib
 import json
+import os
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+_repo_root_env = os.environ.get("MISE_PROJECT_ROOT")
+if _repo_root_env is None:
+    print(
+        "ERROR: MISE_PROJECT_ROOT is not set. Run this script via 'mise run'.",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+REPO_ROOT = Path(_repo_root_env)
 COMMITTED = REPO_ROOT / ".github" / "renovate-tracked-deps.json"
 
 

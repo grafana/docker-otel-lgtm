@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# pylint: disable=invalid-name
+# pylint: disable=invalid-name,duplicate-code
 # [MISE] description="Generate renovate-tracked-deps.json from Renovate's local analysis"
 """Generate renovate-tracked-deps.json from Renovate's local analysis."""
 
@@ -11,7 +11,14 @@ import tempfile
 from collections import defaultdict
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+_repo_root_env = os.environ.get("MISE_PROJECT_ROOT")
+if _repo_root_env is None:
+    print(
+        "ERROR: MISE_PROJECT_ROOT is not set. Run this script via 'mise run'.",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+REPO_ROOT = Path(_repo_root_env)
 OUTPUT_FILE = (
     Path(sys.argv[1])
     if len(sys.argv) > 1

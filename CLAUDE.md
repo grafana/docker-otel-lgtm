@@ -59,6 +59,17 @@ mise run lint:super-linter
 
 Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`. EditorConfig rules in `.editorconfig`.
 
+### Renovate Tracked Deps Linter
+
+A CI lint (`mise run lint:renovate-deps`) verifies that
+`.github/renovate-tracked-deps.json` stays in sync with what Renovate actually
+tracks. This catches dependencies that Renovate silently drops (e.g., a broken
+`# renovate:` annotation or a moved file) — something the Dependency Dashboard
+cannot show. If the snapshot is stale, run
+`mise run generate:renovate-tracked-deps` and commit the result. See
+[`.github/renovate-tracked-deps.md`](.github/renovate-tracked-deps.md) for
+details.
+
 ## Architecture
 
 ### Docker Image (docker/)

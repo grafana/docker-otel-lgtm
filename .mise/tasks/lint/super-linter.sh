@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Run Super-Linter on the repository"
+#MISE description="Run Super-Linter on the repository - applying auto-fixes unless disabled with --no-fix"
 #USAGE flag "--no-fix" help="Disable auto-fix (for CI)"
 
 set -xeuo pipefail

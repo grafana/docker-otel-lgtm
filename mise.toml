@@ -25,7 +25,6 @@ description = "Lint links in local files"
 file = "https://raw.githubusercontent.com/grafana/flint/v0.1.0/tasks/lint/local-links.sh"
 [tasks."lint:links-in-modified-files"]
 description = "Lint links in modified files"
-hide = true
 file = "https://raw.githubusercontent.com/grafana/flint/v0.1.0/tasks/lint/links-in-modified-files.sh"
 [tasks."lint:renovate-deps"]
 description = "Verify renovate-tracked-deps.json is up to date"

@@ -45,6 +45,13 @@
   customManagers: [
     {
       customType: "regex",
+      description: "Update flint version in raw.githubusercontent.com URLs",
+      managerFilePatterns: ["/^mise\\.toml$/"],
+      matchStrings: ["https://raw\\.githubusercontent\\.com/(?<depName>[^/]+/[^/]+)/(?<currentValue>v[^/]+)/"],
+      datasourceTemplate: "github-tags",
+    },
+    {
+      customType: "regex",
       description: "Update _version variables in run.sh",
       managerFilePatterns: ["/run.sh$/"],
       matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"],

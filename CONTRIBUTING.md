@@ -24,8 +24,11 @@ so pull requests that add or remove dependencies without updating the snapshot w
 To regenerate the snapshot after changing dependencies or the Renovate config:
 
 ```sh
-mise run fix
+AUTOFIX=true mise run lint:renovate-deps
 ```
+
+Or use `mise run fix` to auto-fix all linters at once (note: this may also
+reformat code via Super-Linter).
 
 ## Acceptance Tests
 

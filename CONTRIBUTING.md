@@ -27,7 +27,7 @@ To regenerate the snapshot after changing dependencies or the Renovate config:
 AUTOFIX=true mise run lint:renovate-deps
 ```
 
-Or use `mise run fix` to auto-fix all linters at once (note: this may also
+Or use `mise run fix` to autofix all linters at once (note: this may also
 reformat code via Super-Linter).
 
 ## Acceptance Tests

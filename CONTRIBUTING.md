@@ -24,7 +24,7 @@ so pull requests that add or remove dependencies without updating the snapshot w
 To regenerate the snapshot after changing dependencies or the Renovate config:
 
 ```sh
-mise run generate:renovate-tracked-deps
+mise run fix
 ```
 
 ## Acceptance Tests

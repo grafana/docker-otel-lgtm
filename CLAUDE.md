@@ -61,9 +61,8 @@ EditorConfig rules in `.editorconfig`.
 
 `mise run lint` verifies that `.github/renovate-tracked-deps.json` stays in
 sync with what Renovate actually tracks. If the snapshot is stale, run
-`mise run fix` (or `mise run generate:renovate-tracked-deps`) and commit the
-result. See [`.github/renovate-tracked-deps.md`](.github/renovate-tracked-deps.md)
-for details.
+`mise run fix` and commit the result. The lint tasks are provided by
+[flint](https://github.com/grafana/flint).
 
 ## Architecture
 

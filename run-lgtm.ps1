@@ -7,7 +7,7 @@ $supportedContainerRuntime = 'podman', 'docker'
 $containers = 'grafana', 'prometheus', 'loki'
 $image = "docker.io/grafana/otel-lgtm:${ReleaseTag}"
 
-# prefilled pwd var to avoid repeted calls in build string.moved to top init section or logic
+# prefilled pwd var to avoid repeated calls in build string.moved to top init section or logic
 $path = (Get-Location).Path
 
 $containerCommand = $supportedContainerRuntime | ForEach-Object {
@@ -40,16 +40,54 @@ else {
     & $containerCommand image pull $image
 }
 
+# Check if OBI is enabled (from environment or .env file)
+$obiFlags = @()
+$obiEnabled = $env:ENABLE_OBI -eq 'true'
+if (-Not $obiEnabled -and (Test-Path -Path ".env")) {
+    $obiEnabled = (Get-Content ".env" | Select-String -Pattern '^ENABLE_OBI=true$' -Quiet)
+}
+if ($obiEnabled) {
+    Write-Output "OBI eBPF auto-instrumentation enabled. Adding --pid=host --privileged flags."
+    $obiFlags = @('--pid=host', '--privileged')
+    # Forward OBI-specific env vars into the container (they are not in .env by default).
+    # General OTLP vars (OTEL_EXPORTER_OTLP_ENDPOINT, etc.) are forwarded via --env-file .env.
+    $obiFlags += '-e', 'ENABLE_OBI=true'
+    Get-ChildItem env: |
+        Where-Object { $_.Name -match '^(OBI_TARGET|OTEL_EBPF_|ENABLE_LOGS_OBI)' } |
+        ForEach-Object {
+            $obiFlags += '-e', "$($_.Name)=$($_.Value)"
+        }
+}
+
+# Allocate TTY only if stdin is interactive
+$ttyFlag = @()
+if ([Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
+    $ttyFlag = @('-t', '-i')
+}
+
 $runCommand = @(
     'container', 'run'
-    '--name', 'lgtm',
+    '--name', 'lgtm'
+)
+
+# Append OBI-related flags (if any) so each flag is a separate argument
+if ($obiFlags.Count -gt 0) {
+    $runCommand += $obiFlags
+}
+
+# Append the remaining fixed arguments
+$runCommand += @(
     '-p', '3000:3000'
     '-p', '4040:4040'
     '-p', '4317:4317'
     '-p', '4318:4318'
     '-p', '9090:9090'
     '--rm'
-    '-ti',
+)
+
+$runCommand += $ttyFlag
+
+$runCommand += @(
     '-v', "${path}/container/grafana:/data/grafana"
     '-v', "${path}/container/prometheus:/data/prometheus"
     '-v', "${path}/container/loki:/data/loki"

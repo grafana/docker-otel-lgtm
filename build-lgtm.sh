@@ -4,6 +4,8 @@ set -euo pipefail
 
 RELEASE=${1:-latest}
 
+echo "Building the Grafana OTEL-LGTM image with release ${RELEASE}..."
+
 if command -v docker >/dev/null 2>&1; then
 	RUNTIME=docker
 elif command -v podman >/dev/null 2>&1; then
@@ -13,4 +15,4 @@ else
 	exit 1
 fi
 
-$RUNTIME buildx build -f docker/Dockerfile docker --tag grafana/otel-lgtm:"${RELEASE}"
+$RUNTIME buildx build -f docker/Dockerfile docker --tag grafana/otel-lgtm:"${RELEASE}" --build-arg LGTM_VERSION="${RELEASE}"

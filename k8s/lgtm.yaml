@@ -57,7 +57,7 @@ spec:
                 - cat
                 - /tmp/ready
           # NOTE: By default OpenShift does not allow writing the root directory.
-          # Thats why the data dirs for grafana, prometheus and loki can not be
+          # That's why the data dirs for grafana, prometheus and loki can not be
           # created and the pod never becomes ready.
           # See: https://github.com/grafana/docker-otel-lgtm/issues/132
           volumeMounts:

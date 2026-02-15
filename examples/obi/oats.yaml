@@ -1,0 +1,30 @@
+---
+# OATS is an acceptance testing framework for OpenTelemetry
+# https://github.com/grafana/oats/tree/main/yaml
+oats-schema-version: 2
+docker-compose:
+  files:
+    - ./docker-compose.oats.yml
+# No input: section — OATS only supports a single application port, but this
+# test exercises 5 services on different ports. The generate-traffic sidecar
+# sends requests to all services instead.
+expected:
+  traces:
+    # Java (port 8080) - reuses ../java source, no OTel agent
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8080 }'
+      equals: "GET /rolldice"
+    # Go (port 8081) - minimal source, no OTel SDK
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8081 }'
+      equals: "GET /rolldice"
+    # Python (port 8082) - reuses ../python source, no opentelemetry-distro
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8082 }'
+      equals: "GET /rolldice"
+    # .NET (port 8083) - minimal source, no OTel NuGet packages
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8083 }'
+      equals: "GET /rolldice"
+    # Node.js (port 8084) - minimal source, no @opentelemetry/* packages
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8084 }'
+      equals: "GET /rolldice"
+  metrics:
+    - promql: 'http_server_request_duration_seconds_count{http_route="/rolldice"}'
+      value: "> 0"

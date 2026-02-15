@@ -1,0 +1,13 @@
+{
+  "name": "dice-server",
+  "version": "0.1.0",
+  "description": "Simple Express app that rolls a dice (no OpenTelemetry instrumentation).",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^5.0.0"
+  }
+}

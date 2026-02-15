@@ -18,26 +18,12 @@
       allowedVersions: "!/operator/",
     },
     {
-      matchPackageNames: ["ghcr.io/renovatebot/renovate", "renovatebot/github-action"],
-      groupName: "renovatebot",
-      schedule: ["before 4am on monday"],
-    },
-    {
-      matchPackageNames: ["jdx/mise"],
-      groupName: "mise",
-      schedule: ["before 4am on monday"],
-    },
-    {
-      matchPackageNames: ["super-linter/super-linter", "ghcr.io/super-linter/super-linter"],
-      groupName: "super-linter",
-    },
-    {
       matchDatasources: ["pypi"],
       matchDepNames: ["opentelemetry-distro"],
       ignoreUnstable: false,
     },
     {
-      matchPackageNames: ["grafana/grafana", "grafana/loki", "grafana/pyroscope", "grafana/tempo", "open-telemetry/opentelemetry-collector-releases", "prometheus/prometheus"],
+      matchPackageNames: ["otel/ebpf-instrument", "grafana/grafana", "grafana/loki", "grafana/pyroscope", "grafana/tempo", "open-telemetry/opentelemetry-collector-releases", "prometheus/prometheus"],
       labels: ["docker-dependency"],
     },
     {
@@ -59,25 +45,15 @@
   customManagers: [
     {
       customType: "regex",
-      depNameTemplate: "ghcr.io/renovatebot/renovate",
-      datasourceTemplate: "docker",
-      managerFilePatterns: ["/^\\.github/workflows/renovate.yml$/"],
-      matchStrings: ["renovate-version: (?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?", "RENOVATE_IMAGE=ghcr.io/renovatebot/renovate:(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?"],
+      description: "Update _version variables in run.sh",
+      managerFilePatterns: ["/run.sh$/"],
+      matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"],
     },
     {
       customType: "regex",
-      description: "Update _VERSION variables in shell scripts",
-      managerFilePatterns: ["/run.sh$/", "/\\.mise/tasks/.+\\.sh$/"],
-      matchStrings: ['# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_VERSION="?(?<currentValue>.+?)"?\\s'],
-    },
-    {
-      customType: "regex",
-      description: "update mise",
-      managerFilePatterns: ["/(^|/)(workflow-templates|\\.(?:github|gitea|forgejo)/(?:workflows|actions))/.+\\.ya?ml$/", "/(^|/)action\\.ya?ml$/"],
-      datasourceTemplate: "github-release-attachments",
-      packageNameTemplate: "jdx/mise",
-      depNameTemplate: "mise",
-      matchStrings: ["jdx/mise-action.*\\n\\s*with:\\s*\\n\\s*version: [\"']?(?<currentValue>v[.\\d]+)[\"']?\\s*\\n\\s*sha256: [\"']?(?<currentDigest>\\w+)[\"']?"],
+      description: "Update _VERSION variables in mise.toml",
+      managerFilePatterns: ["/^mise\\.toml$/"],
+      matchStrings: ['# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_VERSION="?(?<currentValue>[^@"]+?)(?:@(?<currentDigest>sha256:[a-f0-9]+))?"?\\s'],
     },
   ],
 }

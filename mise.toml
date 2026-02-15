@@ -6,7 +6,7 @@ java = "temurin-25.0.1+8.0.LTS"
 lychee = "0.22.0"
 node = "24.13.1"
 "npm:renovate" = "43.10.1"
-rust = "1.93.0"
+rust = "1.93.1"
 
 [env]
 RENOVATE_TRACKED_DEPS_EXCLUDE="github-actions,github-runners"

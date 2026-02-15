@@ -5,7 +5,7 @@ go = "1.26.0"
 java = "temurin-25.0.1+8.0.LTS"
 lychee = "0.22.0"
 node = "24.13.1"
-"npm:renovate" = "43.8.5"
+"npm:renovate" = "43.9.0"
 rust = "1.93.0"
 
 [env]

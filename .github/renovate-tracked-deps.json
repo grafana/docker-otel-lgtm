@@ -45,6 +45,9 @@
     "dockerfile": [
       "otel/opentelemetry-ebpf-profiler-dev",
       "ubuntu"
+    ],
+    "regex": [
+      "opentelemetry-ebpf-profiler"
     ]
   },
   "examples/ebpf-profiler/generate-traffic.Dockerfile": {

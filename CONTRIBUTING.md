@@ -11,7 +11,8 @@ It's recommended to use the [mise][mise] for development.
 
 ## Linting
 
-This repository uses [flint](https://github.com/grafana/flint) for linting. See the flint README for detailed documentation on each linter.
+This repository uses [flint][flint] for linting.
+See the flint readme for detailed documentation on each linter.
 
 ```bash
 mise run fix   # Auto-fix all issues (recommended before committing)
@@ -54,5 +55,6 @@ print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml
 <!-- markdownlint-disable MD013 -->
 
 [architecture]: https://docs.google.com/presentation/d/1txMBBitezscvtJIXRHNSXnCekjMRM29GmHufUSI0NRw/edit?slide=id.g26040f0db78_0_0#slide=id.g26040f0db78_0_0
+[flint]: https://github.com/grafana/flint
 [mise]: https://github.com/jdx/mise
 [oats]: https://github.com/grafana/oats

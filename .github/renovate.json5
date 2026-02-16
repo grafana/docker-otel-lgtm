@@ -36,6 +36,11 @@
       matchUpdateTypes: ["major"],
       enabled: false,
     },
+    {
+      matchPackageNames: ["renovate"],
+      description: ["Only update renovate once a week"],
+      schedule: ["before 6am on Monday"],
+    },
   ],
   vulnerabilityAlerts: {
     enabled: true,

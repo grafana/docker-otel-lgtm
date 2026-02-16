@@ -1,6 +1,6 @@
 FROM ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:2.22.0@sha256:df7cae821770cadb6dbe7e36681008c8e9dff71bc5f5c8deb0d8422b541592c5 AS agent
 
-FROM eclipse-temurin:25.0.1_8-jdk@sha256:42fc3fe6804ec612f5ef8a613f8c06d8dd578de6207336077387d4cb32edaa9b AS builder
+FROM eclipse-temurin:25.0.2_10-jdk@sha256:ddd55eda5ad0ef851a6c6b5169a83d6f9c9481449de77ae511a3118a3cf8fe91 AS builder
 
 WORKDIR /usr/src/app/
 
@@ -9,7 +9,7 @@ COPY ./.mvn ./.mvn
 COPY ./src ./src
 RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests
 
-FROM eclipse-temurin:25.0.1_8-jre@sha256:9d1d3068b16f2c4127be238ca06439012ff14a8fdf38f8f62472160f9058464a
+FROM eclipse-temurin:25.0.2_10-jre@sha256:43a7b50abf8679d77d6d41d52072402a18312a47b4390864046b393e2570137b
 
 WORKDIR /usr/src/app/
 

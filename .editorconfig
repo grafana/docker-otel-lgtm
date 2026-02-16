@@ -6,6 +6,7 @@ indent_size = 2
 
 [*Dockerfile*]
 end_of_line = lf
+max_line_length = 200
 
 [*.cs]
 indent_size = 4
@@ -18,9 +19,6 @@ max_line_length = 120
 
 [renovate.json5]
 max_line_length = 400
-
-[Dockerfile]
-max_line_length = 200
 
 [{*.sh,.gitignore,go.work.sum,mise.toml,*.yml,*.yaml,pom.xml,*.cmd,maven-wrapper.properties,go.sum,package-lock.json}]
 max_line_length = 150

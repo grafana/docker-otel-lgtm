@@ -1,6 +1,6 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["config:recommended", "customManagers:dockerfileVersions", "customManagers:githubActionsVersions"],
+  extends: ["config:recommended", "customManagers:dockerfileVersions", "customManagers:githubActionsVersions", "github>grafana/flint"],
   branchPrefix: "grafanarenovatebot/",
   dependencyDashboard: true,
   platformCommit: "enabled",
@@ -36,11 +36,6 @@
       matchUpdateTypes: ["major"],
       enabled: false,
     },
-    {
-      matchPackageNames: ["renovate"],
-      description: ["Only update renovate once a week"],
-      schedule: ["before 6am on Monday"],
-    },
   ],
   vulnerabilityAlerts: {
     enabled: true,
@@ -50,22 +45,9 @@
   customManagers: [
     {
       customType: "regex",
-      description: "Update flint version in raw.githubusercontent.com URLs (pinned to SHA)",
-      managerFilePatterns: ["/^mise\\.toml$/"],
-      matchStrings: ["https://raw\\.githubusercontent\\.com/(?<depName>[^/]+/[^/]+)/(?<currentDigest>[a-f0-9]{40})/.*#\\s*(?<currentValue>v\\S+)"],
-      datasourceTemplate: "github-tags",
-    },
-    {
-      customType: "regex",
       description: "Update _version variables in run.sh",
       managerFilePatterns: ["/run.sh$/"],
       matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"],
-    },
-    {
-      customType: "regex",
-      description: "Update _VERSION variables in mise.toml",
-      managerFilePatterns: ["/^mise\\.toml$/"],
-      matchStrings: ['# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_VERSION="?(?<currentValue>[^@"]+?)(?:@(?<currentDigest>sha256:[a-f0-9]+))?"?\\s'],
     },
   ],
 }

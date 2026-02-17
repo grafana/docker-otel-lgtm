@@ -1,4 +1,9 @@
 {
+  ".github/renovate.json5": {
+    "renovate-config-presets": [
+      "grafana/flint"
+    ]
+  },
   ".github/workflows/ghcr-image-build-and-publish.yml": {
     "regex": [
       "cosign"

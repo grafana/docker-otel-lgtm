@@ -9,11 +9,6 @@ max_concurrency = 4
 # Check link anchors
 include_fragments = true
 
-remap = [
-  # workaround for https://github.com/lycheeverse/lychee/issues/1729
-  "https://github.com/(.*?)/(.*?)/blob/(.*?)/(.*#.*)$ https://raw.githubusercontent.com/$1/$2/$3/$4"
-]
-
 exclude = [
   # locally running Grafana instance, used for testing and development
   "http://127.0.0.1:3000/",

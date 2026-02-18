@@ -10,7 +10,7 @@ COPY ./.mvn ./.mvn
 COPY ./src ./src
 RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests
 
-FROM eclipse-temurin:25.0.2_10-jre@sha256:43a7b50abf8679d77d6d41d52072402a18312a47b4390864046b393e2570137b
+FROM eclipse-temurin:25.0.2_10-jre@sha256:0a9c973778b03b88f39ccae4f8cc26022d84a3237a818cb98770369eb6c5daf9
 
 WORKDIR /usr/src/app/
 

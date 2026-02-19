@@ -2,7 +2,7 @@
 [tools]
 go = "1.26.0"
 "go:github.com/grafana/oats" = "0.6.1"
-java = "temurin-25.0.1+8.0.LTS"
+java = "temurin-25.0.2+10.0.LTS"
 lychee = "0.22.0"
 node = "24.13.1"
 "npm:renovate" = "43.11.1"

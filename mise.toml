@@ -2,24 +2,35 @@
 [tools]
 go = "1.26.0"
 "go:github.com/grafana/oats" = "0.6.1"
-java = "temurin-25.0.1+8.0.LTS"
+java = "temurin-25.0.2+10.0.LTS"
 lychee = "0.22.0"
 node = "24.13.1"
-"npm:renovate" = "43.8.5"
-rust = "1.93.0"
+"npm:renovate" = "43.11.1"
+rust = "1.93.1"
 
 [env]
 RENOVATE_TRACKED_DEPS_EXCLUDE="github-actions,github-runners"
 # renovate: datasource=docker depName=ghcr.io/super-linter/super-linter
 SUPER_LINTER_VERSION="v8.4.0@sha256:c5e3307932203ff9e1e8acfe7e92e894add6266605b5d7fb525fb371a59a26f4"
 
+# Shared lint tasks from flint (https://github.com/grafana/flint)
+[tasks."lint:super-linter"]
+description = "Run Super-Linter on the repository"
+file = "https://raw.githubusercontent.com/grafana/flint/5bb3726cfe3305072457c0c4fa85dce5ca154680/tasks/lint/super-linter.sh" # v0.6.0
+[tasks."lint:links"]
+description = "Check for broken links in changed files + all local links"
+file = "https://raw.githubusercontent.com/grafana/flint/5bb3726cfe3305072457c0c4fa85dce5ca154680/tasks/lint/links.sh" # v0.6.0
+[tasks."lint:renovate-deps"]
+description = "Verify renovate-tracked-deps.json is up to date"
+file = "https://raw.githubusercontent.com/grafana/flint/5bb3726cfe3305072457c0c4fa85dce5ca154680/tasks/lint/renovate-deps.py" # v0.6.0
+
 [tasks."lint"]
 description = "Run all lints"
-depends = ["lint:super-linter", "lint:local-links", "lint:links-in-modified-files", "lint:renovate-deps"]
+depends = ["lint:super-linter", "lint:links", "lint:renovate-deps"]
 
 [tasks.fix]
-description = "Auto-fix lint issues, regenerate tracked deps, then verify"
-run = "AUTOFIX=true mise run lint:super-linter && mise run generate:renovate-tracked-deps && mise run lint"
+description = "Auto-fix lint issues and regenerate tracked deps"
+run = "AUTOFIX=true mise run lint"
 
 [tasks.lgtm]
 description = "Run LGTM image"

@@ -11,21 +11,15 @@ It's recommended to use the [mise][mise] for development.
 
 ## Linting
 
-- Markdown link checker: `mise run lint:links`
-- Run all checks: `mise run lint`
+This repository uses [flint][flint] for linting.
+See the flint readme for detailed documentation on each linter.
 
-## Renovate Dependency Tracking
-
-The file `.github/renovate-tracked-deps.json` is an auto-generated snapshot of every dependency
-that [Renovate][renovate] tracks in this repository, grouped by file.
-A CI lint check regenerates this file and compares it against the committed version,
-so pull requests that add or remove dependencies without updating the snapshot will fail.
-
-To regenerate the snapshot after changing dependencies or the Renovate config:
-
-```sh
-mise run generate:renovate-tracked-deps
+```bash
+mise run fix   # Auto-fix all issues (recommended before committing)
+mise run lint  # Check only (same command used in CI)
 ```
+
+Always run `mise run fix` before committing — review the changed files as auto-fixes may produce unexpected results.
 
 ## Acceptance Tests
 
@@ -61,6 +55,6 @@ print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml
 <!-- markdownlint-disable MD013 -->
 
 [architecture]: https://docs.google.com/presentation/d/1txMBBitezscvtJIXRHNSXnCekjMRM29GmHufUSI0NRw/edit?slide=id.g26040f0db78_0_0#slide=id.g26040f0db78_0_0
+[flint]: https://github.com/grafana/flint
 [mise]: https://github.com/jdx/mise
 [oats]: https://github.com/grafana/oats
-[renovate]: https://docs.renovatebot.com/

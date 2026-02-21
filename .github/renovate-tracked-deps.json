@@ -1,4 +1,9 @@
 {
+  ".github/renovate.json5": {
+    "renovate-config-presets": [
+      "grafana/flint"
+    ]
+  },
   ".github/workflows/ghcr-image-build-and-publish.yml": {
     "regex": [
       "cosign"
@@ -45,6 +50,9 @@
     "dockerfile": [
       "otel/opentelemetry-ebpf-profiler-dev",
       "ubuntu"
+    ],
+    "regex": [
+      "opentelemetry-ebpf-profiler"
     ]
   },
   "examples/ebpf-profiler/generate-traffic.Dockerfile": {
@@ -239,7 +247,8 @@
       "rust"
     ],
     "regex": [
-      "ghcr.io/super-linter/super-linter"
+      "ghcr.io/super-linter/super-linter",
+      "grafana/flint"
     ]
   }
 }

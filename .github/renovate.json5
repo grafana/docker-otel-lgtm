@@ -1,6 +1,6 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["config:recommended", "customManagers:dockerfileVersions", "customManagers:githubActionsVersions"],
+  extends: ["config:recommended", "customManagers:dockerfileVersions", "customManagers:githubActionsVersions", "github>grafana/flint"],
   branchPrefix: "grafanarenovatebot/",
   dependencyDashboard: true,
   platformCommit: "enabled",
@@ -48,12 +48,6 @@
       description: "Update _version variables in run.sh",
       managerFilePatterns: ["/run.sh$/"],
       matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"],
-    },
-    {
-      customType: "regex",
-      description: "Update _VERSION variables in mise.toml",
-      managerFilePatterns: ["/^mise\\.toml$/"],
-      matchStrings: ['# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_VERSION="?(?<currentValue>[^@"]+?)(?:@(?<currentDigest>sha256:[a-f0-9]+))?"?\\s'],
     },
   ],
 }

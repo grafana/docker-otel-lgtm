@@ -18,7 +18,7 @@ jobs:
 
     env:
       # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
-      COSIGN_VERSION: v3.0.4
+      COSIGN_VERSION: v3.0.5
 
     permissions:
       attestations: write

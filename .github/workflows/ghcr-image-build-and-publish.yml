@@ -19,7 +19,7 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
   # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
-  COSIGN_VERSION: v3.0.4
+  COSIGN_VERSION: v3.0.5
 
 jobs:
   build:

@@ -43,7 +43,7 @@ ARG TARGETARCH
 ENV TARGETARCH=${TARGETARCH}
 
 # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
-ARG COSIGN_VERSION=v3.0.4
+ARG COSIGN_VERSION=v3.0.5
 
 RUN ./install-cosign.sh $COSIGN_VERSION
 

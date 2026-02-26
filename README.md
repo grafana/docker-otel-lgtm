@@ -153,6 +153,34 @@ development, demo, and testing environments and persisting data to an external v
 doesn't change that. However, this feature could be useful in certain cases for
 some users even in testing situations.
 
+### Customize backend configuration
+
+You can override the default configuration files for each backend by mounting custom files
+into the container. This is useful for setting data retention policies, adjusting resource
+limits, or other backend-specific tuning.
+
+The configuration files inside the container are:
+
+| Backend    | Config file path                  |
+|------------|-----------------------------------|
+| Loki       | `/otel-lgtm/loki-config.yaml`    |
+| Prometheus | `/otel-lgtm/run-prometheus.sh`    |
+| Tempo      | `/otel-lgtm/tempo-config.yaml`   |
+| Pyroscope  | `/otel-lgtm/pyroscope-config.yaml`|
+
+For example, to use a custom Loki config with a 90-day retention period:
+
+```sh
+docker run -v ./my-loki-config.yaml:/otel-lgtm/loki-config.yaml:ro grafana/otel-lgtm
+```
+
+For Prometheus, retention is set via command-line flags, so you need to mount a custom
+`run-prometheus.sh` that adds `--storage.tsdb.retention.time=90d`.
+
+> [!TIP]
+> See [discussion #151][retention-discussion] for a complete docker-compose example
+> with custom retention settings for Loki, Prometheus, and Tempo.
+
 ### Pre-install Grafana plugins
 
 You can pre-install Grafana plugins by adding them to the `GF_PLUGINS_PREINSTALL` environment variable.
@@ -322,3 +350,4 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 [otlp-headers]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers
 [oats]: https://github.com/grafana/oats
 [red-method]: https://grafana.com/blog/the-red-method-how-to-instrument-your-services/ "The RED Method"
+[retention-discussion]: https://github.com/grafana/docker-otel-lgtm/discussions/151 "How to increase data storage time"

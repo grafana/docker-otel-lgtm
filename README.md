@@ -73,6 +73,18 @@ You can enable logging in the .env file for troubleshooting:
 
 This has nothing to do with any application logs, which are collected by OpenTelemetry.
 
+### Configure storage limits (optional)
+
+For development or constrained environments (for example Raspberry Pi), you can optionally override Prometheus's metrics retention settings using environment variables. Currently only metrics retention is configurable; support for logs and traces may be added later.
+
+By default, this image uses Prometheus's built-in retention and deletion behavior as configured by the bundled Prometheus version. The following environment variables let you override those defaults:
+
+| Component     | Environment Variable              | Description |
+|---------------|-----------------------------------|-------------|
+| Prometheus    | `PROM_RETENTION_TIME`             | Metrics retention duration (for example `2d`, `7d`) |
+| Prometheus    | `PROM_RETENTION_SIZE`             | Maximum disk usage for metrics (for example `1GB`) |
+
+Setting these variables changes the retention limits; it does not enable retention from an otherwise disabled state.
 ### Enable OBI (eBPF auto-instrumentation)
 
 [OpenTelemetry eBPF Instrumentation (OBI)][obi] uses eBPF to automatically generate traces and

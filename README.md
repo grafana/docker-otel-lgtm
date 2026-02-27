@@ -155,18 +155,19 @@ some users even in testing situations.
 
 ### Customize backend configuration
 
-You can override the default configuration files for each backend by mounting custom files
+You can override the default configuration and startup files for each backend by mounting custom files
 into the container. This is useful for setting data retention policies, adjusting resource
 limits, or other backend-specific tuning.
 
-The configuration files inside the container are:
+The files you can override are:
 
-| Backend    | Config file path                  |
-|------------|-----------------------------------|
-| Loki       | `/otel-lgtm/loki-config.yaml`    |
-| Prometheus | `/otel-lgtm/run-prometheus.sh`    |
-| Tempo      | `/otel-lgtm/tempo-config.yaml`   |
-| Pyroscope  | `/otel-lgtm/pyroscope-config.yaml`|
+| Backend    | File path                          | Purpose                          |
+|------------|------------------------------------|----------------------------------|
+| Loki       | `/otel-lgtm/loki-config.yaml`     | Configuration file               |
+| Prometheus | `/otel-lgtm/prometheus.yaml`       | Configuration file               |
+| Prometheus | `/otel-lgtm/run-prometheus.sh`     | Startup script (for CLI flags)   |
+| Tempo      | `/otel-lgtm/tempo-config.yaml`    | Configuration file               |
+| Pyroscope  | `/otel-lgtm/pyroscope-config.yaml` | Configuration file               |
 
 For example, to use a custom Loki config with a 90-day retention period:
 

@@ -12,7 +12,7 @@ ARG PYROSCOPE_VERSION=v1.18.1
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
 ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.146.1
 # renovate: datasource=docker depName=obi packageName=otel/ebpf-instrument
-ARG OBI_VERSION=v0.4.1
+ARG OBI_VERSION=v0.5.0
 
 # hadolint global ignore=DL3059
 FROM docker.io/otel/ebpf-instrument:${OBI_VERSION} AS obi-source

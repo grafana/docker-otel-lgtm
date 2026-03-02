@@ -4,7 +4,7 @@ go = "1.26.0"
 "go:github.com/grafana/oats" = "0.6.1"
 java = "temurin-25.0.2+10.0.LTS"
 lychee = "0.22.0"
-node = "24.13.1"
+node = "24.14.0"
 "npm:renovate" = "43.26.5"
 rust = "1.93.1"
 

@@ -66,22 +66,17 @@ jobs:
           version: ${{ env.TRIVY_VERSION }}
 
       - name: Check for vulnerabilities
-        id: check-for-vulnerabilities
         shell: pwsh
         run: |
           $report = Get-Content ./trivy.json | Out-String | ConvertFrom-Json
 
           $vulnerabilities = @()
-          $hasVulnerabilities = $false
 
           foreach ($target in $report.Results) {
             foreach ($vulnerability in $target.Vulnerabilities) {
               $vulnerabilities += $vulnerability
-              $hasVulnerabilities = $true
             }
           }
-
-          "has-vulnerabilities=${hasVulnerabilities}".ToLowerInvariant() >> ${env:GITHUB_OUTPUT}
 
           $report = @(
             "# Container Image Vulnerability Report",

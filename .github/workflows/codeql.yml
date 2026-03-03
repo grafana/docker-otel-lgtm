@@ -24,43 +24,43 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ "actions" ]
+        language: ["actions"]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      with:
-        filter: "tree:0"
-        persist-credentials: false
-        show-progress: false
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          filter: "tree:0"
+          persist-credentials: false
+          show-progress: false
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@89a39a4e59826350b863aa6b6252a07ad50cf83e # v4.32.4
-      with:
-        build-mode: none
-        languages: ${{ matrix.language }}
-        queries: security-and-quality
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@89a39a4e59826350b863aa6b6252a07ad50cf83e # v4.32.4
+        with:
+          build-mode: none
+          languages: ${{ matrix.language }}
+          queries: security-and-quality
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@89a39a4e59826350b863aa6b6252a07ad50cf83e # v4.32.4
-      with:
-        category: "/language:${{ matrix.language }}"
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@89a39a4e59826350b863aa6b6252a07ad50cf83e # v4.32.4
+        with:
+          category: "/language:${{ matrix.language }}"
 
   codeql:
     if: ${{ !cancelled() }}
-    needs: [ analysis ]
+    needs: [analysis]
     runs-on: ubuntu-24.04
 
     steps:
-    - name: Report status
-      shell: bash
-      env:
-        SCAN_SUCCESS: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
-      run: |
-        if [ "${SCAN_SUCCESS}" == "true" ]
-        then
-          echo 'CodeQL analysis successful ✅'
-        else
-          echo 'CodeQL analysis failed ❌'
-          exit 1
-        fi
+      - name: Report status
+        shell: bash
+        env:
+          SCAN_SUCCESS: ${{ !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+        run: |
+          if [ "${SCAN_SUCCESS}" == "true" ]
+          then
+            echo 'CodeQL analysis successful ✅'
+          else
+            echo 'CodeQL analysis failed ❌'
+            exit 1
+          fi

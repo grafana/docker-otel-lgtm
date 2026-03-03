@@ -1,4 +1,4 @@
-name: container-scan
+name: Container Scan
 
 on:
   schedule:

@@ -27,17 +27,9 @@ jobs:
       cancel-in-progress: false
 
     permissions:
-      contents: read
       security-events: write
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          filter: "tree:0"
-          persist-credentials: false
-          show-progress: false
-
       - name: Run Trivy (SARIF)
         uses: aquasecurity/trivy-action@97e0b3872f55f89b95b2f65b3dbab56962816478 # 0.34.2
         with:

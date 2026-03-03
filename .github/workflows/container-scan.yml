@@ -11,6 +11,7 @@ permissions: {}
 env:
   FORCE_COLOR: 3
   TERM: xterm
+  TRIVY_IMAGE_REF: "grafana/otel-lgtm:latest"
   TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
   TRIVY_SEVERITIES: "CRITICAL,HIGH"
   # renovate: datasource=github-releases depName=trivy packageName=aquasecurity/trivy
@@ -33,7 +34,7 @@ jobs:
       - name: Run Trivy (SARIF)
         uses: aquasecurity/trivy-action@97e0b3872f55f89b95b2f65b3dbab56962816478 # 0.34.2
         with:
-          image-ref: "grafana/otel-lgtm:latest"
+          image-ref: ${{ env.TRIVY_IMAGE_REF }}
           format: "sarif"
           ignore-unfixed: true
           limit-severities-for-sarif: true
@@ -50,7 +51,7 @@ jobs:
       - name: Run Trivy (JSON)
         uses: aquasecurity/trivy-action@97e0b3872f55f89b95b2f65b3dbab56962816478 # 0.34.2
         with:
-          image-ref: "grafana/otel-lgtm:latest"
+          image-ref: ${{ env.TRIVY_IMAGE_REF }}
           format: "json"
           ignore-unfixed: true
           output: "trivy.json"

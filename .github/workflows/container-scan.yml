@@ -1,0 +1,110 @@
+---
+name: Container Scan
+
+on:
+  schedule:
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+env:
+  FORCE_COLOR: 3
+  TERM: xterm
+  TRIVY_IMAGE_REF: "grafana/otel-lgtm:latest"
+  TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
+  TRIVY_SEVERITIES: "CRITICAL,HIGH"
+  # renovate: datasource=github-releases depName=trivy packageName=aquasecurity/trivy
+  TRIVY_VERSION: "v0.69.2"
+
+jobs:
+  scan-image:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    if: github.event.repository.fork == false
+
+    concurrency:
+      group: ${{ github.workflow }}
+      cancel-in-progress: false
+
+    permissions:
+      security-events: write
+
+    steps:
+      - name: Run Trivy (SARIF)
+        uses: aquasecurity/trivy-action@97e0b3872f55f89b95b2f65b3dbab56962816478 # 0.34.2
+        with:
+          image-ref: ${{ env.TRIVY_IMAGE_REF }}
+          format: "sarif"
+          ignore-unfixed: true
+          limit-severities-for-sarif: true
+          output: "trivy.sarif"
+          severity: ${{ env.TRIVY_SEVERITIES }}
+          version: ${{ env.TRIVY_VERSION }}
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@c793b717bc78562f491db7b0e93a3a178b099162 # v4.32.5
+        if: ${{ !cancelled() }}
+        with:
+          sarif_file: "trivy.sarif"
+
+      - name: Run Trivy (JSON)
+        uses: aquasecurity/trivy-action@97e0b3872f55f89b95b2f65b3dbab56962816478 # 0.34.2
+        with:
+          image-ref: ${{ env.TRIVY_IMAGE_REF }}
+          format: "json"
+          ignore-unfixed: true
+          output: "trivy.json"
+          severity: ${{ env.TRIVY_SEVERITIES }}
+          version: ${{ env.TRIVY_VERSION }}
+
+      - name: Check for vulnerabilities
+        shell: pwsh
+        run: |
+          $report = Get-Content ./trivy.json | Out-String | ConvertFrom-Json
+
+          $vulnerabilities = @()
+
+          foreach ($target in $report.Results) {
+            foreach ($vulnerability in $target.Vulnerabilities) {
+              $vulnerabilities += $vulnerability
+            }
+          }
+
+          $report = @(
+            "# Container Image Vulnerability Report",
+            ""
+          )
+
+          if ($vulnerabilities.Length -eq 0) {
+            $report += ":closed_lock_with_key: No vulnerabilities found."
+          } else {
+            $report += "| Library | Vulnerability | Severity | Status | Installed Version | Fixed Version | Title |"
+            $report += "|:--------|:--------------|:---------|:-------|:------------------|:--------------|:------|"
+
+            foreach ($vulnerability in $vulnerabilities) {
+              $title = $vulnerability.Title
+              if ([string]::IsNullOrEmpty($title)) {
+                $title = $vulnerability.Description
+              }
+
+              $fixedVersion = $vulnerability.FixedVersion
+              if ([string]::IsNullOrEmpty($fixedVersion)) {
+                $fixedVersion = "N/A"
+              }
+
+              $report +=
+                "| $($vulnerability.PkgName) " +
+                "| $($vulnerability.VulnerabilityID) " +
+                "| $($vulnerability.Severity) " +
+                "| $($vulnerability.Status) " +
+                "| $($vulnerability.InstalledVersion) " +
+                "| ${fixedVersion} " +
+                "| [${title}]($($vulnerability.PrimaryURL)) |"
+            }
+          }
+
+          $report += ""
+          $report += ""
+
+          ($report -Join "`n") >> ${env:GITHUB_STEP_SUMMARY}

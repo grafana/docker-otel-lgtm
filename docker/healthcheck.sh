@@ -15,12 +15,12 @@ check_service(){
     set -e
 
     if [ "$code" -eq 7 ]; then
-	    echo "$name not running (skipping)"
+        echo "$name not running (skipping)"
     elif [ "$code" -eq 0 ]; then
-	    echo "$name healthy"
+        echo "$name healthy"
     else
-	    echo "$name unhealthy"
-	    exit 1
+        echo "$name unhealthy"
+        exit 1
     fi
 }
 

@@ -112,7 +112,7 @@ FROM docker.io/redhat/ubi9-micro:9.7@sha256:093a704be0eaef9bb52d9bc0219c67ee9db1
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm
 
-# Make the healthcheck script executable. The other scripts don't need to be executable because they're run with `sh` or `bash` in the CMD, but the healthcheck script is executed directly by Docker, so it needs the executable permission.
+# Make the healthcheck script executable.
 COPY healthcheck.sh /otel-lgtm/docker/healthcheck.sh
 RUN chmod +x /otel-lgtm/docker/healthcheck.sh
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD [ "/otel-lgtm/docker/healthcheck.sh" ]

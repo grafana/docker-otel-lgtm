@@ -59,6 +59,17 @@ if ($obiEnabled) {
         }
 }
 
+# Check if remotetap is enabled (from environment or .env file)
+$remotetapFlags = @()
+$remotetapEnabled = $env:ENABLE_REMOTETAP -eq 'true'
+if (-Not $remotetapEnabled -and (Test-Path -Path ".env")) {
+    $remotetapEnabled = (Get-Content ".env" | Select-String -Pattern '^ENABLE_REMOTETAP=true$' -Quiet)
+}
+if ($remotetapEnabled) {
+    Write-Output "remotetap WebSocket debug processor enabled on port 12001."
+    $remotetapFlags = @('-p', '12001:12001')
+}
+
 # Allocate TTY only if stdin is interactive
 $ttyFlag = @()
 if ([Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
@@ -75,6 +86,11 @@ if ($obiFlags.Count -gt 0) {
     $runCommand += $obiFlags
 }
 
+# Append remotetap port flag (if enabled)
+if ($remotetapFlags.Count -gt 0) {
+    $runCommand += $remotetapFlags
+}
+
 # Append the remaining fixed arguments
 $runCommand += @(
     '-p', '3000:3000'
@@ -82,7 +98,6 @@ $runCommand += @(
     '-p', '4317:4317'
     '-p', '4318:4318'
     '-p', '9090:9090'
-    '-p', '12001:12001'
     '--rm'
 )
 

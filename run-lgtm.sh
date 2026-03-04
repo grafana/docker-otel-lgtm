@@ -27,6 +27,13 @@ if [[ ${ENABLE_OBI:-} == "true" ]] || grep -qE '^ENABLE_OBI=true$' .env 2>/dev/n
 	done
 fi
 
+# Check if remotetap is enabled (from environment or .env file)
+REMOTETAP_FLAGS=()
+if [[ ${ENABLE_REMOTETAP:-} == "true" ]] || grep -qE '^ENABLE_REMOTETAP=true$' .env 2>/dev/null; then
+	echo "remotetap WebSocket debug processor enabled on port 12001."
+	REMOTETAP_FLAGS=(-p 12001:12001)
+fi
+
 # Allocate TTY only if stdin is a terminal
 TTY_FLAGS=()
 if test -t 0; then
@@ -68,7 +75,7 @@ $RUNTIME container run \
 	-p 4317:4317 \
 	-p 4318:4318 \
 	-p 9090:9090 \
-	-p 12001:12001 \
+	"${REMOTETAP_FLAGS[@]}" \
 	--rm \
 	"${TTY_FLAGS[@]}" \
 	-v "${LOCAL_VOLUME}"/grafana:/data/grafana:"${MOUNT_OPTS}" \

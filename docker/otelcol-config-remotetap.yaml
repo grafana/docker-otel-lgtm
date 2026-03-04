@@ -1,0 +1,13 @@
+processors:
+  remotetap:
+    endpoint: 0.0.0.0:12001
+    limit: ${env:REMOTETAP_LIMIT}
+
+service:
+  pipelines:
+    traces:
+      processors: [remotetap, batch]
+    metrics:
+      processors: [remotetap, batch]
+    logs:
+      processors: [remotetap, batch]

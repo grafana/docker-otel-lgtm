@@ -68,6 +68,7 @@ $RUNTIME container run \
 	-p 4317:4317 \
 	-p 4318:4318 \
 	-p 9090:9090 \
+	-p 12001:12001 \
 	--rm \
 	"${TTY_FLAGS[@]}" \
 	-v "${LOCAL_VOLUME}"/grafana:/data/grafana:"${MOUNT_OPTS}" \

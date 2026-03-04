@@ -32,5 +32,12 @@ if [[ -v OTEL_EXPORTER_OTLP_ENDPOINT && -n ${OTEL_EXPORTER_OTLP_ENDPOINT} ]]; th
 	fi
 fi
 
+remotetap_config_file=""
+if [[ "${ENABLE_REMOTETAP:-false}" == "true" ]]; then
+	export REMOTETAP_LIMIT="${REMOTETAP_LIMIT:-1000}"
+	echo "Enabling remotetap processor (limit=${REMOTETAP_LIMIT}/s, endpoint=0.0.0.0:12001)"
+	remotetap_config_file="--config=file:./otelcol-config-remotetap.yaml"
+fi
+
 run_with_logging "OpenTelemetry Collector ${OPENTELEMETRY_COLLECTOR_VERSION}" "${ENABLE_LOGS_OTELCOL:-false}" \
-	./otelcol-contrib/otelcol-contrib --feature-gates service.profilesSupport --config=file:./otelcol-config.yaml ${secondary_config_file}
+	./otelcol-contrib/otelcol-contrib --feature-gates service.profilesSupport --config=file:./otelcol-config.yaml ${secondary_config_file} ${remotetap_config_file}

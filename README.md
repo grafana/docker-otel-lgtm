@@ -144,6 +144,22 @@ for example, to authenticate with the backend.
 
 You can find the values for the environment variables in your [Grafana Cloud account][otel-setup].
 
+### Debug telemetry with remotetap
+
+The remotetap processor exposes a WebSocket on port `12001` that streams all telemetry data
+in real time, useful for debugging what the OpenTelemetry Collector is receiving.
+
+| Environment Variable | Default | Description |
+|----------------------|---------|-------------|
+| `ENABLE_REMOTETAP`   | `false` | Enable the remotetap WebSocket debug processor |
+| `REMOTETAP_LIMIT`    | `1000`  | Rate limit in messages/second |
+
+Set `ENABLE_REMOTETAP=true` in your `.env` file, then connect with any WebSocket client:
+
+```sh
+wscat -c ws://127.0.0.1:12001
+```
+
 ### Persist data across container instantiation
 
 The various components in the repository are configured to write their data to the `/data`

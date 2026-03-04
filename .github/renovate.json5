@@ -23,7 +23,7 @@
       ignoreUnstable: false,
     },
     {
-      matchPackageNames: ["otel/ebpf-instrument", "grafana/grafana", "grafana/loki", "grafana/pyroscope", "grafana/tempo", "open-telemetry/opentelemetry-collector-releases", "prometheus/prometheus"],
+      matchPackageNames: ["grafana/grafana", "grafana/loki", "grafana/pyroscope", "grafana/tempo", "open-telemetry/opentelemetry-collector-releases", "open-telemetry/opentelemetry-ebpf-instrumentation", "prometheus/prometheus"],
       labels: ["docker-dependency"],
     },
     {

@@ -11,7 +11,7 @@ ARG LOKI_VERSION=v3.6.7
 ARG PYROSCOPE_VERSION=v1.18.1
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
 ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.146.1
-# renovate: datasource=docker depName=obi packageName=otel/ebpf-instrument
+# renovate: datasource=github-releases depName=obi packageName=open-telemetry/opentelemetry-ebpf-instrumentation
 ARG OBI_VERSION=v0.4.1
 
 # hadolint global ignore=DL3059

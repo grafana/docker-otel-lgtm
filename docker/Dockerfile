@@ -12,7 +12,7 @@ ARG PYROSCOPE_VERSION=v1.18.1
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
 ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.146.1
 # renovate: datasource=github-releases depName=obi packageName=open-telemetry/opentelemetry-ebpf-instrumentation
-ARG OBI_VERSION=v0.4.1
+ARG OBI_VERSION=v0.5.0
 
 # hadolint global ignore=DL3059
 FROM docker.io/otel/ebpf-instrument:${OBI_VERSION} AS obi-source
@@ -101,7 +101,7 @@ RUN dnf install --installroot /mnt/rootfs curl-minimal --releasever 9 --setopt i
 RUN find /otel-lgtm/ -maxdepth 1 -type f | xargs dos2unix
 
 COPY --from=downloader /otel-lgtm/ /otel-lgtm/
-COPY --from=obi-source /ebpf-instrument /otel-lgtm/obi/obi
+COPY --from=obi-source /obi /otel-lgtm/obi/obi
 COPY --from=obi-source /obi-java-agent.jar /otel-lgtm/obi/obi-java-agent.jar
 
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/

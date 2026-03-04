@@ -1,11 +1,12 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["config:recommended", "customManagers:dockerfileVersions", "customManagers:githubActionsVersions"],
+  extends: ["config:best-practices", "config:recommended", "customManagers:dockerfileVersions", "customManagers:githubActionsVersions", "github>grafana/flint"],
   branchPrefix: "grafanarenovatebot/",
-  dependencyDashboard: false,
+  dependencyDashboard: true,
   platformCommit: "enabled",
   automerge: true,
   ignorePaths: [],
+  ignorePresets: [":ignoreModulesAndTests"],
   ignoreUnstable: true,
   packageRules: [
     {
@@ -17,22 +18,12 @@
       allowedVersions: "!/operator/",
     },
     {
-      matchPackageNames: ["ghcr.io/renovatebot/renovate", "renovatebot/github-action"],
-      groupName: "renovatebot",
-      schedule: ["before 4am on monday"],
-    },
-    {
-      matchPackageNames: ["jdx/mise"],
-      groupName: "mise",
-      schedule: ["before 4am on monday"],
-    },
-    {
       matchDatasources: ["pypi"],
       matchDepNames: ["opentelemetry-distro"],
       ignoreUnstable: false,
     },
     {
-      matchPackageNames: ["grafana/grafana", "prometheus/prometheus", "grafana/loki", "grafana/tempo", "open-telemetry/opentelemetry-collector-releases"],
+      matchPackageNames: ["grafana/grafana", "grafana/loki", "grafana/pyroscope", "grafana/tempo", "open-telemetry/opentelemetry-collector-releases", "open-telemetry/opentelemetry-ebpf-instrumentation", "prometheus/prometheus"],
       labels: ["docker-dependency"],
     },
     {
@@ -54,25 +45,9 @@
   customManagers: [
     {
       customType: "regex",
-      depNameTemplate: "ghcr.io/renovatebot/renovate",
-      datasourceTemplate: "docker",
-      managerFilePatterns: ["/^\\.github/workflows/renovate.yml$/"],
-      matchStrings: ["renovate-version: (?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?", "RENOVATE_IMAGE=ghcr.io/renovatebot/renovate:(?<currentValue>[^@\\s]+)(?:@(?<currentDigest>\\S+))?"],
-    },
-    {
-      customType: "regex",
       description: "Update _version variables in run.sh",
       managerFilePatterns: ["/run.sh$/"],
       matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"],
-    },
-    {
-      customType: "regex",
-      description: "update mise",
-      managerFilePatterns: ["/(^|/)(workflow-templates|\\.(?:github|gitea|forgejo)/(?:workflows|actions))/.+\\.ya?ml$/", "/(^|/)action\\.ya?ml$/"],
-      datasourceTemplate: "github-release-attachments",
-      packageNameTemplate: "jdx/mise",
-      depNameTemplate: "mise",
-      matchStrings: ["jdx/mise-action.*\\n\\s*with:\\s*\\n\\s*version: [\"']?(?<currentValue>v[.\\d]+)[\"']?\\s*\\n\\s*sha256: [\"']?(?<currentDigest>\\w+)[\"']?"],
     },
   ],
 }

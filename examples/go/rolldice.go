@@ -39,8 +39,8 @@ func roll() int {
 	// simulate a long operation
 	// busy wait to make sure it's shown in the flame graph
 	start := time.Now()
+	//nolint:revive // intentional busy wait for flame graph demo
 	for time.Since(start) < 1*time.Second {
-		// busy wait
 	}
 
 	//nolint:gosec

@@ -1,0 +1,196 @@
+---
+name: Publish Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      draft:
+        description: "If true, creates the release as a draft."
+        required: false
+        type: boolean
+        default: true
+      version:
+        description: "The optional version number to use for the release."
+        required: false
+        type: string
+        default: ""
+
+permissions: {}
+
+jobs:
+  release:
+    runs-on: [ubuntu-latest]
+
+    concurrency:
+      group: ${{ github.workflow }}
+      cancel-in-progress: false
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Get GitHub token
+        id: get-token
+        uses: grafana/shared-workflows/actions/create-github-app-token@ae92934a14a48b94494dbc06d74a81d47fe08a40 # v0.2.2
+        with:
+          github_app: grafana-otel-bot
+          permission_set: default
+
+      - name: Determine next version
+        id: get-version
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ steps.get-token.outputs.token }}
+          NEXT_VERSION: ${{ inputs.version }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $ProgressPreference = "SilentlyContinue"
+
+          # Get the component versions from the container image environment variables
+          function Get-Component-Versions {
+            param([string]$Image)
+
+            docker pull $Image 2>&1 | Out-Null
+
+            if ($LASTEXITCODE -ne 0) {
+              throw "Failed to pull image $Image"
+            }
+
+            $vars = docker image inspect --format '{{json .Config.Env}}' $Image | ConvertFrom-Json
+
+            if ($LASTEXITCODE -ne 0) {
+              throw "Failed to inspect image $Image"
+            }
+
+            $result = [ordered]@{}
+            $suffix = "_VERSION"
+
+            foreach ($var in $vars | Sort-Object) {
+              $parts = $var -split '=', 2
+
+              $key = $parts[0]
+              $value = $parts[1]
+
+              # Ignore the LGTM_VERSION variable since it represents the overall version, not a specific component
+              if ($key -eq "LGTM_VERSION") {
+                continue
+              }
+
+              if ($key.EndsWith($suffix)) {
+                $result[$key.Substring(0, $key.Length - $suffix.Length)] = [System.Version]::new($value.TrimStart("v"))
+              }
+            }
+
+            $result
+          }
+
+          function Get-Next-Version {
+            param(
+              [System.Version]$Version,
+              [hashtable]$Current,
+              [hashtable]$Next
+            )
+
+            # Determine if any components have major or minor version changes
+            $major = $false
+            $minor = $false
+
+            foreach ($key in $Current.Keys) {
+              if ($null -eq $Next[$key]) {
+                # If we remove a component, consider it a major change
+                $major = $true
+                continue
+              }
+
+              $currentComponent = $Current[$key]
+              $nextComponent = $Next[$key]
+
+              if ($nextComponent.Major -gt $currentComponent.Major) {
+                $major = $true
+                break
+              }
+
+              if ($nextComponent.Minor -gt $currentComponent.Minor) {
+                $minor = $true
+              }
+            }
+
+            foreach ($key in $Next.Keys) {
+              if ($null -eq $Current[$key]) {
+                # If we add a component, consider it a major change
+                $major = $true
+                continue
+              }
+            }
+
+            # For major or minor changes, bump the minor version and reset the patch version.
+            # For any other changes, just bump the patch version.
+            if ($major -or $minor) {
+              $nextVersion = [System.Version]::new($Version.Major, $Version.Minor + 1, 0)
+            }
+            else {
+              $nextVersion = [System.Version]::new($Version.Major, $Version.Minor, $Version.Build + 1)
+            }
+
+            $nextVersion.ToString()
+          }
+
+          function Get-Next-LGTM-Version {
+
+            param([string]$NextVersion)
+
+            # Use the version as provided
+            if (-Not [string]::IsNullOrEmpty($NextVersion)) {
+              [System.Version]::new($NextVersion.TrimStart('v')).ToString()
+              return
+            }
+
+            # Get the versions of the components in the latest release and the main branch
+            $current = Get-Component-Versions "docker.io/grafana/otel-lgtm:latest"
+            $next    = Get-Component-Versions "ghcr.io/grafana/docker-otel-lgtm:main"
+
+            # Get the current release version from the latest GitHub release
+            $latest = (gh api "/repos/${env:GITHUB_REPOSITORY}/releases/latest" --jq .tag_name).TrimStart('v')
+
+            if ($LASTEXITCODE -ne 0) {
+              throw "Failed to get latest release version"
+            }
+
+            $currentVersion = [System.Version]::new($latest)
+
+            $nextVersion = Get-Next-Version $currentVersion $current $next
+
+            $nextVersion.ToString()
+          }
+
+          $releaseVersion = Get-Next-LGTM-Version ${env:NEXT_VERSION}
+          "version=${releaseVersion}" >> ${env:GITHUB_OUTPUT}
+
+      - name: Create release
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          DRAFT: ${{ inputs.draft == true }}
+          VERSION: ${{ steps.get-version.outputs.version }}
+        with:
+          github-token: ${{ steps.get-token.outputs.token }}
+          script: |
+            const { repo, owner } = context.repo;
+            const draft = process.env.DRAFT === 'true';
+            const version = process.env.VERSION;
+            const tag_name = `v${version}`;
+            const target_commitish = process.env.DEFAULT_BRANCH;
+            const name = tag_name;
+
+            const { data: release } = await github.rest.repos.createRelease({
+              owner,
+              repo,
+              tag_name,
+              target_commitish,
+              name,
+              draft,
+              generate_release_notes: true,
+            });
+
+            core.notice(`Created release ${release.name}: ${release.html_url}`);

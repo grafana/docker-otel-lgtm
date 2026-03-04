@@ -11,9 +11,15 @@ It's recommended to use the [mise][mise] for development.
 
 ## Linting
 
-- Markdown lint: `mise run lint-markdown`
-- Markdown link checker: `mise run lint-links`
-- Run all checks: `mise run lint-all`
+This repository uses [flint][flint] for linting.
+See the flint readme for detailed documentation on each linter.
+
+```bash
+mise run fix   # Auto-fix all issues (recommended before committing)
+mise run lint  # Check only (same command used in CI)
+```
+
+Always run `mise run fix` before committing — review the changed files as auto-fixes may produce unexpected results.
 
 ## Acceptance Tests
 
@@ -49,5 +55,6 @@ print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml
 <!-- markdownlint-disable MD013 -->
 
 [architecture]: https://docs.google.com/presentation/d/1txMBBitezscvtJIXRHNSXnCekjMRM29GmHufUSI0NRw/edit?slide=id.g26040f0db78_0_0#slide=id.g26040f0db78_0_0
+[flint]: https://github.com/grafana/flint
 [mise]: https://github.com/jdx/mise
 [oats]: https://github.com/grafana/oats

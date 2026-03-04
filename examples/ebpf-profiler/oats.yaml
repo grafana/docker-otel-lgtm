@@ -1,5 +1,6 @@
 # OATS is an acceptance testing framework for OpenTelemetry
 # https://github.com/grafana/oats/tree/main/yaml
+oats-schema-version: 2
 docker-compose:
   files:
     - ./docker-compose.oats.yml
@@ -10,7 +11,7 @@ expected:
     # go
     - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name=~"rolldice"}'
       flamebearers:
-        contains: "main.rolldice"
+        equals: "main.rolldice"
     # python and java are flaky
 #    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name=~"python.*"}'
 #      flamebearers:

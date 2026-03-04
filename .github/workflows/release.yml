@@ -12,9 +12,13 @@ jobs:
   release:
     runs-on: ubuntu-24.04
 
+    concurrency:
+      group: "${{ github.workflow }}-${{ github.ref }}"
+      cancel-in-progress: false
+
     env:
       # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
-      COSIGN_VERSION: v3.0.2
+      COSIGN_VERSION: v3.0.5
 
     permissions:
       attestations: write
@@ -23,7 +27,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 
@@ -42,6 +46,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           registries: "dockerhub"
+          build-args: |
+            LGTM_VERSION=${{ github.ref_name }}
           tags: |-
             type=match,pattern=v(.*),group=1
             latest
@@ -52,7 +58,7 @@ jobs:
             version=${{ github.ref_name }}
 
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.0.0
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
         with:
           push-to-registry: true
           subject-name: docker.io/grafana/otel-lgtm

@@ -1,0 +1,88 @@
+services:
+  lgtm:
+    image: grafana/otel-lgtm
+    environment:
+      ENABLE_OBI: "true"
+    privileged: true
+    pid: "host"
+    networks:
+      - otel-net
+    ports:
+      - "3000:3000"
+      - "4040:4040"
+      - "4317:4317"
+      - "4318:4318"
+      - "9090:9090"
+
+  generate-traffic:
+    build:
+      dockerfile: generate-traffic.Dockerfile
+    networks:
+      - otel-net
+    depends_on:
+      - java
+      - python
+      - dotnet
+      - go
+      - nodejs
+
+  # Uninstrumented applications - sorted alphabetically by language.
+  # None of these have any OpenTelemetry SDK, agent, or distro.
+  # OBI (eBPF Instrumentation) running inside the lgtm container
+  # automatically discovers and instruments them via eBPF.
+
+  dotnet:
+    build:
+      context: ./dotnet
+    ports:
+      - "8083:8083"
+    networks:
+      - otel-net
+    depends_on:
+      - lgtm
+
+  go:
+    build:
+      context: ./go
+    ports:
+      - "8081:8081"
+    networks:
+      - otel-net
+    depends_on:
+      - lgtm
+
+  java:
+    build:
+      context: ../java
+      dockerfile: ../obi/java.Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - otel-net
+    depends_on:
+      - lgtm
+
+  nodejs:
+    build:
+      context: ./nodejs
+    ports:
+      - "8084:8084"
+    networks:
+      - otel-net
+    depends_on:
+      - lgtm
+
+  python:
+    build:
+      context: ../python
+      dockerfile: ../obi/python.Dockerfile
+    ports:
+      - "8082:8082"
+    networks:
+      - otel-net
+    depends_on:
+      - lgtm
+
+networks:
+  otel-net:
+    driver: bridge

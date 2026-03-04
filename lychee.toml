@@ -1,4 +1,0 @@
-max_retries = 6
-exclude_loopback = true
-
-exclude = ['https://docs.google.com/.*']

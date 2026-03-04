@@ -1,5 +1,6 @@
 # OATS is an acceptance testing framework for OpenTelemetry
 # https://github.com/grafana/oats/tree/main/yaml
+oats-schema-version: 2
 docker-compose:
   files:
     - ./docker-compose.oats.yml
@@ -14,14 +15,12 @@ expected:
     - "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'
-      spans:
-        - name: "GET /rolldice"
-          attributes:
-            otel.library.name: opentelemetry.instrumentation.flask
+      equals: "GET /rolldice"
+      attributes:
+        otel.library.name: opentelemetry.instrumentation.flask
   metrics:
     - promql: 'http_server_active_requests{http_method="GET"}'
       value: ">= 0"
   logs:
     - logql: '{service_name="rolldice"} |~ `Anonymous player is rolling the dice.*`'
-      contains:
-        - "Anonymous player is rolling the dice"
+      regexp: "Anonymous player is rolling the dice"

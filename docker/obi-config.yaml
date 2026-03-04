@@ -1,0 +1,12 @@
+ebpf:
+  context_propagation: all
+
+otel_traces_export:
+  endpoint: http://127.0.0.1:4318
+
+otel_metrics_export:
+  endpoint: http://127.0.0.1:4318
+
+prometheus_export:
+  port: 6060
+  path: /metrics

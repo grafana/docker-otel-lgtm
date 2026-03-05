@@ -2,6 +2,7 @@
 
 source ./logging.sh
 
+# shellcheck disable=SC2086 # intentional word splitting for extra args
 run_with_logging "Prometheus ${PROMETHEUS_VERSION}" "${ENABLE_LOGS_PROMETHEUS:-false}" ./prometheus/prometheus \
 	--web.enable-remote-write-receiver \
 	--web.enable-otlp-receiver \

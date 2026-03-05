@@ -155,32 +155,38 @@ some users even in testing situations.
 
 ### Customize backend configuration
 
-You can override the default configuration and startup files for each backend by mounting custom files
-into the container. This is useful for setting data retention policies, adjusting resource
-limits, or other backend-specific tuning.
+Each backend supports a `*_EXTRA_ARGS` environment variable for passing additional
+CLI flags without modifying any files:
 
-The files you can override are:
+| Backend              | Env var                | Example                                            |
+|----------------------|------------------------|----------------------------------------------------|
+| Prometheus           | `PROMETHEUS_EXTRA_ARGS` | `--storage.tsdb.retention.time=90d`               |
+| Loki                 | `LOKI_EXTRA_ARGS`      | `--limits.retention-period=90d`                    |
+| Tempo                | `TEMPO_EXTRA_ARGS`     |                                                    |
+| Pyroscope            | `PYROSCOPE_EXTRA_ARGS` |                                                    |
+| OpenTelemetry Collector | `OTELCOL_EXTRA_ARGS` |                                                    |
 
-| Backend    | File path                          | Purpose                          |
-|------------|------------------------------------|----------------------------------|
-| Loki       | `/otel-lgtm/loki-config.yaml`     | Configuration file               |
-| Prometheus | `/otel-lgtm/prometheus.yaml`       | Configuration file               |
-| Prometheus | `/otel-lgtm/run-prometheus.sh`     | Startup script (for CLI flags)   |
-| Tempo      | `/otel-lgtm/tempo-config.yaml`    | Configuration file               |
-| Pyroscope  | `/otel-lgtm/pyroscope-config.yaml` | Configuration file               |
+For example, to set a 90-day retention period for Prometheus:
 
-For example, to use a custom Loki config with a 90-day retention period:
+```sh
+docker run -e PROMETHEUS_EXTRA_ARGS="--storage.tsdb.retention.time=90d" grafana/otel-lgtm
+```
+
+For deeper customization, you can mount custom configuration files into the container:
+
+| Backend    | Config file path                    |
+|------------|-------------------------------------|
+| Loki       | `/otel-lgtm/loki-config.yaml`      |
+| Prometheus | `/otel-lgtm/prometheus.yaml`        |
+| Tempo      | `/otel-lgtm/tempo-config.yaml`     |
+| Pyroscope  | `/otel-lgtm/pyroscope-config.yaml`  |
 
 ```sh
 docker run -v ./my-loki-config.yaml:/otel-lgtm/loki-config.yaml:ro grafana/otel-lgtm
 ```
 
-For Prometheus, retention is set via command-line flags, so you need to mount a custom
-`run-prometheus.sh` that adds `--storage.tsdb.retention.time=90d`.
-
-> [!TIP]
-> See [discussion #151][retention-discussion] for a complete docker-compose example
-> with custom retention settings for Loki, Prometheus, and Tempo.
+Grafana is configured via `GF_*` environment variables — see the
+[Grafana documentation][grafana-env-overrides] for details.
 
 ### Pre-install Grafana plugins
 
@@ -351,4 +357,4 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 [otlp-headers]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers
 [oats]: https://github.com/grafana/oats
 [red-method]: https://grafana.com/blog/the-red-method-how-to-instrument-your-services/ "The RED Method"
-[retention-discussion]: https://github.com/grafana/docker-otel-lgtm/discussions/151 "How to increase data storage time"
+[grafana-env-overrides]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#override-configuration-with-environment-variables

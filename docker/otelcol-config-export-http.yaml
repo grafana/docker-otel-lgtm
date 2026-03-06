@@ -1,12 +1,16 @@
 service:
   pipelines:
     traces:
-      exporters: [otlphttp/traces, otlphttp/external]
+      exporters: [otlphttp/traces, otlphttp/external-traces]
     metrics:
-      exporters: [otlphttp/metrics, otlphttp/external]
+      exporters: [otlphttp/metrics, otlphttp/external-metrics]
     logs:
-      exporters: [otlphttp/logs, otlphttp/external]
+      exporters: [otlphttp/logs, otlphttp/external-logs]
 
 exporters:
-  otlphttp/external:
-    endpoint: ${env:OTEL_EXPORTER_OTLP_ENDPOINT}
+  otlphttp/external-traces:
+    endpoint: ${env:OTEL_EXPORTER_OTLP_TRACES_ENDPOINT}
+  otlphttp/external-metrics:
+    endpoint: ${env:OTEL_EXPORTER_OTLP_METRICS_ENDPOINT}
+  otlphttp/external-logs:
+    endpoint: ${env:OTEL_EXPORTER_OTLP_LOGS_ENDPOINT}

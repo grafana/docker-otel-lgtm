@@ -137,6 +137,14 @@ If the [`OTEL_EXPORTER_OTLP_ENDPOINT`][otlp-endpoint]
 variable is set, the OpenTelemetry Collector will send data (logs, metrics, and traces)
 to the specified endpoint using "OTLP/HTTP".
 
+You can also configure per-signal endpoints:
+`OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`,
+`OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`, and
+`OTEL_EXPORTER_OTLP_LOGS_ENDPOINT`.
+
+If both global and per-signal endpoints are set, per-signal values take precedence.
+Endpoints must include the scheme (for example, `http://jaeger:4318`).
+
 In addition, you can provide [`OTEL_EXPORTER_OTLP_HEADERS`][otlp-headers],
 for example, to authenticate with the backend.
 

@@ -2,6 +2,17 @@
 
 echo "Starting grafana/otel-lgtm ${LGTM_VERSION}"
 
+# Graceful shutdown: forward SIGTERM/SIGINT to all child processes
+shutdown() {
+	echo "Shutting down..."
+	# Send SIGTERM to all background jobs
+	# shellcheck disable=SC2046
+	kill $(jobs -p) 2>/dev/null
+	wait
+	exit 0
+}
+trap shutdown SIGTERM SIGINT
+
 # Record global start time
 start_time_global=$(date +%s)
 
@@ -156,4 +167,6 @@ echo " - 3000: Grafana (http://localhost:3000). User: admin, password: admin"
 echo " - 4040: Pyroscope endpoint"
 echo " - 9090: Prometheus endpoint"
 
-sleep infinity
+# Wait for signal; backgrounded sleep allows the trap to fire
+sleep infinity &
+wait $!

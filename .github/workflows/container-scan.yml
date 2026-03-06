@@ -15,7 +15,7 @@ env:
   TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
   TRIVY_SEVERITIES: "CRITICAL,HIGH"
   # renovate: datasource=github-releases depName=trivy packageName=aquasecurity/trivy
-  TRIVY_VERSION: "v0.69.2"
+  TRIVY_VERSION: "v0.69.3"
 
 jobs:
   scan-image:

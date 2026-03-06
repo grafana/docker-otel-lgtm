@@ -1,6 +1,6 @@
 module dice
 
-go 1.24.0
+go 1.25.0
 
 require (
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.66.0
@@ -32,7 +32,7 @@ require (
 	go.opentelemetry.io/otel/metric v1.41.0
 	go.opentelemetry.io/otel/trace v1.41.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.9.0 // indirect
-	golang.org/x/net v0.50.0 // indirect
+	golang.org/x/net v0.51.0 // indirect
 	golang.org/x/sys v0.41.0 // indirect
 	golang.org/x/text v0.34.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260209200024-4cfbd4190f57 // indirect

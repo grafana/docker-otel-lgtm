@@ -176,9 +176,9 @@ For deeper customization, you can mount custom configuration files into the cont
 
 | Backend    | Config file path                   |
 |------------|------------------------------------|
-| Loki       | `/otel-lgtm/loki-config.yaml`     |
+| Loki       | `/otel-lgtm/loki-config.yaml`      |
 | Prometheus | `/otel-lgtm/prometheus.yaml`       |
-| Tempo      | `/otel-lgtm/tempo-config.yaml`    |
+| Tempo      | `/otel-lgtm/tempo-config.yaml`     |
 | Pyroscope  | `/otel-lgtm/pyroscope-config.yaml` |
 
 ```sh

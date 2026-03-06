@@ -4,9 +4,17 @@ source ./logging.sh
 
 secondary_config_file=""
 
-if [[ -v OTEL_EXPORTER_OTLP_ENDPOINT && -n ${OTEL_EXPORTER_OTLP_ENDPOINT} ]]; then
-	echo "Also enabling OTLP/HTTP export to ${OTEL_EXPORTER_OTLP_ENDPOINT}"
+if [[ -n ${OTEL_EXPORTER_OTLP_ENDPOINT:-} || -n ${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:-} || -n ${OTEL_EXPORTER_OTLP_METRICS_ENDPOINT:-} || -n ${OTEL_EXPORTER_OTLP_LOGS_ENDPOINT:-} ]]; then
+	if [[ -n ${OTEL_EXPORTER_OTLP_ENDPOINT:-} ]]; then
+		echo "Also enabling OTLP/HTTP export to ${OTEL_EXPORTER_OTLP_ENDPOINT}"
+	fi
 	secondary_config_file="--config=file:./otelcol-config-export-http.yaml"
+
+	# Keep backward compatibility: if only OTEL_EXPORTER_OTLP_ENDPOINT is set,
+	# use it as the per-signal endpoint fallback.
+	export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:-${OTEL_EXPORTER_OTLP_ENDPOINT:-}}"
+	export OTEL_EXPORTER_OTLP_METRICS_ENDPOINT="${OTEL_EXPORTER_OTLP_METRICS_ENDPOINT:-${OTEL_EXPORTER_OTLP_ENDPOINT:-}}"
+	export OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="${OTEL_EXPORTER_OTLP_LOGS_ENDPOINT:-${OTEL_EXPORTER_OTLP_ENDPOINT:-}}"
 
 	if [[ -v OTEL_EXPORTER_OTLP_HEADERS && -n ${OTEL_EXPORTER_OTLP_HEADERS} ]]; then
 		echo "Adding headers from OTEL_EXPORTER_OTLP_HEADERS"
@@ -27,8 +35,13 @@ if [[ -v OTEL_EXPORTER_OTLP_ENDPOINT && -n ${OTEL_EXPORTER_OTLP_ENDPOINT} ]]; th
 		done
 		yaml_headers+="}"
 
-		# add the contents of OTEL_EXPORTER_OTLP_HEADERS to the otelcol-config-export-http.yaml file
-		printf '\n    headers: %s' "${yaml_headers}" >>otelcol-config-export-http.yaml
+		# add the contents of OTEL_EXPORTER_OTLP_HEADERS to all external exporters in otelcol-config-export-http.yaml
+		awk -v headers="${yaml_headers}" '
+			{ print }
+			/endpoint: \$\{env:OTEL_EXPORTER_OTLP_(TRACES|METRICS|LOGS)_ENDPOINT\}/ {
+				print "    headers: " headers
+			}
+		' otelcol-config-export-http.yaml >otelcol-config-export-http.yaml.tmp && mv otelcol-config-export-http.yaml.tmp otelcol-config-export-http.yaml
 	fi
 fi
 

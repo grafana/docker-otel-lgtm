@@ -32,5 +32,7 @@ if [[ -v OTEL_EXPORTER_OTLP_ENDPOINT && -n ${OTEL_EXPORTER_OTLP_ENDPOINT} ]]; th
 	fi
 fi
 
+# shellcheck disable=SC2086 # intentional word splitting for extra args and secondary config
 run_with_logging "OpenTelemetry Collector ${OPENTELEMETRY_COLLECTOR_VERSION}" "${ENABLE_LOGS_OTELCOL:-false}" \
-	./otelcol-contrib/otelcol-contrib --feature-gates service.profilesSupport --config=file:./otelcol-config.yaml ${secondary_config_file}
+	./otelcol-contrib/otelcol-contrib --feature-gates service.profilesSupport \
+	--config=file:./otelcol-config.yaml ${secondary_config_file} ${OTELCOL_EXTRA_ARGS:-}

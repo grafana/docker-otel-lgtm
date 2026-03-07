@@ -153,6 +153,41 @@ development, demo, and testing environments and persisting data to an external v
 doesn't change that. However, this feature could be useful in certain cases for
 some users even in testing situations.
 
+### Customize backend configuration
+
+Each backend supports a `*_EXTRA_ARGS` environment variable for passing additional
+CLI flags without modifying any files:
+
+| Backend                 | Env var                 | Example                              |
+|-------------------------|-------------------------|--------------------------------------|
+| Prometheus              | `PROMETHEUS_EXTRA_ARGS` | `--storage.tsdb.retention.time=90d`  |
+| Loki                    | `LOKI_EXTRA_ARGS`       | `--limits.retention-period=90d`      |
+| Tempo                   | `TEMPO_EXTRA_ARGS`      |                                      |
+| Pyroscope               | `PYROSCOPE_EXTRA_ARGS`  |                                      |
+| OpenTelemetry Collector | `OTELCOL_EXTRA_ARGS`    |                                      |
+
+For example, to set a 90-day retention period for Prometheus:
+
+```sh
+docker run -e PROMETHEUS_EXTRA_ARGS="--storage.tsdb.retention.time=90d" grafana/otel-lgtm
+```
+
+For deeper customization, you can mount custom configuration files into the container:
+
+| Backend    | Config file path                   |
+|------------|------------------------------------|
+| Loki       | `/otel-lgtm/loki-config.yaml`      |
+| Prometheus | `/otel-lgtm/prometheus.yaml`       |
+| Tempo      | `/otel-lgtm/tempo-config.yaml`     |
+| Pyroscope  | `/otel-lgtm/pyroscope-config.yaml` |
+
+```sh
+docker run -v ./my-loki-config.yaml:/otel-lgtm/loki-config.yaml:ro grafana/otel-lgtm
+```
+
+Grafana is configured via `GF_*` environment variables — see the
+[Grafana documentation][grafana-env-overrides] for details.
+
 ### Pre-install Grafana plugins
 
 You can pre-install Grafana plugins by adding them to the `GF_PLUGINS_PREINSTALL` environment variable.
@@ -322,3 +357,4 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 [otlp-headers]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers
 [oats]: https://github.com/grafana/oats
 [red-method]: https://grafana.com/blog/the-red-method-how-to-instrument-your-services/ "The RED Method"
+[grafana-env-overrides]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#override-configuration-with-environment-variables

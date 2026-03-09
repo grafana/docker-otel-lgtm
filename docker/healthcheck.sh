@@ -10,7 +10,7 @@ check_service(){
 
     set +e
     #check if port is listening
-    curl -fsS "$url" >/dev/null 2>&1
+    curl -s "$url" >/dev/null 2>&1
     code=$?
     set -e
 

@@ -36,4 +36,4 @@ the installed components in the container image, if any.
 [immutable-releases]: https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/immutable-releases
 [latest-release]: https://github.com/grafana/docker-otel-lgtm/releases/latest
 [publish-release]: https://github.com/grafana/docker-otel-lgtm/actions/workflows/publish-release.yml
-[scheduled-release]: https://github.com/grafana/docker-otel-lgtm/blob/main/.github/workflows/scheduled-release.yml
+[scheduled-release]: .github/workflows/scheduled-release.yml

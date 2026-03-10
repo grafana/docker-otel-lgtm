@@ -102,7 +102,6 @@ RUN find /otel-lgtm/ -maxdepth 1 -type f | xargs dos2unix
 
 COPY --from=downloader /otel-lgtm/ /otel-lgtm/
 COPY --from=obi-source /obi /otel-lgtm/obi/obi
-COPY --from=obi-source /obi-java-agent.jar /otel-lgtm/obi/obi-java-agent.jar
 
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/

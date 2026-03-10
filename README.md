@@ -309,7 +309,7 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 [docker-hub]: https://hub.docker.com/r/grafana/otel-lgtm
 [docker-latest]: https://img.shields.io/docker/v/grafana/otel-lgtm?logo=docker&label=latest&color=blue
 [docker-pulls]: https://img.shields.io/docker/pulls/grafana/otel-lgtm?logo=docker&label=pulls
-[examples]: https://github.com/grafana/docker-otel-lgtm/tree/main/examples
+[examples]: examples/
 [ghcr]: https://github.com/grafana/docker-otel-lgtm/pkgs/container/docker-otel-lgtm
 [grafana-preinstall-plugins]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/#install-plugins-in-the-docker-container
 [mise]: https://github.com/jdx/mise

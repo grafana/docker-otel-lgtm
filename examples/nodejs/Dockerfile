@@ -1,11 +1,8 @@
 # syntax=docker/dockerfile:1.22@sha256:4a43a54dd1fedceb30ba47e76cfcf2b47304f4161c0caeac2db1c61804ea3c91
 
-ARG NODE_VERSION=22.14.0
-
-FROM node:${NODE_VERSION}-alpine
+FROM node:24.14.0-alpine
 
 ENV NODE_ENV production
-
 
 WORKDIR /usr/src/app
 

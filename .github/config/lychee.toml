@@ -12,6 +12,8 @@ include_fragments = true
 exclude = [
   # locally running Grafana instance, used for testing and development
   "http://127.0.0.1:3000/",
+  # locally running example applications (ports 8080-8084), used for testing and development
+  "http://127.0.0.1:808[0-4]/.*",
   # Google Docs links are often rate-limited and not critical to validate in this repository,
   # so we exclude them to avoid false positives and improve performance
   "https://docs.google.com/.*"

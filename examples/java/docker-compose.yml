@@ -1,0 +1,32 @@
+services:
+  lgtm:
+    image: grafana/otel-lgtm
+    ports:
+      - "3000:3000"
+      - "4317:4317"
+      - "4318:4318"
+    environment:
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /otel-lgtm/grafana/conf/provisioning/dashboards/custom/custom-dashboard.json
+    volumes:
+      - ./custom-dashboard.json:/otel-lgtm/grafana/conf/provisioning/dashboards/custom/custom-dashboard.json:ro
+      - ./dashboards-provisioning.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/custom.yaml:ro
+    networks:
+      - java-demo
+
+  java:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      OTEL_SERVICE_NAME: "rolldice"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+    ports:
+      - "8080:8080"
+    networks:
+      - java-demo
+    depends_on:
+      - lgtm
+
+networks:
+  java-demo:
+    driver: bridge

@@ -167,6 +167,49 @@ some users even in testing situations.
 You can pre-install Grafana plugins by adding them to the `GF_PLUGINS_PREINSTALL` environment variable.
 See the [Grafana documentation][grafana-preinstall-plugins] for more information.
 
+### Add custom dashboards
+
+You can add custom Grafana dashboards by mounting them into the container with a provisioning configuration.
+
+Create a dashboard JSON file and a provisioning YAML file:
+
+**dashboards-provisioning.yaml:**
+
+```yaml
+apiVersion: 1
+
+providers:
+  - name: "Custom Dashboards"
+    type: file
+    options:
+      path: /otel-lgtm/grafana/conf/provisioning/dashboards/custom
+      foldersFromFilesStructure: false
+```
+
+Mount both files in your `docker-compose.yml`:
+
+```yaml
+services:
+  lgtm:
+    image: grafana/otel-lgtm
+    volumes:
+      - ./custom-dashboard.json:/otel-lgtm/grafana/conf/provisioning/dashboards/custom/custom-dashboard.json:ro
+      - ./dashboards-provisioning.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/custom.yaml:ro
+```
+
+See the [Java example][java-example] for a complete working example.
+
+To set a custom dashboard as the home dashboard, add the `GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH`
+environment variable:
+
+```yaml
+services:
+  lgtm:
+    image: grafana/otel-lgtm
+    environment:
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /otel-lgtm/grafana/conf/provisioning/dashboards/custom/custom-dashboard.json
+```
+
 ## Run lgtm in Kubernetes
 
 ```sh
@@ -321,6 +364,7 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 [examples]: examples/
 [ghcr]: https://github.com/grafana/docker-otel-lgtm/pkgs/container/docker-otel-lgtm
 [grafana-preinstall-plugins]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/#install-plugins-in-the-docker-container
+[java-example]: examples/java/
 [mise]: https://github.com/jdx/mise
 [mltp]: https://github.com/grafana/intro-to-mltp
 [otel-checker]: https://github.com/grafana/otel-checker/

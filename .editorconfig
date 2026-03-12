@@ -20,10 +20,10 @@ max_line_length = 120
 [renovate.json5]
 max_line_length = 400
 
-[{*.sh,.gitignore,go.work.sum,mise.toml,*.yml,*.yaml,pom.xml,*.cmd,maven-wrapper.properties,go.sum,package-lock.json}]
+[{*.sh,.gitignore,go.work.sum,mise.toml,*.yml,*.yaml,pom.xml,*.cmd,maven-wrapper.properties,go.sum,package-lock.json,README.md}]
 max_line_length = 150
 
-[{grafana-dashboard-jvm-metrics.json,grafana-dashboard-red-metrics-classic.json,grafana-dashboard-red-metrics-native.json,.editorconfig}]
+[{grafana-dashboard-jvm-metrics.json,grafana-dashboard-red-metrics-classic.json,grafana-dashboard-red-metrics-native.json,.editorconfig,custom-dashboard.json}]
 max_line_length = 3000
 
 [*.py]

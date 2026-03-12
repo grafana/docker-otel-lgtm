@@ -78,5 +78,11 @@ if [[ -n ${OTEL_EXPORTER_OTLP_ENDPOINT:-} ||
 	fi
 fi
 
+debug_config_file=""
+if [[ ${OTEL_COLLECTOR_DEBUG_EXPORTER:-false} == "true" ]]; then
+	echo "Enabling debug exporter for OpenTelemetry Collector"
+	debug_config_file="--config=file:./otelcol-config-debug.yaml"
+fi
+
 run_with_logging "OpenTelemetry Collector ${OPENTELEMETRY_COLLECTOR_VERSION}" "${ENABLE_LOGS_OTELCOL:-false}" \
-	./otelcol-contrib/otelcol-contrib --feature-gates service.profilesSupport --config=file:./otelcol-config.yaml ${secondary_config_file}
+	./otelcol-contrib/otelcol-contrib --feature-gates service.profilesSupport --config=file:./otelcol-config.yaml ${secondary_config_file} ${debug_config_file}

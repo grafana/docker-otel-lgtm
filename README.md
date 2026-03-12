@@ -174,12 +174,13 @@ docker run -e PROMETHEUS_EXTRA_ARGS="--storage.tsdb.retention.time=90d" grafana/
 
 For deeper customization, you can mount custom configuration files into the container:
 
-| Backend    | Config file path                   |
-|------------|------------------------------------|
-| Loki       | `/otel-lgtm/loki-config.yaml`      |
-| Prometheus | `/otel-lgtm/prometheus.yaml`       |
-| Tempo      | `/otel-lgtm/tempo-config.yaml`     |
-| Pyroscope  | `/otel-lgtm/pyroscope-config.yaml` |
+| Backend                 | Config file path                            |
+|-------------------------|---------------------------------------------|
+| OpenTelemetry Collector | `/otel-lgtm/otelcol-config.yaml`            |
+| Loki                    | `/otel-lgtm/loki-config.yaml`               |
+| Prometheus              | `/otel-lgtm/prometheus.yaml`                |
+| Tempo                   | `/otel-lgtm/tempo-config.yaml`              |
+| Pyroscope               | `/otel-lgtm/pyroscope-config.yaml`          |
 
 ```sh
 docker run -v ./my-loki-config.yaml:/otel-lgtm/loki-config.yaml:ro grafana/otel-lgtm

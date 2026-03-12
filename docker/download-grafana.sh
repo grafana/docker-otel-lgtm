@@ -19,5 +19,5 @@ ARCHIVE=$(basename "${DOWNLOAD_URL}")
 curl -fsOL "${DOWNLOAD_URL}"
 echo "${CHECKSUM} ${ARCHIVE}" | sha256sum -c
 tar xfz "${ARCHIVE}"
-EXTRACTED_DIR=$(tar -tzf "${ARCHIVE}" | head -1 | cut -f1 -d"/")
+EXTRACTED_DIR=$(tar -tzf "${ARCHIVE}" | head -1 | cut -f1 -d"/" || true)
 mv "${EXTRACTED_DIR}" /otel-lgtm/grafana/

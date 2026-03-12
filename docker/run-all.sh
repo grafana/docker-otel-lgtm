@@ -2,10 +2,11 @@
 
 echo "Starting grafana/otel-lgtm ${LGTM_VERSION}"
 
-# Graceful shutdown: forward SIGTERM/SIGINT to all child processes
+# Graceful shutdown: forward SIGTERM/SIGINT to all background jobs
 shutdown() {
 	echo "Shutting down..."
-	# Send SIGTERM to all background jobs
+	# Send SIGTERM to all background jobs (the wrapper scripts exec the
+	# server process, so these PIDs are the actual server processes)
 	# shellcheck disable=SC2046
 	kill $(jobs -p) 2>/dev/null
 	wait

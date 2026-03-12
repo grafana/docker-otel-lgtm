@@ -10,9 +10,9 @@ function run_with_logging() {
 	command=$*
 	if [[ ${envvar} == "true" || ${ENABLE_LOGS_ALL:-false} == "true" ]]; then
 		echo "Running ${name} logging=true"
-		${command}
+		exec ${command}
 	else
 		echo "Running ${name} logging=false"
-		${command} >/dev/null 2>&1
+		exec ${command} >/dev/null 2>&1
 	fi
 }

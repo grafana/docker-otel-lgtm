@@ -18,7 +18,7 @@ curl http://127.0.0.1:8080/rolldice
 
 Access services:
 
-- Grafana: <http://127.0.0.1:3000> (admin/admin)
+- Grafana: <http://127.0.0.1:3000> (`admin`/`admin`)
 - Application: <http://127.0.0.1:8080/rolldice>
 
 The custom dashboard loads automatically as the home dashboard.
@@ -27,7 +27,16 @@ The custom dashboard loads automatically as the home dashboard.
 
 ```bash
 docker build -t java-rolldice .
+
+# macOS / Windows (Docker Desktop)
 docker run -p 8080:8080 \
+  -e OTEL_SERVICE_NAME=rolldice \
+  -e OTEL_EXPORTER_OTLP_ENDPOINT=http://host.docker.internal:4318 \
+  java-rolldice
+
+# Linux (add host.docker.internal manually)
+docker run -p 8080:8080 \
+  --add-host=host.docker.internal:host-gateway \
   -e OTEL_SERVICE_NAME=rolldice \
   -e OTEL_EXPORTER_OTLP_ENDPOINT=http://host.docker.internal:4318 \
   java-rolldice

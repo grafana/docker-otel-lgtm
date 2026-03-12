@@ -37,9 +37,9 @@ if [[ -n ${OTEL_EXPORTER_OTLP_ENDPOINT:-} || -n ${OTEL_EXPORTER_OTLP_TRACES_ENDP
 
 	# Keep backward compatibility: if only OTEL_EXPORTER_OTLP_ENDPOINT is set,
 	# use it as the per-signal endpoint fallback.
-	export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:-${OTEL_EXPORTER_OTLP_ENDPOINT:-}}"
-	export OTEL_EXPORTER_OTLP_METRICS_ENDPOINT="${OTEL_EXPORTER_OTLP_METRICS_ENDPOINT:-${OTEL_EXPORTER_OTLP_ENDPOINT:-}}"
 	export OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="${OTEL_EXPORTER_OTLP_LOGS_ENDPOINT:-${OTEL_EXPORTER_OTLP_ENDPOINT:-}}"
+	export OTEL_EXPORTER_OTLP_METRICS_ENDPOINT="${OTEL_EXPORTER_OTLP_METRICS_ENDPOINT:-${OTEL_EXPORTER_OTLP_ENDPOINT:-}}"
+	export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:-${OTEL_EXPORTER_OTLP_ENDPOINT:-}}"
 
 	render_external_otlp_export_config
 	secondary_config_file="--config=file:./otelcol-config-export-http.yaml"
@@ -66,7 +66,7 @@ if [[ -n ${OTEL_EXPORTER_OTLP_ENDPOINT:-} || -n ${OTEL_EXPORTER_OTLP_TRACES_ENDP
 		# add the contents of OTEL_EXPORTER_OTLP_HEADERS to all external exporters in otelcol-config-export-http.yaml
 		awk -v headers="${yaml_headers}" '
 			{ print }
-			/endpoint: \$\{env:OTEL_EXPORTER_OTLP_(TRACES|METRICS|LOGS)_ENDPOINT\}/ {
+			/endpoint: \$\{env:OTEL_EXPORTER_OTLP_(LOGS|METRICS|TRACES)_ENDPOINT\}/ {
 				print "    headers: " headers
 			}
 		' otelcol-config-export-http.yaml >otelcol-config-export-http.yaml.tmp && mv otelcol-config-export-http.yaml.tmp otelcol-config-export-http.yaml

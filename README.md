@@ -198,7 +198,7 @@ services:
   lgtm:
     image: grafana/otel-lgtm
     environment:
-      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /etc/grafana/provisioning/dashboards/custom/custom-dashboard.json
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /otel-lgtm/grafana/conf/provisioning/dashboards/custom/custom-dashboard.json
 ```
 
 ## Run lgtm in Kubernetes

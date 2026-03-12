@@ -173,7 +173,7 @@ providers:
   - name: "Custom Dashboards"
     type: file
     options:
-      path: /etc/grafana/provisioning/dashboards/custom
+      path: /otel-lgtm/grafana/conf/provisioning/dashboards/custom
       foldersFromFilesStructure: false
 ```
 
@@ -184,7 +184,7 @@ services:
   lgtm:
     image: grafana/otel-lgtm
     volumes:
-      - ./custom-dashboard.json:/etc/grafana/provisioning/dashboards/custom/custom-dashboard.json:ro
+      - ./custom-dashboard.json:/otel-lgtm/grafana/conf/provisioning/dashboards/custom/custom-dashboard.json:ro
       - ./dashboards-provisioning.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/custom.yaml:ro
 ```
 

@@ -304,6 +304,17 @@ OIDC_ISSUER="https://token.actions.githubusercontent.com"
 cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-issuer ${OIDC_ISSUER}
 ```
 
+## AI Tool Integration (MCP)
+
+The container exposes [MCP servers][mcp] so AI coding tools can query traces, metrics, logs,
+and dashboards directly.
+
+```sh
+docker exec lgtm cat /etc/lgtm/mcp.json   # or: podman exec ...
+```
+
+Paste the JSON into your AI tool's MCP configuration. See [docs/mcp-integration.md](docs/mcp-integration.md) for details.
+
 ## Related Work
 
 - [Metrics, Logs, Traces and Profiles in Grafana][mltp]
@@ -330,4 +341,5 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 [otlp-endpoint]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint
 [otlp-headers]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers
 [oats]: https://github.com/grafana/oats
+[mcp]: https://modelcontextprotocol.io/ "Model Context Protocol"
 [red-method]: https://grafana.com/blog/the-red-method-how-to-instrument-your-services/ "The RED Method"

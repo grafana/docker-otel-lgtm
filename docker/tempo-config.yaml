@@ -27,6 +27,10 @@ memberlist:
   bind_addr: [127.0.0.1]
   bind_port: 7947
 
+query_frontend:
+  mcp_server:
+    enabled: true
+
 querier:
   frontend_worker:
     frontend_address: 127.0.0.1:9096

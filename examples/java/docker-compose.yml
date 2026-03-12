@@ -6,9 +6,9 @@ services:
       - "4317:4317"
       - "4318:4318"
     environment:
-      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /etc/grafana/provisioning/dashboards/custom/custom-dashboard.json
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /otel-lgtm/grafana/conf/provisioning/dashboards/custom/custom-dashboard.json
     volumes:
-      - ./custom-dashboard.json:/etc/grafana/provisioning/dashboards/custom/custom-dashboard.json:ro
+      - ./custom-dashboard.json:/otel-lgtm/grafana/conf/provisioning/dashboards/custom/custom-dashboard.json:ro
       - ./dashboards-provisioning.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/custom.yaml:ro
     networks:
       - java-demo

@@ -4,5 +4,5 @@ providers:
   - name: "Custom Dashboards"
     type: file
     options:
-      path: /etc/grafana/provisioning/dashboards/custom
+      path: /otel-lgtm/grafana/conf/provisioning/dashboards/custom
       foldersFromFilesStructure: false

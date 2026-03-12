@@ -172,6 +172,10 @@ For example, to set a 90-day retention period for Prometheus:
 docker run -e PROMETHEUS_EXTRA_ARGS="--storage.tsdb.retention.time=90d" grafana/otel-lgtm
 ```
 
+> [!NOTE]
+> The value is split on whitespace into separate arguments. For options that
+> require values with spaces, mount a custom configuration file instead (see below).
+
 For deeper customization, you can mount custom configuration files into the container:
 
 | Backend                 | Config file path                            |

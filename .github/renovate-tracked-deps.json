@@ -136,6 +136,11 @@
       "ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java"
     ]
   },
+  "examples/java/docker-compose.yml": {
+    "docker-compose": [
+      "grafana/otel-lgtm"
+    ]
+  },
   "examples/java/json-logging-ecs/Dockerfile": {
     "dockerfile": [
       "eclipse-temurin"

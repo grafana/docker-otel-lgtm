@@ -7,7 +7,7 @@ Spring Boot application instrumented with OpenTelemetry Java Agent.
 This example includes a custom Grafana dashboard and sets it as the home dashboard.
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Generate traffic:
@@ -43,5 +43,5 @@ The custom dashboard (`custom-dashboard.json`) displays:
 To modify the dashboard, edit `custom-dashboard.json` and restart the lgtm container:
 
 ```bash
-docker-compose restart lgtm
+docker compose restart lgtm
 ```

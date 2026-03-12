@@ -176,11 +176,11 @@ For deeper customization, you can mount custom configuration files into the cont
 
 | Backend                 | Config file path                            |
 |-------------------------|---------------------------------------------|
-| OpenTelemetry Collector | `/otel-lgtm/otelcol-config.yaml`            |
-| Loki                    | `/otel-lgtm/loki-config.yaml`               |
 | Prometheus              | `/otel-lgtm/prometheus.yaml`                |
+| Loki                    | `/otel-lgtm/loki-config.yaml`               |
 | Tempo                   | `/otel-lgtm/tempo-config.yaml`              |
 | Pyroscope               | `/otel-lgtm/pyroscope-config.yaml`          |
+| OpenTelemetry Collector | `/otel-lgtm/otelcol-config.yaml`            |
 
 ```sh
 docker run -v ./my-loki-config.yaml:/otel-lgtm/loki-config.yaml:ro grafana/otel-lgtm
@@ -347,6 +347,7 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 [docker-pulls]: https://img.shields.io/docker/pulls/grafana/otel-lgtm?logo=docker&label=pulls
 [examples]: https://github.com/grafana/docker-otel-lgtm/tree/main/examples
 [ghcr]: https://github.com/grafana/docker-otel-lgtm/pkgs/container/docker-otel-lgtm
+[grafana-env-overrides]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#override-configuration-with-environment-variables
 [grafana-preinstall-plugins]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/#install-plugins-in-the-docker-container
 [mise]: https://github.com/jdx/mise
 [mltp]: https://github.com/grafana/intro-to-mltp
@@ -358,4 +359,3 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 [otlp-headers]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers
 [oats]: https://github.com/grafana/oats
 [red-method]: https://grafana.com/blog/the-red-method-how-to-instrument-your-services/ "The RED Method"
-[grafana-env-overrides]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#override-configuration-with-environment-variables

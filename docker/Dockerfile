@@ -1,6 +1,6 @@
 ARG LGTM_VERSION=development
 # renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
-ARG GRAFANA_VERSION=v12.4.0
+ARG GRAFANA_VERSION=v12.4.1
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
 ARG PROMETHEUS_VERSION=v3.10.0
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
@@ -12,7 +12,7 @@ ARG PYROSCOPE_VERSION=v1.18.1
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
 ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.147.0
 # renovate: datasource=github-releases depName=obi packageName=open-telemetry/opentelemetry-ebpf-instrumentation
-ARG OBI_VERSION=v0.5.0
+ARG OBI_VERSION=v0.6.0
 
 # hadolint global ignore=DL3059
 FROM docker.io/otel/ebpf-instrument:${OBI_VERSION} AS obi-source
@@ -21,7 +21,7 @@ FROM docker.io/otel/ebpf-instrument:${OBI_VERSION} AS obi-source
 # failures that occur under QEMU emulation with overlayfs. The download scripts use
 # TARGETARCH to fetch the correct platform-specific archives.
 # hadolint ignore=DL3033
-FROM --platform=$BUILDPLATFORM docker.io/redhat/ubi9:9.7@sha256:cecb1cde7bda7c8165ae27841c2335667f8a3665a349c0d051329c61660a496c AS downloader
+FROM --platform=$BUILDPLATFORM docker.io/redhat/ubi9:9.7@sha256:6ed9f6f637fe731d93ec60c065dbced79273f1e0b5f512951f2c0b0baedb16ad AS downloader
 
 RUN mkdir /otel-lgtm
 
@@ -61,7 +61,7 @@ RUN ./download-loki.sh $LOKI_VERSION
 RUN ./download-pyroscope.sh $PYROSCOPE_VERSION
 RUN ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
 
-FROM docker.io/redhat/ubi9:9.7@sha256:cecb1cde7bda7c8165ae27841c2335667f8a3665a349c0d051329c61660a496c AS builder
+FROM docker.io/redhat/ubi9:9.7@sha256:6ed9f6f637fe731d93ec60c065dbced79273f1e0b5f512951f2c0b0baedb16ad AS builder
 
 RUN mkdir /otel-lgtm
 
@@ -102,7 +102,6 @@ RUN find /otel-lgtm/ -maxdepth 1 -type f | xargs dos2unix
 
 COPY --from=downloader /otel-lgtm/ /otel-lgtm/
 COPY --from=obi-source /obi /otel-lgtm/obi/obi
-COPY --from=obi-source /obi-java-agent.jar /otel-lgtm/obi/obi-java-agent.jar
 
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/

@@ -27,6 +27,11 @@
       labels: ["docker-dependency"],
     },
     {
+      // version is derived from OBI_VERSION which tracks open-telemetry/opentelemetry-ebpf-instrumentation
+      matchPackageNames: ["otel/ebpf-instrument"],
+      enabled: false,
+    },
+    {
       matchPackageNames: ["grafana/shared-workflows"],
       versioning: "regex:^(?<compatibility>[a-z-]+)-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)?$",
     },

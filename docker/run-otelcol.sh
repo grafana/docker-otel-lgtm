@@ -25,12 +25,17 @@ EOF
 	for signal in traces metrics logs; do
 		local signal_var="OTEL_EXPORTER_OTLP_${signal^^}_ENDPOINT"
 		if [[ -n ${!signal_var:-} ]]; then
-			printf '  otlphttp/external-%s:\n    endpoint: ${env:%s}\n' "${signal}" "${signal_var}" >>otelcol-config-export-http.yaml
+			# shellcheck disable=SC2016 # otelcol config template, not bash variables
+			printf '  otlphttp/external-%s:\n    endpoint: ${env:%s}\n' \
+				"${signal}" "${signal_var}" >>otelcol-config-export-http.yaml
 		fi
 	done
 }
 
-if [[ -n ${OTEL_EXPORTER_OTLP_ENDPOINT:-} || -n ${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:-} || -n ${OTEL_EXPORTER_OTLP_METRICS_ENDPOINT:-} || -n ${OTEL_EXPORTER_OTLP_LOGS_ENDPOINT:-} ]]; then
+if [[ -n ${OTEL_EXPORTER_OTLP_ENDPOINT:-} \
+	|| -n ${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:-} \
+	|| -n ${OTEL_EXPORTER_OTLP_METRICS_ENDPOINT:-} \
+	|| -n ${OTEL_EXPORTER_OTLP_LOGS_ENDPOINT:-} ]]; then
 	if [[ -n ${OTEL_EXPORTER_OTLP_ENDPOINT:-} ]]; then
 		echo "Also enabling OTLP/HTTP export to ${OTEL_EXPORTER_OTLP_ENDPOINT}"
 	fi

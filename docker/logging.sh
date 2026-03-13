@@ -7,12 +7,11 @@ function run_with_logging() {
 	shift
 	envvar=$1
 	shift
-	command=$*
 	if [[ ${envvar} == "true" || ${ENABLE_LOGS_ALL:-false} == "true" ]]; then
 		echo "Running ${name} logging=true"
-		exec ${command}
+		exec "$@"
 	else
 		echo "Running ${name} logging=false"
-		exec ${command} >/dev/null 2>&1
+		exec "$@" >/dev/null 2>&1
 	fi
 }

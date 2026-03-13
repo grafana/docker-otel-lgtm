@@ -7,7 +7,7 @@ shutdown() {
 	echo "Shutting down..."
 	# Send SIGTERM to all background jobs (the wrapper scripts exec the
 	# server process, so these PIDs are the actual server processes)
-	kill "$(jobs -p)" 2>/dev/null
+	jobs -p | xargs -r kill 2>/dev/null
 	wait
 	exit 0
 }

@@ -2,7 +2,10 @@
 
 source ./logging.sh
 
-read -ra extra_args <<<"${PROMETHEUS_EXTRA_ARGS:-}"
+extra_args=()
+if [[ -n "${PROMETHEUS_EXTRA_ARGS:-}" ]]; then
+	read -ra extra_args <<<"${PROMETHEUS_EXTRA_ARGS}"
+fi
 run_with_logging "Prometheus ${PROMETHEUS_VERSION}" "${ENABLE_LOGS_PROMETHEUS:-false}" ./prometheus/prometheus \
 	--web.enable-remote-write-receiver \
 	--web.enable-otlp-receiver \

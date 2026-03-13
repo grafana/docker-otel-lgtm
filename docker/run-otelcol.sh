@@ -34,6 +34,9 @@ fi
 
 otelcol_args=(--feature-gates service.profilesSupport --config=file:./otelcol-config.yaml)
 [[ -n "${secondary_config_file}" ]] && otelcol_args+=("${secondary_config_file}")
-read -ra extra_args <<<"${OTELCOL_EXTRA_ARGS:-}"
+extra_args=()
+if [[ -n "${OTELCOL_EXTRA_ARGS:-}" ]]; then
+	read -ra extra_args <<<"${OTELCOL_EXTRA_ARGS}"
+fi
 run_with_logging "OpenTelemetry Collector ${OPENTELEMETRY_COLLECTOR_VERSION}" "${ENABLE_LOGS_OTELCOL:-false}" \
 	./otelcol-contrib/otelcol-contrib "${otelcol_args[@]}" "${extra_args[@]}"

@@ -3,10 +3,13 @@
 set -euo pipefail
 
 RELEASE=${1:-latest}
+RUNTIME_OVERRIDE=${2:-}
 
 echo "Building the Grafana OTEL-LGTM image with release ${RELEASE}..."
 
-if command -v docker >/dev/null 2>&1; then
+if [ -n "$RUNTIME_OVERRIDE" ]; then
+	RUNTIME="$RUNTIME_OVERRIDE"
+elif command -v docker >/dev/null 2>&1; then
 	RUNTIME=docker
 elif command -v podman >/dev/null 2>&1; then
 	RUNTIME=podman

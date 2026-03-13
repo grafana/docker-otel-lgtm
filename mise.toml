@@ -24,6 +24,17 @@ file = "https://raw.githubusercontent.com/grafana/flint/84e2d760286dead4e503315f
 description = "Verify renovate-tracked-deps.json is up to date"
 file = "https://raw.githubusercontent.com/grafana/flint/84e2d760286dead4e503315f9483a44fe872ee85/tasks/lint/renovate-deps.py" # v0.8.0
 
+[tasks."setup:native-lint-tools"]
+description = "Install native lint tools matching the pinned super-linter version"
+file = "https://raw.githubusercontent.com/grafana/flint/84e2d760286dead4e503315f9483a44fe872ee85/tasks/setup/native-lint-tools.sh" # v0.8.0
+[tasks.pre-commit]
+description = "Pre-commit hook: native lint with autofix"
+depends = ["setup:native-lint-tools"]
+run = "mise run lint:super-linter -- --native --autofix"
+[tasks."setup:pre-commit-hook"]
+description = "Install git pre-commit hook that runs native linting"
+run = "mise generate git-pre-commit --write --task=pre-commit"
+
 [tasks."lint"]
 description = "Run all lints"
 depends = ["lint:super-linter", "lint:links", "lint:renovate-deps"]

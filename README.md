@@ -162,6 +162,46 @@ development, demo, and testing environments and persisting data to an external v
 doesn't change that. However, this feature could be useful in certain cases for
 some users even in testing situations.
 
+### Customize backend configuration
+
+Each backend supports a `*_EXTRA_ARGS` environment variable for passing additional
+CLI flags without modifying any files:
+
+| Backend                 | Env var                 | Example                              |
+|-------------------------|-------------------------|--------------------------------------|
+| Prometheus              | `PROMETHEUS_EXTRA_ARGS` | `--storage.tsdb.retention.time=90d`  |
+| Loki                    | `LOKI_EXTRA_ARGS`       | `--limits.retention-period=90d`      |
+| Tempo                   | `TEMPO_EXTRA_ARGS`      |                                      |
+| Pyroscope               | `PYROSCOPE_EXTRA_ARGS`  |                                      |
+| OpenTelemetry Collector | `OTELCOL_EXTRA_ARGS`    |                                      |
+
+For example, to set a 90-day retention period for Prometheus:
+
+```sh
+docker run -e PROMETHEUS_EXTRA_ARGS="--storage.tsdb.retention.time=90d" grafana/otel-lgtm
+```
+
+> [!NOTE]
+> The value is split on whitespace into separate arguments. For options that
+> require values with spaces, mount a custom configuration file instead (see below).
+
+For deeper customization, you can mount custom configuration files into the container:
+
+| Backend                 | Config file path                            |
+|-------------------------|---------------------------------------------|
+| Prometheus              | `/otel-lgtm/prometheus.yaml`                |
+| Loki                    | `/otel-lgtm/loki-config.yaml`               |
+| Tempo                   | `/otel-lgtm/tempo-config.yaml`              |
+| Pyroscope               | `/otel-lgtm/pyroscope-config.yaml`          |
+| OpenTelemetry Collector | `/otel-lgtm/otelcol-config.yaml`            |
+
+```sh
+docker run -v ./my-loki-config.yaml:/otel-lgtm/loki-config.yaml:ro grafana/otel-lgtm
+```
+
+Grafana is configured via `GF_*` environment variables — see the
+[Grafana documentation][grafana-env-overrides] for details.
+
 ### Pre-install Grafana plugins
 
 You can pre-install Grafana plugins by adding them to the `GF_PLUGINS_PREINSTALL` environment variable.
@@ -363,6 +403,7 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 [docker-pulls]: https://img.shields.io/docker/pulls/grafana/otel-lgtm?logo=docker&label=pulls
 [examples]: examples/
 [ghcr]: https://github.com/grafana/docker-otel-lgtm/pkgs/container/docker-otel-lgtm
+[grafana-env-overrides]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#override-configuration-with-environment-variables
 [grafana-preinstall-plugins]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/#install-plugins-in-the-docker-container
 [java-example]: examples/java/
 [mise]: https://github.com/jdx/mise

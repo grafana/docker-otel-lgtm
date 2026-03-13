@@ -22,3 +22,8 @@ else
 fi
 
 $RUNTIME buildx build -f docker/Dockerfile docker --tag "$TAG" --build-arg LGTM_VERSION="${RELEASE}"
+
+# Ensure the image is also available without localhost/ prefix (for tools like oats)
+if [ "$RUNTIME" = "podman" ]; then
+	$RUNTIME tag "$TAG" "grafana/otel-lgtm:${RELEASE}"
+fi

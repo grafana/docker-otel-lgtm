@@ -2,6 +2,17 @@
 
 echo "Starting grafana/otel-lgtm ${LGTM_VERSION}"
 
+# Graceful shutdown: forward SIGTERM/SIGINT to all background jobs
+shutdown() {
+	echo "Shutting down..."
+	# Send SIGTERM to all background jobs (the wrapper scripts exec the
+	# server process, so these PIDs are the actual server processes)
+	jobs -p | xargs -r kill 2>/dev/null
+	wait
+	exit 0
+}
+trap shutdown SIGTERM SIGINT
+
 # Record global start time
 start_time_global=$(date +%s)
 
@@ -215,4 +226,6 @@ echo " - 3200: Tempo endpoint (MCP at http://localhost:3200/api/mcp)"
 echo " - 4040: Pyroscope endpoint"
 echo " - 9090: Prometheus endpoint"
 
-sleep infinity
+# Wait for signal; backgrounded sleep allows the trap to fire
+sleep infinity &
+wait $!

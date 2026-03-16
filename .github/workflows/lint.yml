@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0 # needed for merge-base used in lint:links-in-modified-files
 
       - name: Setup mise
-        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+        uses: jdx/mise-action@c1ecc8f748cd28cdeabf76dab3cccde4ce692fe4 # v4.0.0
         with:
           version: v2026.3.8
           sha256: 60ef9c2d9005ed4559cc8b1391056adf2c3b43d1065041640bbee854e5c4c9ee

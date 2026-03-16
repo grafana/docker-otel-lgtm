@@ -85,4 +85,5 @@ if [[ ${OTEL_COLLECTOR_DEBUG_EXPORTER:-false} == "true" ]]; then
 fi
 
 run_with_logging "OpenTelemetry Collector ${OPENTELEMETRY_COLLECTOR_VERSION}" "${ENABLE_LOGS_OTELCOL:-false}" \
-	./otelcol-contrib/otelcol-contrib --feature-gates service.profilesSupport --config=file:./otelcol-config.yaml ${secondary_config_file} ${debug_config_file}
+	./otelcol-contrib/otelcol-contrib --feature-gates service.profilesSupport \
+	--config=file:./otelcol-config.yaml ${secondary_config_file} ${debug_config_file}

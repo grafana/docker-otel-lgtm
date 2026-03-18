@@ -389,8 +389,9 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 
 ## AI Tool Integration (MCP)
 
-The container exposes [MCP servers][mcp] so AI coding tools can query traces, metrics, logs,
-and dashboards directly.
+The stack provides [MCP][mcp] integration so AI coding tools can query traces, metrics, logs,
+and dashboards: Tempo exposes an HTTP MCP endpoint from the container, while Grafana
+dashboards and queries are accessed via a client-side MCP server (`uvx mcp-grafana`).
 
 ```sh
 docker exec lgtm cat /etc/lgtm/mcp.json   # or: podman exec ...

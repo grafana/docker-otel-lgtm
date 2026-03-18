@@ -143,60 +143,65 @@ touch /tmp/ready
 echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
 
 # Create a service account token and MCP config for AI tool access
+GRAFANA_CREDS="admin:admin"
+GRAFANA_URL="http://127.0.0.1:3000"
 # Try to create SA; if it already exists (persisted data), look it up
-SA_RESPONSE=$(curl -sf http://127.0.0.1:3000/api/serviceaccounts \
-	-H "Content-Type: application/json" -u admin:admin \
+SA_RESPONSE=$(curl -sf "${GRAFANA_URL}/api/serviceaccounts" \
+	-H "Content-Type: application/json" -u "${GRAFANA_CREDS}" \
 	-d '{"name":"ai-tools","role":"Viewer"}')
 if [ -z "$SA_RESPONSE" ]; then
 	# SA already exists — find its ID
-	SA_RESPONSE=$(curl -sf "http://127.0.0.1:3000/api/serviceaccounts/search?query=ai-tools" -u admin:admin)
+	SA_RESPONSE=$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/search?query=ai-tools" -u "${GRAFANA_CREDS}")
 	SA_ID=$(echo "$SA_RESPONSE" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
 else
 	SA_ID=$(echo "$SA_RESPONSE" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
 fi
 if [ -n "$SA_ID" ]; then
 	# Delete existing tokens and create a fresh one
-	EXISTING_TOKENS=$(curl -sf "http://127.0.0.1:3000/api/serviceaccounts/${SA_ID}/tokens" -u admin:admin)
+	EXISTING_TOKENS=$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens" -u "${GRAFANA_CREDS}")
 	for TOKEN_ID in $(echo "$EXISTING_TOKENS" | grep -o '"id":[0-9]*' | cut -d: -f2); do
-		curl -sf -X DELETE "http://127.0.0.1:3000/api/serviceaccounts/${SA_ID}/tokens/${TOKEN_ID}" \
-			-u admin:admin >/dev/null
+		curl -sf -X DELETE "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens/${TOKEN_ID}" \
+			-u "${GRAFANA_CREDS}" >/dev/null
 	done
-	TOKEN_RESPONSE=$(curl -sf "http://127.0.0.1:3000/api/serviceaccounts/${SA_ID}/tokens" \
-		-H "Content-Type: application/json" -u admin:admin \
+	TOKEN_RESPONSE=$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens" \
+		-H "Content-Type: application/json" -u "${GRAFANA_CREDS}" \
 		-d '{"name":"ai-tools-token"}')
 	SA_TOKEN=$(echo "$TOKEN_RESPONSE" | grep -o '"key":"[^"]*"' | cut -d'"' -f4)
 	if [ -n "$SA_TOKEN" ]; then
-		echo "${SA_TOKEN}" >/tmp/grafana-sa-token
 		mkdir -p /etc/lgtm
 		EXEC="${CONTAINER_RUNTIME:-docker} exec lgtm"
-		cat >/etc/lgtm/mcp.json <<-MCPEOF
-			{
-			  "mcpServers": {
-			    "grafana": {
-			      "command": "uvx",
-			      "args": ["mcp-grafana"],
-			      "env": {
-			        "GRAFANA_URL": "http://localhost:3000",
-			        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${SA_TOKEN}"
-			      }
-			    },
-			    "tempo": {
-			      "url": "http://localhost:3200/api/mcp"
-			    }
-			  }
-			}
-		MCPEOF
-		cat >/etc/lgtm/claude-mcp-setup.sh <<-SETUPEOF
-			#!/bin/bash
-			# Connect Claude Code to the LGTM stack
-			claude mcp add grafana -e GRAFANA_URL=http://localhost:3000 -e GRAFANA_SERVICE_ACCOUNT_TOKEN=${SA_TOKEN} -- uvx mcp-grafana
-			claude mcp add --transport http tempo http://localhost:3200/api/mcp
-		SETUPEOF
+		(
+			umask 077
+			echo "${SA_TOKEN}" >/tmp/grafana-sa-token
+			cat >/etc/lgtm/mcp.json <<-MCPEOF
+				{
+				  "mcpServers": {
+				    "grafana": {
+				      "command": "uvx",
+				      "args": ["mcp-grafana"],
+				      "env": {
+				        "GRAFANA_URL": "http://localhost:3000",
+				        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${SA_TOKEN}"
+				      }
+				    },
+				    "tempo": {
+				      "url": "http://localhost:3200/api/mcp"
+				    }
+				  }
+				}
+			MCPEOF
+			cat >/etc/lgtm/claude-mcp-setup.sh <<-SETUPEOF
+				#!/bin/bash
+				# Connect Claude Code to the LGTM stack
+				claude mcp add grafana -e GRAFANA_URL=http://localhost:3000 -e GRAFANA_SERVICE_ACCOUNT_TOKEN="${SA_TOKEN}" -- uvx mcp-grafana
+				claude mcp add --transport http tempo http://localhost:3200/api/mcp
+			SETUPEOF
+		)
 		echo ""
 		echo "AI Tool Integration (MCP):"
 		echo "  Claude Code:  bash <($EXEC cat /etc/lgtm/claude-mcp-setup.sh)"
 		echo "  Other tools:  $EXEC cat /etc/lgtm/mcp.json"
-		echo "  Docs:         docs/mcp-integration.md"
+		echo "  Docs:         https://github.com/grafana/docker-otel-lgtm/blob/main/docs/mcp-integration.md"
 	fi
 fi
 

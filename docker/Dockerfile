@@ -27,7 +27,8 @@ RUN mkdir /otel-lgtm
 
 RUN yum install -y unzip jq
 
-COPY download-grafana.sh \
+COPY detect-arch.sh \
+ download-grafana.sh \
  download-prometheus.sh \
  download-tempo.sh \
  download-loki.sh \

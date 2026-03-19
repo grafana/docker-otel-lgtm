@@ -8,6 +8,8 @@ if [[ -z "${VERSION}" ]]; then
 	exit 1
 fi
 
+source ./detect-arch.sh
+
 ARCHIVE=tempo_"${VERSION:1}"_linux_"${TARGETARCH}".tar.gz
 curl -sOL https://github.com/grafana/tempo/releases/download/"${VERSION}"/SHA256SUMS
 curl -sOL https://github.com/grafana/tempo/releases/download/"${VERSION}"/"${ARCHIVE}"

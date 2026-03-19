@@ -8,6 +8,8 @@ if [[ -z "${VERSION}" ]]; then
 	exit 1
 fi
 
+source ./detect-arch.sh
+
 ARCHIVE=prometheus-"${VERSION:1}".linux-"${TARGETARCH}"
 curl -sOL https://github.com/prometheus/prometheus/releases/download/"${VERSION}"/sha256sums.txt
 curl -sOL https://github.com/prometheus/prometheus/releases/download/"${VERSION}"/"${ARCHIVE}".tar.gz

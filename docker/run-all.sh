@@ -157,12 +157,15 @@ else
 	SA_ID=$(echo "$SA_RESPONSE" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
 fi
 if [ -n "$SA_ID" ]; then
-	# Delete existing tokens and create a fresh one
+	# Delete only the bootstrap-managed token (preserve any manually-created tokens)
 	EXISTING_TOKENS=$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens" -u "${GRAFANA_CREDS}")
-	for TOKEN_ID in $(echo "$EXISTING_TOKENS" | grep -o '"id":[0-9]*' | cut -d: -f2); do
-		curl -sf -X DELETE "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens/${TOKEN_ID}" \
-			-u "${GRAFANA_CREDS}" >/dev/null
-	done
+	if [ -n "$EXISTING_TOKENS" ]; then
+		BOOTSTRAP_TOKEN_ID=$(echo "$EXISTING_TOKENS" | tr '{}' '\n' | grep '"name":"ai-tools-token"' | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
+		if [ -n "$BOOTSTRAP_TOKEN_ID" ]; then
+			curl -sf -X DELETE "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens/${BOOTSTRAP_TOKEN_ID}" \
+				-u "${GRAFANA_CREDS}" >/dev/null
+		fi
+	fi
 	TOKEN_RESPONSE=$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens" \
 		-H "Content-Type: application/json" -u "${GRAFANA_CREDS}" \
 		-d '{"name":"ai-tools-token"}')

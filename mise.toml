@@ -27,17 +27,25 @@ file = "https://raw.githubusercontent.com/grafana/flint/8a39d96e17327c54974623b2
 [tasks."setup:native-lint-tools"]
 description = "Install native lint tools matching the pinned super-linter version"
 file = "https://raw.githubusercontent.com/grafana/flint/8a39d96e17327c54974623b252eb5260d67ed68a/tasks/setup/native-lint-tools.sh" # v0.9.1
+[tasks."lint:fast"]
+description = "Run fast lints (no Renovate)"
+depends = ["lint:super-linter", "lint:links"]
+
+[tasks.native-lint]
+description = "Run lints natively (no container)"
+run = "NATIVE=true mise run lint:fast"
+
 [tasks.pre-commit]
-description = "Pre-commit hook: native lint with autofix"
+description = "Pre-commit hook: native lint"
 depends = ["setup:native-lint-tools"]
-run = "mise run lint:super-linter -- --native --autofix"
+run = "NATIVE=true mise run lint:fast"
 [tasks."setup:pre-commit-hook"]
 description = "Install git pre-commit hook that runs native linting"
 run = "mise generate git-pre-commit --write --task=pre-commit"
 
 [tasks."lint"]
 description = "Run all lints"
-depends = ["lint:super-linter", "lint:links", "lint:renovate-deps"]
+depends = ["lint:fast", "lint:renovate-deps"]
 
 [tasks.fix]
 description = "Auto-fix lint issues and regenerate tracked deps"

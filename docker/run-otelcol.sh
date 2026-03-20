@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# shellcheck disable=SC1091
 source ./logging.sh
 
 secondary_config_file=""

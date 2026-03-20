@@ -139,9 +139,9 @@ to the specified endpoint using "OTLP/HTTP".
 
 You can also configure per-signal endpoints:
 
-* `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT`
-* `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`
-* `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`
+- `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT`
+- `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`
+- `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`
 
 If both global and per-signal endpoints are set, per-signal values take precedence.
 Endpoints must include the scheme (for example, `http://jaeger:4318`).

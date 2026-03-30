@@ -31,20 +31,3 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: mise run lint
-
-      - name: Reproduce Renovate log on failure
-        if: failure()
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          RENOVATE_CONFIG_FILE: .github/renovate.json5
-        run: |
-          LOG_LEVEL=debug LOG_FORMAT=json \
-            renovate --platform=local --require-config=ignored \
-            > /tmp/renovate-debug.log 2>&1 || true
-
-      - name: Upload Renovate log
-        if: failure()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: renovate-debug-log
-          path: /tmp/renovate-debug.log

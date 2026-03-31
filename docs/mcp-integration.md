@@ -5,10 +5,10 @@ so AI coding tools (Claude, Cursor, etc.) can query your telemetry data directly
 
 ## What you get
 
-- **Traces**: query via TraceQL through Tempo's built-in MCP server
-- **Metrics**: query via PromQL through Grafana MCP
-- **Logs**: query via LogQL through Grafana MCP
 - **Dashboards**: list, read, and search dashboards through Grafana MCP
+- **Logs**: query via LogQL through Grafana MCP
+- **Metrics**: query via PromQL through Grafana MCP
+- **Traces**: query via TraceQL through Tempo's built-in MCP server
 
 ## Setup
 
@@ -18,7 +18,7 @@ so AI coding tools (Claude, Cursor, etc.) can query your telemetry data directly
    ./run-lgtm.sh
    ```
 
-2. Get the MCP config:
+2. Get the MCP configuration:
 
    ```sh
    docker exec lgtm cat /etc/lgtm/mcp.json   # or: podman exec ...
@@ -46,8 +46,8 @@ so AI coding tools (Claude, Cursor, etc.) can query your telemetry data directly
 
 | Component  | MCP Server    | Transport | What you can query                  |
 |------------|---------------|-----------|-------------------------------------|
-| Tempo      | `tempo`       | HTTP      | Traces via TraceQL                  |
 | Grafana    | `grafana`     | stdio     | Dashboards, PromQL, LogQL           |
+| Tempo      | `tempo`       | HTTP      | Traces via TraceQL                  |
 
 ## Collector debug exporter
 
@@ -60,7 +60,7 @@ Enable it by setting the environment variable before starting the container:
 OTEL_COLLECTOR_DEBUG_EXPORTER=true ./run-lgtm.sh
 ```
 
-This adds the `debug` exporter to the traces, metrics, and logs pipelines.
+This adds the `debug` exporter to the logs, metrics, and traces pipelines.
 The output appears in the collector's logs (enable with `ENABLE_LOGS_OTELCOL=true`
 or `ENABLE_LOGS_ALL=true`).
 
@@ -77,7 +77,7 @@ obi_instrumented_processes
 http_server_request_duration_seconds_count{http_route="/rolldice"}
 ```
 
-See the [OBI section in README.md][obi-readme] for setup instructions.
+See the [OBI section in the README][obi-readme] for setup instructions.
 
 ## Pyroscope (continuous profiling)
 

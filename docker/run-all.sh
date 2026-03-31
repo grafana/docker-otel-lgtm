@@ -143,33 +143,36 @@ touch /tmp/ready
 echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
 
 # Create a service account token and MCP config for AI tool access
-GRAFANA_CREDS="admin:admin"
-GRAFANA_URL="http://127.0.0.1:3000"
+GRAFANA_ADMIN_USER="${GRAFANA_ADMIN_USER:-admin}"
+GRAFANA_ADMIN_PASSWORD="${GRAFANA_ADMIN_PASSWORD:-admin}"
+GRAFANA_CREDS="${GRAFANA_ADMIN_USER}:${GRAFANA_ADMIN_PASSWORD}"
+GRAFANA_URL="${GRAFANA_URL:-http://127.0.0.1:3000}"
+TEMPO_URL="${TEMPO_URL:-http://localhost:3200}"
+SA_NAME="ai-tools"
+SA_TOKEN_NAME="ai-tools-token"
 # Try to create SA; if it already exists (persisted data), look it up
-SA_RESPONSE=$(curl -sf "${GRAFANA_URL}/api/serviceaccounts" \
+SA_RESPONSE="$(curl -sf "${GRAFANA_URL}/api/serviceaccounts" \
 	-H "Content-Type: application/json" -u "${GRAFANA_CREDS}" \
-	-d '{"name":"ai-tools","role":"Viewer"}')
+	-d "{\"name\":\"${SA_NAME}\",\"role\":\"Viewer\"}")"
 if [ -z "$SA_RESPONSE" ]; then
 	# SA already exists — find its ID
-	SA_RESPONSE=$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/search?query=ai-tools" -u "${GRAFANA_CREDS}")
-	SA_ID=$(echo "$SA_RESPONSE" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
-else
-	SA_ID=$(echo "$SA_RESPONSE" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
+	SA_RESPONSE="$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/search?query=${SA_NAME}" -u "${GRAFANA_CREDS}")"
 fi
+SA_ID="$(echo "$SA_RESPONSE" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)"
 if [ -n "$SA_ID" ]; then
 	# Delete only the bootstrap-managed token (preserve any manually-created tokens)
-	EXISTING_TOKENS=$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens" -u "${GRAFANA_CREDS}")
+	EXISTING_TOKENS="$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens" -u "${GRAFANA_CREDS}")"
 	if [ -n "$EXISTING_TOKENS" ]; then
-		BOOTSTRAP_TOKEN_ID=$(echo "$EXISTING_TOKENS" | tr '{}' '\n' | grep '"name":"ai-tools-token"' | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)
+		BOOTSTRAP_TOKEN_ID="$(echo "$EXISTING_TOKENS" | tr '{}' '\n' | grep "\"name\":\"${SA_TOKEN_NAME}\"" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)"
 		if [ -n "$BOOTSTRAP_TOKEN_ID" ]; then
 			curl -sf -X DELETE "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens/${BOOTSTRAP_TOKEN_ID}" \
 				-u "${GRAFANA_CREDS}" >/dev/null
 		fi
 	fi
-	TOKEN_RESPONSE=$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens" \
+	TOKEN_RESPONSE="$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens" \
 		-H "Content-Type: application/json" -u "${GRAFANA_CREDS}" \
-		-d '{"name":"ai-tools-token"}')
-	SA_TOKEN=$(echo "$TOKEN_RESPONSE" | grep -o '"key":"[^"]*"' | cut -d'"' -f4)
+		-d "{\"name\":\"${SA_TOKEN_NAME}\"}")"
+	SA_TOKEN="$(echo "$TOKEN_RESPONSE" | grep -o '"key":"[^"]*"' | cut -d'"' -f4)"
 	if [ -n "$SA_TOKEN" ]; then
 		mkdir -p /etc/lgtm
 		EXEC="${CONTAINER_RUNTIME:-docker} exec lgtm"
@@ -188,7 +191,7 @@ if [ -n "$SA_ID" ]; then
 				      }
 				    },
 				    "tempo": {
-				      "url": "http://localhost:3200/api/mcp"
+				      "url": "${TEMPO_URL}/api/mcp"
 				    }
 				  }
 				}
@@ -197,14 +200,14 @@ if [ -n "$SA_ID" ]; then
 				#!/bin/bash
 				# Connect Claude Code to the LGTM stack
 				claude mcp add grafana -e GRAFANA_URL=http://localhost:3000 -e GRAFANA_SERVICE_ACCOUNT_TOKEN="${SA_TOKEN}" -- uvx mcp-grafana
-				claude mcp add --transport http tempo http://localhost:3200/api/mcp
+				claude mcp add --transport http tempo ${TEMPO_URL}/api/mcp
 			SETUPEOF
 		)
 		echo ""
 		echo "AI Tool Integration (MCP):"
 		echo "  Claude Code:  bash <($EXEC cat /etc/lgtm/claude-mcp-setup.sh)"
 		echo "  Other tools:  $EXEC cat /etc/lgtm/mcp.json"
-		echo "  Docs:         https://github.com/grafana/docker-otel-lgtm/blob/main/docs/mcp-integration.md"
+		echo "  Docs:         https://github.com/grafana/docker-otel-lgtm/blob/${LGTM_VERSION:-main}/docs/mcp-integration.md"
 	fi
 fi
 

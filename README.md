@@ -257,7 +257,7 @@ services:
 kubectl apply -f k8s/lgtm.yaml
 
 # Configure port forwarding
-kubectl port-forward service/lgtm 3000:3000 4040:4040 4317:4317 4318:4318 9090:9090
+kubectl port-forward service/lgtm 3000:3000 3200:3200 4040:4040 4317:4317 4318:4318 9090:9090
 
 # Using mise
 mise k8s-apply
@@ -389,8 +389,8 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 
 ## AI Tool Integration (MCP)
 
-The stack provides [MCP][mcp] integration so AI coding tools can query traces, metrics, logs,
-and dashboards: Tempo exposes an HTTP MCP endpoint from the container, while Grafana
+The stack provides an [MCP][mcp] integration so AI coding tools can query logs, metrics, traces,
+and dashboards. Tempo exposes an HTTP MCP endpoint from the container, while Grafana
 dashboards and queries are accessed via a client-side MCP server (`uvx mcp-grafana`).
 
 ```sh
@@ -418,6 +418,7 @@ Paste the JSON into your AI tool's MCP configuration. See [docs/mcp-integration.
 [grafana-env-overrides]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#override-configuration-with-environment-variables
 [grafana-preinstall-plugins]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/#install-plugins-in-the-docker-container
 [java-example]: examples/java/
+[mcp]: https://modelcontextprotocol.io/ "Model Context Protocol"
 [mise]: https://github.com/jdx/mise
 [mltp]: https://github.com/grafana/intro-to-mltp
 [otel-checker]: https://github.com/grafana/otel-checker/
@@ -427,5 +428,4 @@ Paste the JSON into your AI tool's MCP configuration. See [docs/mcp-integration.
 [otlp-endpoint]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_endpoint
 [otlp-headers]: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#otel_exporter_otlp_headers
 [oats]: https://github.com/grafana/oats
-[mcp]: https://modelcontextprotocol.io/ "Model Context Protocol"
 [red-method]: https://grafana.com/blog/the-red-method-how-to-instrument-your-services/ "The RED Method"

@@ -143,9 +143,7 @@ touch /tmp/ready
 echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
 
 # Create a service account token and MCP config for AI tool access
-GRAFANA_ADMIN_USER="${GRAFANA_ADMIN_USER:-admin}"
-GRAFANA_ADMIN_PASSWORD="${GRAFANA_ADMIN_PASSWORD:-admin}"
-GRAFANA_CREDS="${GRAFANA_ADMIN_USER}:${GRAFANA_ADMIN_PASSWORD}"
+GRAFANA_CREDS="${GF_SECURITY_ADMIN_USER:-admin}:${GF_SECURITY_ADMIN_PASSWORD:-admin}"
 GRAFANA_URL="${GRAFANA_URL:-http://127.0.0.1:3000}"
 TEMPO_URL="${TEMPO_URL:-http://localhost:3200}"
 SA_NAME="ai-tools"

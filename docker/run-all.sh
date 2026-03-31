@@ -162,8 +162,8 @@ if [ -n "$SA_ID" ]; then
 	# Delete only the bootstrap-managed token (preserve any manually-created tokens)
 	EXISTING_TOKENS="$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens" -u "${GRAFANA_CREDS}")"
 	if [ -n "$EXISTING_TOKENS" ]; then
-		BOOTSTRAP_TOKEN_ID="$(echo "$EXISTING_TOKENS" | tr '{}' '\n' \
-			| grep "\"name\":\"${SA_TOKEN_NAME}\"" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)"
+		BOOTSTRAP_TOKEN_ID="$(echo "$EXISTING_TOKENS" | tr '{}' '\n' |
+			grep "\"name\":\"${SA_TOKEN_NAME}\"" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)"
 		if [ -n "$BOOTSTRAP_TOKEN_ID" ]; then
 			curl -sf -X DELETE "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens/${BOOTSTRAP_TOKEN_ID}" \
 				-u "${GRAFANA_CREDS}" >/dev/null

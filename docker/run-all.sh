@@ -173,10 +173,10 @@ if [ -n "$SA_ID" ]; then
 		-d "{\"name\":\"${SA_TOKEN_NAME}\"}")"
 	SA_TOKEN="$(echo "$TOKEN_RESPONSE" | grep -o '"key":"[^"]*"' | cut -d'"' -f4)"
 	if [ -n "$SA_TOKEN" ]; then
-		mkdir -p /etc/lgtm
 		EXEC="${CONTAINER_RUNTIME:-docker} exec lgtm"
 		(
 			umask 077
+			mkdir -p /etc/lgtm
 			echo "${SA_TOKEN}" >/tmp/grafana-sa-token
 			cat >/etc/lgtm/mcp.json <<-MCPEOF
 				{
@@ -206,7 +206,7 @@ if [ -n "$SA_ID" ]; then
 		echo "AI Tool Integration (MCP):"
 		echo "  Claude Code:  bash <($EXEC cat /etc/lgtm/claude-mcp-setup.sh)"
 		echo "  Other tools:  $EXEC cat /etc/lgtm/mcp.json"
-		echo "  Docs:         https://github.com/grafana/docker-otel-lgtm/blob/${LGTM_VERSION:-main}/docs/mcp-integration.md"
+		echo "  Docs:         https://github.com/grafana/docker-otel-lgtm/blob/${LGTM_VERSION:+v}${LGTM_VERSION:-main}/docs/mcp-integration.md"
 	fi
 fi
 

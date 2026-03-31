@@ -145,6 +145,7 @@ echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running.
 # Create a service account token and MCP config for AI tool access
 GRAFANA_CREDS="${GF_SECURITY_ADMIN_USER:-admin}:${GF_SECURITY_ADMIN_PASSWORD:-admin}"
 GRAFANA_URL="${GRAFANA_URL:-http://127.0.0.1:3000}"
+GRAFANA_PUBLIC_URL="${GRAFANA_PUBLIC_URL:-http://localhost:3000}"
 TEMPO_URL="${TEMPO_URL:-http://localhost:3200}"
 SA_NAME="ai-tools"
 SA_TOKEN_NAME="ai-tools-token"
@@ -184,7 +185,7 @@ if [ -n "$SA_ID" ]; then
 				      "command": "uvx",
 				      "args": ["mcp-grafana"],
 				      "env": {
-				        "GRAFANA_URL": "http://localhost:3000",
+				        "GRAFANA_URL": "${GRAFANA_PUBLIC_URL}",
 				        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${SA_TOKEN}"
 				      }
 				    },
@@ -197,7 +198,7 @@ if [ -n "$SA_ID" ]; then
 			cat >/etc/lgtm/claude-mcp-setup.sh <<-SETUPEOF
 				#!/bin/bash
 				# Connect Claude Code to the LGTM stack
-				claude mcp add grafana -e GRAFANA_URL=http://localhost:3000 -e GRAFANA_SERVICE_ACCOUNT_TOKEN="${SA_TOKEN}" -- uvx mcp-grafana
+				claude mcp add grafana -e GRAFANA_URL=${GRAFANA_PUBLIC_URL} -e GRAFANA_SERVICE_ACCOUNT_TOKEN="${SA_TOKEN}" -- uvx mcp-grafana
 				claude mcp add --transport http tempo ${TEMPO_URL}/api/mcp
 			SETUPEOF
 		)

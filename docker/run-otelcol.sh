@@ -2,6 +2,7 @@
 
 # shellcheck disable=SC1091
 source ./logging.sh
+# shellcheck enable=SC1091
 
 secondary_config_file=""
 

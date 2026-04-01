@@ -1,8 +1,0 @@
-service:
-  pipelines:
-    traces:
-      exporters: [otlphttp/traces, debug/traces]
-    metrics:
-      exporters: [otlphttp/metrics, debug/metrics]
-    logs:
-      exporters: [otlphttp/logs, debug/logs]

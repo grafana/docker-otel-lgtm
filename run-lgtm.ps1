@@ -68,6 +68,7 @@ if ([Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
 $runCommand = @(
     'container', 'run'
     '--name', 'lgtm'
+    '--init'
 )
 
 # Append OBI-related flags (if any) so each flag is a separate argument

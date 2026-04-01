@@ -61,6 +61,7 @@ fi
 
 $RUNTIME container run \
 	--name lgtm \
+	--init \
 	"${OBI_FLAGS[@]}" \
 	"${OBI_ENV_FLAGS[@]}" \
 	-p 3000:3000 \

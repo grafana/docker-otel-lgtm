@@ -1,14 +1,18 @@
 # AI Tool Integration (MCP)
 
-The `grafana/otel-lgtm` image exposes [Model Context Protocol (MCP)][mcp] servers
+The `grafana/otel-lgtm` image integrates with [Model Context Protocol (MCP)][mcp]
 so AI coding tools (Claude, Cursor, etc.) can query your telemetry data directly.
+
+Tempo exposes an HTTP MCP endpoint from inside the container. Grafana data is accessed
+via a client-side `uvx mcp-grafana` process that runs on your machine and connects to
+the Grafana instance in the container.
 
 ## What you get
 
-- **Dashboards**: list, read, and search dashboards through Grafana MCP
-- **Logs**: query via LogQL through Grafana MCP
-- **Metrics**: query via PromQL through Grafana MCP
-- **Traces**: query via TraceQL through Tempo's built-in MCP server
+- **Dashboards**: list, read, and search dashboards via client-side `uvx mcp-grafana`
+- **Logs**: query via LogQL via client-side `uvx mcp-grafana`
+- **Metrics**: query via PromQL via client-side `uvx mcp-grafana`
+- **Traces**: query via TraceQL through Tempo's built-in HTTP MCP endpoint (in-container)
 
 ## Setup
 

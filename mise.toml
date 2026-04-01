@@ -1,6 +1,5 @@
 # pin all versions to avoid GitHub rate limit
 [tools]
-# renovate: datasource=github-releases depName=bats-core/bats-core
 bats = "1.13.0"
 go = "1.26.1"
 "go:github.com/grafana/oats" = "0.6.1"

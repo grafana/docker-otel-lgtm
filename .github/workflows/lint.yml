@@ -31,3 +31,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: mise run lint
+
+      - name: Unit tests
+        run: mise run test:unit

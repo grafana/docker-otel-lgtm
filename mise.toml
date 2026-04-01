@@ -29,6 +29,10 @@ file = "https://raw.githubusercontent.com/grafana/flint/84e2d760286dead4e503315f
 description = "Run unit tests"
 run = "bats docker/run-otelcol.bats"
 
+[tasks."ci"]
+description = "Run all checks (lint + unit tests)"
+depends = ["lint", "test:unit"]
+
 [tasks."lint"]
 description = "Run all lints"
 depends = ["lint:super-linter", "lint:links", "lint:renovate-deps"]

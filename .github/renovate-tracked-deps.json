@@ -281,6 +281,7 @@
   },
   "mise.toml": {
     "mise": [
+      "bats",
       "go",
       "go:github.com/grafana/oats",
       "java",

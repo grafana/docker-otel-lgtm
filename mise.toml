@@ -1,5 +1,7 @@
 # pin all versions to avoid GitHub rate limit
 [tools]
+# renovate: datasource=github-releases depName=bats-core/bats-core
+bats = "1.13.0"
 go = "1.26.1"
 "go:github.com/grafana/oats" = "0.6.1"
 java = "temurin-25.0.2+10.0.LTS"
@@ -23,6 +25,10 @@ file = "https://raw.githubusercontent.com/grafana/flint/84e2d760286dead4e503315f
 [tasks."lint:renovate-deps"]
 description = "Verify renovate-tracked-deps.json is up to date"
 file = "https://raw.githubusercontent.com/grafana/flint/84e2d760286dead4e503315f9483a44fe872ee85/tasks/lint/renovate-deps.py" # v0.8.0
+
+[tasks."test:unit"]
+description = "Run unit tests"
+run = "bats docker/run-otelcol.bats"
 
 [tasks."lint"]
 description = "Run all lints"

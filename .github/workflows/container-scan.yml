@@ -14,8 +14,6 @@ env:
   TRIVY_IMAGE_REF: "grafana/otel-lgtm:latest"
   TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
   TRIVY_SEVERITIES: "CRITICAL,HIGH"
-  # renovate: datasource=github-releases depName=trivy packageName=aquasecurity/trivy
-  TRIVY_VERSION: "v0.69.3"
 
 jobs:
   scan-image:
@@ -40,10 +38,9 @@ jobs:
           limit-severities-for-sarif: true
           output: "trivy.sarif"
           severity: ${{ env.TRIVY_SEVERITIES }}
-          version: ${{ env.TRIVY_VERSION }}
 
       - name: Upload Trivy scan results
-        uses: github/codeql-action/upload-sarif@0d579ffd059c29b07949a3cce3983f0780820c98 # v4.32.6
+        uses: github/codeql-action/upload-sarif@c10b8064de6f491fea524254123dbe5e09572f13 # v4.35.1
         if: ${{ !cancelled() }}
         with:
           sarif_file: "trivy.sarif"
@@ -56,7 +53,6 @@ jobs:
           ignore-unfixed: true
           output: "trivy.json"
           severity: ${{ env.TRIVY_SEVERITIES }}
-          version: ${{ env.TRIVY_VERSION }}
 
       - name: Check for vulnerabilities
         shell: pwsh

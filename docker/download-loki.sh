@@ -8,6 +8,8 @@ if [[ -z "${VERSION}" ]]; then
 	exit 1
 fi
 
+source ./detect-arch.sh
+
 ARCHIVE=loki-linux-"${TARGETARCH}".zip
 curl -sOL https://github.com/grafana/loki/releases/download/"${VERSION}"/SHA256SUMS
 curl -sOL https://github.com/grafana/loki/releases/download/"${VERSION}"/"${ARCHIVE}"

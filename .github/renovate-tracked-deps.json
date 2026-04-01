@@ -9,11 +9,6 @@
       "mise"
     ]
   },
-  ".github/workflows/container-scan.yml": {
-    "regex": [
-      "trivy"
-    ]
-  },
   ".github/workflows/ghcr-image-build-and-publish.yml": {
     "regex": [
       "cosign"

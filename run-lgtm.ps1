@@ -78,10 +78,12 @@ if ($obiFlags.Count -gt 0) {
 # Append the remaining fixed arguments
 $runCommand += @(
     '-p', '3000:3000'
+    '-p', '3200:3200'
     '-p', '4040:4040'
     '-p', '4317:4317'
     '-p', '4318:4318'
     '-p', '9090:9090'
+    '-e', "CONTAINER_RUNTIME=$(Split-Path -Leaf $containerCommand)"
     '--rm'
 )
 

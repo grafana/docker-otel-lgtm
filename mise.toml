@@ -1,5 +1,6 @@
 # pin all versions to avoid GitHub rate limit
 [tools]
+bats = "1.13.0"
 go = "1.26.1"
 "go:github.com/grafana/oats" = "0.6.1"
 java = "temurin-25.0.2+10.0.LTS"
@@ -42,6 +43,14 @@ run = "NATIVE=true mise run lint:fast"
 [tasks."setup:pre-commit-hook"]
 description = "Install git pre-commit hook that runs native linting"
 run = "mise generate git-pre-commit --write --task=pre-commit"
+
+[tasks."test:unit"]
+description = "Run unit tests"
+run = "bats docker/run-otelcol.bats"
+
+[tasks."ci"]
+description = "Run all checks (lint + unit tests)"
+depends = ["lint", "test:unit"]
 
 [tasks."lint"]
 description = "Run all lints"

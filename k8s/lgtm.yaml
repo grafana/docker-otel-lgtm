@@ -11,6 +11,10 @@ spec:
       protocol: TCP
       port: 3000
       targetPort: 3000
+    - name: tempo
+      protocol: TCP
+      port: 3200
+      targetPort: 3200
     - name: pyroscope
       protocol: TCP
       port: 4040
@@ -47,6 +51,7 @@ spec:
           image: grafana/otel-lgtm:latest
           ports:
             - containerPort: 3000
+            - containerPort: 3200
             - containerPort: 4040
             - containerPort: 4317
             - containerPort: 4318

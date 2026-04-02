@@ -207,7 +207,9 @@ if [ -n "$SA_ID" ]; then
 		echo "AI Tool Integration (MCP):"
 		echo "  Claude Code:  bash <($EXEC cat /etc/lgtm/claude-mcp-setup.sh)"
 		echo "  Other tools:  $EXEC cat /etc/lgtm/mcp.json"
-		echo "  Docs:         https://github.com/grafana/docker-otel-lgtm/blob/${LGTM_VERSION:+v}${LGTM_VERSION:-main}/docs/mcp-integration.md"
+		docs_ref="main"
+		[[ -n "${LGTM_VERSION}" ]] && docs_ref="v${LGTM_VERSION}"
+		echo "  Docs:         https://github.com/grafana/docker-otel-lgtm/blob/${docs_ref}/docs/mcp-integration.md"
 	fi
 fi
 

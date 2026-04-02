@@ -395,6 +395,7 @@ dashboards and queries are accessed via a client-side MCP server (`uvx mcp-grafa
 
 ```sh
 docker exec lgtm cat /etc/lgtm/mcp.json   # or: podman exec ...
+# Kubernetes: kubectl exec deploy/lgtm -- cat /etc/lgtm/mcp.json
 ```
 
 Paste the JSON into your AI tool's MCP configuration. See [docs/mcp-integration.md](docs/mcp-integration.md) for details.

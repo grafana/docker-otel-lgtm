@@ -14,12 +14,12 @@ golangci-lint = "2.11.4"
 "github:google/google-java-format" = "1.35.0"
 "npm:prettier" = "3.8.1"
 shellcheck = "0.11.0"
-actionlint = "latest"
-"npm:@biomejs/biome" = "latest"
-editorconfig-checker = "latest"
-"npm:markdownlint-cli2" = "latest"
-"pipx:ruff" = "latest"
-shfmt = "latest"
+actionlint = "1.7.10"
+"npm:@biomejs/biome" = "2.3.14"
+editorconfig-checker = "v3.6.1"
+"npm:markdownlint-cli2" = "0.17.2"
+"pipx:ruff" = "0.15.0"
+shfmt = "v3.12.0"
 
 [env]
 FLINT_CONFIG_DIR = ".github/config"
@@ -31,10 +31,6 @@ run = "mise generate git-pre-commit --write --task=lint"
 [tasks.lint]
 description = "Run all lints"
 run = "flint run"
-
-[tasks.fix]
-description = "Auto-fix lint issues and regenerate tracked deps"
-run = "flint run --fix"
 
 [tasks.lgtm]
 description = "Run LGTM image"

@@ -48,7 +48,6 @@ run = "flint run"
 [tasks.fix]
 description = "Auto-fix lint issues"
 run = "flint run --fix"
-
 [tasks.lgtm]
 description = "Run LGTM image"
 usage = 'arg "<tag>" default="latest"'

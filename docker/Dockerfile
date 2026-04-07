@@ -21,7 +21,7 @@ FROM docker.io/otel/ebpf-instrument:${OBI_VERSION} AS obi-source
 # failures that occur under QEMU emulation with overlayfs. The download scripts use
 # TARGETARCH to fetch the correct platform-specific archives.
 # hadolint ignore=DL3033
-FROM --platform=$BUILDPLATFORM docker.io/redhat/ubi9:9.7@sha256:9e6e193bfc3596a84d2a32f42d6b1552398ec9735b9a4e893a0fc3c6fbccb381 AS downloader
+FROM --platform=$BUILDPLATFORM docker.io/redhat/ubi9:9.7@sha256:30917ae4ab1d099e7624c57a3ad7b682247afb694da373042b6cd649fb164968 AS downloader
 
 RUN mkdir /otel-lgtm
 
@@ -62,7 +62,7 @@ RUN ./download-loki.sh $LOKI_VERSION
 RUN ./download-pyroscope.sh $PYROSCOPE_VERSION
 RUN ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
 
-FROM docker.io/redhat/ubi9:9.7@sha256:9e6e193bfc3596a84d2a32f42d6b1552398ec9735b9a4e893a0fc3c6fbccb381 AS builder
+FROM docker.io/redhat/ubi9:9.7@sha256:30917ae4ab1d099e7624c57a3ad7b682247afb694da373042b6cd649fb164968 AS builder
 
 RUN mkdir /otel-lgtm
 

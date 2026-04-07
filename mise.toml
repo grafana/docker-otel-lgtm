@@ -7,7 +7,7 @@ lychee = "0.22.0"
 node = "24.14.1"
 "npm:renovate" = "43.104.4"
 rust = { version = "1.94.1", components = "clippy,rustfmt" }
-"github:grafana/flint" = "latest"
+"ubi:grafana/flint" = "latest"
 "pipx:codespell" = "2.4.2"
 dotnet = "10.0.201"
 golangci-lint = "2.11.4"

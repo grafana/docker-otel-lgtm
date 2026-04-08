@@ -277,6 +277,7 @@
   "mise.toml": {
     "mise": [
       "actionlint",
+      "cargo:https://github.com/grafana/flint",
       "dotnet",
       "editorconfig-checker",
       "github:google/google-java-format",

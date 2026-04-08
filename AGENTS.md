@@ -77,6 +77,7 @@ for other components. Each component has a `run-*.sh` startup script.
 ### Example Applications (examples/)
 
 Language-specific demo apps that emit OpenTelemetry data:
+
 - `examples/java` (port 8080) - Maven + OTel Java Agent
 - `examples/go` (port 8081) - Go workspace (`go.work` at repository root)
 - `examples/python` (port 8082) - Python + auto-instrumentation

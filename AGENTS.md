@@ -54,7 +54,7 @@ mise run lint
 NATIVE=true mise run lint:fast
 ```
 
-After running `fix`, always review the changed files before committing —
+After running `lint:fix`, always review the changed files before committing —
 auto-fixes may produce unexpected results.
 
 Native mode requires lint tools on PATH. Run `mise run setup:native-lint-tools`

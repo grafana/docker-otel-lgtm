@@ -77,5 +77,6 @@ $RUNTIME container run \
 	-v "${LOCAL_VOLUME}"/loki:/data/loki:"${MOUNT_OPTS}" \
 	-e GF_PATHS_DATA=/data/grafana \
 	-e CONTAINER_RUNTIME="$RUNTIME" \
+	-e OTEL_COLLECTOR_DEBUG_EXPORTER="${OTEL_COLLECTOR_DEBUG_EXPORTER:-}" \
 	--env-file .env \
 	"$IMAGE"

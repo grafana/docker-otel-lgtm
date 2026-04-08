@@ -149,27 +149,28 @@ GRAFANA_PUBLIC_URL="${GRAFANA_PUBLIC_URL:-http://localhost:3000}"
 TEMPO_URL="${TEMPO_URL:-http://localhost:3200}"
 SA_NAME="ai-tools"
 SA_TOKEN_NAME="ai-tools-token"
+GRAFANA_SA_URL="${GRAFANA_URL}/api/serviceaccounts"
 # Try to create SA; if it already exists (persisted data), look it up
-SA_RESPONSE="$(curl -sf "${GRAFANA_URL}/api/serviceaccounts" \
+SA_RESPONSE="$(curl -sf "${GRAFANA_SA_URL}" \
 	-H "Content-Type: application/json" -u "${GRAFANA_CREDS}" \
 	-d "{\"name\":\"${SA_NAME}\",\"role\":\"Viewer\"}")"
 if [ -z "$SA_RESPONSE" ]; then
 	# SA already exists — find its ID
-	SA_RESPONSE="$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/search?query=${SA_NAME}" -u "${GRAFANA_CREDS}")"
+	SA_RESPONSE="$(curl -sf "${GRAFANA_SA_URL}/search?query=${SA_NAME}" -u "${GRAFANA_CREDS}")"
 fi
 SA_ID="$(echo "$SA_RESPONSE" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)"
 if [ -n "$SA_ID" ]; then
 	# Delete only the bootstrap-managed token (preserve any manually-created tokens)
-	EXISTING_TOKENS="$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens" -u "${GRAFANA_CREDS}")"
+	EXISTING_TOKENS="$(curl -sf "${GRAFANA_SA_URL}/${SA_ID}/tokens" -u "${GRAFANA_CREDS}")"
 	if [ -n "$EXISTING_TOKENS" ]; then
 		BOOTSTRAP_TOKEN_ID="$(echo "$EXISTING_TOKENS" | tr '{}' '\n' |
 			grep "\"name\":\"${SA_TOKEN_NAME}\"" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)"
 		if [ -n "$BOOTSTRAP_TOKEN_ID" ]; then
-			curl -sf -X DELETE "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens/${BOOTSTRAP_TOKEN_ID}" \
+			curl -sf -X DELETE "${GRAFANA_SA_URL}/${SA_ID}/tokens/${BOOTSTRAP_TOKEN_ID}" \
 				-u "${GRAFANA_CREDS}" >/dev/null
 		fi
 	fi
-	TOKEN_RESPONSE="$(curl -sf "${GRAFANA_URL}/api/serviceaccounts/${SA_ID}/tokens" \
+	TOKEN_RESPONSE="$(curl -sf "${GRAFANA_SA_URL}/${SA_ID}/tokens" \
 		-H "Content-Type: application/json" -u "${GRAFANA_CREDS}" \
 		-d "{\"name\":\"${SA_TOKEN_NAME}\"}")"
 	SA_TOKEN="$(echo "$TOKEN_RESPONSE" | grep -o '"key":"[^"]*"' | cut -d'"' -f4)"

@@ -34,7 +34,7 @@ the Grafana instance in the container.
 
    ```sh
    # Get the service account token
-   TOKEN=$(docker exec lgtm cat /tmp/grafana-sa-token)
+   TOKEN=$(docker exec lgtm cat /tmp/grafana-sa-token)   # or: podman exec ...
 
    # Add the Grafana MCP server (requires uvx)
    claude mcp add grafana \

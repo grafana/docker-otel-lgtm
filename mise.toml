@@ -19,6 +19,7 @@ editorconfig-checker = "v3.6.1"
 "npm:markdownlint-cli2" = "0.17.2"
 "pipx:ruff" = "0.15.0"
 shfmt = "v3.12.0"
+"cargo:https://github.com/grafana/flint" = "rev:43436948bee2ff51341f6deb3d059c070e106e1b"
 
 [env]
 FLINT_CONFIG_DIR = ".github/config"

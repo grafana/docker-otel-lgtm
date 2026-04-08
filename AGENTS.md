@@ -51,7 +51,7 @@ mise run lint:fix
 mise run lint
 ```
 
-After running `fix`, always review the changed files before committing —
+After running `lint:fix`, always review the changed files before committing —
 auto-fixes may produce unexpected results.
 
 Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`.

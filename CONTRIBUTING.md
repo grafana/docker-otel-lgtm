@@ -15,11 +15,11 @@ This repository uses [flint][flint] for linting.
 See the flint readme for detailed documentation on each linter.
 
 ```bash
-mise run fix   # Auto-fix all issues (recommended before committing)
+mise run lint:fix   # Auto-fix all issues (recommended before committing)
 mise run lint  # Check only (same command used in CI)
 ```
 
-Always run `mise run fix` before committing — review the changed files as auto-fixes may produce unexpected results.
+Always run `mise run lint:fix` before committing — review the changed files as auto-fixes may produce unexpected results.
 
 ## Acceptance Tests
 

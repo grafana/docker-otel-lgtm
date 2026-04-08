@@ -45,7 +45,7 @@ oats -timeout 2h -lgtm-version dev1 examples/nodejs
 
 ```bash
 # Auto-fix and verify (recommended dev workflow)
-mise run fix
+mise run lint:fix
 
 # Verify only (same command used in CI)
 mise run lint
@@ -61,7 +61,7 @@ EditorConfig rules in `.editorconfig`.
 
 `mise run lint` verifies that `.github/renovate-tracked-deps.json` stays in
 sync with what Renovate actually tracks. If the snapshot is stale, run
-`mise run fix` and commit the result. The lint tasks are provided by
+`mise run lint:fix` and commit the result. The lint tasks are provided by
 [flint](https://github.com/grafana/flint).
 
 ## Architecture

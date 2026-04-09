@@ -26,8 +26,8 @@ jobs:
           version: v2026.4.1
           sha256: c597fa1e4da76d1ea1967111d150a6a655ca51a72f4cd17fdc584be2b9eaa8bd
 
-      - name: Lint
+      - name: CI checks
         env:
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: mise run lint
+        run: mise run ci

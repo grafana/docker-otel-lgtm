@@ -61,9 +61,11 @@ fi
 
 $RUNTIME container run \
 	--name lgtm \
+	--init \
 	"${OBI_FLAGS[@]}" \
 	"${OBI_ENV_FLAGS[@]}" \
 	-p 3000:3000 \
+	-p 3200:3200 \
 	-p 4040:4040 \
 	-p 4317:4317 \
 	-p 4318:4318 \
@@ -74,5 +76,7 @@ $RUNTIME container run \
 	-v "${LOCAL_VOLUME}"/prometheus:/data/prometheus:"${MOUNT_OPTS}" \
 	-v "${LOCAL_VOLUME}"/loki:/data/loki:"${MOUNT_OPTS}" \
 	-e GF_PATHS_DATA=/data/grafana \
+	-e CONTAINER_RUNTIME="$RUNTIME" \
+	-e OTEL_COLLECTOR_DEBUG_EXPORTER="${OTEL_COLLECTOR_DEBUG_EXPORTER:-}" \
 	--env-file .env \
 	"$IMAGE"

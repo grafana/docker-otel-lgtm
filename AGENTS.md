@@ -49,10 +49,16 @@ mise run fix
 
 # Verify only (same command used in CI)
 mise run lint
+
+# Run without Docker/Podman (e.g. inside a container)
+NATIVE=true mise run lint:fast
 ```
 
 After running `fix`, always review the changed files before committing —
 auto-fixes may produce unexpected results.
+
+Native mode requires lint tools on PATH. Run `mise run setup:native-lint-tools`
+once to install them.
 
 Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`.
 EditorConfig rules in `.editorconfig`.
@@ -77,6 +83,7 @@ for other components. Each component has a `run-*.sh` startup script.
 ### Example Applications (examples/)
 
 Language-specific demo apps that emit OpenTelemetry data:
+
 - `examples/java` (port 8080) - Maven + OTel Java Agent
 - `examples/go` (port 8081) - Go workspace (`go.work` at repository root)
 - `examples/python` (port 8082) - Python + auto-instrumentation

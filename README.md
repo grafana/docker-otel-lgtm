@@ -139,9 +139,9 @@ to the specified endpoint using "OTLP/HTTP".
 
 You can also configure per-signal endpoints:
 
-* `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT`
-* `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`
-* `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`
+- `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT`
+- `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`
+- `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`
 
 If both global and per-signal endpoints are set, per-signal values take precedence.
 Endpoints must include the scheme (for example, `http://jaeger:4318`).
@@ -257,7 +257,7 @@ services:
 kubectl apply -f k8s/lgtm.yaml
 
 # Configure port forwarding
-kubectl port-forward service/lgtm 3000:3000 4040:4040 4317:4317 4318:4318 9090:9090
+kubectl port-forward service/lgtm 3000:3000 3200:3200 4040:4040 4317:4317 4318:4318 9090:9090
 
 # Using mise
 mise k8s-apply
@@ -387,6 +387,19 @@ OIDC_ISSUER="https://token.actions.githubusercontent.com"
 cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-issuer ${OIDC_ISSUER}
 ```
 
+## AI Tool Integration (MCP)
+
+The stack provides an [MCP][mcp] integration so AI coding tools can query logs, metrics, traces,
+and dashboards. Tempo exposes an HTTP MCP endpoint from the container, while Grafana
+dashboards and queries are accessed via a client-side MCP server (`uvx mcp-grafana`).
+
+```sh
+docker exec lgtm cat /etc/lgtm/mcp.json   # or: podman exec ...
+# Kubernetes: kubectl exec deploy/lgtm -- cat /etc/lgtm/mcp.json
+```
+
+Paste the JSON into your AI tool's MCP configuration. See [docs/mcp-integration.md](docs/mcp-integration.md) for details.
+
 ## Related Work
 
 - [Metrics, Logs, Traces and Profiles in Grafana][mltp]
@@ -406,6 +419,7 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 [grafana-env-overrides]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#override-configuration-with-environment-variables
 [grafana-preinstall-plugins]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/#install-plugins-in-the-docker-container
 [java-example]: examples/java/
+[mcp]: https://modelcontextprotocol.io/ "Model Context Protocol"
 [mise]: https://github.com/jdx/mise
 [mltp]: https://github.com/grafana/intro-to-mltp
 [otel-checker]: https://github.com/grafana/otel-checker/

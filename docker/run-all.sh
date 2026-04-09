@@ -142,6 +142,78 @@ echo "Total: ${total_elapsed} seconds"
 touch /tmp/ready
 echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
 
+# Create a service account token and MCP config for AI tool access
+GRAFANA_CREDS="${GF_SECURITY_ADMIN_USER:-admin}:${GF_SECURITY_ADMIN_PASSWORD:-admin}"
+GRAFANA_URL="${GRAFANA_URL:-http://127.0.0.1:3000}"
+GRAFANA_PUBLIC_URL="${GRAFANA_PUBLIC_URL:-http://localhost:3000}"
+TEMPO_URL="${TEMPO_URL:-http://localhost:3200}"
+SA_NAME="ai-tools"
+SA_TOKEN_NAME="ai-tools-token"
+GRAFANA_SA_URL="${GRAFANA_URL}/api/serviceaccounts"
+# Try to create SA; if it already exists (persisted data), look it up
+SA_RESPONSE="$(curl -sf "${GRAFANA_SA_URL}" \
+	-H "Content-Type: application/json" -u "${GRAFANA_CREDS}" \
+	-d "{\"name\":\"${SA_NAME}\",\"role\":\"Viewer\"}")"
+if [ -z "$SA_RESPONSE" ]; then
+	# SA already exists — find its ID
+	SA_RESPONSE="$(curl -sf "${GRAFANA_SA_URL}/search?query=${SA_NAME}" -u "${GRAFANA_CREDS}")"
+fi
+SA_ID="$(echo "$SA_RESPONSE" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)"
+if [ -n "$SA_ID" ]; then
+	# Delete only the bootstrap-managed token (preserve any manually-created tokens)
+	EXISTING_TOKENS="$(curl -sf "${GRAFANA_SA_URL}/${SA_ID}/tokens" -u "${GRAFANA_CREDS}")"
+	if [ -n "$EXISTING_TOKENS" ]; then
+		BOOTSTRAP_TOKEN_ID="$(echo "$EXISTING_TOKENS" | tr '{}' '\n' |
+			grep "\"name\":\"${SA_TOKEN_NAME}\"" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)"
+		if [ -n "$BOOTSTRAP_TOKEN_ID" ]; then
+			curl -sf -X DELETE "${GRAFANA_SA_URL}/${SA_ID}/tokens/${BOOTSTRAP_TOKEN_ID}" \
+				-u "${GRAFANA_CREDS}" >/dev/null
+		fi
+	fi
+	TOKEN_RESPONSE="$(curl -sf "${GRAFANA_SA_URL}/${SA_ID}/tokens" \
+		-H "Content-Type: application/json" -u "${GRAFANA_CREDS}" \
+		-d "{\"name\":\"${SA_TOKEN_NAME}\"}")"
+	SA_TOKEN="$(echo "$TOKEN_RESPONSE" | grep -o '"key":"[^"]*"' | cut -d'"' -f4)"
+	if [ -n "$SA_TOKEN" ]; then
+		EXEC="${CONTAINER_RUNTIME:-docker} exec lgtm"
+		(
+			umask 077
+			mkdir -p /etc/lgtm
+			echo "${SA_TOKEN}" >/tmp/grafana-sa-token
+			cat >/etc/lgtm/mcp.json <<-MCPEOF
+				{
+				  "mcpServers": {
+				    "grafana": {
+				      "command": "uvx",
+				      "args": ["mcp-grafana"],
+				      "env": {
+				        "GRAFANA_URL": "${GRAFANA_PUBLIC_URL}",
+				        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${SA_TOKEN}"
+				      }
+				    },
+				    "tempo": {
+				      "url": "${TEMPO_URL}/api/mcp"
+				    }
+				  }
+				}
+			MCPEOF
+			cat >/etc/lgtm/claude-mcp-setup.sh <<-SETUPEOF
+				#!/bin/bash
+				# Connect Claude Code to the LGTM stack
+				claude mcp add grafana -e "GRAFANA_URL=${GRAFANA_PUBLIC_URL}" -e "GRAFANA_SERVICE_ACCOUNT_TOKEN=${SA_TOKEN}" -- uvx mcp-grafana
+				claude mcp add --transport http tempo "${TEMPO_URL}/api/mcp"
+			SETUPEOF
+		)
+		echo ""
+		echo "AI Tool Integration (MCP):"
+		echo "  Claude Code:  bash <($EXEC cat /etc/lgtm/claude-mcp-setup.sh)"
+		echo "  Other tools:  $EXEC cat /etc/lgtm/mcp.json"
+		docs_ref="main"
+		[[ -n "${LGTM_VERSION}" ]] && docs_ref="v${LGTM_VERSION}"
+		echo "  Docs:         https://github.com/grafana/docker-otel-lgtm/blob/${docs_ref}/docs/mcp-integration.md"
+	fi
+fi
+
 if [[ ${ENABLE_OBI:-false} == "true" ]]; then
 	# Non-blocking check — don't delay readiness if OBI fails (e.g. missing capabilities)
 	if curl -o /dev/null -sg "http://127.0.0.1:6060/metrics" -w "%{response_code}" 2>/dev/null | grep -q "200"; then
@@ -164,6 +236,7 @@ echo "Open ports:"
 echo " - 4317: OpenTelemetry GRPC endpoint"
 echo " - 4318: OpenTelemetry HTTP endpoint"
 echo " - 3000: Grafana (http://localhost:3000). User: admin, password: admin"
+echo " - 3200: Tempo endpoint (MCP at http://localhost:3200/api/mcp)"
 echo " - 4040: Pyroscope endpoint"
 echo " - 9090: Prometheus endpoint"
 

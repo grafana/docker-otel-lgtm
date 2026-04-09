@@ -25,15 +25,15 @@ processors:
   batch:
 
 exporters:
-  otlphttp/metrics:
+  otlp_http/metrics:
     endpoint: http://127.0.0.1:9090/api/v1/otlp
     tls:
       insecure: true
-  otlphttp/traces:
+  otlp_http/traces:
     endpoint: http://127.0.0.1:4418
     tls:
       insecure: true
-  otlphttp/logs:
+  otlp_http/logs:
     endpoint: http://127.0.0.1:3100/otlp
     tls:
       insecure: true
@@ -54,18 +54,18 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp/traces]
-      #exporters: [otlphttp/traces,debug/traces]
+      exporters: [otlp_http/traces]
+      #exporters: [otlp_http/traces,debug/traces]
     metrics:
       receivers: [otlp, prometheus/collector]
       processors: [batch]
-      exporters: [otlphttp/metrics]
-      #exporters: [otlphttp/metrics,debug/metrics]
+      exporters: [otlp_http/metrics]
+      #exporters: [otlp_http/metrics,debug/metrics]
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp/logs]
-      #exporters: [otlphttp/logs,debug/logs]
+      exporters: [otlp_http/logs]
+      #exporters: [otlp_http/logs,debug/logs]
     profiles:
       receivers: [otlp]
       exporters: [otlp/profiles]

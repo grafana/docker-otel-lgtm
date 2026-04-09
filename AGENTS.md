@@ -45,13 +45,13 @@ oats -timeout 2h -lgtm-version dev1 examples/nodejs
 
 ```bash
 # Auto-fix and verify (recommended dev workflow)
-mise run fix
+mise run lint:fix
 
 # Verify only (same command used in CI)
 mise run lint
 ```
 
-After running `fix`, always review the changed files before committing —
+After running `lint:fix`, always review the changed files before committing —
 auto-fixes may produce unexpected results.
 
 Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`.
@@ -61,7 +61,7 @@ EditorConfig rules in `.editorconfig`.
 
 `mise run lint` verifies that `.github/renovate-tracked-deps.json` stays in
 sync with what Renovate actually tracks. If the snapshot is stale, run
-`mise run fix` and commit the result. The lint tasks are provided by
+`mise run lint:fix` and commit the result. The lint tasks are provided by
 [flint](https://github.com/grafana/flint).
 
 ## Architecture
@@ -77,6 +77,7 @@ for other components. Each component has a `run-*.sh` startup script.
 ### Example Applications (examples/)
 
 Language-specific demo apps that emit OpenTelemetry data:
+
 - `examples/java` (port 8080) - Maven + OTel Java Agent
 - `examples/go` (port 8081) - Go workspace (`go.work` at repository root)
 - `examples/python` (port 8082) - Python + auto-instrumentation

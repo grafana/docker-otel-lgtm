@@ -6,50 +6,31 @@ java = "temurin-25.0.2+10.0.LTS"
 lychee = "0.22.0"
 node = "24.14.1"
 "npm:renovate" = "43.104.4"
-rust = "1.94.1"
+rust = { version = "1.94.1", components = "clippy,rustfmt" }
+"pipx:codespell" = "2.4.2"
+dotnet = "10.0.201"
+golangci-lint = "2.11.4"
+"github:google/google-java-format" = "1.35.0"
+"npm:prettier" = "3.8.1"
+shellcheck = "0.11.0"
+actionlint = "1.7.10"
+"npm:@biomejs/biome" = "2.3.14"
+editorconfig-checker = "v3.6.1"
+"npm:markdownlint-cli2" = "0.17.2"
+"pipx:ruff" = "0.15.0"
+shfmt = "v3.12.0"
+"cargo:https://github.com/grafana/flint" = "branch:feat/flint-v2"
 
 [env]
-RENOVATE_TRACKED_DEPS_EXCLUDE="github-actions,github-runners"
-# renovate: datasource=docker depName=ghcr.io/super-linter/super-linter
-SUPER_LINTER_VERSION="v8.4.0@sha256:c5e3307932203ff9e1e8acfe7e92e894add6266605b5d7fb525fb371a59a26f4"
+FLINT_CONFIG_DIR = ".github/config"
 
-# Shared lint tasks from flint (https://github.com/grafana/flint)
-[tasks."lint:super-linter"]
-description = "Run Super-Linter on the repository"
-file = "https://raw.githubusercontent.com/grafana/flint/df7b637ee421a491ca5c34b5be4122d8360f57c1/tasks/lint/super-linter.sh" # v0.9.2
-[tasks."lint:links"]
-description = "Check for broken links in changed files + all local links"
-file = "https://raw.githubusercontent.com/grafana/flint/df7b637ee421a491ca5c34b5be4122d8360f57c1/tasks/lint/links.sh" # v0.9.2
-[tasks."lint:renovate-deps"]
-description = "Verify renovate-tracked-deps.json is up to date"
-file = "https://raw.githubusercontent.com/grafana/flint/df7b637ee421a491ca5c34b5be4122d8360f57c1/tasks/lint/renovate-deps.py" # v0.9.2
-
-[tasks."setup:native-lint-tools"]
-description = "Install native lint tools matching the pinned super-linter version"
-file = "https://raw.githubusercontent.com/grafana/flint/df7b637ee421a491ca5c34b5be4122d8360f57c1/tasks/setup/native-lint-tools.sh" # v0.9.2
-[tasks."lint:fast"]
-description = "Run fast lints (no Renovate)"
-depends = ["lint:super-linter", "lint:links"]
-
-[tasks.native-lint]
-description = "Run lints natively (no container)"
-run = "NATIVE=true mise run lint:fast"
-
-[tasks.pre-commit]
-description = "Pre-commit hook: native lint"
-depends = ["setup:native-lint-tools"]
-run = "NATIVE=true mise run lint:fast"
 [tasks."setup:pre-commit-hook"]
-description = "Install git pre-commit hook that runs native linting"
-run = "mise generate git-pre-commit --write --task=pre-commit"
+description = "Install git pre-commit hook"
+run = "mise generate git-pre-commit --write --task=lint"
 
-[tasks."lint"]
+[tasks.lint]
 description = "Run all lints"
-depends = ["lint:fast", "lint:renovate-deps"]
-
-[tasks.fix]
-description = "Auto-fix lint issues and regenerate tracked deps"
-run = "AUTOFIX=true mise run lint"
+run = "flint run"
 
 [tasks.lgtm]
 description = "Run LGTM image"
@@ -114,6 +95,10 @@ run = "kubectl port-forward service/lgtm 3000:3000 4040:4040 4317:4317 4318:4318
 description = "Build LGTM image"
 usage = 'arg "<tag>" default="latest"'
 run = './build-lgtm.sh ${usage_tag}'
+
+[tasks."lint:fix"]
+description = "Auto-fix lint issues"
+run = "flint run --fix"
 
 [settings]
 # for go backend

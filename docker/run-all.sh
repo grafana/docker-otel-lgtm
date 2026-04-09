@@ -200,8 +200,8 @@ if [ -n "$SA_ID" ]; then
 			cat >/etc/lgtm/claude-mcp-setup.sh <<-SETUPEOF
 				#!/bin/bash
 				# Connect Claude Code to the LGTM stack
-				claude mcp add grafana -e GRAFANA_URL=${GRAFANA_PUBLIC_URL} -e GRAFANA_SERVICE_ACCOUNT_TOKEN="${SA_TOKEN}" -- uvx mcp-grafana
-				claude mcp add --transport http tempo ${TEMPO_URL}/api/mcp
+				claude mcp add grafana -e "GRAFANA_URL=${GRAFANA_PUBLIC_URL}" -e "GRAFANA_SERVICE_ACCOUNT_TOKEN=${SA_TOKEN}" -- uvx mcp-grafana
+				claude mcp add --transport http tempo "${TEMPO_URL}/api/mcp"
 			SETUPEOF
 		)
 		echo ""

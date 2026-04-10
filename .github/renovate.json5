@@ -29,8 +29,8 @@
     {
       // version is derived from OBI_VERSION which tracks open-telemetry/opentelemetry-ebpf-instrumentation
       matchDatasources: ["docker"],
-      matchPackageNames: ["otel/ebpf-instrument"],
-      ignoreDeps: ["otel/ebpf-instrument"],
+      matchPackageNames: ["docker.io/otel/ebpf-instrument"],
+      ignoreDeps: ["docker.io/otel/ebpf-instrument"],
     },
     {
       matchPackageNames: ["grafana/shared-workflows"],

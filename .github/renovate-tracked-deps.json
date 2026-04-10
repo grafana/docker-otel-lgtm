@@ -26,6 +26,7 @@
   },
   "docker/Dockerfile": {
     "dockerfile": [
+      "docker.io/otel/ebpf-instrument",
       "docker.io/redhat/ubi9",
       "docker.io/redhat/ubi9-micro"
     ],

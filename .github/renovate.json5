@@ -28,7 +28,8 @@
     },
     {
       // version is derived from OBI_VERSION which tracks open-telemetry/opentelemetry-ebpf-instrumentation
-      matchPackageNames: ["otel/ebpf-instrument"],
+      matchDatasources: ["docker"],
+      matchPackageNames: ["docker.io/otel/ebpf-instrument"],
       enabled: false,
     },
     {

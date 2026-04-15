@@ -21,6 +21,7 @@ jobs:
       COSIGN_VERSION: v3.0.6
 
     permissions:
+      artifact-metadata: write
       attestations: write
       contents: read
       id-token: write

@@ -71,7 +71,7 @@ run_otelcol() {
 @test "debug only: overlay has no external exporters" {
 	export OTEL_COLLECTOR_DEBUG_EXPORTER=true
 	run run_otelcol
-	run ! grep -q "otlphttp/external" "$TESTDIR/otelcol-config-export-http.yaml"
+	run ! grep -q "otlp_http/external" "$TESTDIR/otelcol-config-export-http.yaml"
 }
 
 @test "debug only: overlay passed to otelcol" {
@@ -85,9 +85,9 @@ run_otelcol() {
 @test "external only: overlay has external exporters for all signals" {
 	export OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4318
 	run run_otelcol
-	grep -q "otlphttp/external-traces" "$TESTDIR/otelcol-config-export-http.yaml"
-	grep -q "otlphttp/external-metrics" "$TESTDIR/otelcol-config-export-http.yaml"
-	grep -q "otlphttp/external-logs" "$TESTDIR/otelcol-config-export-http.yaml"
+	grep -q "otlp_http/external-traces" "$TESTDIR/otelcol-config-export-http.yaml"
+	grep -q "otlp_http/external-metrics" "$TESTDIR/otelcol-config-export-http.yaml"
+	grep -q "otlp_http/external-logs" "$TESTDIR/otelcol-config-export-http.yaml"
 }
 
 @test "external only: overlay has no debug exporters" {
@@ -101,9 +101,9 @@ run_otelcol() {
 @test "per-signal: only configured signals get external exporter" {
 	export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://tempo:4318
 	run run_otelcol
-	grep -q "otlphttp/external-traces" "$TESTDIR/otelcol-config-export-http.yaml"
-	run ! grep -q "otlphttp/external-metrics" "$TESTDIR/otelcol-config-export-http.yaml"
-	run ! grep -q "otlphttp/external-logs" "$TESTDIR/otelcol-config-export-http.yaml"
+	grep -q "otlp_http/external-traces" "$TESTDIR/otelcol-config-export-http.yaml"
+	run ! grep -q "otlp_http/external-metrics" "$TESTDIR/otelcol-config-export-http.yaml"
+	run ! grep -q "otlp_http/external-logs" "$TESTDIR/otelcol-config-export-http.yaml"
 }
 
 # --- both debug and external ---
@@ -115,9 +115,9 @@ run_otelcol() {
 	grep -q "debug/traces" "$TESTDIR/otelcol-config-export-http.yaml"
 	grep -q "debug/metrics" "$TESTDIR/otelcol-config-export-http.yaml"
 	grep -q "debug/logs" "$TESTDIR/otelcol-config-export-http.yaml"
-	grep -q "otlphttp/external-traces" "$TESTDIR/otelcol-config-export-http.yaml"
-	grep -q "otlphttp/external-metrics" "$TESTDIR/otelcol-config-export-http.yaml"
-	grep -q "otlphttp/external-logs" "$TESTDIR/otelcol-config-export-http.yaml"
+	grep -q "otlp_http/external-traces" "$TESTDIR/otelcol-config-export-http.yaml"
+	grep -q "otlp_http/external-metrics" "$TESTDIR/otelcol-config-export-http.yaml"
+	grep -q "otlp_http/external-logs" "$TESTDIR/otelcol-config-export-http.yaml"
 }
 
 @test "both: only one overlay config passed to otelcol" {

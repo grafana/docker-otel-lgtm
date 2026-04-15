@@ -11,8 +11,8 @@ render_pipeline_overlay() {
 	for signal in traces metrics logs; do
 		local signal_var="OTEL_EXPORTER_OTLP_${signal^^}_ENDPOINT"
 		if [[ -n ${!signal_var:-} || ${OTEL_COLLECTOR_DEBUG_EXPORTER:-false} == "true" ]]; then
-			local exporters="otlphttp/${signal}"
-			[[ -n ${!signal_var:-} ]] && exporters+=", otlphttp/external-${signal}"
+			local exporters="otlp_http/${signal}"
+			[[ -n ${!signal_var:-} ]] && exporters+=", otlp_http/external-${signal}"
 			[[ ${OTEL_COLLECTOR_DEBUG_EXPORTER:-false} == "true" ]] && exporters+=", debug/${signal}"
 			printf '    %s:\n      exporters: [%s]\n' "${signal}" "${exporters}" >>otelcol-config-export-http.yaml
 		fi
@@ -26,7 +26,7 @@ render_pipeline_overlay() {
 			local signal_var="OTEL_EXPORTER_OTLP_${signal^^}_ENDPOINT"
 			if [[ -n ${!signal_var:-} ]]; then
 				# shellcheck disable=SC2016 # otelcol config template, not bash variables
-				printf '  otlphttp/external-%s:\n    endpoint: ${env:%s}\n' \
+				printf '  otlp_http/external-%s:\n    endpoint: ${env:%s}\n' \
 					"${signal}" "${signal_var}" >>otelcol-config-export-http.yaml
 			fi
 		done

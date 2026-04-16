@@ -8,7 +8,7 @@ COPY ./src ./src
 COPY json-logging-logback/logback-spring.xml ./src/main/resources/logback-spring.xml
 RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests
 
-FROM eclipse-temurin:25.0.2_10-jre@sha256:5da0c1d73846ea62dd635a7ee06aa3f1d3c0ebeed1aeca61fd57a5617fefd4eb
+FROM eclipse-temurin:25.0.2_10-jre@sha256:400bd31bd17a97d3cfba314d77f7b2035936a18d454bcfec7d5d21850e00b8e3
 
 WORKDIR /usr/src/app/
 

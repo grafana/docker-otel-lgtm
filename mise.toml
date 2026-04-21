@@ -1,26 +1,26 @@
 # pin all versions to avoid GitHub rate limit
 [tools]
-bats = "1.13.0"
 dotnet = "10.0.202"
 go = "1.26.2"
-"go:github.com/grafana/oats" = "0.6.1"
-java = "temurin-25.0.2+10.0.LTS"
-lychee = "0.22.0"
-node = "24.15.0"
-"npm:renovate" = "43.127.0"
 rust = { version = "1.95.0", components = "clippy,rustfmt" }
 
 # Linters
 actionlint = "1.7.12"
-"github:grafana/flint" = "0.20.3"
+bats = "1.13.0"
 "cargo:xmloxide" = "0.4.1"
 editorconfig-checker = "3.6.1"
 "github:google/google-java-format" = "1.35.0"
+"github:grafana/flint" = "0.20.3"
+"go:github.com/grafana/oats" = "0.6.1"
 golangci-lint = "2.11.4"
 hadolint = "2.14.0"
+java = "temurin-25.0.2+10.0.LTS"
+lychee = "0.22.0"
+node = "24.15.0"
 "npm:@biomejs/biome" = "2.4.12"
 "npm:markdownlint-cli2" = "0.22.0"
 "npm:prettier" = "3.8.3"
+"npm:renovate" = "43.127.0"
 "pipx:codespell" = "2.4.2"
 "pipx:ruff" = "0.15.11"
 shellcheck = "0.11.0"

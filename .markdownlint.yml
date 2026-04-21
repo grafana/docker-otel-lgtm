@@ -1,10 +1,2 @@
-default: true
-
-# allow long lines for tables and code blocks
-MD013:
-  code_blocks: false
-  tables: false
-  line_length: 120
-
-MD024:
-  siblings_only: true
+# Line length is enforced by editorconfig-checker via .editorconfig
+MD013: false

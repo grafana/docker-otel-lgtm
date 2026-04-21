@@ -4,7 +4,6 @@ dotnet = "10.0.202"
 go = "1.26.2"
 rust = { version = "1.95.0", components = "clippy,rustfmt" }
 
-# Tools
 bats = "1.13.0"
 "go:github.com/grafana/oats" = "0.6.1"
 java = "temurin-25.0.2+10.0.LTS"

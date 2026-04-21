@@ -6,7 +6,6 @@ rust = { version = "1.95.0", components = "clippy,rustfmt" }
 
 # Tools
 bats = "1.13.0"
-"github:grafana/flint" = "0.20.3"
 "go:github.com/grafana/oats" = "0.6.1"
 java = "temurin-25.0.2+10.0.LTS"
 node = "24.15.0"
@@ -16,6 +15,7 @@ node = "24.15.0"
 actionlint = "1.7.12"
 "cargo:xmloxide" = "0.4.1"
 editorconfig-checker = "3.6.1"
+"github:grafana/flint" = "0.20.3"
 "github:google/google-java-format" = "1.35.0"
 golangci-lint = "2.11.4"
 hadolint = "2.14.0"

@@ -45,10 +45,6 @@ depends = ["lint", "test:unit"]
 description = "Run all lints"
 run = "flint run"
 
-[tasks.fix]
-description = "Auto-fix lint issues"
-run = "mise run lint:fix"
-
 [tasks.lgtm]
 description = "Run LGTM image"
 usage = 'arg "<tag>" default="latest"'

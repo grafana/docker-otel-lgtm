@@ -277,13 +277,16 @@
   "mise.toml": {
     "mise": [
       "actionlint",
+      "bats",
       "cargo:https://github.com/grafana/flint",
+      "cargo:xmloxide",
       "dotnet",
       "editorconfig-checker",
       "github:google/google-java-format",
       "go",
       "go:github.com/grafana/oats",
       "golangci-lint",
+      "hadolint",
       "java",
       "lychee",
       "node",

@@ -49,16 +49,10 @@ mise run lint:fix
 
 # Verify only (same command used in CI)
 mise run lint
-
-# Run without Docker/Podman (e.g. inside a container)
-NATIVE=true mise run lint:fast
 ```
 
 After running `lint:fix`, always review the changed files before committing —
 auto-fixes may produce unexpected results.
-
-Native mode requires lint tools on PATH. Run `mise run setup:native-lint-tools`
-once to install them.
 
 Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`.
 EditorConfig rules in `.editorconfig`.

@@ -29,10 +29,6 @@ shfmt = "3.13.1"
 [env]
 FLINT_CONFIG_DIR = ".github/config"
 
-[tasks."setup:pre-commit-hook"]
-description = "Install git pre-commit hook"
-run = "mise generate git-pre-commit --write --task=lint"
-
 [tasks."test:unit"]
 description = "Run unit tests"
 run = "bats docker/run-otelcol.bats"

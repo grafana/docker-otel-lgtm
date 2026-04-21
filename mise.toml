@@ -47,7 +47,7 @@ run = "flint run"
 
 [tasks.fix]
 description = "Auto-fix lint issues"
-run = "flint run --fix"
+run = "mise run lint:fix"
 
 [tasks.lgtm]
 description = "Run LGTM image"

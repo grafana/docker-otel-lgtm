@@ -4,7 +4,7 @@ dotnet = "10.0.202"
 go = "1.26.2"
 rust = { version = "1.95.0", components = "clippy,rustfmt" }
 
-# Linters
+# Tools
 actionlint = "1.7.12"
 bats = "1.13.0"
 "cargo:xmloxide" = "0.4.1"

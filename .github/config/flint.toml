@@ -1,0 +1,5 @@
+[settings]
+exclude = []
+
+[checks.renovate-deps]
+exclude_managers = ["github-actions", "github-runners"]

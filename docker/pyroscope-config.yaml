@@ -2,22 +2,25 @@ server:
   grpc_listen_port: 9097 # to avoid conflict with tempo
 
 metastore:
-  address: 127.0.0.1
+  address: 127.0.0.1:9097
   min_ready_duration: 1s
+  data_dir: /data/pyroscope/metastore/data
+  raft:
+    dir: /data/pyroscope/metastore/raft
+    snapshots_dir: /data/pyroscope/metastore/raft
+
+architecture_storage: v2
+
+limits:
+  write_path_overrides:
+    write_path: segment-writer
+
+storage:
+  backend: filesystem
+  filesystem:
+    dir: /data/pyroscope/shared
 
 distributor:
   ring:
     kvstore:
       store: inmemory
-
-ingester:
-  lifecycler:
-    address: 127.0.0.1
-    ring:
-      kvstore:
-        store: inmemory
-      replication_factor: 1
-    min_ready_duration: 1s
-
-pyroscopedb:
-  data_path: "/data/pyroscope"

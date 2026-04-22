@@ -3,6 +3,7 @@
 source ./logging.sh
 
 mkdir -p /data/pyroscope
+mkdir -p /data/pyroscope/shared /data/pyroscope/metastore/data /data/pyroscope/metastore/raft
 
 extra_args=()
 if [[ -n "${PYROSCOPE_EXTRA_ARGS:-}" ]]; then

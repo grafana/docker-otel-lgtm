@@ -109,10 +109,6 @@ run = './build-lgtm.sh ${usage_tag}'
 description = "Auto-fix lint issues"
 run = "flint run --fix"
 
-[tasks."lint:pre-commit"]
-description = "Fast auto-fix lint (skips slow checks) — for pre-commit/pre-push hooks"
-run = "flint run --fix --fast-only"
-
 [settings]
 # for go backend
 experimental = true

@@ -2,5 +2,6 @@ extends: relaxed
 
 rules:
   document-start: disable
+  key-duplicates: disable
   line-length: disable
   indentation: warning

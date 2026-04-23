@@ -281,17 +281,16 @@
   },
   "mise.toml": {
     "mise": [
-      "dotnet",
-      "go",
-      "rust",
       "actionlint",
       "bats",
       "biome",
       "cargo:xmloxide",
       "cargo:yaml-lint",
+      "dotnet",
       "editorconfig-checker",
       "github:google/google-java-format",
       "github:grafana/flint",
+      "go",
       "go:github.com/grafana/oats",
       "golangci-lint",
       "hadolint",
@@ -302,6 +301,7 @@
       "pipx:codespell",
       "pipx:ruff",
       "rumdl",
+      "rust",
       "shellcheck",
       "shfmt"
     ]

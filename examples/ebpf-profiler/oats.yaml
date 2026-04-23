@@ -9,7 +9,7 @@ input:
 expected:
   profiles:
     # go
-    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process.executable.name=~"rolldice"}'
+    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{"process.executable.name"=~"rolldice"}'
       flamebearers:
         equals: "main.rolldice"
     # python and java are flaky

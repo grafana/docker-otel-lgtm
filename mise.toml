@@ -3,10 +3,11 @@
 dotnet = "10.0.202"
 go = "1.26.2"
 rust = { version = "1.95.0", components = "clippy,rustfmt" }
+bats = "1.13.0"
+java = "temurin-25.0.2+10.0.LTS"
 
 # Linters
 actionlint = "1.7.12"
-bats = "1.13.0"
 biome = "2.4.12"
 "cargo:xmloxide" = "0.4.1"
 "cargo:yaml-lint" = "0.1.0"
@@ -16,7 +17,6 @@ editorconfig-checker = "3.6.1"
 "go:github.com/grafana/oats" = "0.6.1"
 golangci-lint = "2.11.4"
 hadolint = "2.14.0"
-java = "temurin-25.0.2+10.0.LTS"
 lychee = "0.22.0"
 node = "24.15.0"
 "npm:renovate" = "43.127.0"

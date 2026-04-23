@@ -21,7 +21,7 @@ FROM docker.io/otel/ebpf-instrument:${OBI_VERSION} AS obi-source
 # Download and extract components on the build platform (no QEMU) to avoid tar/rpm
 # failures that occur under QEMU emulation with overlayfs. The download scripts use
 # TARGETARCH to fetch the correct platform-specific archives.
-FROM --platform=$BUILDPLATFORM docker.io/redhat/ubi9:9.7@sha256:cf13fe2aba608ea76abcac5acb3fa4d88821416e7eb45e0623a62c948853ab84 AS downloader
+FROM --platform=$BUILDPLATFORM docker.io/redhat/ubi9:9.7@sha256:fd3612ebe7968002122fb8c41df2cf9bd3f9916c573f7248113cdec1d6f4c245 AS downloader
 
 RUN mkdir /otel-lgtm
 
@@ -65,7 +65,7 @@ RUN ./download-grafana.sh $GRAFANA_VERSION && \
     ./download-pyroscope.sh $PYROSCOPE_VERSION && \
     ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
 
-FROM docker.io/redhat/ubi9:9.7@sha256:cf13fe2aba608ea76abcac5acb3fa4d88821416e7eb45e0623a62c948853ab84 AS builder
+FROM docker.io/redhat/ubi9:9.7@sha256:fd3612ebe7968002122fb8c41df2cf9bd3f9916c573f7248113cdec1d6f4c245 AS builder
 
 RUN mkdir /otel-lgtm
 

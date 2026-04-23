@@ -1,6 +1,12 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  extends: ["config:best-practices", "config:recommended", "customManagers:dockerfileVersions", "customManagers:githubActionsVersions", "github>grafana/flint"],
+  extends: [
+    "config:best-practices",
+    "config:recommended",
+    "customManagers:dockerfileVersions",
+    "customManagers:githubActionsVersions",
+    "github>grafana/flint#v0.20.3"
+  ],
   branchPrefix: "grafanarenovatebot/",
   dependencyDashboard: true,
   platformCommit: "enabled",
@@ -11,41 +17,49 @@
   packageRules: [
     {
       matchPackageNames: ["open-telemetry/opentelemetry-collector-releases"],
-      allowedVersions: "!/cmd/",
+      allowedVersions: "!/cmd/"
     },
     {
       matchPackageNames: ["grafana/loki"],
-      allowedVersions: "!/operator/",
+      allowedVersions: "!/operator/"
     },
     {
       matchDatasources: ["pypi"],
       matchDepNames: ["opentelemetry-distro"],
-      ignoreUnstable: false,
+      ignoreUnstable: false
     },
     {
-      matchPackageNames: ["grafana/grafana", "grafana/loki", "grafana/pyroscope", "grafana/tempo", "open-telemetry/opentelemetry-collector-releases", "open-telemetry/opentelemetry-ebpf-instrumentation", "prometheus/prometheus"],
-      labels: ["docker-dependency"],
+      matchPackageNames: [
+        "grafana/grafana",
+        "grafana/loki",
+        "grafana/pyroscope",
+        "grafana/tempo",
+        "open-telemetry/opentelemetry-collector-releases",
+        "open-telemetry/opentelemetry-ebpf-instrumentation",
+        "prometheus/prometheus"
+      ],
+      labels: ["docker-dependency"]
     },
     {
       // version is derived from OBI_VERSION which tracks open-telemetry/opentelemetry-ebpf-instrumentation
       matchDatasources: ["docker"],
       matchPackageNames: ["docker.io/otel/ebpf-instrument"],
-      enabled: false,
+      enabled: false
     },
     {
       matchPackageNames: ["grafana/shared-workflows"],
-      versioning: "regex:^(?<compatibility>[a-z-]+)-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)?$",
+      versioning: "regex:^(?<compatibility>[a-z-]+)-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)?$"
     },
     {
       extends: ["monorepo:dotnet"],
       description: ["Disable major version updates for .NET"],
       matchUpdateTypes: ["major"],
-      enabled: false,
-    },
+      enabled: false
+    }
   ],
   vulnerabilityAlerts: {
     enabled: true,
-    labels: ["automerge-security-update"],
+    labels: ["automerge-security-update"]
   },
   osvVulnerabilityAlerts: true,
   customManagers: [
@@ -53,7 +67,9 @@
       customType: "regex",
       description: "Update _version variables in run.sh",
       managerFilePatterns: ["/run.sh$/"],
-      matchStrings: ["# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"],
-    },
-  ],
+      matchStrings: [
+        "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"
+      ]
+    }
+  ]
 }

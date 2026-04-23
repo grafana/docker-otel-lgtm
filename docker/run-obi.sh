@@ -1,6 +1,8 @@
 #!/bin/bash
 
-source ./logging.sh
+# shellcheck disable=SC1091 # Flint 0.20.3 runs ShellCheck without source following.
+source ./common.sh
+source_sibling logging.sh
 
 # Map friendly language names to OBI's OTEL_EBPF_AUTO_TARGET_EXE
 case "${OBI_TARGET:-}" in

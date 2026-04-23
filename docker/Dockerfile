@@ -14,20 +14,23 @@ ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.150.1
 # renovate: datasource=github-releases depName=obi packageName=open-telemetry/opentelemetry-ebpf-instrumentation
 ARG OBI_VERSION=v0.8.0
 
+# This is a source-only stage, so collapsing it into neighboring stages is not useful.
 # hadolint global ignore=DL3059
 FROM docker.io/otel/ebpf-instrument:${OBI_VERSION} AS obi-source
 
 # Download and extract components on the build platform (no QEMU) to avoid tar/rpm
 # failures that occur under QEMU emulation with overlayfs. The download scripts use
 # TARGETARCH to fetch the correct platform-specific archives.
-# hadolint ignore=DL3033
 FROM --platform=$BUILDPLATFORM docker.io/redhat/ubi9:9.7@sha256:cf13fe2aba608ea76abcac5acb3fa4d88821416e7eb45e0623a62c948853ab84 AS downloader
 
 RUN mkdir /otel-lgtm
 
-RUN yum install -y unzip jq
+# UBI repository metadata does not expose stable package versions for these helper tools.
+# hadolint ignore=DL3033
+RUN yum install -y unzip jq && yum clean all
 
-COPY detect-arch.sh \
+COPY common.sh \
+ detect-arch.sh \
  download-grafana.sh \
  download-prometheus.sh \
  download-tempo.sh \
@@ -35,7 +38,7 @@ COPY detect-arch.sh \
  download-pyroscope.sh \
  download-otelcol.sh \
  install-cosign.sh \
- ./
+ /
 
 # TARGETARCH is automatically detected and set by the Docker daemon during the build process. If the build starts
 # on an amd64 architecture, then the TARGETARCH will be set to `amd64`.
@@ -55,18 +58,19 @@ ARG LOKI_VERSION
 ARG PYROSCOPE_VERSION
 ARG OPENTELEMETRY_COLLECTOR_VERSION
 
-RUN ./download-grafana.sh $GRAFANA_VERSION
-RUN ./download-prometheus.sh $PROMETHEUS_VERSION
-RUN ./download-tempo.sh $TEMPO_VERSION
-RUN ./download-loki.sh $LOKI_VERSION
-RUN ./download-pyroscope.sh $PYROSCOPE_VERSION
-RUN ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
+RUN ./download-grafana.sh $GRAFANA_VERSION && \
+    ./download-prometheus.sh $PROMETHEUS_VERSION && \
+    ./download-tempo.sh $TEMPO_VERSION && \
+    ./download-loki.sh $LOKI_VERSION && \
+    ./download-pyroscope.sh $PYROSCOPE_VERSION && \
+    ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
 
 FROM docker.io/redhat/ubi9:9.7@sha256:cf13fe2aba608ea76abcac5acb3fa4d88821416e7eb45e0623a62c948853ab84 AS builder
 
 RUN mkdir /otel-lgtm
 
-COPY prometheus.yaml \
+COPY common.sh \
+ prometheus.yaml \
  run-prometheus.sh \
  grafana-dashboard-red-metrics-classic.json \
  grafana-dashboard-red-metrics-native.json \
@@ -86,20 +90,22 @@ COPY prometheus.yaml \
  run-all.sh \
  /otel-lgtm/
 
+# UBI repository metadata does not expose a stable package version for this build helper.
 # hadolint ignore=DL3033
-RUN yum install -y dos2unix
+RUN yum install -y dos2unix && yum clean all
 
 # installs for the final image
 # see https://github.com/thomasdarimont/keycloak/blob/main/docs/guides/server/containers.adoc#installing-additional-rpm-packages
 # Use tsflags=noscripts to skip RPM scriptlets that need /bin/sh inside the installroot,
 # which fails under QEMU emulation (arm64 cross-build). CA certs come from the builder image.
 RUN mkdir -p /mnt/rootfs
+# UBI repository metadata does not expose a stable package version for curl-minimal.
+# hadolint ignore=DL3041
 RUN dnf install --installroot /mnt/rootfs curl-minimal --releasever 9 --setopt install_weak_deps=false --setopt tsflags=noscripts --nodocs -y && \
     dnf --installroot /mnt/rootfs clean all && \
     rpm --root /mnt/rootfs -e --nodeps setup
 
-# hadolint ignore=SC2038,DL4006
-RUN find /otel-lgtm/ -maxdepth 1 -type f | xargs dos2unix
+RUN find /otel-lgtm/ -maxdepth 1 -type f -exec dos2unix {} +
 
 COPY --from=downloader /otel-lgtm/ /otel-lgtm/
 COPY --from=obi-source /obi /otel-lgtm/obi/obi

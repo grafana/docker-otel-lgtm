@@ -1,28 +1,18 @@
 {
   ".github/renovate.json5": {
-    "renovate-config-presets": [
-      "grafana/flint"
-    ]
+    "renovate-config-presets": ["grafana/flint"]
   },
   ".github/workflows/acceptance-tests.yml": {
-    "regex": [
-      "mise"
-    ]
+    "regex": ["mise"]
   },
   ".github/workflows/ghcr-image-build-and-publish.yml": {
-    "regex": [
-      "cosign"
-    ]
+    "regex": ["cosign"]
   },
   ".github/workflows/lint.yml": {
-    "regex": [
-      "mise"
-    ]
+    "regex": ["mise"]
   },
   ".github/workflows/release.yml": {
-    "regex": [
-      "cosign"
-    ]
+    "regex": ["cosign"]
   },
   "docker/Dockerfile": {
     "dockerfile": [
@@ -48,9 +38,7 @@
     ]
   },
   "examples/dotnet/docker-compose.yml": {
-    "docker-compose": [
-      "grafana/otel-lgtm"
-    ]
+    "docker-compose": ["grafana/otel-lgtm"]
   },
   "examples/dotnet/rolldice.csproj": {
     "nuget": [
@@ -62,28 +50,17 @@
     ]
   },
   "examples/ebpf-profiler/Dockerfile": {
-    "dockerfile": [
-      "otel/opentelemetry-ebpf-profiler-dev",
-      "ubuntu"
-    ],
-    "regex": [
-      "opentelemetry-ebpf-profiler"
-    ]
+    "dockerfile": ["otel/opentelemetry-ebpf-profiler-dev", "ubuntu"],
+    "regex": ["opentelemetry-ebpf-profiler"]
   },
   "examples/ebpf-profiler/docker-compose.yml": {
-    "docker-compose": [
-      "grafana/otel-lgtm"
-    ]
+    "docker-compose": ["grafana/otel-lgtm"]
   },
   "examples/ebpf-profiler/generate-traffic.Dockerfile": {
-    "dockerfile": [
-      "ubuntu"
-    ]
+    "dockerfile": ["ubuntu"]
   },
   "examples/go/Dockerfile": {
-    "dockerfile": [
-      "golang"
-    ]
+    "dockerfile": ["golang"]
   },
   "examples/go/go.mod": {
     "gomod": [
@@ -121,9 +98,7 @@
     ]
   },
   "examples/java/.mvn/wrapper/maven-wrapper.properties": {
-    "maven-wrapper": [
-      "maven"
-    ]
+    "maven-wrapper": ["maven"]
   },
   "examples/java/Dockerfile": {
     "dockerfile": [
@@ -132,19 +107,13 @@
     ]
   },
   "examples/java/docker-compose.yml": {
-    "docker-compose": [
-      "grafana/otel-lgtm"
-    ]
+    "docker-compose": ["grafana/otel-lgtm"]
   },
   "examples/java/json-logging-ecs/Dockerfile": {
-    "dockerfile": [
-      "eclipse-temurin"
-    ]
+    "dockerfile": ["eclipse-temurin"]
   },
   "examples/java/json-logging-logback/Dockerfile": {
-    "dockerfile": [
-      "eclipse-temurin"
-    ]
+    "dockerfile": ["eclipse-temurin"]
   },
   "examples/java/json-logging-otlp/Dockerfile": {
     "dockerfile": [
@@ -153,24 +122,16 @@
     ]
   },
   "examples/java/mvnw": {
-    "maven-wrapper": [
-      "maven-wrapper"
-    ]
+    "maven-wrapper": ["maven-wrapper"]
   },
   "examples/java/mvnw.cmd": {
-    "maven-wrapper": [
-      "maven-wrapper"
-    ]
+    "maven-wrapper": ["maven-wrapper"]
   },
   "examples/java/pom.xml": {
-    "maven": [
-      "org.springframework.boot:spring-boot-dependencies"
-    ]
+    "maven": ["org.springframework.boot:spring-boot-dependencies"]
   },
   "examples/java/run.sh": {
-    "regex": [
-      "opentelemetry-java-instrumentation"
-    ]
+    "regex": ["opentelemetry-java-instrumentation"]
   },
   "examples/java/testcontainer/pom.xml": {
     "maven": [
@@ -182,10 +143,7 @@
     ]
   },
   "examples/nodejs/Dockerfile": {
-    "dockerfile": [
-      "docker/dockerfile",
-      "node"
-    ]
+    "dockerfile": ["docker/dockerfile", "node"]
   },
   "examples/nodejs/package.json": {
     "npm": [
@@ -205,9 +163,7 @@
     ]
   },
   "examples/obi/docker-compose.yaml": {
-    "docker-compose": [
-      "grafana/otel-lgtm"
-    ]
+    "docker-compose": ["grafana/otel-lgtm"]
   },
   "examples/obi/dotnet/Dockerfile": {
     "dockerfile": [
@@ -216,47 +172,29 @@
     ]
   },
   "examples/obi/generate-traffic.Dockerfile": {
-    "dockerfile": [
-      "ubuntu"
-    ]
+    "dockerfile": ["ubuntu"]
   },
   "examples/obi/go/Dockerfile": {
-    "dockerfile": [
-      "golang"
-    ]
+    "dockerfile": ["golang"]
   },
   "examples/obi/go/go.mod": {
-    "gomod": [
-      "go"
-    ]
+    "gomod": ["go"]
   },
   "examples/obi/java.Dockerfile": {
-    "dockerfile": [
-      "eclipse-temurin"
-    ]
+    "dockerfile": ["eclipse-temurin"]
   },
   "examples/obi/nodejs/Dockerfile": {
-    "dockerfile": [
-      "node"
-    ]
+    "dockerfile": ["node"]
   },
   "examples/obi/nodejs/package.json": {
-    "npm": [
-      "express"
-    ]
+    "npm": ["express"]
   },
   "examples/obi/python.Dockerfile": {
-    "dockerfile": [
-      "python"
-    ]
+    "dockerfile": ["python"]
   },
   "examples/python/Dockerfile": {
-    "dockerfile": [
-      "python"
-    ],
-    "regex": [
-      "opentelemetry-distro"
-    ]
+    "dockerfile": ["python"],
+    "regex": ["opentelemetry-distro"]
   },
   "examples/python/requirements.txt": {
     "pip_requirements": [
@@ -270,24 +208,36 @@
     ]
   },
   "examples/python/run.sh": {
-    "regex": [
-      "opentelemetry-distro"
-    ]
+    "regex": ["opentelemetry-distro"]
+  },
+  "go.mod": {
+    "gomod": ["go"]
   },
   "mise.toml": {
     "mise": [
+      "actionlint",
       "bats",
+      "cargo:xmloxide",
+      "dotnet",
+      "editorconfig-checker",
+      "github:google/google-java-format",
+      "github:grafana/flint",
       "go",
       "go:github.com/grafana/oats",
+      "golangci-lint",
+      "hadolint",
       "java",
       "lychee",
       "node",
+      "npm:@biomejs/biome",
+      "npm:markdownlint-cli2",
+      "npm:prettier",
       "npm:renovate",
-      "rust"
-    ],
-    "regex": [
-      "ghcr.io/super-linter/super-linter",
-      "grafana/flint"
+      "pipx:codespell",
+      "pipx:ruff",
+      "rust",
+      "shellcheck",
+      "shfmt"
     ]
   }
 }

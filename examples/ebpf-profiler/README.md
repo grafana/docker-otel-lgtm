@@ -29,7 +29,7 @@ docker compose up --remove-orphans --build
 docker compose down
 ```
 
-2. Access the UI:
+1. Access the UI:
 
 Navigate to the [Pyroscope UI][Pyroscope UI] to visualize the profiles.
 

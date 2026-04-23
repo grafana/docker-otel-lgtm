@@ -301,19 +301,19 @@ mise build-lgtm
 
 Run the example REST service:
 
-#### Unix/Linux
+#### Run on Unix/Linux
 
 ```sh
 ./run-example.sh
 ```
 
-#### Windows (PowerShell)
+#### Run on Windows (PowerShell)
 
 ```powershell
 ./run-example
 ```
 
-#### Unix/Linux Using mise
+#### Run on Unix/Linux using mise
 
 ```sh
 mise run example
@@ -321,19 +321,19 @@ mise run example
 
 ### Generate traffic
 
-#### Unix/Linux
+#### Generate on Unix/Linux
 
 ```sh
 ./generate-traffic.sh
 ```
 
-#### Windows (PowerShell)
+#### Generate on Windows (PowerShell)
 
 ```powershell
 ./generate-traffic
 ```
 
-#### Unix/Linux Using mise
+#### Generate on Unix/Linux using mise
 
 ```sh
 mise run generate-traffic

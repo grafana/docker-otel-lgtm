@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/examples/" />
+  <Folder Name="/examples/dotnet/">
+    <Project Path="examples/dotnet/rolldice.csproj" />
+  </Folder>
+  <Folder Name="/examples/obi/" />
+  <Folder Name="/examples/obi/dotnet/">
+    <Project Path="examples/obi/dotnet/rolldice.csproj" />
+  </Folder>
+</Solution>

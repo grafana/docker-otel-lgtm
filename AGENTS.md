@@ -54,8 +54,8 @@ mise run lint
 After running `lint:fix`, always review the changed files before committing —
 auto-fixes may produce unexpected results.
 
-Go code uses `.golangci.yaml` config. Markdown uses `.markdownlint.yaml`.
-EditorConfig rules in `.editorconfig`.
+Go code uses `.github/config/.golangci.yml`. Markdown uses
+`.github/config/.rumdl.toml`. EditorConfig rules live in `.editorconfig`.
 
 ### Renovate Tracked Deps Linter
 

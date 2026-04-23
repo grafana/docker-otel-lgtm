@@ -9,17 +9,17 @@ test OpenTelemetry metrics in a Java application. Here's a step-by-step explanat
 - The `@Container` annotation is used to define a `LgtmStackContainer` that
   runs the Grafana LGTM stack in a Docker container.
 
-2. **Configure OpenTelemetry**:
+1. **Configure OpenTelemetry**:
 
 - In the `@BeforeEach` method, system properties are set to configure the OpenTelemetry
   exporter to send metrics to the LGTM stack running in the container.
 
-3. **Run the Application**:
+1. **Run the Application**:
 
 - The `OtelApp` class initializes OpenTelemetry and generates a custom metric (`sold_items`)
   with attributes (e.g., `tenant`), a span representing the block of code, and emits a log.
 
-4. **Test Exporting Metrics and Traces**:
+1. **Test Exporting Metrics and Traces**:
 
 - The test method `testExportSignals` runs the application and queries the Prometheus, Loki, and
   Tempo endpoints in the LGTM stack to verify that the metric (`sold_items`), span, and log have
@@ -27,7 +27,7 @@ test OpenTelemetry metrics in a Java application. Here's a step-by-step explanat
 - The `Awaitility` library is used to poll the endpoints until the telemetry is found or a timeout
   occurs.
 
-5. **Debugging with Grafana**:
+1. **Debugging with Grafana**:
 
 - The test outputs the Grafana URL (`lgtm.getGrafanaHttpUrl()`) to the console, allowing you to
   manually inspect the
@@ -60,4 +60,3 @@ expected:
 ```
 
 OATs provides support for traces, logs, profiles, and metrics.
-

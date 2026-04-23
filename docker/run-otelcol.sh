@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# shellcheck disable=SC1091
-source ./logging.sh
+# shellcheck disable=SC1091 # Flint 0.20.3 runs ShellCheck without source following.
+source ./common.sh
+source_sibling logging.sh
 
 secondary_config_file=""
 

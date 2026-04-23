@@ -17,6 +17,7 @@ run_with_logging() {
 EOF
 
 	cp "$BATS_TEST_DIRNAME/run-otelcol.sh" "$TESTDIR/"
+	cp "$BATS_TEST_DIRNAME/common.sh" "$TESTDIR/"
 
 	export OPENTELEMETRY_COLLECTOR_VERSION="test"
 	unset OTEL_EXPORTER_OTLP_ENDPOINT \

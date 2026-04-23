@@ -1,6 +1,8 @@
 #!/bin/bash
 
-source ./logging.sh
+# shellcheck disable=SC1091 # Flint 0.20.3 runs ShellCheck without source following.
+source ./common.sh
+source_sibling logging.sh
 
 # Respect user-provided environment variables and apply defaults only if unset
 export GF_AUTH_ANONYMOUS_ENABLED="${GF_AUTH_ANONYMOUS_ENABLED:-true}"

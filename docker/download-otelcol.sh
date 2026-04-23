@@ -8,7 +8,9 @@ if [[ -z "${VERSION}" ]]; then
 	exit 1
 fi
 
-source ./detect-arch.sh
+# shellcheck disable=SC1091 # Flint 0.20.3 runs ShellCheck without source following.
+source ./common.sh
+source_sibling detect-arch.sh
 
 ARCHIVE=otelcol-contrib_"${VERSION:1}"_linux_"${TARGETARCH}".tar.gz
 URL=https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${VERSION}"/"${ARCHIVE}"

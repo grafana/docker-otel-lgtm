@@ -8,7 +8,9 @@ if [[ -z "${VERSION}" ]]; then
 	exit 1
 fi
 
-source ./detect-arch.sh
+# shellcheck disable=SC1091 # Flint 0.20.3 runs ShellCheck without source following.
+source ./common.sh
+source_sibling detect-arch.sh
 
 API_URL="https://grafana.com/api/downloads/grafana/versions/${VERSION:1}/packages/${TARGETARCH}/linux"
 API_RESPONSE=$(curl -fsL "${API_URL}" -H 'accept: application/json')

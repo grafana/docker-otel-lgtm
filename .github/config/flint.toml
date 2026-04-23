@@ -1,5 +1,5 @@
 [settings]
-exclude = []
+exclude = ["**/package-lock.json"]
 
 [checks.renovate-deps]
 exclude_managers = ["github-actions", "github-runners"]

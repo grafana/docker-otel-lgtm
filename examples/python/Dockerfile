@@ -1,4 +1,3 @@
-# hadolint global ignore=DL3059
 FROM python:alpine3.19
 
 WORKDIR /app
@@ -8,14 +7,18 @@ COPY requirements.txt .
 # How to get the requirements.txt file?
 # 1. Follow https://opentelemetry.io/docs/languages/python/getting-started/
 # 2. Run `pip freeze > requirements.txt` in the same directory as your app.py file
+# Alpine package revisions are intentionally inherited from the selected Python base image.
+# hadolint ignore=DL3018
 RUN apk add --no-cache build-base
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+# pip is upgraded before installing the generated requirements file for this example image.
+# hadolint ignore=DL3013
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # renovate: datasource=pypi depName=opentelemetry-distro
 ENV OPENTELEMETRY_DISTRO_VERSION=0.62b0
-RUN pip install --no-cache-dir "opentelemetry-distro[otlp]==$OPENTELEMETRY_DISTRO_VERSION"
-RUN opentelemetry-bootstrap -a install
+RUN pip install --no-cache-dir "opentelemetry-distro[otlp]==$OPENTELEMETRY_DISTRO_VERSION" && \
+    opentelemetry-bootstrap -a install
 
 COPY app.py .
 

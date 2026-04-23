@@ -8,7 +8,9 @@ if [[ -z "${VERSION}" ]]; then
 	exit 1
 fi
 
-source ./detect-arch.sh
+# shellcheck disable=SC1091 # Flint 0.20.3 runs ShellCheck without source following.
+source ./common.sh
+source_sibling detect-arch.sh
 
 ARCHIVE=pyroscope_"${VERSION:1}"_linux_"${TARGETARCH}".tar.gz
 curl -sOL https://github.com/grafana/pyroscope/releases/download/"${VERSION}"/checksums.txt

@@ -14,9 +14,6 @@ insert_final_newline = true
 end_of_line = crlf
 max_line_length = 180
 
-[*.md]
-max_line_length = 120
-
 [renovate.json5]
 max_line_length = 400
 

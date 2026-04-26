@@ -7,8 +7,7 @@ An OpenTelemetry backend in a Docker image. It bundles the **OpenTelemetry Colle
 **Prometheus** (metrics), **Tempo** (traces), **Loki** (logs), **Pyroscope** (profiles),
 and **Grafana** into a single container — with optional **OBI** (eBPF auto-instrumentation).
 
-<!-- markdownlint-disable-next-line MD013 -->
-![Overview of telemetry flow: applications, optionally auto-instrumented with OBI for traces and metrics, send telemetry to the OpenTelemetry Collector, which routes metrics to Prometheus, traces to Tempo, logs to Loki, and profiles to Pyroscope, with all signals visualized in Grafana](img/overview.png) <!-- editorconfig-checker-disable-line -->
+![Overview of telemetry flow: applications, optionally auto-instrumented with OBI for traces and metrics, send telemetry to the OpenTelemetry Collector, which routes metrics to Prometheus, traces to Tempo, logs to Loki, and profiles to Pyroscope, with all signals visualized in Grafana](img/overview.png)
 
 The `grafana/otel-lgtm` Docker image is an open source backend for OpenTelemetry
 that's intended for development, demo, and testing environments.
@@ -118,7 +117,6 @@ ENABLE_OBI=true OBI_TARGET=myapp ./run-lgtm.sh
 ENABLE_OBI=true OTEL_EBPF_OPEN_PORT=8080,9090 ./run-lgtm.sh
 ```
 
-<!-- editorconfig-checker-disable -->
 
 | Variable                    | Purpose                                                                                         |
 |-----------------------------|-------------------------------------------------------------------------------------------------|
@@ -126,7 +124,6 @@ ENABLE_OBI=true OTEL_EBPF_OPEN_PORT=8080,9090 ./run-lgtm.sh
 | `OTEL_EBPF_OPEN_PORT`       | Override ports to monitor (native OBI environment variable)                                     |
 | `OTEL_EBPF_AUTO_TARGET_EXE` | Executable name pattern (native OBI environment variable, set automatically by `OBI_TARGET`)    |
 
-<!-- editorconfig-checker-enable -->
 
 ### Send data to vendors
 
@@ -405,8 +402,6 @@ Paste the JSON into your AI tool's MCP configuration. See [docs/mcp-integration.
 - [Metrics, Logs, Traces and Profiles in Grafana][mltp]
 - [OpenTelemetry Acceptance Tests (OATs)][oats]
 
-<!-- editorconfig-checker-disable -->
-<!-- markdownlint-disable MD013 -->
 
 [app-o11y]: https://grafana.com/products/cloud/application-observability/
 [obi]: https://opentelemetry.io/docs/zero-code/obi/ "OpenTelemetry eBPF Instrumentation"

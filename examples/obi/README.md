@@ -13,7 +13,6 @@ works at the kernel level and can instrument any application regardless of langu
 
 ## How it works
 
-<!-- editorconfig-checker-disable -->
 
 ```text
 +--------------------------------------------------------------------+
@@ -38,7 +37,6 @@ works at the kernel level and can instrument any application regardless of langu
     +--------------------------------------------------------------+
 ```
 
-<!-- editorconfig-checker-enable -->
 
 1. The `lgtm` container runs with `privileged: true` and `pid: "host"`, giving OBI access
    to the host kernel and all container processes.

@@ -26,3 +26,15 @@ max_line_length = 3000
 [*.py]
 # checked by black
 indent_size = 4
+
+[*.rs]
+# Rust line length is handled by rustfmt
+max_line_length = off
+
+[*.java]
+# Java line length is handled by google-java-format
+max_line_length = off
+
+[*.md]
+# Markdown line length is handled by rumdl
+max_line_length = off

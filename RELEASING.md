@@ -29,8 +29,6 @@ the installed components in the container image, if any.
 7. Verify that the release notes are correct. Make any manual adjustments if necessary.
 8. Click on **Publish release**.
 
-<!-- editorconfig-checker-disable -->
-<!-- markdownlint-disable MD013 -->
 
 [docker]: ./docker
 [immutable-releases]: https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/immutable-releases

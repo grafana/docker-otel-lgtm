@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Detect TARGETARCH when not set by buildx (e.g. plain `docker build`)
 
 if [[ -z "${TARGETARCH:-}" ]]; then

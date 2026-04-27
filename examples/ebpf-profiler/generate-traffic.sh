@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 while true; do
 	curl -s http://java:8080/rolldice || echo "error reaching java service"

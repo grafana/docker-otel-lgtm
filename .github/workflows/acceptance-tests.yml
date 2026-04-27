@@ -17,8 +17,8 @@ jobs:
 
       - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151 # v4.0.1
         with:
-          version: v2026.4.15
-          sha256: c55befc52e5694f388b927ef304362ca7b9e919d97d43c342fca57f2eccea255
+          version: v2026.4.19
+          sha256: 6b58ff5f1e1ce98ed2b7e5372c344ea48182c460e5b6df12d9e0def35aad4438
 
       - name: Run acceptance tests
         run: mise run acceptance-tests ${{ github.event.pull_request.head.sha }}

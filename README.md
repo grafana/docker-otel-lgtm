@@ -117,13 +117,11 @@ ENABLE_OBI=true OBI_TARGET=myapp ./run-lgtm.sh
 ENABLE_OBI=true OTEL_EBPF_OPEN_PORT=8080,9090 ./run-lgtm.sh
 ```
 
-
 | Variable                    | Purpose                                                                                         |
 |-----------------------------|-------------------------------------------------------------------------------------------------|
 | `OBI_TARGET`                | Friendly language target: `java`, `python`, `node`, `dotnet`, `ruby`, or any regular expression |
 | `OTEL_EBPF_OPEN_PORT`       | Override ports to monitor (native OBI environment variable)                                     |
 | `OTEL_EBPF_AUTO_TARGET_EXE` | Executable name pattern (native OBI environment variable, set automatically by `OBI_TARGET`)    |
-
 
 ### Send data to vendors
 
@@ -401,7 +399,6 @@ Paste the JSON into your AI tool's MCP configuration. See [docs/mcp-integration.
 
 - [Metrics, Logs, Traces and Profiles in Grafana][mltp]
 - [OpenTelemetry Acceptance Tests (OATs)][oats]
-
 
 [app-o11y]: https://grafana.com/products/cloud/application-observability/
 [obi]: https://opentelemetry.io/docs/zero-code/obi/ "OpenTelemetry eBPF Instrumentation"

@@ -29,7 +29,6 @@ the installed components in the container image, if any.
 7. Verify that the release notes are correct. Make any manual adjustments if necessary.
 8. Click on **Publish release**.
 
-
 [docker]: ./docker
 [immutable-releases]: https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/immutable-releases
 [latest-release]: https://github.com/grafana/docker-otel-lgtm/releases/latest

@@ -4,4 +4,4 @@ rules:
   document-start: disable
   key-duplicates: disable
   line-length: disable
-  indentation: warning
+  indentation: enable

@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # renovate: datasource=pypi depName=opentelemetry-distro
-ENV OPENTELEMETRY_DISTRO_VERSION=0.62b0
+ENV OPENTELEMETRY_DISTRO_VERSION=0.62b1
 RUN pip install --no-cache-dir "opentelemetry-distro[otlp]==$OPENTELEMETRY_DISTRO_VERSION" && \
     opentelemetry-bootstrap -a install
 

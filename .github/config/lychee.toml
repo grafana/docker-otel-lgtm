@@ -7,7 +7,7 @@ max_retries = 6
 max_concurrency = 4
 
 # Check link anchors
-include_fragments = true
+include_fragments = "anchor-only"
 
 exclude = [
   # locally running Grafana instance, used for testing and development

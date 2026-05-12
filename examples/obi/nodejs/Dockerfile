@@ -4,6 +4,7 @@ ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
 
+COPY .npmrc ./
 COPY package*.json ./
 RUN npm ci --omit=dev
 

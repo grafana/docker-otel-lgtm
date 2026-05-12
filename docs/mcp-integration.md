@@ -90,10 +90,5 @@ http_server_request_duration_seconds_count{http_route="/rolldice"}
 
 See the [OBI section in the README][obi-readme] for setup instructions.
 
-## Pyroscope (continuous profiling)
-
-Pyroscope collects continuous profiles on port 4040. Explore them in Grafana's
-**Explore > Profiles** view. There is no MCP integration for Pyroscope yet.
-
 [mcp]: https://modelcontextprotocol.io/
 [obi-readme]: ../README.md#enable-obi-ebpf-auto-instrumentation

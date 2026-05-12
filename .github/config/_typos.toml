@@ -1,0 +1,8 @@
+[default]
+extend-ignore-re = [
+  '\*\.\[Pp\]ublish\.xml',
+  '# RED Metrics: \(r\)equest rate, \(e\)rror rate, \(d\)uration',
+  '\.atMost\(',
+  '# Paket dependency manager',
+  '# Tye',
+]

@@ -15,7 +15,9 @@ the Grafana instance in the container.
 - **Traces**: query via TraceQL via client-side `uvx mcp-grafana` or through Tempo's built-in HTTP MCP endpoint (in-container)
 
 ## Setup
+
 1. Enable the Tempo MCP server:
+
    ```sh
    echo 'TEMPO_EXTRA_ARGS=--query-frontend.mcp-server.enabled=true' >> .env
    ```
@@ -48,6 +50,7 @@ the Grafana instance in the container.
    ```
 
    The Grafana MCP server proxies the Tempo MCP server, but you can add it separately if you wish:
+
    ```sh
    # Add the Tempo MCP server
    claude mcp add --transport http tempo http://localhost:3200/api/mcp

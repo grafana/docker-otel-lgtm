@@ -385,11 +385,12 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 ## AI Tool Integration (MCP)
 
 The stack provides an [MCP][mcp] integration so AI coding tools can query logs, metrics, traces,
-and dashboards. Traces can be queried through Tempo's HTTP MCP endpoint or through
-the client-side [Grafana MCP server](https://grafana.com/docs/grafana/latest/developer-resources/mcp/) 
+and dashboards. Traces can be queried through Tempo's HTTP MCP endpoint or through the
+client-side [Grafana MCP server](https://grafana.com/docs/grafana/latest/developer-resources/mcp/)
 (`uvx mcp-grafana`), which also provides access to dashboards, logs, and metrics.
 
 Enable the Tempo MCP server by setting an environment variable:
+
 ```sh
 TEMPO_EXTRA_ARGS="--query-frontend.mcp-server.enabled=true"
 ```
@@ -397,7 +398,6 @@ TEMPO_EXTRA_ARGS="--query-frontend.mcp-server.enabled=true"
 ```sh
 docker run -e TEMPO_EXTRA_ARGS="--query-frontend.mcp-server.enabled=true" grafana/otel-lgtm
 ```
-
 
 ```sh
 docker exec lgtm cat /etc/lgtm/mcp.json   # or: podman exec ...

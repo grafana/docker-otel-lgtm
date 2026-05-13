@@ -147,6 +147,8 @@ GRAFANA_CREDS="${GF_SECURITY_ADMIN_USER:-admin}:${GF_SECURITY_ADMIN_PASSWORD:-ad
 GRAFANA_URL="${GRAFANA_URL:-http://127.0.0.1:3000}"
 GRAFANA_PUBLIC_URL="${GRAFANA_PUBLIC_URL:-http://localhost:3000}"
 TEMPO_URL="${TEMPO_URL:-http://localhost:3200}"
+LGTM_CONFIG_DIR="${LGTM_CONFIG_DIR:-/etc/lgtm}"
+GRAFANA_SA_TOKEN_FILE="${GRAFANA_SA_TOKEN_FILE:-/tmp/grafana-sa-token}"
 SA_NAME="ai-tools"
 SA_TOKEN_NAME="ai-tools-token"
 GRAFANA_SA_URL="${GRAFANA_URL}/api/serviceaccounts"
@@ -178,9 +180,9 @@ if [ -n "$SA_ID" ]; then
 		EXEC="${CONTAINER_RUNTIME:-docker} exec lgtm"
 		(
 			umask 077
-			mkdir -p /etc/lgtm
-			echo "${SA_TOKEN}" >/tmp/grafana-sa-token
-			cat >/etc/lgtm/mcp.json <<-MCPEOF
+			mkdir -p "${LGTM_CONFIG_DIR}"
+			echo "${SA_TOKEN}" >"${GRAFANA_SA_TOKEN_FILE}"
+			cat >"${LGTM_CONFIG_DIR}/mcp.json" <<-MCPEOF
 				{
 				  "mcpServers": {
 				    "grafana": {
@@ -197,7 +199,7 @@ if [ -n "$SA_ID" ]; then
 				  }
 				}
 			MCPEOF
-			cat >/etc/lgtm/claude-mcp-setup.sh <<-SETUPEOF
+			cat >"${LGTM_CONFIG_DIR}/claude-mcp-setup.sh" <<-SETUPEOF
 				#!/usr/bin/env bash
 				# Connect Claude Code to the LGTM stack
 				claude mcp add grafana -e "GRAFANA_URL=${GRAFANA_PUBLIC_URL}" -e "GRAFANA_SERVICE_ACCOUNT_TOKEN=${SA_TOKEN}" -- uvx mcp-grafana
@@ -206,10 +208,13 @@ if [ -n "$SA_ID" ]; then
 		)
 		echo ""
 		echo "AI Tool Integration (MCP):"
-		echo "  Claude Code:  bash <($EXEC cat /etc/lgtm/claude-mcp-setup.sh)"
-		echo "  Other tools:  $EXEC cat /etc/lgtm/mcp.json"
+		echo "  Claude Code:  bash <($EXEC cat ${LGTM_CONFIG_DIR}/claude-mcp-setup.sh)"
+		echo "  Other tools:  $EXEC cat ${LGTM_CONFIG_DIR}/mcp.json"
 		docs_ref="main"
-		[[ -n "${LGTM_VERSION}" ]] && docs_ref="v${LGTM_VERSION}"
+		if [[ -n "${LGTM_VERSION}" && "${LGTM_VERSION}" != "latest" ]]; then
+			docs_ref="${LGTM_VERSION}"
+			[[ "${docs_ref}" != v* ]] && docs_ref="v${docs_ref}"
+		fi
 		echo "  Docs:         https://github.com/grafana/docker-otel-lgtm/blob/${docs_ref}/docs/mcp-integration.md"
 	fi
 fi

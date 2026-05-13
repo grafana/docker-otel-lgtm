@@ -11,7 +11,7 @@ rust = { version = "1.95.0", components = "clippy,rustfmt" }
 # Linters
 actionlint = "1.7.12"
 "aqua:grafana/flint" = "0.22.2"
-"aqua:jonwiggins/xmloxide" = "0.4.2"
+"aqua:jonwiggins/xmloxide" = "0.4.3"
 "aqua:owenlamont/ryl" = "0.9.1"
 biome = "2.4.13"
 editorconfig-checker = "3.6.1"

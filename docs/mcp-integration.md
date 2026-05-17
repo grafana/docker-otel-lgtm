@@ -12,23 +12,29 @@ the Grafana instance in the container.
 - **Dashboards**: list, read, and search dashboards via client-side `uvx mcp-grafana`
 - **Logs**: query via LogQL via client-side `uvx mcp-grafana`
 - **Metrics**: query via PromQL via client-side `uvx mcp-grafana`
-- **Traces**: query via TraceQL through Tempo's built-in HTTP MCP endpoint (in-container)
+- **Traces**: query via TraceQL via client-side `uvx mcp-grafana` or through Tempo's built-in HTTP MCP endpoint (in-container)
 
 ## Setup
 
-1. Start the container:
+1. Enable the Tempo MCP server:
+
+   ```sh
+   echo 'TEMPO_EXTRA_ARGS=--query-frontend.mcp-server.enabled=true' >> .env
+   ```
+
+2. Start the container:
 
    ```sh
    ./run-lgtm.sh
    ```
 
-2. Get the MCP configuration:
+3. Get the MCP configuration:
 
    ```sh
    docker exec lgtm cat /etc/lgtm/mcp.json   # or: podman exec ...
    ```
 
-3. Paste the JSON into your AI tool's MCP configuration.
+4. Paste the JSON into your AI tool's MCP configuration.
 
    For Claude Code, you can add the servers individually:
 
@@ -41,7 +47,11 @@ the Grafana instance in the container.
      -e GRAFANA_URL=http://localhost:3000 \
      -e GRAFANA_SERVICE_ACCOUNT_TOKEN="$TOKEN" \
      -- uvx mcp-grafana
+   ```
 
+   The Grafana MCP server proxies the Tempo MCP server, but you can add it separately if you wish:
+
+   ```sh
    # Add the Tempo MCP server
    claude mcp add --transport http tempo http://localhost:3200/api/mcp
    ```
@@ -82,11 +92,6 @@ http_server_request_duration_seconds_count{http_route="/rolldice"}
 ```
 
 See the [OBI section in the README][obi-readme] for setup instructions.
-
-## Pyroscope (continuous profiling)
-
-Pyroscope collects continuous profiles on port 4040. Explore them in Grafana's
-**Explore > Profiles** view. There is no MCP integration for Pyroscope yet.
 
 [mcp]: https://modelcontextprotocol.io/
 [obi-readme]: ../README.md#enable-obi-ebpf-auto-instrumentation

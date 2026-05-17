@@ -162,13 +162,13 @@ some users even in testing situations.
 Each backend supports a `*_EXTRA_ARGS` environment variable for passing additional
 CLI flags without modifying any files:
 
-| Backend                 | Env var                 | Example                              |
-|-------------------------|-------------------------|--------------------------------------|
-| Prometheus              | `PROMETHEUS_EXTRA_ARGS` | `--storage.tsdb.retention.time=90d`  |
-| Loki                    | `LOKI_EXTRA_ARGS`       | `--limits.retention-period=90d`      |
-| Tempo                   | `TEMPO_EXTRA_ARGS`      |                                      |
-| Pyroscope               | `PYROSCOPE_EXTRA_ARGS`  |                                      |
-| OpenTelemetry Collector | `OTELCOL_EXTRA_ARGS`    |                                      |
+| Backend                 | Env var                 | Example                                   |
+|-------------------------|-------------------------|-------------------------------------------|
+| Prometheus              | `PROMETHEUS_EXTRA_ARGS` | `--storage.tsdb.retention.time=90d`       |
+| Loki                    | `LOKI_EXTRA_ARGS`       | `--limits.retention-period=90d`           |
+| Tempo                   | `TEMPO_EXTRA_ARGS`      | `--query-frontend.mcp-server.enabled=true`|
+| Pyroscope               | `PYROSCOPE_EXTRA_ARGS`  |                                           |
+| OpenTelemetry Collector | `OTELCOL_EXTRA_ARGS`    |                                           |
 
 For example, to set a 90-day retention period for Prometheus:
 
@@ -385,8 +385,19 @@ cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-iss
 ## AI Tool Integration (MCP)
 
 The stack provides an [MCP][mcp] integration so AI coding tools can query logs, metrics, traces,
-and dashboards. Tempo exposes an HTTP MCP endpoint from the container, while Grafana
-dashboards and queries are accessed via a client-side MCP server (`uvx mcp-grafana`).
+and dashboards. Traces can be queried through Tempo's HTTP MCP endpoint or through the
+client-side [Grafana MCP server](https://grafana.com/docs/grafana/latest/developer-resources/mcp/)
+(`uvx mcp-grafana`), which also provides access to dashboards, logs, and metrics.
+
+Enable the Tempo MCP server by setting an environment variable:
+
+```sh
+TEMPO_EXTRA_ARGS="--query-frontend.mcp-server.enabled=true"
+```
+
+```sh
+docker run -e TEMPO_EXTRA_ARGS="--query-frontend.mcp-server.enabled=true" grafana/otel-lgtm
+```
 
 ```sh
 docker exec lgtm cat /etc/lgtm/mcp.json   # or: podman exec ...

@@ -83,6 +83,23 @@ run_run_all() {
 	[[ "$output" == *"$expected_line"* ]]
 }
 
+
+@test "docs URL uses main for main tag" {
+	local expected="https://github.com/grafana/docker-otel-lgtm/blob/main/docs/mcp-integration.md"
+	local expected_line="  Docs:         $expected"
+	run run_run_all "main"
+	[[ "$output" == *"$expected_line"* ]]
+	[[ "$output" != *"/blob/vmain/"* ]]
+}
+
+@test "printed MCP commands escape configurable paths" {
+	local configdir="$TESTDIR/etc/lgtm with spaces"
+	local escaped_configdir=${configdir// /\\ }
+	CONFIGDIR="$configdir" run run_run_all "latest"
+	[[ "$output" == *"bash <(docker exec lgtm cat ${escaped_configdir}/claude-mcp-setup.sh)"* ]]
+	[[ "$output" == *"docker exec lgtm cat ${escaped_configdir}/mcp.json"* ]]
+}
+
 @test "docs URL prefixes bare release version with v" {
 	local expected
 	expected="https://github.com/grafana/docker-otel-lgtm/blob/v1.2.3-test/docs/mcp-integration.md"

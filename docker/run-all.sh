@@ -208,10 +208,10 @@ if [ -n "$SA_ID" ]; then
 		)
 		echo ""
 		echo "AI Tool Integration (MCP):"
-		echo "  Claude Code:  bash <($EXEC cat ${LGTM_CONFIG_DIR}/claude-mcp-setup.sh)"
-		echo "  Other tools:  $EXEC cat ${LGTM_CONFIG_DIR}/mcp.json"
+		printf '  Claude Code:  bash <(%s cat %q)\n' "$EXEC" "${LGTM_CONFIG_DIR}/claude-mcp-setup.sh"
+		printf '  Other tools:  %s cat %q\n' "$EXEC" "${LGTM_CONFIG_DIR}/mcp.json"
 		docs_ref="main"
-		if [[ -n "${LGTM_VERSION}" && "${LGTM_VERSION}" != "latest" ]]; then
+		if [[ -n "${LGTM_VERSION}" && "${LGTM_VERSION}" != "latest" && "${LGTM_VERSION}" != "main" ]]; then
 			docs_ref="${LGTM_VERSION}"
 			[[ "${docs_ref}" != v* ]] && docs_ref="v${docs_ref}"
 		fi

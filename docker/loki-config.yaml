@@ -42,3 +42,18 @@ frontend:
 
 query_scheduler:
   use_scheduler_ring: false
+
+# NEW: tell Loki which OTLP resource attributes to turn into index labels
+distributor:
+  otlp_config:
+    default_resource_attributes_as_index_labels:
+      - service.name
+      - service.namespace
+      - service.instance.id
+      - deployment.environment
+      - env
+      - level
+
+# NEW: keep structured metadata so you can parse non-indexed fields at query time
+limits_config:
+  allow_structured_metadata: true

@@ -9,6 +9,9 @@ otlp:
     - service.name
     - service.namespace
     - service.version
+    - host.name
+    - hostname
+    - license
     - cloud.availability_zone
     - cloud.region
     - container.name
@@ -25,7 +28,6 @@ otlp:
     - k8s.pod.name
     - k8s.replicaset.name
     - k8s.statefulset.name
-    - host.name
     - postgresql.database.name
     - postgresql.schema.name
     - postgresql.table.name

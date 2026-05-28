@@ -232,7 +232,8 @@
         "@opentelemetry/sdk-node",
         "@opentelemetry/sdk-trace-node",
         "@opentelemetry/semantic-conventions",
-        "express"
+        "express",
+        "npm"
       ]
     },
     "examples/obi/docker-compose.yaml": {
@@ -273,7 +274,8 @@
     },
     "examples/obi/nodejs/package.json": {
       "npm": [
-        "express"
+        "express",
+        "npm"
       ]
     },
     "examples/obi/python.Dockerfile": {

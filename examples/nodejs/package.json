@@ -1,6 +1,7 @@
 {
   "name": "dice-server",
   "version": "0.1.0",
+  "packageManager": "npm@11.16.0",
   "description": "Simple Express app that rolls a dice.",
   "main": "app.js",
   "scripts": {

@@ -40,11 +40,6 @@
         "mise"
       ]
     },
-    ".github/workflows/ghcr-image-build-and-publish.yml": {
-      "regex": [
-        "cosign"
-      ]
-    },
     ".github/workflows/lint.yml": {
       "regex": [
         "mise"

@@ -11,18 +11,6 @@ distributor:
         http:
           endpoint: "127.0.0.1:4418"
 
-ingester:
-  trace_idle_period: 1s
-  max_block_duration: 1s
-  flush_check_period: 1s
-  lifecycler:
-    address: 127.0.0.1
-    ring:
-      kvstore:
-        store: inmemory
-      replication_factor: 1
-    min_ready_duration: 1s
-
 memberlist:
   bind_addr: [127.0.0.1]
   bind_port: 7947
@@ -45,15 +33,11 @@ storage:
 
 metrics_generator:
   processor:
-    local_blocks:
-      filter_server_spans: false
     span_metrics:
       dimensions:
         - service_name
         - operation
         - status_code
-  traces_storage:
-    path: /data/tempo/generator/traces
   storage:
     path: /data/tempo/generator/wal
     remote_write:
@@ -61,4 +45,6 @@ metrics_generator:
         send_exemplars: true
 
 overrides:
-  metrics_generator_processors: [service-graphs, local-blocks, span-metrics]
+  defaults:
+    metrics_generator:
+      processors: [service-graphs, span-metrics]

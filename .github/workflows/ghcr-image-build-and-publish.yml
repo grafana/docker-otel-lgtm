@@ -11,6 +11,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
   COSIGN_VERSION: v3.0.6
 
 jobs:

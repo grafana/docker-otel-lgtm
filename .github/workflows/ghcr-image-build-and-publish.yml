@@ -39,7 +39,8 @@ jobs:
         shell: bash
         run: echo "GIT_COMMIT_EPOCH=$(git log -1 --pretty=%ct)" >> "${GITHUB_ENV}"
 
-      - id: push
+      - name: Build and push Docker image
+        id: push
         uses: grafana/shared-workflows/actions/docker-build-push-image@34f27887c37cafe70d34af57dfc86b468a31b8c4 # docker-build-push-image/v0.3.3
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
@@ -55,6 +56,7 @@ jobs:
           tags: |-
             type=ref,event=branch
             type=ref,event=pr
+            type=ref,event=tag
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
           labels: |-

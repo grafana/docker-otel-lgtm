@@ -37,7 +37,7 @@ exporters:
     endpoint: http://127.0.0.1:3100/otlp
     tls:
       insecure: true
-  otlp/profiles:
+  otlp_grpc/profiles:
     endpoint: http://127.0.0.1:4040
     tls:
       insecure: true
@@ -68,4 +68,4 @@ service:
       #exporters: [otlp_http/logs,debug/logs]
     profiles:
       receivers: [otlp]
-      exporters: [otlp/profiles]
+      exporters: [otlp_grpc/profiles]

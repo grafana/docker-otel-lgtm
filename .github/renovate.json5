@@ -5,7 +5,7 @@
     "config:recommended",
     "customManagers:dockerfileVersions",
     "customManagers:githubActionsVersions",
-    "github>grafana/flint#v0.22.4"
+    "github>grafana/flint#v0.22.5"
   ],
   branchPrefix: "grafanarenovatebot/",
   dependencyDashboard: true,

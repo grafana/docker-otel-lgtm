@@ -37,16 +37,17 @@ jobs:
         run: echo "GIT_COMMIT_EPOCH=$(git log -1 --pretty=%ct)" >> "${GITHUB_ENV}"
 
       - id: push-to-dockerhub
-        uses: grafana/shared-workflows/actions/docker-build-push-image@b3d136565946d8788dd6812881fb0fb2fe14bacb # docker-build-push-image/v0.2.0
+        uses: grafana/shared-workflows/actions/docker-build-push-image@34f27887c37cafe70d34af57dfc86b468a31b8c4 # docker-build-push-image/v0.3.3
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
           SOURCE_DATE_EPOCH: ${{ env.GIT_COMMIT_EPOCH }}
         with:
-          dockerhub-repository: grafana/otel-lgtm
           context: docker
+          gar-environment: prod
+          gar-repository: "dockerhub-docker-otel-lgtm-prod-mirror/otel-lgtm"
           push: true
           platforms: linux/amd64,linux/arm64
-          registries: "dockerhub"
+          registries: "gar"
           build-args: |
             LGTM_VERSION=${{ github.ref_name }}
           tags: |-

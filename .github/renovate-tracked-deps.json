@@ -45,7 +45,7 @@
         "cosign"
       ]
     },
-    ".github/workflows/lint.yml": {
+    ".github/workflows/ci.yml": {
       "regex": [
         "mise"
       ]

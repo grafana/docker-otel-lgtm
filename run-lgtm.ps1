@@ -1,6 +1,7 @@
 param (
     [Parameter(Mandatory = $false, Position = 0)] [string]  $ReleaseTag = "latest",
-    [Parameter(Mandatory = $false, Position = 1)] [boolean] $UseLocalImage = $false
+    [Parameter(Mandatory = $false, Position = 1)] [boolean] $UseLocalImage = $false,
+    [Parameter(Mandatory = $false)] [switch] $DryRun
 )
 
 $supportedContainerRuntime = 'podman', 'docker'
@@ -37,7 +38,9 @@ if ($UseLocalImage) {
 }
 else {
     $image = "docker.io/grafana/otel-lgtm:${ReleaseTag}"
-    & $containerCommand image pull $image
+    if (-Not $DryRun) {
+        & $containerCommand image pull $image
+    }
 }
 
 # Check if OBI is enabled (from environment or .env file)
@@ -85,6 +88,7 @@ $runCommand += @(
     '-p', '4318:4318'
     '-p', '9090:9090'
     '-e', "CONTAINER_RUNTIME=$(Split-Path -Leaf $containerCommand)"
+    '-e', "OTEL_COLLECTOR_DEBUG_EXPORTER=$($env:OTEL_COLLECTOR_DEBUG_EXPORTER)"
     '--rm'
 )
 
@@ -98,5 +102,14 @@ $runCommand += @(
     '--env-file', '.env'
     ${image}
 )
+
+if ($DryRun) {
+    Write-Output "runtime=$(Split-Path -Leaf $containerCommand)"
+    Write-Output "image=$image"
+    foreach ($arg in $runCommand) {
+        Write-Output "arg=$arg"
+    }
+    return
+}
 
 & $containerCommand @runCommand

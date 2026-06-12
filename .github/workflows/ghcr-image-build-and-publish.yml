@@ -107,8 +107,6 @@ jobs:
   # TODO This is just for testing and is not intended to be merged
   publish-to-dockerhub-via-gar:
     runs-on: ubuntu-24.04
-    # TODO Enable once the dev mirror is set up
-    if: false
 
     concurrency:
       group: "${{ github.workflow }}-${{ github.ref }}"
@@ -172,7 +170,7 @@ jobs:
           subject-name: ${{ format('{0}/{1}', env.REGISTRY, env.IMAGE_NAME) }}
           subject-digest: ${{ steps.publish.outputs.digest }}
 
-      - name: Verify attestation
+      - name: Verify attestations
         env:
           CONTAINER_IMAGE_DIGEST: ${{ format('oci://{0}/{1}@{2}', env.REGISTRY, env.IMAGE_NAME, steps.publish.outputs.digest) }}
           CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}:{2}', env.REGISTRY, env.IMAGE_NAME, github.ref_name) }}
@@ -198,7 +196,7 @@ jobs:
         with:
           image: ${{ format('{0}@{1}', env.IMAGE_NAME, steps.publish.outputs.digest) }}
 
-      - name: Verify container image signature
+      - name: Verify container image signatures
         shell: bash
         env:
           CERTIFICATE_IDENTITY: ${{ format('{0}/{1}', github.server_url, github.workflow_ref) }}

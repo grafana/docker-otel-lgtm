@@ -163,6 +163,11 @@ jobs:
             vcs-ref=${{ github.sha }}
             version=${{ github.ref_name }}
 
+      - name: Wait for DockerHub mirror
+        uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
+        with:
+          image: ${{ format('{0}@{1}', env.IMAGE_NAME, steps.publish.outputs.digest) }}
+
       - name: Generate artifact attestation
         uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
         with:
@@ -190,11 +195,6 @@ jobs:
           TAGS: ${{ steps.publish.outputs.tags }}
         run: |
           echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}" --annotations "ref=${GITHUB_SHA}" --annotations "repo=${GITHUB_REPOSITORY}" --annotations "workflow=${GITHUB_WORKFLOW}"
-
-      - name: Wait for DockerHub mirror
-        uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
-        with:
-          image: ${{ format('{0}@{1}', env.IMAGE_NAME, steps.publish.outputs.digest) }}
 
       - name: Verify container image signatures
         shell: bash

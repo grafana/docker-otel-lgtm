@@ -117,13 +117,12 @@ jobs:
     env:
       # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
       COSIGN_VERSION: v3.1.1
-      IMAGE_OWNER: dwyliegrafana
-      IMAGE_NAME: otel-lgtm
+      IMAGE_NAME: dwyliegrafana/otel-lgtm
       REGISTRY: docker.io
 
     outputs:
       digest: ${{ steps.publish.outputs.digest }}
-      image: ${{ format('{0}/{1}', env.IMAGE_OWNER, env.IMAGE_NAME) }}
+      image: ${{ env.IMAGE_NAME }}
 
     permissions:
       artifact-metadata: write
@@ -170,13 +169,13 @@ jobs:
         uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
         with:
           push-to-registry: true
-          subject-name: ${{ format('{0}/{1}/{2}', env.REGISTRY, env.IMAGE_OWNER, env.IMAGE_NAME) }}
+          subject-name: ${{ format('{0}/{1}', env.REGISTRY, env.IMAGE_NAME) }}
           subject-digest: ${{ steps.publish.outputs.digest }}
 
       - name: Verify attestation
         env:
-          CONTAINER_IMAGE_DIGEST: ${{ format('oci://{0}/{1}/{2}@{3}', env.REGISTRY, env.IMAGE_OWNER, env.IMAGE_NAME, steps.publish.outputs.digest) }}
-          CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}/{2}:{3}', env.REGISTRY, env.IMAGE_OWNER, env.IMAGE_NAME, github.ref_name) }}
+          CONTAINER_IMAGE_DIGEST: ${{ format('oci://{0}/{1}@{2}', env.REGISTRY, env.IMAGE_NAME, steps.publish.outputs.digest) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}:{2}', env.REGISTRY, env.IMAGE_NAME, github.ref_name) }}
         run: |
           gh attestation verify --repo "${GITHUB_REPOSITORY}" "${CONTAINER_IMAGE_DIGEST}" || exit 1
           gh attestation verify --repo "${GITHUB_REPOSITORY}" "${CONTAINER_IMAGE_LABEL}" || exit 1
@@ -198,8 +197,8 @@ jobs:
         env:
           CERTIFICATE_IDENTITY: ${{ format('{0}/{1}', github.server_url, github.workflow_ref) }}
           CERTIFICATE_OIDC_ISSUER: "https://token.actions.githubusercontent.com"
-          CONTAINER_IMAGE_DIGEST: ${{ format('{0}/{1}/{2}@{3}', env.REGISTRY, env.IMAGE_OWNER, env.IMAGE_NAME, steps.publish.outputs.digest) }}
-          CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}/{2}:{3}', env.REGISTRY, env.IMAGE_OWNER, env.IMAGE_NAME, github.ref_name) }}
+          CONTAINER_IMAGE_DIGEST: ${{ format('oci://{0}/{1}@{2}', env.REGISTRY, env.IMAGE_NAME, steps.publish.outputs.digest) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}:{2}', env.REGISTRY, env.IMAGE_NAME, github.ref_name) }}
         run: |
           cosign verify "${CONTAINER_IMAGE_DIGEST}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1
           cosign verify "${CONTAINER_IMAGE_LABEL}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1
@@ -209,4 +208,4 @@ jobs:
       - name: Wait for DockerHub mirror
         uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
         with:
-          image: ${{ format('{0}/{1}@{2}', env.IMAGE_OWNER, env.IMAGE_NAME, steps.publish.outputs.digest) }}
+          image: ${{ format('{0}@{1}', env.IMAGE_NAME, steps.publish.outputs.digest) }}

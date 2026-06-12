@@ -150,7 +150,7 @@ jobs:
           context: docker
           gar-environment: dev
           gar-image: otel-lgtm
-          gar-repository: "dockerhub-docker-otel-lgtm-dev-mirror/otel-lgtm"
+          gar-repository: "dockerhub-docker-otel-lgtm-dev-mirror"
           push: true
           platforms: linux/amd64,linux/arm64
           registries: gar

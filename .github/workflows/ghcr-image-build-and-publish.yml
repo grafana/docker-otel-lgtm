@@ -117,6 +117,13 @@ jobs:
     env:
       # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
       COSIGN_VERSION: v3.1.1
+      IMAGE_OWNER: dwyliegrafana
+      IMAGE_NAME: otel-lgtm
+      REGISTRY: docker.io
+
+    outputs:
+      digest: ${{ steps.publish.outputs.digest }}
+      image: ${{ format('{0}/{1}', env.IMAGE_OWNER, env.IMAGE_NAME) }}
 
     permissions:
       artifact-metadata: write
@@ -144,7 +151,7 @@ jobs:
         with:
           context: docker
           gar-environment: dev
-          gar-repository: "dockerhub-docker-otel-lgtm-dev-mirror/otel-lgtm"
+          gar-repository: "dockerhub-docker-${{ env.IMAGE_NAME }}-dev-mirror/${{ env.IMAGE_NAME }}"
           push: true
           platforms: linux/amd64,linux/arm64
           registries: gar
@@ -163,8 +170,16 @@ jobs:
         uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
         with:
           push-to-registry: true
-          subject-name: docker.io/dwyliegrafana/otel-lgtm
+          subject-name: ${{ format('{0}/{1}/{2}', env.REGISTRY, env.IMAGE_OWNER, env.IMAGE_NAME) }}
           subject-digest: ${{ steps.publish.outputs.digest }}
+
+      - name: Verify attestation
+        env:
+          CONTAINER_IMAGE_DIGEST: ${{ format('oci://{0}/{1}/{2}@{3}', env.REGISTRY, env.IMAGE_OWNER, env.IMAGE_NAME, steps.publish.outputs.digest) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}/{2}:{3}', env.REGISTRY, env.IMAGE_OWNER, env.IMAGE_NAME, github.ref_name) }}
+        run: |
+          gh attestation verify --repo "${GITHUB_REPOSITORY}" "${CONTAINER_IMAGE_DIGEST}" || exit 1
+          gh attestation verify --repo "${GITHUB_REPOSITORY}" "${CONTAINER_IMAGE_LABEL}" || exit 1
 
       - name: Install cosign
         uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
@@ -175,11 +190,23 @@ jobs:
         env:
           DIGEST: ${{ steps.publish.outputs.digest }}
           TAGS: ${{ steps.publish.outputs.tags }}
-        run: echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}"
+        run: |
+          echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}" --annotations "ref=${GITHUB_SHA}" --annotations "repo=${GITHUB_REPOSITORY}" --annotations "workflow=${GITHUB_WORKFLOW}"
+
+      - name: Verify container image signature
+        shell: bash
+        env:
+          CERTIFICATE_IDENTITY: ${{ format('{0}/{1}', github.server_url, github.workflow_ref) }}
+          CERTIFICATE_OIDC_ISSUER: "https://token.actions.githubusercontent.com"
+          CONTAINER_IMAGE_DIGEST: ${{ format('{0}/{1}/{2}@{3}', env.REGISTRY, env.IMAGE_OWNER, env.IMAGE_NAME, steps.publish.outputs.digest) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}/{2}:{3}', env.REGISTRY, env.IMAGE_OWNER, env.IMAGE_NAME, github.ref_name) }}
+        run: |
+          cosign verify "${CONTAINER_IMAGE_DIGEST}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1
+          cosign verify "${CONTAINER_IMAGE_LABEL}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1
 
       # Initially leave publishing as is and wait as a convenience - move before attestation and signing if it causes issues
       # Once we migrate real releases to the GAR mirror this should instead be its own job so it can be retried independently of build
       - name: Wait for DockerHub mirror
         uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
         with:
-          image: dwyliegrafana/otel-lgtm@${{ steps.publish.outputs.digest }}
+          image: ${{ format('{0}/{1}@{2}', env.IMAGE_OWNER, env.IMAGE_NAME, steps.publish.outputs.digest) }}

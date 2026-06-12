@@ -24,6 +24,12 @@ jobs:
     env:
       # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
       COSIGN_VERSION: v3.1.1
+      IMAGE_OWNER: grafana
+      IMAGE_NAME: otel-lgtm
+
+    outputs:
+      digest: ${{ steps.publish.outputs.digest }}
+      image: ${{ env.IMAGE_OWNER }}/${{ env.IMAGE_NAME }}
 
     permissions:
       artifact-metadata: write
@@ -51,7 +57,7 @@ jobs:
         with:
           context: docker
           gar-environment: prod
-          gar-repository: "dockerhub-docker-otel-lgtm-prod-mirror/otel-lgtm"
+          gar-repository: "dockerhub-docker-${{ env.IMAGE_NAME }}-prod-mirror/${{ env.IMAGE_NAME }}"
           push: true
           platforms: linux/amd64,linux/arm64
           registries: "gar"
@@ -66,11 +72,14 @@ jobs:
             vcs-ref=${{ github.sha }}
             version=${{ github.ref_name }}
 
+      # TODO Unresolved question - when do we attest and sign?
+      # https://github.com/grafana/docker-otel-lgtm/pull/1467 attempts to answer.
+
       - name: Generate artifact attestation
         uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
         with:
           push-to-registry: true
-          subject-name: docker.io/grafana/otel-lgtm
+          subject-name: docker.io/${{ env.IMAGE_OWNER }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.publish.outputs.digest }}
 
       - name: Install cosign
@@ -83,3 +92,19 @@ jobs:
           DIGEST: ${{ steps.publish.outputs.digest }}
           TAGS: ${{ steps.publish.outputs.tags }}
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}"
+
+  wait-for-mirror:
+    needs: release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    concurrency:
+      group: "${{ github.workflow }}-${{ needs.release.outputs.digest }}"
+      cancel-in-progress: false
+
+    steps:
+      - name: Wait for DockerHub mirror
+        uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
+        with:
+          image: ${{ needs.release.outputs.image }}@${{ needs.release.outputs.digest }}
+          timeout: "15m"

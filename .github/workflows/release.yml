@@ -16,6 +16,10 @@ jobs:
       group: "${{ github.workflow }}-${{ github.ref }}"
       cancel-in-progress: false
 
+    environment:
+      name: release
+      url: "https://hub.docker.com/r/grafana/otel-lgtm"
+
     env:
       # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
       COSIGN_VERSION: v3.1.1

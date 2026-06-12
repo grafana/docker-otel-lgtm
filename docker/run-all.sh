@@ -142,7 +142,13 @@ echo "Total: ${total_elapsed} seconds"
 touch /tmp/ready
 echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
 
-# Create a service account token and MCP config for AI tool access
+# Check if Tempo MCP is enabled
+TEMPO_MCP_ENABLED=false
+if [[ " ${TEMPO_EXTRA_ARGS:-} " == *" --query-frontend.mcp-server.enabled=true "* ]]; then
+	TEMPO_MCP_ENABLED=true
+fi
+
+# Create MCP config for AI tool access.
 GRAFANA_CREDS="${GF_SECURITY_ADMIN_USER:-admin}:${GF_SECURITY_ADMIN_PASSWORD:-admin}"
 GRAFANA_URL="${GRAFANA_URL:-http://127.0.0.1:3000}"
 GRAFANA_PUBLIC_URL="${GRAFANA_PUBLIC_URL:-http://localhost:3000}"
@@ -152,6 +158,9 @@ GRAFANA_SA_TOKEN_FILE="${GRAFANA_SA_TOKEN_FILE:-/tmp/grafana-sa-token}"
 SA_NAME="ai-tools"
 SA_TOKEN_NAME="ai-tools-token"
 GRAFANA_SA_URL="${GRAFANA_URL}/api/serviceaccounts"
+SA_TOKEN=""
+EXEC="${CONTAINER_RUNTIME:-docker} exec lgtm"
+
 # Try to create SA; if it already exists (persisted data), look it up
 SA_RESPONSE="$(curl -sf "${GRAFANA_SA_URL}" \
 	-H "Content-Type: application/json" -u "${GRAFANA_CREDS}" \
@@ -176,48 +185,96 @@ if [ -n "$SA_ID" ]; then
 		-H "Content-Type: application/json" -u "${GRAFANA_CREDS}" \
 		-d "{\"name\":\"${SA_TOKEN_NAME}\"}")"
 	SA_TOKEN="$(echo "$TOKEN_RESPONSE" | grep -o '"key":"[^"]*"' | cut -d'"' -f4)"
-	if [ -n "$SA_TOKEN" ]; then
-		EXEC="${CONTAINER_RUNTIME:-docker} exec lgtm"
-		(
-			umask 077
-			mkdir -p "${LGTM_CONFIG_DIR}"
-			echo "${SA_TOKEN}" >"${GRAFANA_SA_TOKEN_FILE}"
-			cat >"${LGTM_CONFIG_DIR}/mcp.json" <<-MCPEOF
-				{
-				  "mcpServers": {
-				    "grafana": {
-				      "command": "uvx",
-				      "args": ["mcp-grafana"],
-				      "env": {
-				        "GRAFANA_URL": "${GRAFANA_PUBLIC_URL}",
-				        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${SA_TOKEN}"
-				      }
-				    },
-				    "tempo": {
-				      "url": "${TEMPO_URL}/api/mcp"
-				    }
-				  }
-				}
-			MCPEOF
-			cat >"${LGTM_CONFIG_DIR}/claude-mcp-setup.sh" <<-SETUPEOF
-				#!/usr/bin/env bash
-				# Connect Claude Code to the LGTM stack
-				claude mcp add grafana -e "GRAFANA_URL=${GRAFANA_PUBLIC_URL}" -e "GRAFANA_SERVICE_ACCOUNT_TOKEN=${SA_TOKEN}" -- uvx mcp-grafana
-				claude mcp add --transport http tempo "${TEMPO_URL}/api/mcp"
-			SETUPEOF
-		)
-		echo ""
-		echo "AI Tool Integration (MCP):"
-		printf '  Claude Code:  bash <(%s cat %q)\n' "$EXEC" "${LGTM_CONFIG_DIR}/claude-mcp-setup.sh"
-		printf '  Other tools:  %s cat %q\n' "$EXEC" "${LGTM_CONFIG_DIR}/mcp.json"
-		docs_ref="main"
-		if [[ -n "${LGTM_VERSION}" && "${LGTM_VERSION}" != "latest" && "${LGTM_VERSION}" != "main" ]]; then
-			docs_ref="${LGTM_VERSION}"
-			[[ "${docs_ref}" != v* ]] && docs_ref="v${docs_ref}"
-		fi
-		echo "  Docs:         https://github.com/grafana/docker-otel-lgtm/blob/${docs_ref}/docs/mcp-integration.md"
-	fi
 fi
+
+(
+	umask 077
+	mkdir -p "${LGTM_CONFIG_DIR}"
+	if [ -n "$SA_TOKEN" ]; then
+		echo "${SA_TOKEN}" >"${GRAFANA_SA_TOKEN_FILE}"
+	fi
+	if [ -n "$SA_TOKEN" ] && [[ ${TEMPO_MCP_ENABLED} == "true" ]]; then
+		cat >"${LGTM_CONFIG_DIR}/mcp.json" <<-MCPEOF
+			{
+			  "mcpServers": {
+			    "grafana": {
+			      "command": "uvx",
+			      "args": ["mcp-grafana"],
+			      "env": {
+			        "GRAFANA_URL": "${GRAFANA_PUBLIC_URL}",
+			        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${SA_TOKEN}"
+			      }
+			    },
+			    "tempo": {
+			      "url": "${TEMPO_URL}/api/mcp"
+			    }
+			  }
+			}
+		MCPEOF
+	elif [ -n "$SA_TOKEN" ]; then
+		cat >"${LGTM_CONFIG_DIR}/mcp.json" <<-MCPEOF
+			{
+			  "mcpServers": {
+			    "grafana": {
+			      "command": "uvx",
+			      "args": ["mcp-grafana"],
+			      "env": {
+			        "GRAFANA_URL": "${GRAFANA_PUBLIC_URL}",
+			        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${SA_TOKEN}"
+			      }
+			    }
+			  }
+			}
+		MCPEOF
+	elif [[ ${TEMPO_MCP_ENABLED} == "true" ]]; then
+		cat >"${LGTM_CONFIG_DIR}/mcp.json" <<-MCPEOF
+			{
+			  "mcpServers": {
+			    "tempo": {
+			      "url": "${TEMPO_URL}/api/mcp"
+			    }
+			  }
+			}
+		MCPEOF
+	else
+		cat >"${LGTM_CONFIG_DIR}/mcp.json" <<-MCPEOF
+			{
+			  "mcpServers": {}
+			}
+		MCPEOF
+	fi
+	{
+		echo "#!/usr/bin/env bash"
+		echo "# Connect Claude Code to the LGTM stack"
+		if [ -n "$SA_TOKEN" ]; then
+			echo "claude mcp add grafana -e \"GRAFANA_URL=${GRAFANA_PUBLIC_URL}\" -e \"GRAFANA_SERVICE_ACCOUNT_TOKEN=${SA_TOKEN}\" -- uvx mcp-grafana"
+		fi
+		if [[ ${TEMPO_MCP_ENABLED} == "true" ]]; then
+			echo "claude mcp add --transport http tempo \"${TEMPO_URL}/api/mcp\""
+		fi
+	} >"${LGTM_CONFIG_DIR}/claude-mcp-setup.sh"
+)
+
+echo ""
+echo "AI Tool Integration (MCP):"
+if [[ ${TEMPO_MCP_ENABLED} == "true" ]]; then
+	echo "  Tempo MCP:    server enabled at ${TEMPO_URL}/api/mcp"
+else
+	echo "  Tempo MCP:    server disabled; enable with TEMPO_EXTRA_ARGS=--query-frontend.mcp-server.enabled=true"
+fi
+if [ -n "$SA_TOKEN" ]; then
+	echo "  Grafana MCP:  server enabled with service account token"
+else
+	echo "  Grafana MCP:  server unavailable; could not create service account token"
+fi
+printf '  Claude Code:  bash <(%s cat %q)\n' "$EXEC" "${LGTM_CONFIG_DIR}/claude-mcp-setup.sh"
+printf '  Other tools:  %s cat %q\n' "$EXEC" "${LGTM_CONFIG_DIR}/mcp.json"
+docs_ref="main"
+if [[ -n "${LGTM_VERSION}" && "${LGTM_VERSION}" != "latest" && "${LGTM_VERSION}" != "main" ]]; then
+	docs_ref="${LGTM_VERSION}"
+	[[ "${docs_ref}" != v* ]] && docs_ref="v${docs_ref}"
+fi
+echo "  Docs:         https://github.com/grafana/docker-otel-lgtm/blob/${docs_ref}/docs/mcp-integration.md"
 
 if [[ ${ENABLE_OBI:-false} == "true" ]]; then
 	# Non-blocking check — don't delay readiness if OBI fails (e.g. missing capabilities)
@@ -237,11 +294,16 @@ if [[ ${ENABLE_OBI:-false} == "true" ]]; then
 	fi
 fi
 
+echo ""
 echo "Open ports:"
 echo " - 4317: OpenTelemetry GRPC endpoint"
 echo " - 4318: OpenTelemetry HTTP endpoint"
 echo " - 3000: Grafana (http://localhost:3000). User: admin, password: admin"
-echo " - 3200: Tempo endpoint (MCP at http://localhost:3200/api/mcp)"
+if [[ ${TEMPO_MCP_ENABLED} == "true" ]]; then
+	echo " - 3200: Tempo endpoint (MCP at http://localhost:3200/api/mcp)"
+else
+	echo " - 3200: Tempo endpoint"
+fi
 echo " - 4040: Pyroscope endpoint"
 echo " - 9090: Prometheus endpoint"
 

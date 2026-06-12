@@ -2,10 +2,21 @@
 
 set -euo pipefail
 
-RELEASE=${1:-latest}
-LOCAL_VOLUME=${PWD}/container
+RELEASE=latest
 # Only set this to "true" if you built the image with the 'build-lgtm.sh' script
-USE_LOCAL_IMAGE=${2:-false}
+USE_LOCAL_IMAGE=false
+DRY_RUN=false
+LOCAL_VOLUME=${PWD}/container
+
+POSITIONAL_ARGS=()
+for arg in "$@"; do
+	case "$arg" in
+	--dry-run) DRY_RUN=true ;;
+	*) POSITIONAL_ARGS+=("$arg") ;;
+	esac
+done
+RELEASE=${POSITIONAL_ARGS[0]:-latest}
+USE_LOCAL_IMAGE=${POSITIONAL_ARGS[1]:-false}
 
 for dir in grafana prometheus loki; do
 	test -d "${LOCAL_VOLUME}"/${dir} || mkdir -p "${LOCAL_VOLUME}"/${dir}
@@ -50,33 +61,60 @@ fi
 if [ "$USE_LOCAL_IMAGE" = true ]; then
 	if [ "$RUNTIME" = "podman" ]; then
 		# Default address when building with Podman.
-		IMAGE="localhost/grafana/otel-lgtm:latest"
+		IMAGE="localhost/grafana/otel-lgtm:${RELEASE}"
 	else
-		IMAGE="grafana/otel-lgtm:latest"
+		IMAGE="grafana/otel-lgtm:${RELEASE}"
 	fi
 else
 	IMAGE="docker.io/grafana/otel-lgtm:${RELEASE}"
-	$RUNTIME image pull "$IMAGE"
+	if [[ ${DRY_RUN} != true ]]; then
+		$RUNTIME image pull "$IMAGE"
+	fi
 fi
 
-$RUNTIME container run \
-	--name lgtm \
-	--init \
-	"${OBI_FLAGS[@]}" \
-	"${OBI_ENV_FLAGS[@]}" \
-	-p 3000:3000 \
-	-p 3200:3200 \
-	-p 4040:4040 \
-	-p 4317:4317 \
-	-p 4318:4318 \
-	-p 9090:9090 \
-	--rm \
-	"${TTY_FLAGS[@]}" \
-	-v "${LOCAL_VOLUME}"/grafana:/data/grafana:"${MOUNT_OPTS}" \
-	-v "${LOCAL_VOLUME}"/prometheus:/data/prometheus:"${MOUNT_OPTS}" \
-	-v "${LOCAL_VOLUME}"/loki:/data/loki:"${MOUNT_OPTS}" \
-	-e GF_PATHS_DATA=/data/grafana \
-	-e CONTAINER_RUNTIME="$RUNTIME" \
-	-e OTEL_COLLECTOR_DEBUG_EXPORTER="${OTEL_COLLECTOR_DEBUG_EXPORTER:-}" \
-	--env-file .env \
-	"$IMAGE"
+RUN_FLAGS=(
+	--name lgtm
+	--init
+)
+
+if ((${#OBI_FLAGS[@]})); then
+	RUN_FLAGS+=("${OBI_FLAGS[@]}")
+fi
+if ((${#OBI_ENV_FLAGS[@]})); then
+	RUN_FLAGS+=("${OBI_ENV_FLAGS[@]}")
+fi
+
+RUN_FLAGS+=(
+	-p 3000:3000
+	-p 3200:3200
+	-p 4040:4040
+	-p 4317:4317
+	-p 4318:4318
+	-p 9090:9090
+	--rm
+)
+
+if ((${#TTY_FLAGS[@]})); then
+	RUN_FLAGS+=("${TTY_FLAGS[@]}")
+fi
+
+RUN_FLAGS+=(
+	-v "${LOCAL_VOLUME}"/grafana:/data/grafana:"${MOUNT_OPTS}"
+	-v "${LOCAL_VOLUME}"/prometheus:/data/prometheus:"${MOUNT_OPTS}"
+	-v "${LOCAL_VOLUME}"/loki:/data/loki:"${MOUNT_OPTS}"
+	-e GF_PATHS_DATA=/data/grafana
+	-e CONTAINER_RUNTIME="$RUNTIME"
+	-e OTEL_COLLECTOR_DEBUG_EXPORTER="${OTEL_COLLECTOR_DEBUG_EXPORTER:-}"
+	--env-file .env
+)
+
+if [[ ${DRY_RUN} == true ]]; then
+	echo "runtime=$RUNTIME"
+	echo "image=$IMAGE"
+	for arg in container run "${RUN_FLAGS[@]}" "$IMAGE"; do
+		echo "arg=$arg"
+	done
+	exit 0
+fi
+
+$RUNTIME container run "${RUN_FLAGS[@]}" "$IMAGE"

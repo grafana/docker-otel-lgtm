@@ -1,4 +1,5 @@
 #!/usr/bin/env bats
+# shellcheck disable=SC2030,SC2031
 bats_require_minimum_version 1.5.0
 
 setup() {
@@ -15,16 +16,17 @@ setup() {
 		run-prometheus.sh \
 		run-tempo.sh \
 		run-pyroscope.sh; do
-		cat >"$TESTDIR/$script" <<'EOF'
+		cat >"$TESTDIR/$script" <<'SCRIPT'
 #!/usr/bin/env bash
 sleep 60
-EOF
+SCRIPT
 		chmod +x "$TESTDIR/$script"
 	done
 
-	cat >"$TESTDIR/curl" <<'EOF'
+	cat >"$TESTDIR/curl" <<'SCRIPT'
 #!/usr/bin/env bash
 args="$*"
+mode="${STUB_SA_MODE:-success}"
 
 if [[ "$args" == *"/ready"* ||
 	"$args" == *"/api/health"* ||
@@ -33,23 +35,45 @@ if [[ "$args" == *"/ready"* ||
 	exit 0
 fi
 
+if [[ "$args" == *"/api/serviceaccounts/1/tokens"* && "$args" == *"-X DELETE"* ]]; then
+	printf '{}'
+	exit 0
+fi
+
 if [[ "$args" == *"/api/serviceaccounts/1/tokens"* && "$args" == *"-d"* ]]; then
-	printf '{"key":"token123"}'
+	if [[ "$mode" == "success" || "$mode" == "with_existing_token" ]]; then
+		printf '{"key":"token123"}'
+	fi
 	exit 0
 fi
 
 if [[ "$args" == *"/api/serviceaccounts/1/tokens"* ]]; then
-	printf '[]'
+	if [[ "$mode" == "with_existing_token" ]]; then
+		printf '[{"id":99,"name":"ai-tools-token"}]'
+	else
+		printf '[]'
+	fi
+	exit 0
+fi
+
+if [[ "$args" == *"/api/serviceaccounts/search?query=ai-tools"* ]]; then
+	if [[ "$mode" == "lookup_existing" ]]; then
+		printf '{"serviceAccounts":[{"id":1,"name":"ai-tools"}]}'
+	else
+		printf '{}'
+	fi
 	exit 0
 fi
 
 if [[ "$args" == *"/api/serviceaccounts"* && "$args" == *"-d"* ]]; then
-	printf '{"id":1}'
+	if [[ "$mode" == "success" || "$mode" == "with_existing_token" ]]; then
+		printf '{"id":1}'
+	fi
 	exit 0
 fi
 
 printf '{}'
-EOF
+SCRIPT
 	chmod +x "$TESTDIR/curl"
 }
 
@@ -58,7 +82,7 @@ teardown() {
 }
 
 run_run_all() {
-	local version=$1
+	local version=${1:-latest}
 	cd "$TESTDIR" || return 1
 	PATH="$TESTDIR:$PATH" \
 		LGTM_CONFIG_DIR="$CONFIGDIR" \
@@ -68,78 +92,141 @@ run_run_all() {
 			timeout 3s bash ./run-all.sh
 }
 
+run_mcp_case() {
+	local tempo_enabled=$1
+	local sa_mode=$2
+	local version=${3:-latest}
+	if [[ "$tempo_enabled" == "true" ]]; then
+		export TEMPO_EXTRA_ARGS="--query-frontend.mcp-server.enabled=true"
+	else
+		unset TEMPO_EXTRA_ARGS
+	fi
+	export STUB_SA_MODE="$sa_mode"
+	run run_run_all "$version"
+}
+
+assert_contains() {
+	local needle=$1
+	[[ "$output" == *"$needle"* ]]
+}
+
+assert_not_contains() {
+	local needle=$1
+	[[ "$output" != *"$needle"* ]]
+}
+
+assert_has_file() {
+	[ -f "$1" ]
+}
+
+assert_no_file() {
+	[ ! -f "$1" ]
+}
+
+assert_file_contains() {
+	grep -Fq "$2" "$1"
+}
+
+assert_file_not_contains() {
+	! grep -Fq "$2" "$1"
+}
+
 @test "docs URL uses main for latest" {
 	local expected="https://github.com/grafana/docker-otel-lgtm/blob/main/docs/mcp-integration.md"
-	local expected_line="  Docs:         $expected"
-	run run_run_all "latest"
-	[[ "$output" == *"$expected_line"* ]]
-	[[ "$output" != *"/blob/vlatest/"* ]]
+	run run_run_all latest
+	assert_contains "  Docs:         $expected"
+	assert_not_contains "/blob/vlatest/"
 }
 
 @test "docs URL uses main when version is empty" {
 	local expected="https://github.com/grafana/docker-otel-lgtm/blob/main/docs/mcp-integration.md"
-	local expected_line="  Docs:         $expected"
 	run run_run_all ""
-	[[ "$output" == *"$expected_line"* ]]
+	assert_contains "  Docs:         $expected"
 }
-
 
 @test "docs URL uses main for main tag" {
 	local expected="https://github.com/grafana/docker-otel-lgtm/blob/main/docs/mcp-integration.md"
-	local expected_line="  Docs:         $expected"
-	run run_run_all "main"
-	[[ "$output" == *"$expected_line"* ]]
-	[[ "$output" != *"/blob/vmain/"* ]]
+	run run_run_all main
+	assert_contains "  Docs:         $expected"
+	assert_not_contains "/blob/vmain/"
 }
 
 @test "printed MCP commands escape configurable paths" {
 	local configdir="$TESTDIR/etc/lgtm with spaces"
 	local escaped_configdir=${configdir// /\\ }
-	CONFIGDIR="$configdir" run run_run_all "latest"
-	[[ "$output" == *"bash <(docker exec lgtm cat ${escaped_configdir}/claude-mcp-setup.sh)"* ]]
-	[[ "$output" == *"docker exec lgtm cat ${escaped_configdir}/mcp.json"* ]]
+	CONFIGDIR="$configdir" run run_run_all latest
+	assert_contains "bash <(docker exec lgtm cat ${escaped_configdir}/claude-mcp-setup.sh)"
+	assert_contains "docker exec lgtm cat ${escaped_configdir}/mcp.json"
 }
 
 @test "docs URL prefixes bare release version with v" {
 	local expected
 	expected="https://github.com/grafana/docker-otel-lgtm/blob/v1.2.3-test/docs/mcp-integration.md"
-	local expected_line="  Docs:         $expected"
-	run run_run_all "1.2.3-test"
-	[[ "$output" == *"$expected_line"* ]]
+	run run_run_all 1.2.3-test
+	assert_contains "  Docs:         $expected"
 }
 
 @test "docs URL does not double-prefix version that already starts with v" {
 	local expected
 	expected="https://github.com/grafana/docker-otel-lgtm/blob/v1.2.3-test/docs/mcp-integration.md"
-	local expected_line="  Docs:         $expected"
-	run run_run_all "v1.2.3-test"
-	[[ "$output" == *"$expected_line"* ]]
-	[[ "$output" != *"/blob/vv1.2.3-test/"* ]]
+	run run_run_all v1.2.3-test
+	assert_contains "  Docs:         $expected"
+	assert_not_contains "/blob/vv1.2.3-test/"
 }
 
-@test "MCP bootstrap writes helper artifacts with expected contents" {
-	run run_run_all "latest"
-	[ -f "$CONFIGDIR/mcp.json" ]
-	[ -f "$CONFIGDIR/claude-mcp-setup.sh" ]
-	[ -f "$TOKENFILE" ]
+@test "tempo enabled with service account writes both MCP servers" {
+	run_mcp_case true success latest
+	assert_contains "Tempo MCP:    server enabled at http://localhost:3200/api/mcp"
+	assert_contains "Grafana MCP:  server enabled with service account token"
+	assert_contains " - 3200: Tempo endpoint (MCP at http://localhost:3200/api/mcp)"
+	assert_has_file "$CONFIGDIR/mcp.json"
+	assert_has_file "$CONFIGDIR/claude-mcp-setup.sh"
+	assert_has_file "$TOKENFILE"
+	assert_file_contains "$CONFIGDIR/mcp.json" '"grafana"'
+	assert_file_contains "$CONFIGDIR/mcp.json" '"tempo"'
+	assert_file_contains "$CONFIGDIR/mcp.json" 'GRAFANA_SERVICE_ACCOUNT_TOKEN": "token123"'
+	assert_file_contains "$CONFIGDIR/claude-mcp-setup.sh" 'claude mcp add grafana'
+	assert_file_contains "$CONFIGDIR/claude-mcp-setup.sh" 'claude mcp add --transport http tempo'
+	assert_file_contains "$TOKENFILE" 'token123'
+}
 
-	grep -Fq \
-		'"GRAFANA_URL": "http://localhost:3000"' \
-		"$CONFIGDIR/mcp.json"
-	grep -Fq \
-		'"GRAFANA_SERVICE_ACCOUNT_TOKEN": "token123"' \
-		"$CONFIGDIR/mcp.json"
-	grep -Fq '"url": "http://localhost:3200/api/mcp"' "$CONFIGDIR/mcp.json"
+@test "tempo disabled with service account writes grafana-only MCP config" {
+	run_mcp_case false success latest
+	assert_contains "Tempo MCP:    server disabled; enable with"
+	assert_contains "TEMPO_EXTRA_ARGS=--query-frontend.mcp-server.enabled=true"
+	assert_contains "Grafana MCP:  server enabled with service account token"
+	assert_contains " - 3200: Tempo endpoint"
+	assert_not_contains " - 3200: Tempo endpoint (MCP at http://localhost:3200/api/mcp)"
+	assert_has_file "$CONFIGDIR/mcp.json"
+	assert_has_file "$CONFIGDIR/claude-mcp-setup.sh"
+	assert_has_file "$TOKENFILE"
+	assert_file_contains "$CONFIGDIR/mcp.json" '"grafana"'
+	assert_file_not_contains "$CONFIGDIR/mcp.json" '"tempo"'
+	assert_file_contains "$CONFIGDIR/claude-mcp-setup.sh" 'claude mcp add grafana'
+	assert_file_not_contains "$CONFIGDIR/claude-mcp-setup.sh" 'claude mcp add --transport http tempo'
+}
 
-	grep -Fq \
-		'claude mcp add grafana -e "GRAFANA_URL=http://localhost:3000"' \
-		"$CONFIGDIR/claude-mcp-setup.sh"
-	grep -Fq \
-		'GRAFANA_SERVICE_ACCOUNT_TOKEN=token123' \
-		"$CONFIGDIR/claude-mcp-setup.sh"
-	grep -Fq \
-		'claude mcp add --transport http tempo "http://localhost:3200/api/mcp"' \
-		"$CONFIGDIR/claude-mcp-setup.sh"
+@test "tempo enabled without service account writes tempo-only MCP config" {
+	run_mcp_case true missing latest
+	assert_contains "Tempo MCP:    server enabled at http://localhost:3200/api/mcp"
+	assert_contains "Grafana MCP:  server unavailable; could not create service account token"
+	assert_has_file "$CONFIGDIR/mcp.json"
+	assert_has_file "$CONFIGDIR/claude-mcp-setup.sh"
+	assert_no_file "$TOKENFILE"
+	assert_file_not_contains "$CONFIGDIR/mcp.json" '"grafana"'
+	assert_file_contains "$CONFIGDIR/mcp.json" '"tempo"'
+	assert_file_not_contains "$CONFIGDIR/claude-mcp-setup.sh" 'claude mcp add grafana'
+	assert_file_contains "$CONFIGDIR/claude-mcp-setup.sh" 'claude mcp add --transport http tempo'
+}
 
-	grep -Fqx 'token123' "$TOKENFILE"
+@test "tempo disabled without service account writes empty MCP config" {
+	run_mcp_case false missing latest
+	assert_contains "Tempo MCP:    server disabled; enable with"
+	assert_contains "TEMPO_EXTRA_ARGS=--query-frontend.mcp-server.enabled=true"
+	assert_contains "Grafana MCP:  server unavailable; could not create service account token"
+	assert_has_file "$CONFIGDIR/mcp.json"
+	assert_has_file "$CONFIGDIR/claude-mcp-setup.sh"
+	assert_no_file "$TOKENFILE"
+	assert_file_contains "$CONFIGDIR/mcp.json" '"mcpServers": {}'
+	assert_file_not_contains "$CONFIGDIR/claude-mcp-setup.sh" 'claude mcp add '
 }

@@ -148,7 +148,7 @@ jobs:
         with:
           context: docker
           gar-environment: dev
-          gar-repository: "dockerhub-docker-${{ env.IMAGE_NAME }}-dev-mirror/${{ env.IMAGE_NAME }}"
+          gar-repository: "dockerhub-docker-otel-lgtm-dev-mirror/otel-lgtm"
           push: true
           platforms: linux/amd64,linux/arm64
           registries: gar

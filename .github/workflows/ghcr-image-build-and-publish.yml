@@ -105,7 +105,7 @@ jobs:
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}"
 
   # TODO This is just for testing and is not intended to be merged
-  publish-to-dockerhub-via-gar:
+  release:
     runs-on: ubuntu-24.04
 
     concurrency:
@@ -121,6 +121,7 @@ jobs:
     outputs:
       digest: ${{ steps.publish.outputs.digest }}
       image: ${{ env.IMAGE_NAME }}
+      tags: ${{ steps.publish.outputs.tags }}
 
     permissions:
       artifact-metadata: write
@@ -168,17 +169,43 @@ jobs:
         with:
           image: ${{ format('{0}@{1}', env.IMAGE_NAME, steps.publish.outputs.digest) }}
 
+  wait-for-mirror:
+    needs: release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    concurrency:
+      group: "${{ github.workflow }}-${{ needs.release.outputs.digest }}"
+      cancel-in-progress: false
+
+    steps:
+      - name: Wait for DockerHub mirror
+        uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
+        with:
+          image: ${{ needs.release.outputs.image }}@${{ needs.release.outputs.digest }}
+          timeout: "15m"
+
+  attest-and-sign:
+    needs: [release, wait-for-mirror]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    concurrency:
+      group: "${{ github.workflow }}-${{ needs.release.outputs.digest }}"
+      cancel-in-progress: false
+
+    steps:
       - name: Generate artifact attestation
         uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
         with:
           push-to-registry: true
-          subject-name: ${{ format('{0}/{1}', env.REGISTRY, env.IMAGE_NAME) }}
-          subject-digest: ${{ steps.publish.outputs.digest }}
+          subject-name: ${{ format('{0}/{1}', env.REGISTRY, needs.release.outputs.image) }}
+          subject-digest: ${{ needs.release.outputs.digest }}
 
       - name: Verify attestations
         env:
-          CONTAINER_IMAGE_DIGEST: ${{ format('oci://{0}/{1}@{2}', env.REGISTRY, env.IMAGE_NAME, steps.publish.outputs.digest) }}
-          CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}:{2}', env.REGISTRY, env.IMAGE_NAME, github.ref_name) }}
+          CONTAINER_IMAGE_DIGEST: ${{ format('oci://{0}/{1}@{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.digest) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, github.ref_name) }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh attestation verify --repo "${GITHUB_REPOSITORY}" "${CONTAINER_IMAGE_DIGEST}" || exit 1
@@ -191,8 +218,8 @@ jobs:
 
       - name: Sign container images
         env:
-          DIGEST: ${{ steps.publish.outputs.digest }}
-          TAGS: ${{ steps.publish.outputs.tags }}
+          DIGEST: ${{ needs.release.outputs.digest }}
+          TAGS: ${{ needs.release.outputs.tags }}
         run: |
           echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}" --annotations "ref=${GITHUB_SHA}" --annotations "repo=${GITHUB_REPOSITORY}" --annotations "workflow=${GITHUB_WORKFLOW}"
 
@@ -201,8 +228,8 @@ jobs:
         env:
           CERTIFICATE_IDENTITY: ${{ format('{0}/{1}', github.server_url, github.workflow_ref) }}
           CERTIFICATE_OIDC_ISSUER: "https://token.actions.githubusercontent.com"
-          CONTAINER_IMAGE_DIGEST: ${{ format('{0}/{1}@{2}', env.REGISTRY, env.IMAGE_NAME, steps.publish.outputs.digest) }}
-          CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}:{2}', env.REGISTRY, env.IMAGE_NAME, github.ref_name) }}
+          CONTAINER_IMAGE_DIGEST: ${{ format('{0}/{1}@{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.digest) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, github.ref_name) }}
         run: |
           cosign verify "${CONTAINER_IMAGE_DIGEST}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1
           cosign verify "${CONTAINER_IMAGE_LABEL}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1

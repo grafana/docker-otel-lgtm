@@ -33,14 +33,16 @@ jobs:
           persist-credentials: false
 
       - name: Get Git commit timestamp
+        id: get-commit-timestamp
         shell: bash
-        run: echo "GIT_COMMIT_EPOCH=$(git log -1 --pretty=%ct)" >> "${GITHUB_ENV}"
+        run: echo "git-commit-epoch=$(git log -1 --pretty=%ct)" >> "${GITHUB_OUTPUT}"
 
-      - id: push-to-dockerhub
-        uses: grafana/shared-workflows/actions/docker-build-push-image@34f27887c37cafe70d34af57dfc86b468a31b8c4 # docker-build-push-image/v0.3.3
+      - name: Publish to DockerHub via GAR
+        id: publish
+        uses: grafana/shared-workflows/actions/docker-build-push-image@c66d74df41cf4ed28a90da1d91c263f9d1609a21 # docker-build-push-image/v0.3.4
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
-          SOURCE_DATE_EPOCH: ${{ env.GIT_COMMIT_EPOCH }}
+          SOURCE_DATE_EPOCH: ${{ steps.get-commit-timestamp.outputs.git-commit-epoch }}
         with:
           context: docker
           gar-environment: prod
@@ -64,7 +66,7 @@ jobs:
         with:
           push-to-registry: true
           subject-name: docker.io/grafana/otel-lgtm
-          subject-digest: ${{ steps.push-to-dockerhub.outputs.digest }}
+          subject-digest: ${{ steps.publish.outputs.digest }}
 
       - name: Install cosign
         uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
@@ -73,6 +75,6 @@ jobs:
 
       - name: Sign container images
         env:
-          DIGEST: ${{ steps.push-to-dockerhub.outputs.digest }}
-          TAGS: ${{ steps.push-to-dockerhub.outputs.tags }}
+          DIGEST: ${{ steps.publish.outputs.digest }}
+          TAGS: ${{ steps.publish.outputs.tags }}
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}"

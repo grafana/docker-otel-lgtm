@@ -175,7 +175,7 @@ jobs:
         with:
           create_credentials_file: false
           project_id: "grafanalabs-workload-identity"
-          workload_identity_provider: "projects/304398677251/locations/dev/workloadIdentityPools/github/providers/github-provider"
+          workload_identity_provider: "projects/304398677251/locations/global/workloadIdentityPools/github/providers/github-provider"
 
       - name: Authenticate Docker
         uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0

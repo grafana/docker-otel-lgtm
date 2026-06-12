@@ -124,8 +124,6 @@ jobs:
       tags: ${{ steps.publish.outputs.tags }}
 
     permissions:
-      artifact-metadata: write
-      attestations: write
       contents: read
       id-token: write
 
@@ -193,6 +191,12 @@ jobs:
     concurrency:
       group: "${{ github.workflow }}-${{ needs.release.outputs.digest }}"
       cancel-in-progress: false
+
+    permissions:
+      artifact-metadata: write
+      attestations: write
+      contents: read
+      id-token: write
 
     steps:
       - name: Generate artifact attestation

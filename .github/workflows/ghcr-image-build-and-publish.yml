@@ -203,8 +203,8 @@ jobs:
         env:
           CERTIFICATE_IDENTITY: ${{ format('{0}/{1}', github.server_url, github.workflow_ref) }}
           CERTIFICATE_OIDC_ISSUER: "https://token.actions.githubusercontent.com"
-          CONTAINER_IMAGE_DIGEST: ${{ format('oci://{0}/{1}@{2}', env.REGISTRY, env.IMAGE_NAME, steps.publish.outputs.digest) }}
-          CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}:{2}', env.REGISTRY, env.IMAGE_NAME, github.ref_name) }}
+          CONTAINER_IMAGE_DIGEST: ${{ format('{0}/{1}@{2}', env.REGISTRY, env.IMAGE_NAME, steps.publish.outputs.digest) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}:{2}', env.REGISTRY, env.IMAGE_NAME, github.ref_name) }}
         run: |
           cosign verify "${CONTAINER_IMAGE_DIGEST}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1
           cosign verify "${CONTAINER_IMAGE_LABEL}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1

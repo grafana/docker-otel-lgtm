@@ -119,7 +119,7 @@ jobs:
       IMAGE: otel-lgtm
       IMAGE_NAME: dwyliegrafana/otel-lgtm
       REGISTRY: us-docker.pkg.dev
-      REPOSITORY: "dockerhub-${{ github.repository }}-dev-mirror"
+      REPOSITORY: "dockerhub-${{ github.event.repository.name }}-dev-mirror"
 
     outputs:
       digest: ${{ steps.publish.outputs.digest }}

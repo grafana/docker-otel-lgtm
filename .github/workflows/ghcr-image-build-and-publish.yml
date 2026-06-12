@@ -109,14 +109,17 @@ jobs:
     runs-on: ubuntu-24.04
 
     concurrency:
-      group: "${{ github.workflow }}-${{ github.ref }}"
+      group: ${{ format('{0}-{1}', github.workflow, github.ref) }}
       cancel-in-progress: false
 
     env:
       # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
       COSIGN_VERSION: v3.1.1
+      ENVIRONMENT: dev
+      IMAGE: otel-lgtm
       IMAGE_NAME: dwyliegrafana/otel-lgtm
-      REGISTRY: docker.io
+      REGISTRY: us-docker.pkg.dev
+      REPOSITORY: "dockerhub-${{ github.repository }}-dev-mirror"
 
     outputs:
       digest: ${{ steps.publish.outputs.digest }}
@@ -150,7 +153,8 @@ jobs:
           context: docker
           gar-environment: dev
           gar-image: otel-lgtm
-          gar-repository: "dockerhub-docker-otel-lgtm-dev-mirror"
+          gar-registry: ${{ env.REGISTRY }}
+          gar-repository: ${{ env.REPOSITORY }}
           push: true
           platforms: linux/amd64,linux/arm64
           registries: gar
@@ -165,20 +169,33 @@ jobs:
             vcs-ref=${{ github.sha }}
             version=${{ github.ref_name }}
 
-      # Subject is for docker.io but we're pushing to GAR - hopefully the signature is mirrored too...
+      - name: Authenticate with GAR
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        id: login-gar
+        with:
+          create_credentials_file: false
+          project_id: "grafanalabs-workload-identity"
+          workload_identity_provider: "projects/304398677251/locations/global/workloadIdentityPools/github/providers/github-provider"
+
+      - name: Authenticate Docker
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: "oauth2accesstoken"
+          password: ${{ steps.login-gar.outputs.auth_token }}
+
       - name: Generate artifact attestation
         uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
         with:
           push-to-registry: true
-          subject-name: ${{ fromJSON(steps.publish.outputs.json).tags[0] }}
           subject-digest: ${{ steps.publish.outputs.digest }}
+          subject-name: ${{ format('{0}/grafanalabs-{1}/{2}/{3}', env.REGISTRY, env.ENVIRONMENT, env.REPOSITORY, env.IMAGE) }}
 
       - name: Install cosign
         uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
         with:
           cosign-release: ${{ env.COSIGN_VERSION }}
 
-      # Hopefully the signature is mirrored to DockerHub too
       - name: Sign container images
         env:
           DIGEST: ${{ steps.publish.outputs.digest }}
@@ -197,14 +214,14 @@ jobs:
     timeout-minutes: 20
 
     concurrency:
-      group: "${{ github.workflow }}-${{ needs.release.outputs.digest }}"
+      group: ${{ format('{0}-{1}', github.workflow, needs.release.outputs.digest) }}
       cancel-in-progress: false
 
     steps:
       - name: Wait for DockerHub mirror
         uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
         with:
-          image: ${{ needs.release.outputs.image }}@${{ needs.release.outputs.digest }}
+          image: ${{ format('{0}@{1}', needs.release.outputs.image, needs.release.outputs.digest) }}
           timeout: "15m"
 
   verify:
@@ -213,7 +230,7 @@ jobs:
     timeout-minutes: 10
 
     concurrency:
-      group: "${{ github.workflow }}-${{ needs.release.outputs.digest }}"
+      group: ${{ format('{0}-{1}', github.workflow, needs.release.outputs.digest) }}
       cancel-in-progress: false
 
     permissions:

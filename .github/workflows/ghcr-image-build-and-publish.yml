@@ -170,7 +170,7 @@ jobs:
         uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
         with:
           push-to-registry: true
-          subject-name: ${{ steps.publish.outputs.image }}
+          subject-name: ${{ fromJSON(steps.publish.outputs.json).tags[0] }}
           subject-digest: ${{ steps.publish.outputs.digest }}
 
       - name: Install cosign

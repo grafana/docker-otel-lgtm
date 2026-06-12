@@ -193,6 +193,11 @@ jobs:
         run: |
           echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}" --annotations "ref=${GITHUB_SHA}" --annotations "repo=${GITHUB_REPOSITORY}" --annotations "workflow=${GITHUB_WORKFLOW}"
 
+      - name: Wait for DockerHub mirror
+        uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
+        with:
+          image: ${{ format('{0}@{1}', env.IMAGE_NAME, steps.publish.outputs.digest) }}
+
       - name: Verify container image signature
         shell: bash
         env:
@@ -203,10 +208,3 @@ jobs:
         run: |
           cosign verify "${CONTAINER_IMAGE_DIGEST}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1
           cosign verify "${CONTAINER_IMAGE_LABEL}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1
-
-      # Initially leave publishing as is and wait as a convenience - move before attestation and signing if it causes issues
-      # Once we migrate real releases to the GAR mirror this should instead be its own job so it can be retried independently of build
-      - name: Wait for DockerHub mirror
-        uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
-        with:
-          image: ${{ format('{0}@{1}', env.IMAGE_NAME, steps.publish.outputs.digest) }}

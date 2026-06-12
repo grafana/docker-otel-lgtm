@@ -180,6 +180,6 @@ jobs:
       # Initially leave publishing as is and wait as a convenience - move before attestation and signing if it causes issues
       # Once we migrate real relases to the GAR mirror this should instead be its own job so it can be retried independently of build
       - name: Wait for DockerHub mirror
-        uses: grafana/shared-workflows/actions/wait-for-docker-publish@wait-for-docker-publish/v0.2.0
+        uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
         with:
           image: dwyliegrafana/otel-lgtm@${{ steps.publish.outputs.digest }}

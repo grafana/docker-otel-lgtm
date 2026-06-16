@@ -1,20 +1,20 @@
-# OATS is an acceptance testing framework for OpenTelemetry
-# https://github.com/grafana/oats/tree/main/yaml
-oats-schema-version: 2
-docker-compose:
-  files:
-    - ./docker-compose.oats.yml
+oats: 2
+name: nodejs rolldice emits traces metrics and logs
+seed:
+  type: app
 input:
   - path: /rolldice?rolls=5
 expected:
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'
-      equals: "GET /rolldice"
-      attributes:
-        otel.library.name: "@opentelemetry/instrumentation-http"
+      match:
+        - name: GET /rolldice
+          attributes:
+            otel.library.name: '@opentelemetry/instrumentation-http'
   metrics:
-    - promql: 'dice_lib_rolls_counter_total{service_name="dice-server"}'
-      value: ">= 0"
+    - promql: dice_lib_rolls_counter_total{service_name="dice-server"}
+      value: '>= 0'
   logs:
     - logql: '{service_name="dice-server"} |~ `Received request to roll dice`'
-      equals: "Received request to roll dice"
+      match:
+        - name: Received request to roll dice

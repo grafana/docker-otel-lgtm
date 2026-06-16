@@ -3,40 +3,40 @@ version = 2
 
 [[suite]]
 name = "nodejs"
-cases = ["examples/nodejs/oats-v2.yaml"]
+cases = ["examples/nodejs/oats.yaml"]
 fixture = "nodejs-compose"
 tags = ["traces", "metrics", "logs", "pilot"]
 
 [[suite]]
 name = "python"
-cases = ["examples/python/oats-v2.yaml"]
+cases = ["examples/python/oats.yaml"]
 fixture = "python-compose"
 tags = ["traces", "metrics", "logs", "compose-logs"]
 
 [[suite]]
 name = "obi"
-cases = ["examples/obi/oats-v2.yaml"]
+cases = ["examples/obi/oats.yaml"]
 fixture = "obi-compose"
 tags = ["traces", "metrics", "multi-service"]
 
 [[suite]]
 name = "ebpf-profiler"
-cases = ["examples/ebpf-profiler/oats-v2.yaml"]
+cases = ["examples/ebpf-profiler/oats.yaml"]
 fixture = "ebpf-profiler-compose"
 tags = ["profiles", "ebpf"]
 
 [fixture.nodejs-compose]
 type = "compose"
-compose_files = ["ci/oats-v2/docker-compose.lgtm.yml", "examples/nodejs/docker-compose.oats.yml"]
+compose_files = ["ci/oats/docker-compose.lgtm.yml", "examples/nodejs/docker-compose.oats.yml"]
 
 [fixture.python-compose]
 type = "compose"
-compose_files = ["ci/oats-v2/docker-compose.lgtm.yml", "examples/python/docker-compose.oats.yml"]
+compose_files = ["ci/oats/docker-compose.lgtm.yml", "examples/python/docker-compose.oats.yml"]
 
 [fixture.obi-compose]
 type = "compose"
-compose_files = ["ci/oats-v2/docker-compose.lgtm.yml", "examples/obi/docker-compose.oats.yml"]
+compose_files = ["ci/oats/docker-compose.lgtm.yml", "examples/obi/docker-compose.oats.yml"]
 
 [fixture.ebpf-profiler-compose]
 type = "compose"
-compose_files = ["ci/oats-v2/docker-compose.lgtm.yml", "examples/ebpf-profiler/docker-compose.oats.yml"]
+compose_files = ["ci/oats/docker-compose.lgtm.yml", "examples/ebpf-profiler/docker-compose.oats.yml"]

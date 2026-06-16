@@ -1,26 +1,23 @@
-# OATS is an acceptance testing framework for OpenTelemetry
-# https://github.com/grafana/oats/tree/main/yaml
-oats-schema-version: 2
-docker-compose:
-  files:
-    - ./docker-compose.oats.yml
+oats: 2
+name: python rolldice emits traces metrics logs and lgtm readiness
+seed:
+  type: app
 input:
   - path: /rolldice
 expected:
-  # this is checking that the health check is working
-  # this is usually not needed - because we check the functionality of the app
-  # but some cases are missing, e.g. that grafana is up and running
-  # We also check that this exact log line is present in the logs, which some users rely on
-  compose-logs:
-    - "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
+  custom-checks:
+    - script: ./scripts/check-lgtm-ready.sh
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'
-      equals: "GET /rolldice"
-      attributes:
-        otel.library.name: opentelemetry.instrumentation.flask
+      match:
+        - name: GET /rolldice
+          attributes:
+            otel.library.name: opentelemetry.instrumentation.flask
   metrics:
-    - promql: 'http_server_active_requests{http_method="GET"}'
-      value: ">= 0"
+    - promql: http_server_active_requests{http_method="GET"}
+      value: '>= 0'
   logs:
     - logql: '{service_name="rolldice"} |~ `Anonymous player is rolling the dice.*`'
-      regexp: "Anonymous player is rolling the dice"
+      match:
+        - match_type: regexp
+          name: Anonymous player is rolling the dice

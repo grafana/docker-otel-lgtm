@@ -33,14 +33,15 @@ jobs:
           persist-credentials: false
 
       - name: Get Git commit timestamp
+        id: get-commit-timestamp
         shell: bash
-        run: echo "GIT_COMMIT_EPOCH=$(git log -1 --pretty=%ct)" >> "${GITHUB_ENV}"
+        run: echo "git-commit-epoch=$(git log -1 --pretty=%ct)" >> "${GITHUB_OUTPUT}"
 
       - id: push-to-dockerhub
         uses: grafana/shared-workflows/actions/docker-build-push-image@b3d136565946d8788dd6812881fb0fb2fe14bacb # docker-build-push-image/v0.2.0
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
-          SOURCE_DATE_EPOCH: ${{ env.GIT_COMMIT_EPOCH }}
+          SOURCE_DATE_EPOCH: ${{ steps.get-commit-timestamp.outputs.git-commit-epoch }}
         with:
           dockerhub-repository: grafana/otel-lgtm
           context: docker

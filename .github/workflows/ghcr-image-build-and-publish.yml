@@ -38,8 +38,9 @@ jobs:
           persist-credentials: false
 
       - name: Get Git commit timestamp
+        id: get-commit-timestamp
         shell: bash
-        run: echo "GIT_COMMIT_EPOCH=$(git log -1 --pretty=%ct)" >> "${GITHUB_ENV}"
+        run: echo "git-commit-epoch=$(git log -1 --pretty=%ct)" >> "${GITHUB_OUTPUT}"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
@@ -69,7 +70,7 @@ jobs:
         id: push
         uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         env:
-          SOURCE_DATE_EPOCH: ${{ env.GIT_COMMIT_EPOCH }}
+          SOURCE_DATE_EPOCH: ${{ steps.get-commit-timestamp.outputs.git-commit-epoch }}
         with:
           annotations: ${{ steps.meta.outputs.annotations }}
           build-args: |
@@ -102,3 +103,163 @@ jobs:
           DIGEST: ${{ steps.push.outputs.digest }}
           TAGS: ${{ steps.meta.outputs.tags }}
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}"
+
+  # TODO This is just for testing and is not intended to be merged
+  release:
+    runs-on: ubuntu-24.04
+
+    concurrency:
+      group: ${{ format('{0}-{1}', github.workflow, github.ref) }}
+      cancel-in-progress: false
+
+    env:
+      # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
+      COSIGN_VERSION: v3.1.1
+      ENVIRONMENT: dev
+      IMAGE: otel-lgtm
+      IMAGE_NAME: dwyliegrafana/otel-lgtm
+      REGISTRY: us-docker.pkg.dev
+      REPOSITORY: "dockerhub-${{ github.event.repository.name }}-dev-mirror"
+
+    outputs:
+      digest: ${{ steps.publish.outputs.digest }}
+      image: ${{ env.IMAGE_NAME }}
+      tags: ${{ steps.publish.outputs.tags }}
+
+    permissions:
+      artifact-metadata: write
+      attestations: write
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - name: Get Git commit timestamp
+        id: get-commit-timestamp
+        shell: bash
+        run: echo "git-commit-epoch=$(git log -1 --pretty=%ct)" >> "${GITHUB_OUTPUT}"
+
+      - name: Publish to DockerHub via GAR
+        id: publish
+        uses: grafana/shared-workflows/actions/docker-build-push-image@c66d74df41cf4ed28a90da1d91c263f9d1609a21 # docker-build-push-image/v0.3.4
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
+          SOURCE_DATE_EPOCH: ${{ steps.get-commit-timestamp.outputs.git-commit-epoch }}
+        with:
+          context: docker
+          gar-environment: dev
+          gar-image: otel-lgtm
+          gar-registry: ${{ env.REGISTRY }}
+          gar-repository: ${{ env.REPOSITORY }}
+          push: true
+          platforms: linux/amd64,linux/arm64
+          registries: gar
+          build-args: |
+            LGTM_VERSION=${{ github.ref_name }}
+          tags: |-
+            type=match,pattern=v(.*),group=1
+            latest
+          labels: |-
+            org.opencontainers.image.ref.name=${{ github.ref_name }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            vcs-ref=${{ github.sha }}
+            version=${{ github.ref_name }}
+
+      - name: Authenticate with GAR
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        id: login-gar
+        with:
+          create_credentials_file: false
+          project_id: "grafanalabs-workload-identity"
+          workload_identity_provider: "projects/304398677251/locations/global/workloadIdentityPools/github/providers/github-provider"
+
+      - name: Authenticate Docker
+        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: "oauth2accesstoken"
+          password: ${{ steps.login-gar.outputs.auth_token }}
+
+      - name: Generate artifact attestation
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
+        with:
+          push-to-registry: true
+          subject-digest: ${{ steps.publish.outputs.digest }}
+          subject-name: ${{ format('{0}/grafanalabs-{1}/{2}/{3}', env.REGISTRY, env.ENVIRONMENT, env.REPOSITORY, env.IMAGE) }}
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+        with:
+          cosign-release: ${{ env.COSIGN_VERSION }}
+
+      - name: Sign container images
+        env:
+          DIGEST: ${{ steps.publish.outputs.digest }}
+          TAGS: ${{ steps.publish.outputs.tags }}
+        run: |
+          echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}" --annotations "ref=${GITHUB_SHA}" --annotations "repo=${GITHUB_REPOSITORY}" --annotations "workflow=${GITHUB_WORKFLOW}"
+
+      - name: Wait for DockerHub mirror
+        uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
+        with:
+          image: ${{ format('{0}@{1}', env.IMAGE_NAME, steps.publish.outputs.digest) }}
+
+  wait-for-mirror:
+    needs: release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    concurrency:
+      group: ${{ format('{0}-{1}', github.workflow, needs.release.outputs.digest) }}
+      cancel-in-progress: false
+
+    steps:
+      - name: Wait for DockerHub mirror
+        uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
+        with:
+          image: ${{ format('{0}@{1}', needs.release.outputs.image, needs.release.outputs.digest) }}
+          timeout: "15m"
+
+  verify:
+    needs: [release, wait-for-mirror]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    concurrency:
+      group: ${{ format('{0}-{1}', github.workflow, needs.release.outputs.digest) }}
+      cancel-in-progress: false
+
+    permissions:
+      artifact-metadata: read
+      attestations: read
+      contents: read
+
+    steps:
+      - name: Verify attestations
+        env:
+          CONTAINER_IMAGE_DIGEST: ${{ format('oci://{0}/{1}@{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.digest) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, github.ref_name) }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh attestation verify --repo "${GITHUB_REPOSITORY}" "${CONTAINER_IMAGE_DIGEST}" || exit 1
+          gh attestation verify --repo "${GITHUB_REPOSITORY}" "${CONTAINER_IMAGE_LABEL}" || exit 1
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+        with:
+          cosign-release: ${{ env.COSIGN_VERSION }}
+
+      - name: Verify container image signatures
+        shell: bash
+        env:
+          CERTIFICATE_IDENTITY: ${{ format('{0}/{1}', github.server_url, github.workflow_ref) }}
+          CERTIFICATE_OIDC_ISSUER: "https://token.actions.githubusercontent.com"
+          CONTAINER_IMAGE_DIGEST: ${{ format('{0}/{1}@{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.digest) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, github.ref_name == github.event.repository.default_branch && github.event.repository.default_branch || 'latest') }}
+        run: |
+          cosign verify "${CONTAINER_IMAGE_DIGEST}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1
+          cosign verify "${CONTAINER_IMAGE_LABEL}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1

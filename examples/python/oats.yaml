@@ -9,7 +9,7 @@ expected:
     - script: ./scripts/check-lgtm-ready.sh
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'
-      match:
+      match_spans:
         - name: GET /rolldice
           attributes:
             otel.library.name: opentelemetry.instrumentation.flask

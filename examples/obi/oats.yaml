@@ -5,19 +5,19 @@ seed:
 expected:
   traces:
     - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8080 }'
-      match:
+      match_spans:
         - name: GET /rolldice
     - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8081 }'
-      match:
+      match_spans:
         - name: GET /rolldice
     - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8082 }'
-      match:
+      match_spans:
         - name: GET /rolldice
     - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8083 }'
-      match:
+      match_spans:
         - name: GET /rolldice
     - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8084 }'
-      match:
+      match_spans:
         - name: GET /rolldice
   metrics:
     - promql: http_server_request_duration_seconds_count{http_route="/rolldice"}

@@ -18,7 +18,7 @@ go install "github.com/grafana/gcx/cmd/gcx@${GCX_VERSION}"
 workdir="$(mktemp -d)"
 trap 'rm -rf "$workdir"' EXIT
 git clone --depth 1 --branch v2 https://github.com/grafana/oats "$workdir/oats-src"
-go build -o "$workdir/oats" "$workdir/oats-src/cmd/v2"
+GOWORK=off go build -o "$workdir/oats" "$workdir/oats-src/cmd/v2"
 
 export LGTM_IMAGE="grafana/otel-lgtm:${version}"
 REAL_GCX_BIN="$(go env GOPATH)/bin/gcx" \

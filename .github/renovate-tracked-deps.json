@@ -40,19 +40,24 @@
         "mise"
       ]
     },
-    ".github/workflows/ghcr-image-build-and-publish.yml": {
-      "regex": [
-        "cosign"
-      ]
-    },
     ".github/workflows/ci.yml": {
       "regex": [
         "mise"
       ]
     },
+    ".github/workflows/ghcr-image-build-and-publish.yml": {
+      "regex": [
+        "cosign"
+      ]
+    },
     ".github/workflows/release.yml": {
       "regex": [
         "cosign"
+      ]
+    },
+    "ci/oats/docker-compose.lgtm.yml": {
+      "docker-compose": [
+        "docker.io/grafana/otel-lgtm"
       ]
     },
     "docker/Dockerfile": {

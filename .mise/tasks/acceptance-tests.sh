@@ -26,4 +26,5 @@ REAL_GCX_BIN="$(go env GOPATH)/bin/gcx" \
 	--config oats.toml \
 	--gcx ./ci/oats/gcx-wrapper.sh \
 	--no-cache \
-	--timeout=8m
+	--timeout=3m \
+	-v 2

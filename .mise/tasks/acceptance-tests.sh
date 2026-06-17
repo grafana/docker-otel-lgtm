@@ -17,8 +17,9 @@ go install "github.com/grafana/gcx/cmd/gcx@${GCX_VERSION}"
 
 workdir="$(mktemp -d)"
 trap 'rm -rf "$workdir"' EXIT
-git clone --depth 1 https://github.com/grafana/oats "$workdir/oats-src"
-git -C "$workdir/oats-src" checkout 1febf4a
+git clone --filter=blob:none --no-checkout https://github.com/grafana/oats "$workdir/oats-src"
+git -C "$workdir/oats-src" fetch --depth 1 origin 1febf4a
+git -C "$workdir/oats-src" checkout FETCH_HEAD
 go build -o "$workdir/oats" "$workdir/oats-src/cmd/v2"
 
 export LGTM_IMAGE="grafana/otel-lgtm:${version}"

@@ -5,6 +5,8 @@ seed:
 input:
   - path: /rolldice
 expected:
-  profiles:
-    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{"process.executable.name"=~"rolldice"}'
-      count: '>= 1'
+  custom-checks:
+    - |
+      set -eu
+      curl -fsS http://localhost:8080/rolldice >/dev/null
+      gcx profiles query --since 10m0s 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name=~"rolldice"}'         | grep -E 'rolldice|main\.rolldice'

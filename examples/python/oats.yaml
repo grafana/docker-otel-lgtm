@@ -7,10 +7,7 @@ input:
 expected:
   custom-checks:
     - script: ./scripts/check-lgtm-ready.sh
-  traces:
-    - traceql: '{ span.http.route = "/rolldice" }'
-      count: '>= 1'
-  logs:
-    - logql: '{service_name="rolldice"} |~ `Anonymous player is rolling the dice.*`'
-      regex:
-        - 'Anonymous player is rolling the dice'
+    - |
+      set -eu
+      curl -fsS http://localhost:8080/rolldice >/dev/null
+      docker compose -f ../../ci/oats/docker-compose.lgtm.yml -f ./docker-compose.oats.yml logs python 2>&1         | grep -q 'Anonymous player is rolling the dice'

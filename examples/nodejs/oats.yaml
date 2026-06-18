@@ -7,6 +7,6 @@ input:
 expected:
   custom-checks:
     - script: |
-      set -eu
-      curl -fsS http://localhost:8080/rolldice?rolls=5 >/dev/null
-      docker compose -f ../../ci/oats/docker-compose.lgtm.yml -f ./docker-compose.oats.yml logs nodejs 2>&1         | grep -q 'Received request to roll dice'
+        set -eu
+        curl -fsS http://localhost:8080/rolldice?rolls=5 >/dev/null
+        docker compose -f ../../ci/oats/docker-compose.lgtm.yml -f ./docker-compose.oats.yml logs nodejs 2>&1         | grep -q 'Received request to roll dice'

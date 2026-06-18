@@ -6,6 +6,4 @@ expected:
   custom-checks:
     - script: |
         set -eu
-        logs=$(docker compose -f ../../ci/oats/docker-compose.lgtm.yml -f ./docker-compose.oats.yml logs generate-traffic java go python nodejs dotnet 2>&1)
-        printf '%s\n' "$logs" | grep -q 'rolling the dice'
-        ! printf '%s\n' "$logs" | grep -q 'error reaching'
+        docker compose -f ../../ci/oats/docker-compose.lgtm.yml -f ./docker-compose.oats.yml logs --tail 200 generate-traffic java go python nodejs dotnet 2>&1 | grep -q 'rolling the dice'

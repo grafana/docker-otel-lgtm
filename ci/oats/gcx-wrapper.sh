@@ -14,8 +14,16 @@ for arg in "$@"; do
 	fi
 	args+=("$arg")
 done
+find_docker_lgtm() {
+	docker ps --filter label=com.docker.compose.service=lgtm --format '{{.ID}}' | head -n1
+}
+
 for _ in $(seq 1 120); do
-	token="$(docker exec lgtm cat /tmp/grafana-sa-token 2>/dev/null || true)"
+	container_id="$(find_docker_lgtm || true)"
+	token=""
+	if [ -n "$container_id" ]; then
+		token="$(docker exec "$container_id" cat /tmp/grafana-sa-token 2>/dev/null || true)"
+	fi
 	if [ -n "$token" ]; then
 		export GRAFANA_SERVER="${GRAFANA_SERVER:-http://localhost:3000}"
 		export GRAFANA_TOKEN="$token"

@@ -9,4 +9,7 @@ expected:
     - script: |
         set -eu
         curl -fsS http://localhost:8080/rolldice >/dev/null
-        gcx profiles query --since 10m0s 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name=~"rolldice"}'         | grep -E 'rolldice|main\.rolldice'
+        /usr/bin/curl -fsS -G \
+          --data-urlencode 'query=process_cpu:cpu:nanoseconds:cpu:nanoseconds{service_name="unknown_service:rolldice"}' \
+          --data-urlencode 'from=now-10m' \
+          http://localhost:4040/pyroscope/render | grep -E 'rolldice|main\.rolldice'

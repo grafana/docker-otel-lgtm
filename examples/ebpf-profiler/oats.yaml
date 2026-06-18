@@ -6,7 +6,7 @@ input:
   - path: /rolldice
 expected:
   custom-checks:
-    - |
+    - script: |
       set -eu
       curl -fsS http://localhost:8080/rolldice >/dev/null
       gcx profiles query --since 10m0s 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name=~"rolldice"}'         | grep -E 'rolldice|main\.rolldice'

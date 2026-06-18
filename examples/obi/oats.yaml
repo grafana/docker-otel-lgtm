@@ -4,7 +4,7 @@ seed:
   type: app
 expected:
   custom-checks:
-    - |
+    - script: |
       set -eu
       logs=$(docker compose -f ../../ci/oats/docker-compose.lgtm.yml -f ./docker-compose.oats.yml logs generate-traffic java go python nodejs dotnet 2>&1)
       printf '%s\n' "$logs" | grep -q 'rolling the dice'

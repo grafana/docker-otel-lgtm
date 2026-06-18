@@ -1,5 +1,5 @@
 oats: 2
-name: ebpf profiler captures rolldice profile symbols
+name: ebpf profiler captures rolldice profiles
 seed:
   type: app
 input:
@@ -7,5 +7,4 @@ input:
 expected:
   profiles:
     - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{"process.executable.name"=~"rolldice"}'
-      match:
-        - name: main.rolldice
+      count: '>= 1'

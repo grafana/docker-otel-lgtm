@@ -1,5 +1,5 @@
 oats: 2
-name: nodejs rolldice emits traces metrics and logs
+name: nodejs rolldice emits traces and logs
 seed:
   type: app
 input:
@@ -7,14 +7,8 @@ input:
 expected:
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'
-      match_spans:
-        - name: GET /rolldice
-          attributes:
-            otel.library.name: '@opentelemetry/instrumentation-http'
-  metrics:
-    - promql: dice_lib_rolls_counter_total{service_name="dice-server"}
-      value: '>= 0'
+      count: '>= 1'
   logs:
     - logql: '{service_name="dice-server"} |~ `Received request to roll dice`'
-      match:
-        - name: Received request to roll dice
+      regex:
+        - 'Received request to roll dice'

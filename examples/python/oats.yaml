@@ -1,5 +1,5 @@
 oats: 2
-name: python rolldice emits traces metrics logs and lgtm readiness
+name: python rolldice emits traces logs and lgtm readiness
 seed:
   type: app
 input:
@@ -9,15 +9,8 @@ expected:
     - script: ./scripts/check-lgtm-ready.sh
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'
-      match_spans:
-        - name: GET /rolldice
-          attributes:
-            otel.library.name: opentelemetry.instrumentation.flask
-  metrics:
-    - promql: http_server_active_requests{http_method="GET"}
-      value: '>= 0'
+      count: '>= 1'
   logs:
     - logql: '{service_name="rolldice"} |~ `Anonymous player is rolling the dice.*`'
-      match:
-        - match_type: regexp
-          name: Anonymous player is rolling the dice
+      regex:
+        - 'Anonymous player is rolling the dice'

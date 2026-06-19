@@ -27,6 +27,7 @@ jobs:
       cancel-in-progress: false
 
     permissions:
+      packages: read
       security-events: write
 
     strategy:

@@ -55,11 +55,6 @@
         "cosign"
       ]
     },
-    "ci/oats/docker-compose.lgtm.yml": {
-      "docker-compose": [
-        "docker.io/grafana/otel-lgtm"
-      ]
-    },
     "docker/Dockerfile": {
       "dockerfile": [
         "docker.io/otel/ebpf-instrument",

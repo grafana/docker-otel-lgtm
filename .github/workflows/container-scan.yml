@@ -17,22 +17,33 @@ env:
 
 jobs:
   scan-image:
+    name: ${{ format('Scan {0} container image', matrix.repository) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     if: github.event.repository.fork == false
 
     concurrency:
-      group: ${{ github.workflow }}
+      group: ${{ format('{0}-{1}', github.workflow, matrix.repository) }}
       cancel-in-progress: false
 
     permissions:
+      packages: read
       security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image-ref: "grafana/otel-lgtm:latest"
+            repository: "DockerHub"
+          - image-ref: "ghcr.io/grafana/docker-otel-lgtm:${{ github.event.repository.default_branch }}"
+            repository: "GHCR"
 
     steps:
       - name: Run Trivy (SARIF)
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
-          image-ref: ${{ env.TRIVY_IMAGE_REF }}
+          image-ref: ${{ matrix.image-ref }}
           format: "sarif"
           ignore-unfixed: true
           limit-severities-for-sarif: true
@@ -46,9 +57,9 @@ jobs:
           sarif_file: "trivy.sarif"
 
       - name: Run Trivy (JSON)
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
-          image-ref: ${{ env.TRIVY_IMAGE_REF }}
+          image-ref: ${{ matrix.image-ref }}
           format: "json"
           ignore-unfixed: true
           output: "trivy.json"

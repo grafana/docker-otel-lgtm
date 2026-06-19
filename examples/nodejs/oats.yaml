@@ -1,5 +1,5 @@
 oats: 2
-name: nodejs rolldice serves traffic
+name: nodejs rolldice emits traces and logs
 fixture:
   type: compose
   template: lgtm
@@ -9,7 +9,10 @@ seed:
 input:
   - path: /rolldice?rolls=5
 expected:
-  custom-checks:
-    - script: |
-        set -eu
-        curl -fsS "$OATS_APP_URL/rolldice?rolls=5" >/dev/null
+  traces:
+    - traceql: '{ span.http.route = "/rolldice" }'
+      count: ">= 1"
+  logs:
+    - logql: '{service_name="dice-server"} |~ `Received request to roll dice`'
+      regex:
+        - 'Received request to roll dice'

@@ -1,5 +1,5 @@
 oats: 2
-name: obi sidecar traffic generator starts
+name: obi multi-service emits traces and metrics
 fixture:
   type: compose
   template: lgtm
@@ -7,8 +7,17 @@ fixture:
 seed:
   type: app
 expected:
-  custom-checks:
-    - script: |
-        set -eu
-        docker compose -f .oats.lgtm.compose.yml -f docker-compose.oats.yml ps generate-traffic | grep -q generate-traffic
-        docker compose -f .oats.lgtm.compose.yml -f docker-compose.oats.yml logs --tail 200 go python nodejs dotnet java 2>&1 | grep -q 'Anonymous player is rolling the dice'
+  traces:
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8080 }'
+      count: ">= 1"
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8081 }'
+      count: ">= 1"
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8082 }'
+      count: ">= 1"
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8083 }'
+      count: ">= 1"
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8084 }'
+      count: ">= 1"
+  metrics:
+    - promql: 'http_server_request_duration_seconds_count{http_route="/rolldice"}'
+      value: '> 0'

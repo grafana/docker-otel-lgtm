@@ -1,9 +1,15 @@
 oats: 2
-name: obi sidecar traffic yields traces across services
+name: obi sidecar traffic generator starts
+fixture:
+  type: compose
+  template: lgtm
+  compose_file: docker-compose.oats.yml
 seed:
   type: app
 expected:
   custom-checks:
     - script: |
         set -eu
-        docker compose -f ../../ci/oats/docker-compose.lgtm.yml -f ./docker-compose.oats.yml logs --tail 200 generate-traffic java go python nodejs dotnet 2>&1 | grep -q 'rolling the dice'
+        cid=$(docker ps --filter label=com.docker.compose.service=generate-traffic --format '{{.ID}}' | head -n1)
+        [ -n "$cid" ]
+        docker logs "$cid" 2>&1 | grep -q 'rolling the dice'

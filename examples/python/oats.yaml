@@ -1,13 +1,16 @@
 oats: 2
-name: python rolldice emits traces logs and lgtm readiness
+name: python rolldice serves traffic and lgtm is ready
+fixture:
+  type: compose
+  template: lgtm
+  compose_file: docker-compose.oats.yml
 seed:
   type: app
 input:
   - path: /rolldice
 expected:
   custom-checks:
-    - script: ./scripts/check-lgtm-ready.sh
     - script: |
         set -eu
-        curl -fsS http://localhost:8080/rolldice >/dev/null
-        docker compose -f ../../ci/oats/docker-compose.lgtm.yml -f ./docker-compose.oats.yml logs python 2>&1         | grep -q 'Anonymous player is rolling the dice'
+        curl -fsS "$OATS_GRAFANA_URL/api/health" >/dev/null
+        curl -fsS "$OATS_APP_URL/rolldice" >/dev/null

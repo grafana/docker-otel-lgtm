@@ -11,20 +11,17 @@ echo "using version $version"
 # Force Docker: oats hardcodes `docker compose`, so the image must be built with Docker.
 ./build-lgtm.sh "$version" docker
 
-# renovate: datasource=github-releases depName=gcx packageName=grafana/gcx
-export GCX_VERSION=v0.4.0
-go install "github.com/grafana/gcx/cmd/gcx@${GCX_VERSION}"
-
 workdir="$(mktemp -d)"
 trap 'rm -rf "$workdir"' EXIT
+
 git clone --depth 1 --branch v2 https://github.com/grafana/oats "$workdir/oats-src"
-GOWORK=off go -C "$workdir/oats-src" build -o "$workdir/oats" ./cmd/v2
+chmod +x "$workdir/oats-src/scripts/build-local-tools.sh"
+"$workdir/oats-src/scripts/build-local-tools.sh" "$workdir/bin"
 
 export LGTM_IMAGE="grafana/otel-lgtm:${version}"
-REAL_GCX_BIN="$(go env GOPATH)/bin/gcx" \
-	"$workdir/oats" \
+"$workdir/bin/oats" \
 	--config oats.toml \
-	--gcx ./ci/oats/gcx-wrapper.sh \
+	--gcx "$workdir/bin/gcx" \
 	--no-cache \
 	--timeout=3m \
 	-v 2

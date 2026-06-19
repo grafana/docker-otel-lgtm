@@ -1,5 +1,9 @@
 oats: 2
 name: ebpf profiler captures rolldice profiles
+fixture:
+  type: compose
+  template: lgtm
+  compose_file: docker-compose.oats.yml
 seed:
   type: app
 input:
@@ -8,8 +12,8 @@ expected:
   custom-checks:
     - script: |
         set -eu
-        curl -fsS http://localhost:8080/rolldice >/dev/null
+        curl -fsS "$OATS_APP_URL/rolldice" >/dev/null
         /usr/bin/curl -fsS -G \
           --data-urlencode 'query=process_cpu:cpu:nanoseconds:cpu:nanoseconds{service_name="unknown_service:rolldice"}' \
           --data-urlencode 'from=now-10m' \
-          http://localhost:4040/pyroscope/render | grep -E 'rolldice|main\.rolldice'
+          "$OATS_PYROSCOPE_URL/pyroscope/render" | grep -E 'rolldice|main\.rolldice'

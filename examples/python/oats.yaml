@@ -1,5 +1,5 @@
 oats: 2
-name: python rolldice serves traffic and lgtm is ready
+name: python rolldice emits traces and logs
 fixture:
   type: compose
   template: lgtm
@@ -14,3 +14,10 @@ expected:
         set -eu
         curl -fsS "$OATS_GRAFANA_URL/api/health" >/dev/null
         curl -fsS "$OATS_APP_URL/rolldice" >/dev/null
+  traces:
+    - traceql: '{ span.http.route = "/rolldice" }'
+      count: ">= 1"
+  logs:
+    - logql: '{service_name="rolldice"} |~ `Anonymous player is rolling the dice.*`'
+      regex:
+        - 'Anonymous player is rolling the dice'

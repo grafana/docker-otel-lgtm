@@ -1,4 +1,6 @@
 cases = [
+  "examples/go/oats.yaml",
+  "examples/dotnet/oats.yaml",
   "examples/nodejs/oats.yaml",
   "examples/python/oats.yaml",
   "examples/obi/oats.yaml",

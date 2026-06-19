@@ -1,14 +1,9 @@
+cases = [
+  "examples/nodejs/oats.yaml",
+  "examples/python/oats.yaml",
+  "examples/obi/oats.yaml",
+  "examples/ebpf-profiler/oats.yaml",
+]
+
 [meta]
 version = 2
-
-[[suite]]
-cases = ["examples/nodejs/oats.yaml"]
-
-[[suite]]
-cases = ["examples/python/oats.yaml"]
-
-[[suite]]
-cases = ["examples/obi/oats.yaml"]
-
-[[suite]]
-cases = ["examples/ebpf-profiler/oats.yaml"]

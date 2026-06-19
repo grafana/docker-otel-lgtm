@@ -1,5 +1,5 @@
 oats: 2
-name: ebpf profiler starts and attaches to rolldice
+name: ebpf profiler captures rolldice profiles
 fixture:
   type: compose
   template: lgtm
@@ -9,9 +9,6 @@ seed:
 input:
   - path: /rolldice
 expected:
-  custom-checks:
-    - script: |
-        set -eu
-        curl -fsS "$OATS_APP_URL/rolldice" >/dev/null
-        docker compose -f .oats.lgtm.compose.yml -f docker-compose.oats.yml logs --tail 200 otel-ebpf-profiler 2>&1 | grep -q 'eBPF tracer loaded'
-        docker compose -f .oats.lgtm.compose.yml -f docker-compose.oats.yml logs --tail 200 otel-ebpf-profiler 2>&1 | grep -q 'Attached tracer program'
+  profiles:
+    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{service_name="unknown_service:rolldice"}'
+      count: '>= 1'

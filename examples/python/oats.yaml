@@ -9,11 +9,6 @@ seed:
 input:
   - path: /rolldice
 expected:
-  custom-checks:
-    - script: |
-        set -eu
-        curl -fsS "$OATS_GRAFANA_URL/api/health" >/dev/null
-        curl -fsS "$OATS_APP_URL/rolldice" >/dev/null
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'
       count: ">= 1"

@@ -23,7 +23,7 @@ jobs:
     if: github.event.repository.fork == false
 
     concurrency:
-      group: ${{ github.workflow }}
+      group: ${{ format('{0}-{1}', github.workflow, matrix.repository) }}
       cancel-in-progress: false
 
     permissions:

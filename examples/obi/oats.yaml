@@ -10,6 +10,5 @@ expected:
   custom-checks:
     - script: |
         set -eu
-        cid=$(docker ps --filter label=com.docker.compose.service=generate-traffic --format '{{.ID}}' | head -n1)
-        [ -n "$cid" ]
-        docker logs "$cid" 2>&1 | grep -q 'rolling the dice'
+        docker compose -f .oats.lgtm.compose.yml -f docker-compose.oats.yml ps generate-traffic | grep -q generate-traffic
+        docker compose -f .oats.lgtm.compose.yml -f docker-compose.oats.yml logs --tail 200 go python nodejs dotnet java 2>&1 | grep -q 'Anonymous player is rolling the dice'

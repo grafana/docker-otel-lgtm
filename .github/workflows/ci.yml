@@ -23,8 +23,8 @@ jobs:
       - name: Setup mise
         uses: jdx/mise-action@e6a8b3978addb5a52f2b4cd9d91eafa7f0ab959d # v4.2.0
         with:
-          version: v2026.6.5
-          sha256: 9ca3e4e25c26c64886d036fe9ddb2e5415a204f2d5b9c35bf67abd4f15f0f768
+          version: v2026.6.11
+          sha256: 4c1036af15efea3a4d83f13481132ec7d7dda15e7ec5869dd70a64072bf1a6c9
 
       - name: CI checks
         env:

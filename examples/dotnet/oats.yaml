@@ -11,11 +11,14 @@ input:
 expected:
   traces:
     - traceql: '{ span.http.route = "/rolldice/{player?}" }'
-      count: ">= 1"
+      match_spans:
+        - name: GET /rolldice/{player?}
+          attributes:
+            - key: otel.library.name
+              value: Microsoft.AspNetCore
   metrics:
     - promql: 'http_server_active_requests{http_request_method="GET"}'
       value: '>= 0'
   logs:
     - logql: '{service_name="rolldice"} |~ `Anonymous player is rolling the dice.*`'
-      regex:
-        - 'Anonymous player is rolling the dice'
+      regex: 'Anonymous player is rolling the dice'

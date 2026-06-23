@@ -11,10 +11,17 @@ const {
 } = require("@opentelemetry/exporter-metrics-otlp-proto");
 
 const sdk = new NodeSDK({
-  traceExporter: new OTLPTraceExporter(),
-  metricReader: new PeriodicExportingMetricReader({
-    exporter: new OTLPMetricExporter(),
+  traceExporter: new OTLPTraceExporter({
+    url: "http://lgtm:4318/v1/traces",
   }),
+  metricReaders: [
+    new PeriodicExportingMetricReader({
+      exporter: new OTLPMetricExporter({
+        url: "http://lgtm:4318/v1/metrics",
+      }),
+      exportIntervalMillis: 5000,
+    }),
+  ],
   instrumentations: [
     getNodeAutoInstrumentations({
       "@opentelemetry/instrumentation-http": {
@@ -29,4 +36,4 @@ const sdk = new NodeSDK({
   ],
 });
 
-sdk.start();
+module.exports = { sdk };

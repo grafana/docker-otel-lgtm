@@ -11,8 +11,15 @@ input:
 expected:
   traces:
     - traceql: '{ span.http.route = "/rolldice" }'
-      count: ">= 1"
+      match_spans:
+        - name: GET /rolldice
+          attributes:
+            - key: otel.library.name
+              value: "@opentelemetry/instrumentation-http"
+  metrics:
+    - promql: 'dice_lib_rolls_counter_total{service_name="dice-server"}'
+      value: '>= 0'
   logs:
     - logql: '{service_name="dice-server"} |~ `Received request to roll dice`'
-      regex:
-        - 'Received request to roll dice'
+      match:
+        - name: Received request to roll dice

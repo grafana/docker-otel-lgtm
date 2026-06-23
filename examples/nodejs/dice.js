@@ -2,15 +2,20 @@ const { trace, metrics } = require("@opentelemetry/api");
 const { Logger } = require("./logger");
 
 const tracer = trace.getTracer("dice-lib");
-const meter = metrics.getMeter("dice-lib");
-
-const counter = meter.createCounter("dice-lib.rolls.counter");
+let counter = null;
 
 const logger = new Logger("dice-lib");
 
+function getCounter() {
+  if (!counter) {
+    counter = metrics.getMeter("dice-lib").createCounter("dice-lib.rolls.counter");
+  }
+  return counter;
+}
+
 function rollOnce(i, min, max) {
   return tracer.startActiveSpan(`rollOnce:${i}`, (span) => {
-    counter.add(1);
+    getCounter().add(1);
     logger.log(`Rolling a single die between ${min} and ${max}`);
     const result = Math.floor(Math.random() * (max - min + 1) + min);
 

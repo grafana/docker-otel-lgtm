@@ -8,7 +8,9 @@ const logger = new Logger("dice-lib");
 
 function getCounter() {
   if (!counter) {
-    counter = metrics.getMeter("dice-lib").createCounter("dice-lib.rolls.counter");
+    counter = metrics
+      .getMeter("dice-lib")
+      .createCounter("dice-lib.rolls.counter");
   }
   return counter;
 }

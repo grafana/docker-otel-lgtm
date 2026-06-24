@@ -26,6 +26,7 @@ jobs:
 
     environment:
       name: release
+      deployment: ${{ github.event_name != 'pull_request' }}
       url: ${{ format('{0}/{1}/pkgs/container/{2}', github.server_url, github.repository, 'docker-otel-lgtm') }}
 
     permissions:

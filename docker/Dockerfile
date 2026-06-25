@@ -113,7 +113,7 @@ COPY --from=obi-source /obi /otel-lgtm/obi/obi
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/
 
-FROM docker.io/redhat/ubi9-micro:9.8@sha256:b498b3ea26111ab4b81d65139f2ebd2ef9a2abb7a4588b7fdcc54889f95e9caa
+FROM docker.io/redhat/ubi9-micro:9.8@sha256:fdf68a4f5f88cca14ae906bbec6e0fbbffe92b5b91e73e0862c961234d63b986
 
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm

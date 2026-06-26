@@ -1,22 +1,15 @@
-# OATS is an acceptance testing framework for OpenTelemetry
-# https://github.com/grafana/oats/tree/main/yaml
-oats-schema-version: 2
-docker-compose:
-  files:
-    - ./docker-compose.oats.yml
+oats: 2
+name: ebpf profiler captures rolldice profiles
+fixture:
+  type: compose
+  template: lgtm
+  compose_file: docker-compose.oats.yml
+seed:
+  type: app
 input:
   - path: /rolldice
 expected:
   profiles:
-    # go
     - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{"process.executable.name"=~"rolldice"}'
-      flamebearers:
-        equals: "main.rolldice"
-    # python and java are flaky
-#    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name=~"python.*"}'
-#      flamebearers:
-#        # not very useful, because the python function names are not in the flamegraph
-#        contains: "python"
-#    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{process_executable_name="java"}'
-#      flamebearers:
-#        contains: "void org.springframework.boot.SpringApplication.refreshContext(org.springframework.context.ConfigurableApplicationContext)"
+      match:
+        - name: main.rolldice

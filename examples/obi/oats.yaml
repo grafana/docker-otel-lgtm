@@ -1,30 +1,28 @@
----
-# OATS is an acceptance testing framework for OpenTelemetry
-# https://github.com/grafana/oats/tree/main/yaml
-oats-schema-version: 2
-docker-compose:
-  files:
-    - ./docker-compose.oats.yml
-# No input: section — OATS only supports a single application port, but this
-# test exercises 5 services on different ports. The generate-traffic sidecar
-# sends requests to all services instead.
+oats: 2
+name: obi multi-service emits traces and metrics
+fixture:
+  type: compose
+  template: lgtm
+  compose_file: docker-compose.oats.yml
+seed:
+  type: app
 expected:
   traces:
-    # Java (port 8080) - reuses ../java source, no OTel agent
     - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8080 }'
-      equals: "GET /rolldice"
-    # Go (port 8081) - minimal source, no OTel SDK
+      match_spans:
+        - name: GET /rolldice
     - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8081 }'
-      equals: "GET /rolldice"
-    # Python (port 8082) - reuses ../python source, no opentelemetry-distro
+      match_spans:
+        - name: GET /rolldice
     - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8082 }'
-      equals: "GET /rolldice"
-    # .NET (port 8083) - minimal source, no OTel NuGet packages
+      match_spans:
+        - name: GET /rolldice
     - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8083 }'
-      equals: "GET /rolldice"
-    # Node.js (port 8084) - minimal source, no @opentelemetry/* packages
+      match_spans:
+        - name: GET /rolldice
     - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8084 }'
-      equals: "GET /rolldice"
+      match_spans:
+        - name: GET /rolldice
   metrics:
     - promql: 'http_server_request_duration_seconds_count{http_route="/rolldice"}'
-      value: "> 0"
+      value: '> 0'

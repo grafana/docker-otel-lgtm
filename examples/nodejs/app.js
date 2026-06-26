@@ -1,6 +1,5 @@
 const { trace, SpanStatusCode } = require("@opentelemetry/api");
 const express = require("express");
-const { rollTheDice } = require("./dice.js");
 const { Logger } = require("./logger.js");
 
 const tracer = trace.getTracer("dice-server", "0.1.0");
@@ -12,6 +11,7 @@ const app = express();
 
 app.get("/rolldice", (req, res) => {
   return tracer.startActiveSpan("rollDice", (span) => {
+    const { rollTheDice } = require("./dice.js");
     logger.log("Received request to roll dice");
     const rolls = req.query.rolls
       ? parseInt(req.query.rolls.toString(), 10)

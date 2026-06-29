@@ -1,4 +1,3 @@
----
 # OATS is an acceptance testing framework for OpenTelemetry
 # https://github.com/grafana/oats/tree/main/yaml
 services:
@@ -12,6 +11,7 @@ services:
 
   generate-traffic:
     build:
+      context: ../../examples/obi
       dockerfile: generate-traffic.Dockerfile
     depends_on:
       - java
@@ -20,37 +20,34 @@ services:
       - go
       - nodejs
 
-  # Uninstrumented applications — no OTel SDK, agent, or distro.
-  # OBI discovers and instruments them automatically via eBPF.
-
   dotnet:
     build:
-      context: ./dotnet
+      context: ../../examples/obi/dotnet
     depends_on:
       - lgtm
 
   go:
     build:
-      context: ./go
+      context: ../../examples/obi/go
     depends_on:
       - lgtm
 
   java:
     build:
-      context: ../java
+      context: ../../examples/java
       dockerfile: ../obi/java.Dockerfile
     depends_on:
       - lgtm
 
   nodejs:
     build:
-      context: ./nodejs
+      context: ../../examples/obi/nodejs
     depends_on:
       - lgtm
 
   python:
     build:
-      context: ../python
+      context: ../../examples/python
       dockerfile: ../obi/python.Dockerfile
     depends_on:
       - lgtm

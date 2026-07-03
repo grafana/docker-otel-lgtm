@@ -321,6 +321,7 @@
         "dotnet",
         "editorconfig-checker",
         "go",
+        "go:github.com/grafana/gcx/cmd/gcx",
         "go:github.com/grafana/oats",
         "golangci-lint",
         "google-java-format",

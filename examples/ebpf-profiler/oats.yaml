@@ -1,4 +1,4 @@
-oats: 2
+oats-schema-version: 3
 name: ebpf profiler captures rolldice profiles
 fixture:
   type: compose

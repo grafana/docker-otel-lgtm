@@ -1,4 +1,4 @@
-oats: 2
+oats-schema-version: 3
 name: go rolldice emits traces and metrics
 fixture:
   type: compose

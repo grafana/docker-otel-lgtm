@@ -1,4 +1,4 @@
-oats: 2
+oats-schema-version: 3
 name: dotnet rolldice emits traces metrics and logs
 fixture:
   type: compose

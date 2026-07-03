@@ -1,4 +1,4 @@
-oats: 2
+oats-schema-version: 3
 name: python rolldice emits traces and logs
 fixture:
   type: compose

@@ -2,7 +2,7 @@ ARG LGTM_VERSION=development
 # renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
 ARG GRAFANA_VERSION=v13.1.0
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
-ARG PROMETHEUS_VERSION=v3.12.0
+ARG PROMETHEUS_VERSION=v3.13.0
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
 ARG TEMPO_VERSION=v3.0.2
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki

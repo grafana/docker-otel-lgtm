@@ -40,14 +40,14 @@
         "mise"
       ]
     },
-    ".github/workflows/ghcr-image-build-and-publish.yml": {
-      "regex": [
-        "cosign"
-      ]
-    },
     ".github/workflows/ci.yml": {
       "regex": [
         "mise"
+      ]
+    },
+    ".github/workflows/ghcr-image-build-and-publish.yml": {
+      "regex": [
+        "cosign"
       ]
     },
     ".github/workflows/release.yml": {
@@ -314,6 +314,7 @@
       "mise": [
         "actionlint",
         "aqua:grafana/flint",
+        "aqua:grafana/oats",
         "aqua:jonwiggins/xmloxide",
         "aqua:owenlamont/ryl",
         "bats",
@@ -321,7 +322,6 @@
         "dotnet",
         "editorconfig-checker",
         "go",
-        "go:github.com/grafana/oats",
         "golangci-lint",
         "google-java-format",
         "hadolint",

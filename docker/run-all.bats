@@ -75,6 +75,14 @@ fi
 printf '{}'
 SCRIPT
 	chmod +x "$TESTDIR/curl"
+
+	# Stub `claude` so executing the generated helper script never invokes a
+	# real Claude CLI or mutates the user's own ~/.claude.json.
+	cat >"$TESTDIR/claude" <<'SCRIPT'
+#!/usr/bin/env bash
+exit 0
+SCRIPT
+	chmod +x "$TESTDIR/claude"
 }
 
 teardown() {
@@ -232,14 +240,14 @@ assert_file_not_contains() {
 }
 
 @test "TEMPO_URL cannot inject commands into generated helper script" {
-	local marker="$TESTDIR/pwned"
+	local marker="$TESTDIR/injected"
 	export TEMPO_EXTRA_ARGS="--query-frontend.mcp-server.enabled=true"
 	export STUB_SA_MODE="missing"
 	export TEMPO_URL="http://localhost:3200\"; touch ${marker}; echo \""
 	run run_run_all latest
 	assert_has_file "$CONFIGDIR/claude-mcp-setup.sh"
 	assert_file_not_contains "$CONFIGDIR/claude-mcp-setup.sh" "; touch ${marker}"
-	run bash "$CONFIGDIR/claude-mcp-setup.sh"
+	PATH="$TESTDIR:$PATH" run bash "$CONFIGDIR/claude-mcp-setup.sh"
 	[ ! -e "$marker" ]
 }
 
@@ -247,6 +255,26 @@ assert_file_not_contains() {
 	export TEMPO_EXTRA_ARGS="--query-frontend.mcp-server.enabled=true"
 	export STUB_SA_MODE="missing"
 	export TEMPO_URL='http://x"},"evil":{"command":"sh","args":["-c","id"]'
+	run run_run_all latest
+	assert_has_file "$CONFIGDIR/mcp.json"
+	assert_file_not_contains "$CONFIGDIR/mcp.json" '"},"evil"'
+	assert_file_contains "$CONFIGDIR/mcp.json" '\"},\"evil\"'
+}
+
+@test "GRAFANA_PUBLIC_URL cannot inject commands into generated helper script" {
+	local marker="$TESTDIR/injected"
+	export STUB_SA_MODE="success"
+	export GRAFANA_PUBLIC_URL="http://localhost:3000\"; touch ${marker}; echo \""
+	run run_run_all latest
+	assert_has_file "$CONFIGDIR/claude-mcp-setup.sh"
+	assert_file_not_contains "$CONFIGDIR/claude-mcp-setup.sh" "; touch ${marker}"
+	PATH="$TESTDIR:$PATH" run bash "$CONFIGDIR/claude-mcp-setup.sh"
+	[ ! -e "$marker" ]
+}
+
+@test "GRAFANA_PUBLIC_URL cannot inject extra servers into generated mcp.json" {
+	export STUB_SA_MODE="success"
+	export GRAFANA_PUBLIC_URL='http://x"},"evil":{"command":"sh","args":["-c","id"]'
 	run run_run_all latest
 	assert_has_file "$CONFIGDIR/mcp.json"
 	assert_file_not_contains "$CONFIGDIR/mcp.json" '"},"evil"'

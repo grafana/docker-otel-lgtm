@@ -187,6 +187,22 @@ if [ -n "$SA_ID" ]; then
 	SA_TOKEN="$(echo "$TOKEN_RESPONSE" | grep -o '"key":"[^"]*"' | cut -d'"' -f4)"
 fi
 
+# JSON-escape a string for safe inclusion inside a double-quoted JSON value.
+# The runtime image has no jq, so escaping is done in pure Bash.
+json_escape() {
+	local s=$1
+	s=${s//\\/\\\\}
+	s=${s//\"/\\\"}
+	s=${s//$'\n'/\\n}
+	s=${s//$'\r'/\\r}
+	s=${s//$'\t'/\\t}
+	printf '%s' "$s"
+}
+
+TEMPO_MCP_URL_ESCAPED="$(json_escape "${TEMPO_URL}/api/mcp")"
+GRAFANA_PUBLIC_URL_ESCAPED="$(json_escape "${GRAFANA_PUBLIC_URL}")"
+SA_TOKEN_ESCAPED="$(json_escape "${SA_TOKEN}")"
+
 (
 	umask 077
 	mkdir -p "${LGTM_CONFIG_DIR}"
@@ -201,12 +217,12 @@ fi
 			      "command": "uvx",
 			      "args": ["mcp-grafana"],
 			      "env": {
-			        "GRAFANA_URL": "${GRAFANA_PUBLIC_URL}",
-			        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${SA_TOKEN}"
+			        "GRAFANA_URL": "${GRAFANA_PUBLIC_URL_ESCAPED}",
+			        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${SA_TOKEN_ESCAPED}"
 			      }
 			    },
 			    "tempo": {
-			      "url": "${TEMPO_URL}/api/mcp"
+			      "url": "${TEMPO_MCP_URL_ESCAPED}"
 			    }
 			  }
 			}
@@ -219,8 +235,8 @@ fi
 			      "command": "uvx",
 			      "args": ["mcp-grafana"],
 			      "env": {
-			        "GRAFANA_URL": "${GRAFANA_PUBLIC_URL}",
-			        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${SA_TOKEN}"
+			        "GRAFANA_URL": "${GRAFANA_PUBLIC_URL_ESCAPED}",
+			        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${SA_TOKEN_ESCAPED}"
 			      }
 			    }
 			  }
@@ -231,7 +247,7 @@ fi
 			{
 			  "mcpServers": {
 			    "tempo": {
-			      "url": "${TEMPO_URL}/api/mcp"
+			      "url": "${TEMPO_MCP_URL_ESCAPED}"
 			    }
 			  }
 			}
@@ -246,11 +262,14 @@ fi
 	{
 		echo "#!/usr/bin/env bash"
 		echo "# Connect Claude Code to the LGTM stack"
+		# Use printf %q so user-supplied values (e.g. TEMPO_URL or
+		# GRAFANA_PUBLIC_URL supplied via environment variables) are shell-quoted
+		# and cannot inject commands when this helper script is later executed.
 		if [ -n "$SA_TOKEN" ]; then
-			echo "claude mcp add grafana -e \"GRAFANA_URL=${GRAFANA_PUBLIC_URL}\" -e \"GRAFANA_SERVICE_ACCOUNT_TOKEN=${SA_TOKEN}\" -- uvx mcp-grafana"
+			printf 'claude mcp add grafana -e GRAFANA_URL=%q -e GRAFANA_SERVICE_ACCOUNT_TOKEN=%q -- uvx mcp-grafana\n' "${GRAFANA_PUBLIC_URL}" "${SA_TOKEN}"
 		fi
 		if [[ ${TEMPO_MCP_ENABLED} == "true" ]]; then
-			echo "claude mcp add --transport http tempo \"${TEMPO_URL}/api/mcp\""
+			printf 'claude mcp add --transport http tempo %q\n' "${TEMPO_URL}/api/mcp"
 		fi
 	} >"${LGTM_CONFIG_DIR}/claude-mcp-setup.sh"
 )

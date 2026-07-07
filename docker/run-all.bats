@@ -230,3 +230,25 @@ assert_file_not_contains() {
 	assert_file_contains "$CONFIGDIR/mcp.json" '"mcpServers": {}'
 	assert_file_not_contains "$CONFIGDIR/claude-mcp-setup.sh" 'claude mcp add '
 }
+
+@test "TEMPO_URL cannot inject commands into generated helper script" {
+	local marker="$TESTDIR/pwned"
+	export TEMPO_EXTRA_ARGS="--query-frontend.mcp-server.enabled=true"
+	export STUB_SA_MODE="missing"
+	export TEMPO_URL="http://localhost:3200\"; touch ${marker}; echo \""
+	run run_run_all latest
+	assert_has_file "$CONFIGDIR/claude-mcp-setup.sh"
+	assert_file_not_contains "$CONFIGDIR/claude-mcp-setup.sh" "; touch ${marker}"
+	run bash "$CONFIGDIR/claude-mcp-setup.sh"
+	[ ! -e "$marker" ]
+}
+
+@test "TEMPO_URL cannot inject extra servers into generated mcp.json" {
+	export TEMPO_EXTRA_ARGS="--query-frontend.mcp-server.enabled=true"
+	export STUB_SA_MODE="missing"
+	export TEMPO_URL='http://x"},"evil":{"command":"sh","args":["-c","id"]'
+	run run_run_all latest
+	assert_has_file "$CONFIGDIR/mcp.json"
+	assert_file_not_contains "$CONFIGDIR/mcp.json" '"},"evil"'
+	assert_file_contains "$CONFIGDIR/mcp.json" '\"},\"evil\"'
+}

@@ -6,7 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8080:8083
+      # Ephemeral host port so parallel suites don't collide; OATS discovers it
+      # via fixture.app_service + app_port.
+      - "127.0.0.1::8083"
     environment:
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://lgtm:4318
       - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf

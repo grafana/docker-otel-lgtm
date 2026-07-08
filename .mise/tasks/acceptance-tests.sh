@@ -16,5 +16,6 @@ oats \
 	--config oats.toml \
 	--gcx "$(command -v gcx)" \
 	--no-cache \
+	--parallel 4 \
 	--timeout=3m \
 	-v 2

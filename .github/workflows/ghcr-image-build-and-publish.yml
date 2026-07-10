@@ -205,7 +205,7 @@ jobs:
       attestations: write
       contents: read
       id-token: write
-    uses: grafana/shared-workflows/.github/workflows/sign-and-attest.yml@24c4b83e50e74fce9871480681d123fd3c68f4f4 # TODO Needs to be a tagged version
+    uses: grafana/shared-workflows/.github/workflows/sign-and-attest.yml@f881046c6f637c8167d8b6c9f9185688e3cfe1d3 # main
     with:
       image: ${{ needs.release.outputs.sign-target }}
       registry: ${{ needs.release.outputs.registry }}
@@ -221,7 +221,7 @@ jobs:
 
     steps:
       - name: Wait for DockerHub mirror
-        uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
+        uses: grafana/shared-workflows/actions/wait-for-docker-publish@a2718cb69dbc55c16d5db1ee9fc0fd1d052079fa # wait-for-docker-publish/v0.3.0
         with:
           image: ${{ format('{0}@{1}', needs.release.outputs.image, needs.release.outputs.digest) }}
           timeout: "15m"

@@ -152,6 +152,7 @@ jobs:
     outputs:
       digest: ${{ steps.publish.outputs.digest }}
       image: ${{ env.IMAGE_NAME }}
+      registry: ${{ env.REGISTRY }}
       tags: ${{ steps.publish.outputs.tags }}
 
     permissions:
@@ -197,45 +198,16 @@ jobs:
             vcs-ref=${{ github.sha }}
             version=${{ github.ref_name }}
 
-      - name: Authenticate with GAR
-        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
-        id: login-gar
-        with:
-          create_credentials_file: false
-          project_id: "grafanalabs-workload-identity"
-          workload_identity_provider: "projects/304398677251/locations/global/workloadIdentityPools/github/providers/github-provider"
-
-      - name: Authenticate Docker
-        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4.4.0
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: "oauth2accesstoken"
-          password: ${{ steps.login-gar.outputs.auth_token }}
-
-      # TODO Temporarily disabled
-      #- name: Generate artifact attestation
-      #  uses: actions/attest@a1948c3f048ba23858d222213b7c278aabede763 # v4.1.1
-      #  with:
-      #    push-to-registry: true
-      #    subject-digest: ${{ steps.publish.outputs.digest }}
-      #    subject-name: ${{ format('{0}/grafanalabs-{1}/{2}/{3}', env.REGISTRY, env.ENVIRONMENT, env.REPOSITORY, env.IMAGE) }}
-
-      - name: Install cosign
-        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
-        with:
-          cosign-release: ${{ env.COSIGN_VERSION }}
-
-      - name: Sign container images
-        env:
-          DIGEST: ${{ steps.publish.outputs.digest }}
-          TAGS: ${{ steps.publish.outputs.tags }}
-        run: |
-          echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}" --annotations "ref=${GITHUB_SHA}" --annotations "repo=${GITHUB_REPOSITORY}" --annotations "workflow=${GITHUB_WORKFLOW}"
-
-      - name: Wait for DockerHub mirror
-        uses: grafana/shared-workflows/actions/wait-for-docker-publish@cd185787ec303639a71383384e1b0d424b7422fb # wait-for-docker-publish/v0.2.0
-        with:
-          image: ${{ format('{0}@{1}', env.IMAGE_NAME, steps.publish.outputs.digest) }}
+  sign:
+    needs: release
+    permissions:
+      attestations: write
+      contents: read
+      id-token: write
+    uses: grafana/shared-workflows/.github/workflows/sign-and-attest.yml@24c4b83e50e74fce9871480681d123fd3c68f4f4 # TODO Needs to be a tagged version
+    with:
+      image: ${{ format('{0}@{1}', needs.release.outputs.image, needs.release.outputs.digest) }}
+      registry: ${{ needs.release.outputs.registry }}
 
   wait-for-mirror:
     needs: release
@@ -254,7 +226,7 @@ jobs:
           timeout: "15m"
 
   verify:
-    needs: [release, wait-for-mirror]
+    needs: [release, sign, wait-for-mirror]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
 

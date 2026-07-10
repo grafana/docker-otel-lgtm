@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
 
@@ -63,6 +63,7 @@ jobs:
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
+          SOURCE_DATE_EPOCH: ${{ steps.get-commit-timestamp.outputs.git-commit-epoch }}
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           labels: |-
@@ -118,7 +119,8 @@ jobs:
         env:
           DIGEST: ${{ steps.push.outputs.digest }}
           TAGS: ${{ steps.meta.outputs.tags }}
-        run: echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}"
+        run: |
+          echo "${TAGS}" | xargs -I {} cosign sign --yes "{}@${DIGEST}" --annotations "ref=${GITHUB_SHA}" --annotations "repo=${GITHUB_REPOSITORY}" --annotations "workflow=${GITHUB_WORKFLOW}"
 
       - name: Verify container image signatures
         if: github.event_name != 'pull_request'

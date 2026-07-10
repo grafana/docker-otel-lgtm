@@ -249,9 +249,10 @@ jobs:
           CONTAINER_IMAGE_DIGEST: ${{ format('oci://{0}/{1}@{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.digest) }}
           CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, github.ref_name) }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SIGNER_WORKFLOW_REF: "grafana/shared-workflows/.github/workflows/sign-and-attest.yml"
         run: |
-          gh attestation verify --repo "${GITHUB_REPOSITORY}" "${CONTAINER_IMAGE_DIGEST}" || exit 1
-          gh attestation verify --repo "${GITHUB_REPOSITORY}" "${CONTAINER_IMAGE_LABEL}" || exit 1
+          gh attestation verify --repo "${GITHUB_REPOSITORY}" --signer-workflow "${SIGNER_WORKFLOW_REF}" "${CONTAINER_IMAGE_DIGEST}" || exit 1
+          gh attestation verify --repo "${GITHUB_REPOSITORY}" --signer-workflow "${SIGNER_WORKFLOW_REF}" "${CONTAINER_IMAGE_LABEL}" || exit 1
 
       - name: Install cosign
         uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2

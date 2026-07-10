@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         with:
           persist-credentials: false
 
@@ -43,7 +43,6 @@ jobs:
         env:
           DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
           SOURCE_DATE_EPOCH: ${{ steps.get-commit-timestamp.outputs.git-commit-epoch }}
-
         with:
           dockerhub-repository: grafana/otel-lgtm
           context: docker
@@ -62,7 +61,7 @@ jobs:
             version=${{ github.ref_name }}
 
       - name: Generate artifact attestation
-        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4.1.0
+        uses: actions/attest@a1948c3f048ba23858d222213b7c278aabede763 # v4.1.1
         with:
           push-to-registry: true
           subject-name: docker.io/grafana/otel-lgtm

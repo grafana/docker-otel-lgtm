@@ -1,18 +1,18 @@
 ARG LGTM_VERSION=development
 # renovate: datasource=github-releases depName=grafana packageName=grafana/grafana
-ARG GRAFANA_VERSION=v13.0.1
+ARG GRAFANA_VERSION=v13.1.0
 # renovate: datasource=github-releases depName=prometheus packageName=prometheus/prometheus
-ARG PROMETHEUS_VERSION=v3.12.0
+ARG PROMETHEUS_VERSION=v3.13.0
 # renovate: datasource=github-releases depName=tempo packageName=grafana/tempo
-ARG TEMPO_VERSION=v3.0.0
+ARG TEMPO_VERSION=v3.0.2
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
-ARG LOKI_VERSION=v3.7.2
+ARG LOKI_VERSION=v3.7.3
 # renovate: datasource=github-releases depName=pyroscope packageName=grafana/pyroscope
-ARG PYROSCOPE_VERSION=v2.0.3
+ARG PYROSCOPE_VERSION=v2.1.0
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
-ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.153.0
+ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.155.0
 # renovate: datasource=github-releases depName=obi packageName=open-telemetry/opentelemetry-ebpf-instrumentation
-ARG OBI_VERSION=v0.9.0
+ARG OBI_VERSION=v0.10.0
 
 # This is a source-only stage, so collapsing it into neighboring stages is not useful.
 # hadolint global ignore=DL3059
@@ -21,7 +21,7 @@ FROM docker.io/otel/ebpf-instrument:${OBI_VERSION} AS obi-source
 # Download and extract components on the build platform (no QEMU) to avoid tar/rpm
 # failures that occur under QEMU emulation with overlayfs. The download scripts use
 # TARGETARCH to fetch the correct platform-specific archives.
-FROM --platform=$BUILDPLATFORM docker.io/redhat/ubi9:9.8@sha256:46d19c10caf9888e8a01131283eaaf50c7f5d4eddab02cd92a66f8adf2e15407 AS downloader
+FROM --platform=$BUILDPLATFORM docker.io/redhat/ubi9:9.8@sha256:8bf0e8f20737e9c8a68c8a498299e9504ab397b1b1f2837acb2fef12ec698f0e AS downloader
 
 RUN mkdir /otel-lgtm
 
@@ -65,7 +65,7 @@ RUN ./download-grafana.sh $GRAFANA_VERSION && \
     ./download-pyroscope.sh $PYROSCOPE_VERSION && \
     ./download-otelcol.sh $OPENTELEMETRY_COLLECTOR_VERSION
 
-FROM docker.io/redhat/ubi9:9.8@sha256:46d19c10caf9888e8a01131283eaaf50c7f5d4eddab02cd92a66f8adf2e15407 AS builder
+FROM docker.io/redhat/ubi9:9.8@sha256:8bf0e8f20737e9c8a68c8a498299e9504ab397b1b1f2837acb2fef12ec698f0e AS builder
 
 RUN mkdir /otel-lgtm
 
@@ -113,7 +113,7 @@ COPY --from=obi-source /obi /otel-lgtm/obi/obi
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/
 
-FROM docker.io/redhat/ubi9-micro:9.8@sha256:b498b3ea26111ab4b81d65139f2ebd2ef9a2abb7a4588b7fdcc54889f95e9caa
+FROM docker.io/redhat/ubi9-micro:9.8@sha256:35de56a9413112f1474e392ebc35e0cf6f0fb484c8e8877bbae59b513694b41f
 
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm

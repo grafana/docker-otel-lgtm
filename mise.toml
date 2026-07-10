@@ -1,31 +1,31 @@
 # pin all versions to avoid GitHub rate limit
 [tools]
+"aqua:grafana/oats" = "0.7.0"
 bats = "1.13.0"
 dotnet = "10.0.202"
 go = "1.26.4"
-"go:github.com/grafana/oats" = "0.7.0"
 java = "temurin-25.0.3+9.0.LTS"
-node = "24.16.0"
-rust = { version = "1.96.0", components = "clippy,rustfmt" }
+node = "24.18.0"
+rust = { version = "1.96.1", components = "clippy,rustfmt" }
 
 # Linters
 actionlint = "1.7.12"
-"aqua:grafana/flint" = "0.22.5"
+"aqua:grafana/flint" = "0.22.6"
 "aqua:jonwiggins/xmloxide" = "0.4.3"
-"aqua:owenlamont/ryl" = "0.10.0"
-biome = "2.4.13"
-editorconfig-checker = "3.6.1"
+"aqua:owenlamont/ryl" = "0.21.0"
+biome = "2.5.2"
+editorconfig-checker = "3.8.0"
 golangci-lint = "2.12.2"
 google-java-format = "1.35.0"
 hadolint = "2.14.0"
 lychee = "0.24.2"
-"npm:renovate" = "43.150.0"
-ruff = "0.15.14"
-rumdl = "0.1.80"
+"npm:renovate" = "43.251.0"
+ruff = "0.15.20"
+rumdl = "0.2.27"
 shellcheck = "0.11.0"
 shfmt = "3.13.1"
 taplo = "0.10.0"
-typos = "1.46.0"
+typos = "1.48.0"
 
 [env]
 FLINT_CONFIG_DIR = ".github/config"

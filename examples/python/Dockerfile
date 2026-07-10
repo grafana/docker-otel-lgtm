@@ -1,4 +1,4 @@
-FROM python:alpine3.19
+FROM python:alpine3.19@sha256:8287ca207e905649e9f399b5f91a119e5e9051d8cd110d5f8c3b4bd9458ebd1d
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # renovate: datasource=pypi depName=opentelemetry-distro
-ENV OPENTELEMETRY_DISTRO_VERSION=0.63b1
+ENV OPENTELEMETRY_DISTRO_VERSION=0.64b0
 RUN pip install --no-cache-dir "opentelemetry-distro[otlp]==$OPENTELEMETRY_DISTRO_VERSION" && \
     opentelemetry-bootstrap -a install
 

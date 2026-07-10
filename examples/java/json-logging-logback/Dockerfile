@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25.0.3_9-jdk@sha256:edb3aa0f621796d8f5f9d602c7611ffdf015cd89e6ddda1894d85a3a99d170a8 AS builder
+FROM eclipse-temurin:25.0.3_9-jdk@sha256:68868d04fa9cfd5f5c6abec0b5cef86d8de2bf9c62c37c7d3e4f0f80f5cfd7ff AS builder
 
 WORKDIR /usr/src/app/
 
@@ -8,7 +8,7 @@ COPY ./src ./src
 COPY json-logging-logback/logback-spring.xml ./src/main/resources/logback-spring.xml
 RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests
 
-FROM eclipse-temurin:25.0.3_9-jre@sha256:5cf92df78f6dba978777d5cffa3c856e583f86814fde82a6c3534ccdfd794f2f
+FROM eclipse-temurin:25.0.3_9-jre@sha256:d0eb1b9018b3044da1b7346f39e945f71095749853d69a3aa16b8c99dad9bb45
 
 WORKDIR /usr/src/app/
 

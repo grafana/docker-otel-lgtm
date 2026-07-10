@@ -1,3 +1,5 @@
+#!/usr/bin/env pwsh
+
 param (
     [Parameter(Mandatory = $false, Position = 0)] [string]  $ReleaseTag = "latest",
     [Parameter(Mandatory = $false, Position = 1)] [boolean] $UseLocalImage = $false,

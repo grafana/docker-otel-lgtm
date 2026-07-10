@@ -263,7 +263,7 @@ jobs:
         shell: bash
         env:
           CERTIFICATE_IDENTITY: ${{ format('{0}/{1}', github.server_url, github.workflow_ref) }}
-          CERTIFICATE_IDENTITY_REGEX: "^https://github\.com/grafana/shared-workflows/\.github/workflows/sign-and-attest\.yml@"
+          CERTIFICATE_IDENTITY_REGEX: "^https://github\\.com/grafana/shared-workflows/\\.github/workflows/sign-and-attest\\.yml@"
           CERTIFICATE_OIDC_ISSUER: "https://token.actions.githubusercontent.com"
           CONTAINER_IMAGE_DIGEST: ${{ format('{0}/{1}@{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.digest) }}
           CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, github.ref_name) }}

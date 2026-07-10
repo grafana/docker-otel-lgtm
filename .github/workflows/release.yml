@@ -34,6 +34,7 @@ jobs:
       registry: ${{ env.REGISTRY }}
       sign-target: ${{ format('{0}@{1}', steps.publish.outputs.images, steps.publish.outputs.digest) }}
       tags: ${{ steps.publish.outputs.tags }}
+      version: ${{ steps.get-version.outputs.version }}
 
     permissions:
       contents: read
@@ -49,6 +50,11 @@ jobs:
         id: get-commit-timestamp
         shell: bash
         run: echo "git-commit-epoch=$(git log -1 --pretty=%ct)" >> "${GITHUB_OUTPUT}"
+
+      - name: Get version from tag
+        id: get-version
+        shell: bash
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "${GITHUB_OUTPUT}"
 
       - name: Publish to GAR
         id: publish
@@ -129,7 +135,7 @@ jobs:
         env:
           CONTAINER_IMAGE_DIGEST: ${{ format('oci://{0}/{1}@{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.digest) }}
           CONTAINER_IMAGE_FLOATING: ${{ format('oci://{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, env.FLOATING_LABEL) }}
-          CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, github.ref_name) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.version) }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SIGNER_WORKFLOW_REF: "grafana/shared-workflows/.github/workflows/sign-and-attest.yml"
         run: |
@@ -152,7 +158,7 @@ jobs:
           CERTIFICATE_OIDC_ISSUER: "https://token.actions.githubusercontent.com"
           CONTAINER_IMAGE_DIGEST: ${{ format('{0}/{1}@{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.digest) }}
           CONTAINER_IMAGE_FLOATING: ${{ format('{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, env.FLOATING_LABEL) }}
-          CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, github.ref_name) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.version) }}
         run: |
           cosign verify "${CONTAINER_IMAGE_DIGEST}" --certificate-identity-regexp "${CERTIFICATE_IDENTITY_REGEX}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" --certificate-github-workflow-repository "${GITHUB_REPOSITORY}" || exit 1
           cosign verify "${CONTAINER_IMAGE_LABEL}" --certificate-identity-regexp "${CERTIFICATE_IDENTITY_REGEX}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" --certificate-github-workflow-repository "${GITHUB_REPOSITORY}" || exit 1

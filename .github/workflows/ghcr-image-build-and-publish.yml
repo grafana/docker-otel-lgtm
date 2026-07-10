@@ -266,7 +266,7 @@ jobs:
           CERTIFICATE_IDENTITY_REGEX: "^https://github\\.com/grafana/shared-workflows/\\.github/workflows/sign-and-attest\\.yml@"
           CERTIFICATE_OIDC_ISSUER: "https://token.actions.githubusercontent.com"
           CONTAINER_IMAGE_DIGEST: ${{ format('{0}/{1}@{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.digest) }}
-          CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, github.ref_name) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, 'latest') }}
         run: |
           cosign verify "${CONTAINER_IMAGE_DIGEST}" --certificate-identity-regexp "${CERTIFICATE_IDENTITY_REGEX}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" --certificate-github-workflow-repository "${GITHUB_REPOSITORY}" || exit 1
           cosign verify "${CONTAINER_IMAGE_LABEL}" --certificate-identity-regexp "${CERTIFICATE_IDENTITY_REGEX}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" --certificate-github-workflow-repository "${GITHUB_REPOSITORY}" || exit 1

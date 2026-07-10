@@ -235,6 +235,9 @@ jobs:
       group: ${{ format('{0}-{1}', github.workflow, needs.release.outputs.digest) }}
       cancel-in-progress: false
 
+    env:
+      REGISTRY: docker.io
+
     permissions:
       artifact-metadata: read
       attestations: read
@@ -243,8 +246,8 @@ jobs:
     steps:
       - name: Verify attestations
         env:
-          CONTAINER_IMAGE_DIGEST: ${{ format('oci://{0}/{1}@{2}', needs.release.outputs.registry, needs.release.outputs.image, needs.release.outputs.digest) }}
-          CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}:{2}', needs.release.outputs.registry, needs.release.outputs.image, github.ref_name) }}
+          CONTAINER_IMAGE_DIGEST: ${{ format('oci://{0}/{1}@{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.digest) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('oci://{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, github.ref_name) }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh attestation verify --repo "${GITHUB_REPOSITORY}" "${CONTAINER_IMAGE_DIGEST}" || exit 1
@@ -260,8 +263,8 @@ jobs:
         env:
           CERTIFICATE_IDENTITY: ${{ format('{0}/{1}', github.server_url, github.workflow_ref) }}
           CERTIFICATE_OIDC_ISSUER: "https://token.actions.githubusercontent.com"
-          CONTAINER_IMAGE_DIGEST: ${{ format('{0}/{1}@{2}', needs.release.outputs.registry, needs.release.outputs.image, needs.release.outputs.digest) }}
-          CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}:{2}', needs.release.outputs.registry, needs.release.outputs.image, github.ref_name == github.event.repository.default_branch && github.event.repository.default_branch || 'latest') }}
+          CONTAINER_IMAGE_DIGEST: ${{ format('{0}/{1}@{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.digest) }}
+          CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, github.ref_name == github.event.repository.default_branch && github.event.repository.default_branch || 'latest') }}
         run: |
           cosign verify "${CONTAINER_IMAGE_DIGEST}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1
           cosign verify "${CONTAINER_IMAGE_LABEL}" --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" || exit 1

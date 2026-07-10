@@ -153,6 +153,7 @@ jobs:
       digest: ${{ steps.publish.outputs.digest }}
       image: ${{ env.IMAGE_NAME }}
       registry: ${{ env.REGISTRY }}
+      sign-target: ${{ steps.publish.outputs.images }}
       tags: ${{ steps.publish.outputs.tags }}
 
     permissions:
@@ -206,7 +207,7 @@ jobs:
       id-token: write
     uses: grafana/shared-workflows/.github/workflows/sign-and-attest.yml@24c4b83e50e74fce9871480681d123fd3c68f4f4 # TODO Needs to be a tagged version
     with:
-      image: ${{ format('{0}/{1}@{2}', needs.release.outputs.registry, needs.release.outputs.image, needs.release.outputs.digest) }}
+      image: ${{ needs.release.outputs.sign-target }}
       registry: ${{ needs.release.outputs.registry }}
 
   wait-for-mirror:

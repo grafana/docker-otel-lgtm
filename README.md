@@ -357,16 +357,17 @@ Each example uses a different application port
 
 ## Verifying Container Image Signatures
 
-The container images that are published are signed using [cosign][cosign]. You
-can verify the signatures using a command similar to the following example:
+The container images that are published are signed using [cosign][cosign] v3+.
+You can verify the signatures using a command similar to the following example:
 
 ```sh
 VERSION="0.29.0"
 IMAGE="docker.io/grafana/otel-lgtm:${VERSION}"
-IDENTITY="https://github.com/grafana/docker-otel-lgtm/.github/workflows/release.yml@refs/tags/v${VERSION}"
-OIDC_ISSUER="https://token.actions.githubusercontent.com"
+CERTIFICATE_IDENTITY_REGEX="^https://github\.com/grafana/shared-workflows/\.github/workflows/sign-and-attest\.yml@"
+CERTIFICATE_OIDC_ISSUER="https://token.actions.githubusercontent.com"
+CERTIFICATE_REPO="grafana/docker-otel-lgtm"
 
-cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-issuer ${OIDC_ISSUER}
+cosign verify "${IMAGE}" --certificate-identity-regexp "${CERTIFICATE_IDENTITY_REGEX}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" --certificate-github-workflow-repository "${CERTIFICATE_REPO}"
 ```
 
 It is also possible to verify the signatures of images from our continuous integration
@@ -376,10 +377,10 @@ that are published to the [GitHub Container Registry][ghcr]. For example for the
 VERSION="main"
 IMAGE="ghcr.io/grafana/docker-otel-lgtm:${VERSION}"
 WORKFLOW="ghcr-image-build-and-publish.yml"
-IDENTITY="https://github.com/grafana/docker-otel-lgtm/.github/workflows/${WORKFLOW}@refs/heads/${VERSION}"
-OIDC_ISSUER="https://token.actions.githubusercontent.com"
+CERTIFICATE_IDENTITY="https://github.com/grafana/docker-otel-lgtm/.github/workflows/${WORKFLOW}@refs/heads/${VERSION}"
+CERTIFICATE_OIDC_ISSUER="https://token.actions.githubusercontent.com"
 
-cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-issuer ${OIDC_ISSUER}
+cosign verify ${IMAGE} --certificate-identity "${CERTIFICATE_IDENTITY}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}"
 ```
 
 ## Verifying Container Image Attestations

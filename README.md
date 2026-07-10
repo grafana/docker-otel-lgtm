@@ -361,7 +361,7 @@ The container images that are published are signed using [cosign][cosign]. You
 can verify the signatures using a command similar to the following example:
 
 ```sh
-VERSION="0.11.16"
+VERSION="0.29.0"
 IMAGE="docker.io/grafana/otel-lgtm:${VERSION}"
 IDENTITY="https://github.com/grafana/docker-otel-lgtm/.github/workflows/release.yml@refs/tags/v${VERSION}"
 OIDC_ISSUER="https://token.actions.githubusercontent.com"
@@ -380,6 +380,31 @@ IDENTITY="https://github.com/grafana/docker-otel-lgtm/.github/workflows/${WORKFL
 OIDC_ISSUER="https://token.actions.githubusercontent.com"
 
 cosign verify ${IMAGE} --certificate-identity ${IDENTITY} --certificate-oidc-issuer ${OIDC_ISSUER}
+```
+
+## Verifying Container Image Attestations
+
+The container images that are published are also [attested][github-attestation]. You
+can verify the attestations using the [GitHub CLI][gh-cli] as shown in the following example:
+
+```sh
+VERSION="0.29.0"
+IMAGE="oci://docker.io/grafana/otel-lgtm:${VERSION}"
+REPOSITORY="grafana/docker-otel-lgtm"
+SIGNER_WORKFLOW="grafana/shared-workflows/.github/workflows/sign-and-attest.yml"
+
+gh attestation verify --repo "${REPOSITORY}" "${IMAGE}" --signer-workflow "${SIGNER_WORKFLOW}"
+```
+
+It is also possible to verify the attestations of images from our continuous integration
+that are published to the [GitHub Container Registry][ghcr]. For example for the `main` branch:
+
+```sh
+VERSION="main"
+REPOSITORY="grafana/docker-otel-lgtm"
+IMAGE="oci://ghcr.io/${REPOSITORY}:${VERSION}"
+
+gh attestation verify --repo "${REPOSITORY}" "${IMAGE}"
 ```
 
 ## AI Tool Integration (MCP)
@@ -419,6 +444,8 @@ Paste the JSON into your AI tool's MCP configuration. See [docs/mcp-integration.
 [docker-pulls]: https://img.shields.io/docker/pulls/grafana/otel-lgtm?logo=docker&label=pulls
 [examples]: examples/
 [ghcr]: https://github.com/grafana/docker-otel-lgtm/pkgs/container/docker-otel-lgtm
+[gh-cli]: https://cli.github.com/ "GitHub CLI"
+[github-attestation]: https://docs.github.com/actions/concepts/security/artifact-attestations
 [grafana-env-overrides]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#override-configuration-with-environment-variables
 [grafana-preinstall-plugins]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/#install-plugins-in-the-docker-container
 [java-example]: examples/java/

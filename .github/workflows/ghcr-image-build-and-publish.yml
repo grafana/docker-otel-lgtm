@@ -157,8 +157,6 @@ jobs:
       tags: ${{ steps.publish.outputs.tags }}
 
     permissions:
-      artifact-metadata: write
-      attestations: write
       contents: read
       id-token: write
 
@@ -202,6 +200,7 @@ jobs:
   sign:
     needs: release
     permissions:
+      artifact-metadata: write
       attestations: write
       contents: read
       id-token: write

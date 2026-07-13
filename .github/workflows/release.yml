@@ -139,9 +139,18 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SIGNER_WORKFLOW_REF: "grafana/shared-workflows/.github/workflows/sign-and-attest.yml"
         run: |
-          gh attestation verify --repo "${GITHUB_REPOSITORY}" --signer-workflow "${SIGNER_WORKFLOW_REF}" "${CONTAINER_IMAGE_DIGEST}" || exit 1
-          gh attestation verify --repo "${GITHUB_REPOSITORY}" --signer-workflow "${SIGNER_WORKFLOW_REF}" "${CONTAINER_IMAGE_FLOATING}" || exit 1
-          gh attestation verify --repo "${GITHUB_REPOSITORY}" --signer-workflow "${SIGNER_WORKFLOW_REF}" "${CONTAINER_IMAGE_LABEL}" || exit 1
+          for image in "${CONTAINER_IMAGE_DIGEST}" "${CONTAINER_IMAGE_FLOATING}" "${CONTAINER_IMAGE_LABEL}"; do
+            attempts=0
+            until gh attestation verify --repo "${GITHUB_REPOSITORY}" --signer-workflow "${SIGNER_WORKFLOW_REF}" "${image}"; do
+              attempts=$((attempts + 1))
+              if [ "${attempts}" -ge 20 ]; then
+                echo "Attestation verification failed for ${image} after ${attempts} attempts."
+                exit 1
+              fi
+              echo "Attestation verification failed for ${image}; retrying in 15s (attempt ${attempts})..."
+              sleep 15s
+            done
+          done
 
       - name: Install cosign
         uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
@@ -160,6 +169,15 @@ jobs:
           CONTAINER_IMAGE_FLOATING: ${{ format('{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, env.FLOATING_LABEL) }}
           CONTAINER_IMAGE_LABEL: ${{ format('{0}/{1}:{2}', env.REGISTRY, needs.release.outputs.image, needs.release.outputs.version) }}
         run: |
-          cosign verify "${CONTAINER_IMAGE_DIGEST}" --certificate-identity-regexp "${CERTIFICATE_IDENTITY_REGEX}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" --certificate-github-workflow-repository "${GITHUB_REPOSITORY}" || exit 1
-          cosign verify "${CONTAINER_IMAGE_LABEL}" --certificate-identity-regexp "${CERTIFICATE_IDENTITY_REGEX}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" --certificate-github-workflow-repository "${GITHUB_REPOSITORY}" || exit 1
-          cosign verify "${CONTAINER_IMAGE_FLOATING}" --certificate-identity-regexp "${CERTIFICATE_IDENTITY_REGEX}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" --certificate-github-workflow-repository "${GITHUB_REPOSITORY}" || exit 1
+          for image in "${CONTAINER_IMAGE_DIGEST}" "${CONTAINER_IMAGE_FLOATING}" "${CONTAINER_IMAGE_LABEL}"; do
+            attempts=0
+            until cosign verify "${image}" --certificate-identity-regexp "${CERTIFICATE_IDENTITY_REGEX}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" --certificate-github-workflow-repository "${GITHUB_REPOSITORY}"; do
+              attempts=$((attempts + 1))
+              if [ "${attempts}" -ge 20 ]; then
+                echo "Signature verification failed for ${image} after ${attempts} attempts."
+                exit 1
+              fi
+              echo "Signature verification failed for ${image}; retrying in 15s (attempt ${attempts})..."
+              sleep 15s
+            done
+          done

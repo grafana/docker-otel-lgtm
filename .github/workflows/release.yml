@@ -115,7 +115,7 @@ jobs:
   verify:
     needs: [release, sign, wait-for-mirror]
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
 
     concurrency:
       group: ${{ format('{0}-{1}', github.workflow, needs.release.outputs.digest) }}

@@ -53,7 +53,7 @@ print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml
 
 ## Submit a pull request
 
-Effective June 22nd 2026, all Grafana Labs repositories [require signed commits][signed-commits].
+Effective 2026-06-22, all Grafana Labs repositories [require signed commits][signed-commits].
 To learn more about Git commit verification, refer to [About commit signature verification][signing-commits]
 and [Checking your commit signature verification status][verifying-commits].
 

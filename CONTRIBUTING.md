@@ -51,7 +51,19 @@ Take a screenshot of the slide and save it as `img/overview.png`.
 print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml
 ```
 
+## Submit a pull request
+
+Effective 2026-06-22, all Grafana Labs repositories [require signed commits][signed-commits].
+To learn more about Git commit verification, refer to [About commit signature verification][signing-commits]
+and [Checking your commit signature verification status][verifying-commits].
+
+> [!NOTE]
+> Pull requests containing any unsigned commits cannot be merged until all commits are signed.
+
 [architecture]: https://docs.google.com/presentation/d/1txMBBitezscvtJIXRHNSXnCekjMRM29GmHufUSI0NRw/edit?slide=id.g26040f0db78_0_0#slide=id.g26040f0db78_0_0
 [flint]: https://github.com/grafana/flint
 [mise]: https://github.com/jdx/mise
 [oats]: https://github.com/grafana/oats
+[signed-commits]: https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-signed-commits
+[signing-commits]: https://docs.github.com/authentication/managing-commit-signature-verification/about-commit-signature-verification
+[verifying-commits]: https://docs.github.com/authentication/troubleshooting-commit-signature-verification/checking-your-commit-and-tag-signature-verification-status

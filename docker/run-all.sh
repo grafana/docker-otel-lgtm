@@ -2,13 +2,30 @@
 
 echo "Starting grafana/otel-lgtm ${LGTM_VERSION}"
 
-# Graceful shutdown: forward SIGTERM/SIGINT to all background jobs
+# Graceful shutdown: forward SIGTERM/SIGINT to all background jobs.
 shutdown() {
+	# Avoid re-entering the handler if another signal arrives while waiting.
+	trap - SIGTERM SIGINT
 	echo "Shutting down..."
-	# Send SIGTERM to all background jobs (the wrapper scripts exec the
-	# server process, so these PIDs are the actual server processes)
-	jobs -p | xargs -r kill 2>/dev/null
-	wait
+
+	local pids=()
+	mapfile -t pids < <(jobs -pr)
+	if ((${#pids[@]} == 0)); then
+		exit 0
+	fi
+
+	# The wrapper scripts exec the server processes, so these are the server
+	# PIDs. Give them time to stop cleanly before forcing any stragglers down.
+	kill -TERM "${pids[@]}" 2>/dev/null || true
+	(
+		sleep "${LGTM_SHUTDOWN_TIMEOUT_SECONDS:-5}"
+		kill -KILL "${pids[@]}" 2>/dev/null || true
+	) &
+	local watchdog_pid=$!
+
+	wait "${pids[@]}" 2>/dev/null || true
+	kill "$watchdog_pid" 2>/dev/null || true
+	wait "$watchdog_pid" 2>/dev/null || true
 	exit 0
 }
 trap shutdown SIGTERM SIGINT

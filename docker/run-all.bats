@@ -18,7 +18,10 @@ setup() {
 		run-pyroscope.sh; do
 		cat >"$TESTDIR/$script" <<'SCRIPT'
 #!/usr/bin/env bash
-sleep 60
+if [[ "${STUB_IGNORE_TERM:-false}" == "true" ]]; then
+	trap '' TERM
+fi
+exec sleep 60
 SCRIPT
 		chmod +x "$TESTDIR/$script"
 	done
@@ -100,6 +103,18 @@ run_run_all() {
 			timeout 3s bash ./run-all.sh
 }
 
+run_run_all_with_stubborn_children() {
+	cd "$TESTDIR" || return 1
+	PATH="$TESTDIR:$PATH" \
+		LGTM_CONFIG_DIR="$CONFIGDIR" \
+		GRAFANA_SA_TOKEN_FILE="$TOKENFILE" \
+		LGTM_VERSION=latest \
+		CONTAINER_RUNTIME=docker \
+		LGTM_SHUTDOWN_TIMEOUT_SECONDS=0.1 \
+		STUB_IGNORE_TERM=true \
+			timeout --preserve-status --signal=TERM --kill-after=2s 1s bash ./run-all.sh
+}
+
 run_mcp_case() {
 	local tempo_enabled=$1
 	local sa_mode=$2
@@ -137,6 +152,12 @@ assert_file_contains() {
 
 assert_file_not_contains() {
 	! grep -Fq "$2" "$1"
+}
+
+@test "shutdown force stops children after the grace period" {
+	run run_run_all_with_stubborn_children
+	[ "$status" -eq 0 ]
+	assert_contains "Shutting down..."
 }
 
 @test "docs URL uses main for latest" {

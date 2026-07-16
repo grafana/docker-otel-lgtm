@@ -18,7 +18,7 @@ setup() {
 		run-pyroscope.sh; do
 		cat >"$TESTDIR/$script" <<'SCRIPT'
 #!/usr/bin/env bash
-if [[ ${STUB_IGNORE_TERM:-false} == "true" ]]; then
+if [[ "${STUB_IGNORE_TERM:-false}" == "true" ]]; then
 	trap '' TERM
 fi
 exec sleep 60

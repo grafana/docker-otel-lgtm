@@ -72,6 +72,12 @@ You can enable logging in the .env file for troubleshooting:
 
 This has nothing to do with any application logs, which are collected by OpenTelemetry.
 
+### Configure the shutdown timeout
+
+The container forwards `SIGTERM` and `SIGINT` to every backend and waits up to five seconds
+for a graceful shutdown. Set `LGTM_SHUTDOWN_TIMEOUT_SECONDS` to change this grace period.
+Any process still running after the timeout is forcefully stopped.
+
 ### Enable OBI (eBPF auto-instrumentation)
 
 [OpenTelemetry eBPF Instrumentation (OBI)][obi] uses eBPF to automatically generate traces and

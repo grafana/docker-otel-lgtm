@@ -54,11 +54,11 @@ print-initial-config --feature-gates otelcol.printInitialConfig > merged.yaml
 ## Submit a pull request
 
 Effective June 22nd 2026, all Grafana Labs repositories [require signed commits][signed-commits].
-To learn how to enable commit verification, refer to [About commit signature verification][signing-commits]
-and [Checking your commit signature verification status][verifying-commits] to learn more.
+To learn more about Git commit verification, refer to [About commit signature verification][signing-commits]
+and [Checking your commit signature verification status][verifying-commits].
 
 > [!NOTE]
-> Pull requests containing unsigned commits will be rejected and closed.
+> Pull requests containing any unsigned commits cannot be merged until all commits are signed.
 
 [architecture]: https://docs.google.com/presentation/d/1txMBBitezscvtJIXRHNSXnCekjMRM29GmHufUSI0NRw/edit?slide=id.g26040f0db78_0_0#slide=id.g26040f0db78_0_0
 [flint]: https://github.com/grafana/flint

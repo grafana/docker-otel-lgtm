@@ -168,4 +168,17 @@ LABEL cpe=""
 LABEL io.buildah.version=""
 LABEL release=""
 
+# Grafana
+EXPOSE 3000
+
+# Pyroscope
+EXPOSE 4040
+
+# OpenTelemetry Collector
+EXPOSE 4317
+EXPOSE 4318
+
+# Prometheus
+EXPOSE 9090
+
 CMD ["/otel-lgtm/run-all.sh"]

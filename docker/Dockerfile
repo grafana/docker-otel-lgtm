@@ -171,6 +171,9 @@ LABEL release=""
 # Grafana
 EXPOSE 3000
 
+# Tempo
+EXPOSE 3200
+
 # Pyroscope
 EXPOSE 4040
 

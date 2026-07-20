@@ -24,7 +24,7 @@ class Logger {
       }),
       processors: [
         // Add a processor to export log record
-        new BatchLogRecordProcessor(new OTLPLogExporter()),
+        new BatchLogRecordProcessor({ exporter: new OTLPLogExporter() }),
       ],
     });
     this.logger = loggerProvider.getLogger("default");

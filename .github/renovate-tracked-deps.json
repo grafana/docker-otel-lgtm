@@ -118,7 +118,7 @@
     },
     "examples/go/go.mod": {
       "gomod": [
-        "github.com/cenkalti/backoff/v5",
+        "github.com/cenkalti/backoff/v7",
         "github.com/cespare/xxhash/v2",
         "github.com/felixge/httpsnoop",
         "github.com/go-logr/logr",

@@ -7,8 +7,8 @@
 
 # To make upgrades self-healing, remove these managed plugins whenever the
 # Grafana version changes so they are re-downloaded fresh for the running
-# version. The last-installed version is recorded in a marker file next to the
-# Grafana home directory.
+# version. The last-installed version is recorded in a marker file under
+# GF_PATHS_HOME.
 
 # Grafana-managed plugins that this image relies on Grafana to (re)install on
 # startup. Grafana downloads these automatically (as needed) into GF_PATHS_PLUGINS,

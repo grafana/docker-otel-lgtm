@@ -11,9 +11,8 @@
 # Grafana home directory.
 
 # Grafana-managed plugins that this image relies on Grafana to (re)install on
-# startup. All of these are re-downloaded automatically via Grafana's preinstall
-# mechanism, so removing them is safe and only forces a fresh, version-compatible
-# download.
+# startup. Grafana downloads these automatically (as needed) into GF_PATHS_PLUGINS,
+ # so removing them is safe and only forces a fresh, version-compatible download.
 GRAFANA_MANAGED_PLUGINS=(
 	grafana-exploretraces-app
 	grafana-lokiexplore-app

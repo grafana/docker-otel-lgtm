@@ -29,7 +29,7 @@ seed_managed_plugins() {
 	GRAFANA_VERSION=v13.1.0 run refresh_stale_managed_plugins
 	[ "$status" -eq 0 ]
 	[ -f "$MARKER" ]
-	[ "$(cat "$MARKER")" = "v13.1.0" ]
+	[ "$(<"$MARKER")" = "v13.1.0" ]
 }
 
 @test "same version is a no-op and keeps existing plugins" {
@@ -52,7 +52,7 @@ seed_managed_plugins() {
 	[ ! -e "$GF_PATHS_PLUGINS/grafana-lokiexplore-app" ]
 	[ ! -e "$GF_PATHS_PLUGINS/grafana-exploretraces-app" ]
 	[ ! -e "$GF_PATHS_PLUGINS/grafana-pyroscope-app" ]
-	[ "$(cat "$MARKER")" = "v13.1.0" ]
+	[ "$(<"$MARKER")" = "v13.1.0" ]
 }
 
 @test "existing volume without a marker is treated as stale and refreshed" {
@@ -61,7 +61,7 @@ seed_managed_plugins() {
 	GRAFANA_VERSION=v13.1.0 run refresh_stale_managed_plugins
 	[ "$status" -eq 0 ]
 	[ ! -e "$GF_PATHS_PLUGINS/grafana-metricsdrilldown-app" ]
-	[ "$(cat "$MARKER")" = "v13.1.0" ]
+	[ "$(<"$MARKER")" = "v13.1.0" ]
 }
 
 @test "unmanaged plugins are preserved when refreshing" {

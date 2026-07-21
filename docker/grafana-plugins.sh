@@ -25,7 +25,7 @@ GRAFANA_MANAGED_PLUGINS=(
 refresh_stale_managed_plugins() {
 	local plugins_dir="${GF_PATHS_PLUGINS:?GF_PATHS_PLUGINS must be set}"
 	local home_dir="${GF_PATHS_HOME:?GF_PATHS_HOME must be set}"
-	local version="${GRAFANA_VERSION:-}"
+	local version="${GRAFANA_VERSION:?GRAFANA_VERSION must be set}"
 	local marker="${home_dir}/.otel-lgtm-grafana-version"
 
 	# On a first run with no persisted plugins there is nothing stale to clean;
@@ -38,7 +38,7 @@ refresh_stale_managed_plugins() {
 
 	local previous_version=""
 	if [ -f "${marker}" ]; then
-		previous_version=$(cat "${marker}")
+		previous_version=$(<"${marker}")
 	fi
 
 	# Plugins were already installed for the running Grafana version.

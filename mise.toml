@@ -32,7 +32,7 @@ FLINT_CONFIG_DIR = ".github/config"
 
 [tasks."test:unit"]
 description = "Run unit tests"
-run = "bats docker/run-otelcol.bats docker/run-all.bats run-lgtm.bats"
+run = "bats docker/run-otelcol.bats docker/run-all.bats docker/grafana-plugins.bats run-lgtm.bats"
 
 [tasks."ci"]
 description = "Run all checks (lint + unit tests)"

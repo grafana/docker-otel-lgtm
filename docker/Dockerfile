@@ -76,6 +76,7 @@ COPY common.sh \
  grafana-dashboard-red-metrics-native.json \
  grafana-dashboard-jvm-metrics.json \
  logging.sh \
+ grafana-plugins.sh \
  run-grafana.sh \
  loki-config.yaml \
  run-loki.sh \

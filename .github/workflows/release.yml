@@ -89,7 +89,7 @@ jobs:
       attestations: write
       contents: read
       id-token: write
-    uses: grafana/shared-workflows/.github/workflows/sign-and-attest.yml@8c3a387491e78a07acaac8f84b249a6f2de4dd55 # main
+    uses: grafana/shared-workflows/.github/workflows/sign-and-attest.yml@1da238b5701cb458c9843d6704e9bfde799da74c # main
     with:
       # renovate: datasource=github-releases depName=cosign packageName=sigstore/cosign
       cosign-version: v3.1.1

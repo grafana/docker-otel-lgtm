@@ -1,0 +1,25 @@
+name: python rolldice emits traces and logs
+fixture:
+  compose:
+    template: lgtm
+    file: docker-compose.oats.yml
+seed:
+  type: app
+input:
+  - path: /rolldice
+expected:
+  compose-logs:
+    - The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)
+  traces:
+    - traceql: '{ span.http.route = "/rolldice" }'
+      match_spans:
+        - name: GET /rolldice
+          attributes:
+            - key: otel.library.name
+              value: opentelemetry.instrumentation.flask
+  metrics:
+    - promql: 'http_server_active_requests{http_method="GET"}'
+      value: '>= 0'
+  logs:
+    - logql: '{service_name="rolldice"} |~ `Anonymous player is rolling the dice.*`'
+      regex: 'Anonymous player is rolling the dice'

@@ -1,0 +1,27 @@
+name: obi multi-service emits traces and metrics
+fixture:
+  compose:
+    template: lgtm
+    file: docker-compose.oats.yml
+seed:
+  type: app
+expected:
+  traces:
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8080 }'
+      match_spans:
+        - name: GET /rolldice
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8081 }'
+      match_spans:
+        - name: GET /rolldice
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8082 }'
+      match_spans:
+        - name: GET /rolldice
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8083 }'
+      match_spans:
+        - name: GET /rolldice
+    - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8084 }'
+      match_spans:
+        - name: GET /rolldice
+  metrics:
+    - promql: 'http_server_request_duration_seconds_count{http_route="/rolldice"}'
+      value: '> 0'

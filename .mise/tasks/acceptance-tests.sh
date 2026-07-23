@@ -8,6 +8,11 @@ version=${usage_version:-$(date +%Y%m%d%H%M%S)}
 
 echo "using version $version"
 
-# Force Docker: oats hardcodes `docker compose`, so the image must be built with Docker.
+# Build with Docker so the image is available when OATS falls back to Docker.
 ./build-lgtm.sh "$version" docker
-oats -timeout 5m -lgtm-version "$version" examples/
+
+export LGTM_IMAGE="grafana/otel-lgtm:${version}"
+oats \
+	--config oats-config.yaml \
+	--no-cache \
+	--timeout=3m

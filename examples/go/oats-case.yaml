@@ -1,0 +1,20 @@
+name: go rolldice emits traces and metrics
+fixture:
+  compose:
+    template: lgtm
+    file: docker-compose.oats.yml
+seed:
+  type: app
+input:
+  - path: /rolldice
+expected:
+  traces:
+    - traceql: '{ span.http.route = "/rolldice" }'
+      match_spans:
+        - name: GET /rolldice
+          attributes:
+            - key: otel.library.name
+              value: go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp
+  metrics:
+    - promql: 'go_goroutine_count{}'
+      value: '> 0'

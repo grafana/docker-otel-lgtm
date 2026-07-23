@@ -1,0 +1,24 @@
+name: nodejs rolldice emits traces and logs
+fixture:
+  compose:
+    template: lgtm
+    file: docker-compose.oats.yml
+seed:
+  type: app
+input:
+  - path: /rolldice?rolls=5
+expected:
+  traces:
+    - traceql: '{ span.http.route = "/rolldice" }'
+      match_spans:
+        - name: GET /rolldice
+          attributes:
+            - key: otel.library.name
+              value: "@opentelemetry/instrumentation-http"
+  metrics:
+    - promql: 'dice_lib_rolls_counter_total{service_name="dice-server"}'
+      value: '>= 0'
+  logs:
+    - logql: '{service_name="dice-server"} |~ `Received request to roll dice`'
+      match:
+        - name: Received request to roll dice

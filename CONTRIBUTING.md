@@ -30,7 +30,7 @@ directory and listed by the root `oats-config.yaml`. The test cases are run by
 If a test case fails (let's say `examples/nodejs`), follow these steps:
 
 1. Build a new image: `mise run build-lgtm dev1`
-2. Run `LGTM_IMAGE=grafana/otel-lgtm:dev1 oats --config oats-config.yaml --container-runtime docker examples/nodejs`
+2. Run `oats --no-cache --lgtm-version dev1 --timeout 5m examples/nodejs`
    (`oats` is automatically installed by `mise`)
 3. go to <http://127.0.0.1:3000>
 

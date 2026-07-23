@@ -4,16 +4,16 @@
 
 set -euo pipefail
 
-version=${usage_version:-$(date +%Y%m%d%H%M%S)}
+LGTM_VERSION=${usage_version:-$(date +%Y%m%d%H%M%S)}
 
-echo "using version $version"
+echo "using version $LGTM_VERSION"
 
 # Build with Docker so the image is available when OATS falls back to Docker.
-./build-lgtm.sh "$version" docker
+./build-lgtm.sh "$LGTM_VERSION" docker
 
-export LGTM_IMAGE="grafana/otel-lgtm:${version}"
 oats \
-	--config oats-config.yaml \
 	--no-cache \
+	--lgtm-version "$LGTM_VERSION" \
 	--parallel=4 \
-	--timeout=3m
+	--timeout=5m \
+	.

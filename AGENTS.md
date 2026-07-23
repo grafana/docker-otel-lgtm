@@ -39,8 +39,7 @@ mise run acceptance-tests
 
 # Run a single example's tests (build first)
 mise run build-lgtm dev1
-LGTM_IMAGE=grafana/otel-lgtm:dev1 oats --config oats-config.yaml \
-  --container-runtime docker examples/nodejs
+oats --no-cache --lgtm-version dev1 --timeout 5m examples/nodejs
 ```
 
 ## Linting

@@ -23,13 +23,15 @@ Always run `mise run lint:fix` before committing — review the changed files as
 
 ## Acceptance Tests
 
-Acceptance test cases are defined in `oats.yaml` files in the examples directory.
-The test cases are run by [oats].
+Acceptance test cases are defined in `oats-case.yaml` files in the examples
+directory and listed by the root `oats-config.yaml`. The test cases are run by
+[oats].
 
 If a test case fails (let's say `examples/nodejs`), follow these steps:
 
 1. Build a new image: `mise run build-lgtm dev1`
-2. `oats -timeout 2h -lgtm-version dev1 examples/nodejs` (automatically installed by `mise`)
+2. Run `LGTM_IMAGE=grafana/otel-lgtm:dev1 oats --config oats-config.yaml --container-runtime docker examples/nodejs`
+   (`oats` is automatically installed by `mise`)
 3. go to <http://127.0.0.1:3000>
 
 You can run all everything together using `mise run test`.

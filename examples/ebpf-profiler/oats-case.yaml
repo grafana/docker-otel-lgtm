@@ -3,6 +3,8 @@ fixture:
   compose:
     template: lgtm
     file: docker-compose.oats.yml
+    # Keep this host-privileged eBPF fixture serial instead of declaring a
+    # managed app endpoint that OATS would consider parallel-safe.
 seed:
   type: app
 input:

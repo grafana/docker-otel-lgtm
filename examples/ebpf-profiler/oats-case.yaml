@@ -1,4 +1,5 @@
 name: ebpf profiler captures rolldice profiles
+tags: [ebpf-profiler]
 fixture:
   compose:
     template: lgtm

@@ -6,8 +6,11 @@ services:
     environment:
       ENABLE_OBI: "true"
       ENABLE_LOGS_OBI: "true"
+      # OBI defaults to 60s, which needlessly delays the test's metric assertion.
+      OTEL_EBPF_METRICS_INTERVAL: "1s"
     privileged: true
     pid: "host"
+    stop_grace_period: 1s
 
   generate-traffic:
     build:
@@ -19,18 +22,21 @@ services:
       - dotnet
       - go
       - nodejs
+    stop_grace_period: 1s
 
   dotnet:
     build:
       context: ../../examples/obi/dotnet
     depends_on:
       - lgtm
+    stop_grace_period: 1s
 
   go:
     build:
       context: ../../examples/obi/go
     depends_on:
       - lgtm
+    stop_grace_period: 1s
 
   java:
     build:
@@ -38,12 +44,14 @@ services:
       dockerfile: ../obi/java.Dockerfile
     depends_on:
       - lgtm
+    stop_grace_period: 1s
 
   nodejs:
     build:
       context: ../../examples/obi/nodejs
     depends_on:
       - lgtm
+    stop_grace_period: 1s
 
   python:
     build:
@@ -51,3 +59,4 @@ services:
       dockerfile: ../obi/python.Dockerfile
     depends_on:
       - lgtm
+    stop_grace_period: 1s

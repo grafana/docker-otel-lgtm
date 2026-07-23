@@ -1,4 +1,5 @@
 name: go rolldice emits traces and metrics
+tags: [examples]
 fixture:
   compose:
     template: lgtm

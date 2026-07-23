@@ -11,9 +11,10 @@ echo "using version $LGTM_VERSION"
 # Build with Docker so the image is available when OATS falls back to Docker.
 ./build-lgtm.sh "$LGTM_VERSION" docker
 
+export OATS_PARALLEL=${OATS_PARALLEL:-4}
+
 oats \
 	--no-cache \
 	--lgtm-version "$LGTM_VERSION" \
-	--parallel=4 \
 	--timeout=5m \
 	.

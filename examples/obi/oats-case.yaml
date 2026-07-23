@@ -1,4 +1,5 @@
 name: obi multi-service emits traces and metrics
+tags: [obi]
 fixture:
   compose:
     template: lgtm

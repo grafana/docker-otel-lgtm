@@ -29,8 +29,9 @@ The build script (`build-lgtm.sh`) auto-detects Docker or Podman.
 ## Testing
 
 Acceptance tests use [OATS](https://github.com/grafana/oats) (OpenTelemetry
-Acceptance Tests). Most examples have an `oats.yaml` that validates traces
-(TraceQL), metrics (PromQL), and logs (LogQL).
+Acceptance Tests). The root `oats-config.yaml` discovers per-example
+`oats-case.yaml` files that validate traces (TraceQL), metrics (PromQL), logs
+(LogQL), and profiles.
 
 ```bash
 # Run all acceptance tests
@@ -38,7 +39,7 @@ mise run acceptance-tests
 
 # Run a single example's tests (build first)
 mise run build-lgtm dev1
-oats -timeout 2h -lgtm-version dev1 examples/nodejs
+oats --no-cache --lgtm-version dev1 --timeout 5m examples/nodejs
 ```
 
 ## Linting
@@ -85,7 +86,8 @@ Language-specific demo apps that emit OpenTelemetry data:
 - `examples/nodejs` (port 8084) - Node.js
 
 Most examples have a `docker-compose.oats.yml`, a `run.sh` script, and an
-`oats.yaml` for acceptance tests.
+`oats-case.yaml` for acceptance tests. The root `oats-config.yaml` lists the
+cases.
 
 ### Key Ports
 

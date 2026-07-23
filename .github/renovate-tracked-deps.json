@@ -248,7 +248,7 @@
     },
     "examples/obi/generate-traffic.Dockerfile": {
       "dockerfile": [
-        "ubuntu"
+        "curlimages/curl"
       ]
     },
     "examples/obi/go/Dockerfile": {
@@ -314,6 +314,7 @@
       "mise": [
         "actionlint",
         "aqua:grafana/flint",
+        "aqua:grafana/gcx",
         "aqua:grafana/oats",
         "aqua:jonwiggins/xmloxide",
         "aqua:owenlamont/ryl",

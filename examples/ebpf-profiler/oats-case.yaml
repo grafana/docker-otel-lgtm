@@ -1,0 +1,17 @@
+name: ebpf profiler captures rolldice profiles
+tags: [ebpf-profiler]
+fixture:
+  compose:
+    template: lgtm
+    file: docker-compose.oats.yml
+    # Keep this host-privileged eBPF fixture serial instead of declaring a
+    # managed app endpoint that OATS would consider parallel-safe.
+seed:
+  type: app
+input:
+  - path: /rolldice
+expected:
+  profiles:
+    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{"process.executable.name"=~"rolldice"}'
+      match:
+        - name: main.rolldice

@@ -1,0 +1,26 @@
+name: dotnet rolldice emits traces metrics and logs
+tags: [examples]
+fixture:
+  compose:
+    template: lgtm
+    file: docker-compose.oats.yml
+    app_service: rolldice
+    app_port: 8083
+seed:
+  type: app
+input:
+  - path: /rolldice
+expected:
+  traces:
+    - traceql: '{ span.http.route = "/rolldice/{player?}" }'
+      match_spans:
+        - name: GET /rolldice/{player?}
+          attributes:
+            - key: otel.library.name
+              value: Microsoft.AspNetCore
+  metrics:
+    - promql: 'http_server_active_requests{http_request_method="GET"}'
+      value: '>= 0'
+  logs:
+    - logql: '{service_name="rolldice"} |~ `Anonymous player is rolling the dice.*`'
+      regex: 'Anonymous player is rolling the dice'

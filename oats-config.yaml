@@ -1,0 +1,10 @@
+meta:
+  version: 3
+
+cases:
+  - examples/go/oats-case.yaml
+  - examples/dotnet/oats-case.yaml
+  - examples/nodejs/oats-case.yaml
+  - examples/python/oats-case.yaml
+  - examples/obi/oats-case.yaml
+  - examples/ebpf-profiler/oats-case.yaml

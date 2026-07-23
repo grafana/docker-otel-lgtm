@@ -3,6 +3,8 @@ fixture:
   compose:
     template: lgtm
     file: docker-compose.oats.yml
+    app_service: python
+    app_port: 8082
 seed:
   type: app
 input:

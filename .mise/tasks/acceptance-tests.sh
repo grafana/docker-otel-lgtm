@@ -15,4 +15,5 @@ export LGTM_IMAGE="grafana/otel-lgtm:${version}"
 oats \
 	--config oats-config.yaml \
 	--no-cache \
+	--parallel=4 \
 	--timeout=3m

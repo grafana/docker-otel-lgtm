@@ -12,4 +12,4 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
       OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
     ports:
-      - "8080:8082"
+      - "127.0.0.1::8082"

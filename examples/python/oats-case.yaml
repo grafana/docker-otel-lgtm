@@ -1,4 +1,4 @@
-name: python rolldice emits traces and logs
+name: python rolldice emits traces metrics and logs
 fixture:
   compose:
     template: lgtm

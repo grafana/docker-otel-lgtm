@@ -1,4 +1,4 @@
-name: obi multi-service emits traces and metrics
+name: OBI multi-service emits traces and metrics
 tags: [obi]
 fixture:
   compose:

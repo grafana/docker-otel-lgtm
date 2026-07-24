@@ -1,4 +1,4 @@
-name: nodejs rolldice emits traces metrics and logs
+name: Node.js rolldice emits traces metrics and logs
 tags: [examples]
 fixture:
   compose:

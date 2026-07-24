@@ -1,4 +1,4 @@
-name: dotnet rolldice emits traces metrics and logs
+name: .NET rolldice emits traces metrics and logs
 tags: [examples]
 fixture:
   compose:

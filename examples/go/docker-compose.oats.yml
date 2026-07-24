@@ -4,7 +4,7 @@
 services:
   go:
     build:
-      context: .
+      context: ../../examples/go
       dockerfile: Dockerfile
     environment:
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318

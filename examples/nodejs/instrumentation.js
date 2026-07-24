@@ -12,9 +12,12 @@ const {
 
 const sdk = new NodeSDK({
   traceExporter: new OTLPTraceExporter(),
-  metricReader: new PeriodicExportingMetricReader({
-    exporter: new OTLPMetricExporter(),
-  }),
+  metricReaders: [
+    new PeriodicExportingMetricReader({
+      exporter: new OTLPMetricExporter(),
+      exportIntervalMillis: 5000,
+    }),
+  ],
   instrumentations: [
     getNodeAutoInstrumentations({
       "@opentelemetry/instrumentation-http": {
@@ -29,4 +32,4 @@ const sdk = new NodeSDK({
   ],
 });
 
-sdk.start();
+module.exports = { sdk };

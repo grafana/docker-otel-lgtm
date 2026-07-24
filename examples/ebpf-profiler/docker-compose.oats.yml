@@ -1,7 +1,7 @@
 services:
   otel-ebpf-profiler:
     build:
-      context: .
+      context: ../../examples/ebpf-profiler
       dockerfile: Dockerfile
     command:
       [
@@ -20,11 +20,10 @@ services:
     depends_on:
       - lgtm
 
-  # instrumented applications - sorted alphabetically by language
   go:
     build:
-      context: ../go
-      dockerfile: ../go/Dockerfile
+      context: ../../examples/go
+      dockerfile: Dockerfile
     environment:
       OTEL_SERVICE_NAME: "rolldice"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
@@ -33,29 +32,3 @@ services:
       - "8080:8081"
     depends_on:
       - lgtm
-#
-#  java:
-#    build:
-#      context: ../java
-#      dockerfile: ../java/json-logging-otlp/Dockerfile
-#    environment:
-#      OTEL_SERVICE_NAME: "rolldice"
-#      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
-#      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - lgtm
-#
-#  python:
-#    build:
-#      context: ../python
-#      dockerfile: ../python/Dockerfile
-#    environment:
-#      OTEL_SERVICE_NAME: "rolldice"
-#      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4317
-#      OTEL_METRIC_EXPORT_INTERVAL: "5000" # so we don't have to wait 60s for metrics
-#    ports:
-#      - "8082:8082"
-#    depends_on:
-#      - lgtm

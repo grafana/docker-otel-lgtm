@@ -1,0 +1,15 @@
+name: ebpf profiler captures rolldice profiles
+tags: [ebpf-profiler]
+fixture:
+  compose:
+    template: lgtm
+    file: docker-compose.oats.yml
+seed:
+  type: app
+input:
+  - path: /rolldice
+expected:
+  profiles:
+    - query: 'process_cpu:cpu:nanoseconds:cpu:nanoseconds{"process.executable.name"=~"rolldice"}'
+      match:
+        - name: main.rolldice

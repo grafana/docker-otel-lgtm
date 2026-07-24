@@ -18,4 +18,4 @@ COPY . .
 
 EXPOSE 8084
 
-CMD ["node", "--require", "./instrumentation.js", "app.js"]
+CMD ["node", "bootstrap.js"]

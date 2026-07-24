@@ -6,9 +6,23 @@ on: [pull_request]
 permissions: {}
 
 jobs:
-  acceptance-tests:
+  acceptance-test-suite:
+    name: acceptance-tests (${{ matrix.name }})
     permissions: {}
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: examples
+            tags: examples
+            parallel: 4
+          - name: ebpf-profiler
+            tags: ebpf-profiler
+            parallel: 1
+          - name: obi
+            tags: obi
+            parallel: 1
     steps:
       - name: Check out
         with:
@@ -21,4 +35,19 @@ jobs:
           sha256: 0744cb3c303baf0d308ff7b112ed41f22abb6029cb5644fd3a8ce74b29f16a68
 
       - name: Run acceptance tests
+        env:
+          OATS_PARALLEL: ${{ matrix.parallel }}
+          OATS_TAGS: ${{ matrix.tags }}
         run: mise run acceptance-tests ${{ github.event.pull_request.head.sha }}
+
+  # Keep the stable required-check name while running the suites concurrently.
+  acceptance-tests:
+    if: ${{ always() }}
+    needs: acceptance-test-suite
+    permissions: {}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Verify acceptance test suites
+        env:
+          RESULT: ${{ needs.acceptance-test-suite.result }}
+        run: test "$RESULT" = success

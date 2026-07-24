@@ -1,6 +1,7 @@
 # pin all versions to avoid GitHub rate limit
 [tools]
-"aqua:grafana/oats" = "0.7.0"
+"aqua:grafana/gcx" = "v0.5.0"
+"aqua:grafana/oats" = "0.8.0"
 bats = "1.13.0"
 dotnet = "10.0.202"
 go = "1.26.5"

@@ -313,12 +313,13 @@
     "mise.toml": {
       "mise": [
         "actionlint",
-        "aqua:grafana/flint",
         "aqua:grafana/oats",
         "aqua:jonwiggins/xmloxide",
         "aqua:owenlamont/ryl",
+        "aqua:stackrox/kube-linter",
         "bats",
         "biome",
+        "cargo:https://github.com/grafana/flint",
         "dotnet",
         "editorconfig-checker",
         "go",

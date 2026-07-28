@@ -1,9 +1,5 @@
 [settings]
-exclude = [
-  "**/package-lock.json",
-  # actionlint 1.7.12 predates GitHub's environment.deployment setting.
-  ".github/workflows/ghcr-image-build-and-publish.yml",
-]
+exclude = ["**/package-lock.json"]
 
 [checks.renovate-deps]
 exclude_managers = ["github-actions", "github-runners"]

@@ -9,21 +9,19 @@ seed:
 input:
   - compose:
       service: generate-traffic
-      # Java instrumentation attaches after the app becomes healthy, so wait
-      # before sending the first and only request.
-      command: [sleep 10; exec curl -fsS http://java:8080/rolldice]
+      command: [curl, -fsS, --retry, "30", --retry-delay, "1", --retry-all-errors, http://java:8080/rolldice]
   - compose:
       service: generate-traffic
-      command: [exec curl -fsS http://go:8081/rolldice]
+      command: [curl, -fsS, --retry, "30", --retry-delay, "1", --retry-all-errors, http://go:8081/rolldice]
   - compose:
       service: generate-traffic
-      command: [exec curl -fsS http://python:8082/rolldice]
+      command: [curl, -fsS, --retry, "30", --retry-delay, "1", --retry-all-errors, http://python:8082/rolldice]
   - compose:
       service: generate-traffic
-      command: [exec curl -fsS http://dotnet:8083/rolldice]
+      command: [curl, -fsS, --retry, "30", --retry-delay, "1", --retry-all-errors, http://dotnet:8083/rolldice]
   - compose:
       service: generate-traffic
-      command: [exec curl -fsS http://nodejs:8084/rolldice]
+      command: [curl, -fsS, --retry, "30", --retry-delay, "1", --retry-all-errors, http://nodejs:8084/rolldice]
 expected:
   traces:
     - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8080 }'

@@ -13,7 +13,7 @@ echo "using version $LGTM_VERSION"
 
 export OATS_PARALLEL=${OATS_PARALLEL:-4}
 
-mise exec "go:github.com/grafana/oats" -- oats \
+oats \
 	--no-cache \
 	--lgtm-version "$LGTM_VERSION" \
 	--timeout=5m \

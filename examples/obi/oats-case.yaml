@@ -6,6 +6,22 @@ fixture:
     file: docker-compose.oats.yml
 seed:
   type: app
+input:
+  - compose:
+      service: generate-traffic
+      command: [-fsS, http://java:8080/rolldice]
+  - compose:
+      service: generate-traffic
+      command: [-fsS, http://go:8081/rolldice]
+  - compose:
+      service: generate-traffic
+      command: [-fsS, http://python:8082/rolldice]
+  - compose:
+      service: generate-traffic
+      command: [-fsS, http://dotnet:8083/rolldice]
+  - compose:
+      service: generate-traffic
+      command: [-fsS, http://nodejs:8084/rolldice]
 expected:
   traces:
     - traceql: '{ span.url.path = "/rolldice" && span.server.port = 8080 }'

@@ -235,6 +235,11 @@
         "express"
       ]
     },
+    "examples/obi/docker-compose.oats.yml": {
+      "docker-compose": [
+        "curlimages/curl"
+      ]
+    },
     "examples/obi/docker-compose.yaml": {
       "docker-compose": [
         "grafana/otel-lgtm"
@@ -315,7 +320,6 @@
         "actionlint",
         "aqua:grafana/flint",
         "aqua:grafana/gcx",
-        "aqua:grafana/oats",
         "aqua:jonwiggins/xmloxide",
         "aqua:owenlamont/ryl",
         "bats",
@@ -323,6 +327,7 @@
         "dotnet",
         "editorconfig-checker",
         "go",
+        "go:github.com/grafana/oats",
         "golangci-lint",
         "google-java-format",
         "hadolint",

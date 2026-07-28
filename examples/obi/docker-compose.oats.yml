@@ -13,16 +13,14 @@ services:
     stop_grace_period: 1s
 
   generate-traffic:
-    build:
-      context: ../../examples/obi
-      dockerfile: generate-traffic.Dockerfile
+    image: curlimages/curl:8.21.0@sha256:7c12af72ceb38b7432ab85e1a265cff6ae58e06f95539d539b654f2cfa64bb13
+    profiles: [oats-input]
     depends_on:
       - java
       - python
       - dotnet
       - go
       - nodejs
-    stop_grace_period: 1s
 
   dotnet:
     build:

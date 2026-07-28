@@ -9,7 +9,9 @@ seed:
 input:
   - compose:
       service: generate-traffic
-      command: [curl, -fsS, --retry, "30", --retry-delay, "1", --retry-all-errors, http://java:8080/rolldice]
+      # Java instrumentation attaches after the app becomes healthy, so wait
+      # before sending the first and only request.
+      command: [sh, -c, "sleep 10; exec curl -fsS --retry 30 --retry-delay 1 --retry-all-errors http://java:8080/rolldice"]
   - compose:
       service: generate-traffic
       command: [curl, -fsS, --retry, "30", --retry-delay, "1", --retry-all-errors, http://go:8081/rolldice]

@@ -1,7 +1,7 @@
 # pin all versions to avoid GitHub rate limit
 [tools]
 "aqua:grafana/gcx" = "v0.6.0"
-"aqua:grafana/oats" = "0.8.0"
+"aqua:grafana/oats" = "v0.9.0"
 bats = "1.14.0"
 dotnet = "10.0.202"
 go = "1.26.5"
@@ -113,7 +113,3 @@ run = './build-lgtm.sh ${usage_tag}'
 [tasks."lint:fix"]
 description = "Auto-fix lint issues"
 run = "flint run --fix"
-
-[settings]
-# for go backend
-experimental = true

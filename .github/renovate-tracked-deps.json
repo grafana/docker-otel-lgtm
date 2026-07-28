@@ -235,6 +235,11 @@
         "express"
       ]
     },
+    "examples/obi/docker-compose.oats.yml": {
+      "docker-compose": [
+        "curlimages/curl"
+      ]
+    },
     "examples/obi/docker-compose.yaml": {
       "docker-compose": [
         "grafana/otel-lgtm"

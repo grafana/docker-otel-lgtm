@@ -327,6 +327,7 @@
         "google-java-format",
         "hadolint",
         "java",
+        "kube-linter",
         "lychee",
         "node",
         "npm:renovate",

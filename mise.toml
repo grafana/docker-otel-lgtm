@@ -19,6 +19,7 @@ editorconfig-checker = "3.8.0"
 golangci-lint = "2.12.2"
 google-java-format = "1.35.0"
 hadolint = "2.14.0"
+kube-linter = "0.8.3"
 lychee = "0.24.2"
 # @yarnpkg/libzip 3.2.2 is npm-signed and matches Yarn's release commit, but
 # was published without provenance; mise's no-downgrade policy otherwise rejects Renovate.

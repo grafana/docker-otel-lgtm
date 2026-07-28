@@ -248,7 +248,7 @@
     },
     "examples/obi/generate-traffic.Dockerfile": {
       "dockerfile": [
-        "ubuntu"
+        "curlimages/curl"
       ]
     },
     "examples/obi/go/Dockerfile": {
@@ -313,13 +313,14 @@
     "mise.toml": {
       "mise": [
         "actionlint",
+        "aqua:grafana/flint",
+        "aqua:grafana/gcx",
         "aqua:grafana/oats",
         "aqua:jonwiggins/xmloxide",
         "aqua:owenlamont/ryl",
         "aqua:stackrox/kube-linter",
         "bats",
         "biome",
-        "cargo:https://github.com/grafana/flint",
         "dotnet",
         "editorconfig-checker",
         "go",

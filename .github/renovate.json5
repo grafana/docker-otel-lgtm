@@ -2,9 +2,9 @@
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   extends: [
     "config:best-practices",
-    "config:recommended",
     "customManagers:dockerfileVersions",
     "customManagers:githubActionsVersions",
+    "helpers:pinGitHubActionDigestsToSemver",
     "github>grafana/flint#v0.22.10"
   ],
   branchPrefix: "grafanarenovatebot/",

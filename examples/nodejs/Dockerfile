@@ -12,7 +12,8 @@ RUN --mount=type=bind,source=.npmrc,target=.npmrc \
     --mount=type=cache,target=/root/.npm \
     npm ci --omit=dev
 
-USER node
+# Run as the node user
+USER 1000
 
 COPY . .
 

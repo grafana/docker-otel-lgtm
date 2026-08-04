@@ -8,7 +8,7 @@ RUN wget --progress=dot:giga https://github.com/open-telemetry/opentelemetry-ebp
 WORKDIR /profiler
 RUN /bin/bash -euo pipefail -c "source /etc/profile && make ebpf-profiler"
 
-FROM ubuntu:26.04@sha256:3131b4cc82a783df6c9df078f86e01819a13594b865c2cad47bd1bca2b7063bb
+FROM ubuntu:26.04@sha256:678c6550cc43645e08669028bc177f50be4e7c5b8cca677067b1914d4afc7a03
 
 COPY --from=builder /profiler/ebpf-profiler /usr/local/bin/
 

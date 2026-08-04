@@ -1,7 +1,7 @@
 # Same Spring Boot app as ../java but WITHOUT the OpenTelemetry Java agent.
 # OBI (eBPF Instrumentation) provides observability at the kernel level instead.
 
-FROM eclipse-temurin:25.0.3_9-jdk@sha256:bd02aad397764a2d2ea35351655d72db47dcc4b1644f65289b10946878df4623 AS builder
+FROM eclipse-temurin:25.0.3_9-jdk@sha256:12e44624adee6808a36d962717e1656e0afeeeff5a100f9cb00e0136513558f0 AS builder
 
 WORKDIR /usr/src/app/
 

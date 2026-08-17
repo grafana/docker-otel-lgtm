@@ -10,7 +10,8 @@ RUN npm ci --omit=dev
 
 COPY --chown=node:node app.js .
 
-USER node
+# Run as the node user
+USER 1000
 
 EXPOSE 8084
 

@@ -14,14 +14,12 @@ source_sibling detect-arch.sh
 
 ARCHIVE=otelcol-contrib_"${VERSION:1}"_linux_"${TARGETARCH}".tar.gz
 URL=https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/"${VERSION}"/"${ARCHIVE}"
-curl -sOL "${URL}".sig
-curl -sOL "${URL}".pem
-curl -sOL "${URL}"
+curl -fsOL "${URL}".sigstore.json
+curl -fsOL "${URL}"
 cosign verify-blob \
 	--certificate-identity-regexp github.com/open-telemetry/opentelemetry-collector-releases \
 	--certificate-oidc-issuer https://token.actions.githubusercontent.com \
-	--certificate "${ARCHIVE}".pem \
-	--signature "${ARCHIVE}".sig \
+	--bundle "${ARCHIVE}".sigstore.json \
 	"${ARCHIVE}"
 mkdir /otel-lgtm/otelcol-contrib
 tar xfz "${ARCHIVE}" -C /otel-lgtm/otelcol-contrib/

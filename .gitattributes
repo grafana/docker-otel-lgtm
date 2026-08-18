@@ -1,3 +1,5 @@
+mise.lock linguist-generated
+docs/** linguist-documentation
 * text=auto
 mvnw eol=lf
 *.sh eol=lf

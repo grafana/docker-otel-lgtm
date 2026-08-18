@@ -265,6 +265,15 @@ mise k8s-apply
 mise k8s-port-forward
 ```
 
+## Run lgtm with Nomad
+
+See [`nomad/`](nomad/) for a Nomad job spec (optional Consul service registration)
+that mirrors the Kubernetes example and `run-lgtm.sh` ports.
+
+```sh
+nomad job run nomad/lgtm.nomad.hcl
+```
+
 ## Send OpenTelemetry Data
 
 There's no need to configure anything: the Docker image works with OpenTelemetry's defaults.

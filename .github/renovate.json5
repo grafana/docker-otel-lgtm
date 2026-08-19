@@ -32,6 +32,7 @@
       matchPackageNames: [
         "grafana/grafana",
         "grafana/loki",
+        "grafana/otel-lgtm",
         "grafana/pyroscope",
         "grafana/tempo",
         "open-telemetry/opentelemetry-collector-releases",
@@ -71,6 +72,17 @@
       matchStrings: [
         "# renovate: datasource=(?<datasource>[a-z-]+?)(?: depName=(?<depName>.+?))?(?: packageName=(?<packageName>.+?))?(?: versioning=(?<versioning>[a-z-]+?))?\\s.+?_version=(?<currentValue>.+?)\\s"
       ]
+    },
+    {
+      customType: "regex",
+      description: "Update grafana/otel-lgtm image tag in the Nomad example",
+      managerFilePatterns: ["/nomad/README.md$/", "/nomad/lgtm.nomad.hcl$/"],
+      matchStrings: [
+        "docker\\.io/grafana/otel-lgtm:(?<currentValue>[\\w.-]+)"
+      ],
+      datasourceTemplate: "docker",
+      depNameTemplate: "grafana/otel-lgtm",
+      packageNameTemplate: "grafana/otel-lgtm"
     }
   ]
 }

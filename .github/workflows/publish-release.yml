@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Get GitHub token
         id: get-token
-        uses: grafana/shared-workflows/actions/create-github-app-token@ae92934a14a48b94494dbc06d74a81d47fe08a40 # v0.2.2
+        uses: grafana/shared-workflows/actions/create-github-app-token@ae92934a14a48b94494dbc06d74a81d47fe08a40 # create-github-app-token/v0.2.2
         with:
           github_app: grafana-otel-bot
           permission_set: default

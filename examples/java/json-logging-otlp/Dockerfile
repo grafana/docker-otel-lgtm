@@ -1,6 +1,6 @@
 FROM ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java:2.30.0@sha256:2f72eab291fef045b0e3dc225d9de57d46617af5412b7214802e5dcea833ff59 AS agent
 
-FROM eclipse-temurin:25.0.3_9-jdk@sha256:85765cc23cda09cdfc9af5cbd8dfeb8d4df3e4634a6a89936013962051aa2df8 AS builder
+FROM eclipse-temurin:25.0.3_9-jdk@sha256:32861ec22e54af9597a3875c69001f57c0954648f5e3fcb6be601b4e35290ab5 AS builder
 
 WORKDIR /usr/src/app/
 

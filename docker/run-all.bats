@@ -154,10 +154,61 @@ assert_file_not_contains() {
 	! grep -Fq "$2" "$1"
 }
 
+assert_process_stopped() {
+	! kill -0 "$1" 2>/dev/null
+}
+
 @test "shutdown force stops children after the grace period" {
 	run run_run_all_with_stubborn_children
 	[ "$status" -eq 0 ]
 	assert_contains "Shutting down..."
+}
+
+@test "fails fast when a component exits before becoming ready" {
+	cat >"$TESTDIR/run-loki.sh" <<'SCRIPT'
+#!/usr/bin/env bash
+exit 1
+SCRIPT
+	chmod +x "$TESTDIR/run-loki.sh"
+
+	# A well-behaved component that should be stopped (not orphaned) once
+	# the startup failure is detected. It records its own PID, then execs
+	# (like the real wrapper scripts) so a bash trap wouldn't fire anyway -
+	# the check below relies on the process itself no longer existing.
+	local pidfile="$TESTDIR/grafana.pid"
+	cat >"$TESTDIR/run-grafana.sh" <<SCRIPT
+#!/usr/bin/env bash
+echo \$\$ >"${pidfile}"
+exec sleep 60
+SCRIPT
+	chmod +x "$TESTDIR/run-grafana.sh"
+
+	cat >"$TESTDIR/curl" <<'SCRIPT'
+#!/usr/bin/env bash
+args="$*"
+
+if [[ "$args" == *"127.0.0.1:3100/ready"* ]]; then
+	printf '000'
+	exit 0
+fi
+
+if [[ "$args" == *"/ready"* ||
+	"$args" == *"/api/health"* ||
+	"$args" == *"/api/v1/status/runtimeinfo"* ]]; then
+	printf '200'
+	exit 0
+fi
+
+printf '{}'
+SCRIPT
+	chmod +x "$TESTDIR/curl"
+
+	run run_run_all
+	[ "$status" -eq 1 ]
+	assert_contains "Error: Loki exited before becoming ready."
+	assert_contains "Re-run with ENABLE_LOGS_LOKI=true (or ENABLE_LOGS_ALL=true) to see its output."
+	assert_has_file "$pidfile"
+	assert_process_stopped "$(cat "$pidfile")"
 }
 
 @test "docs URL uses main for latest" {

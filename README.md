@@ -168,13 +168,13 @@ some users even in testing situations.
 Each backend supports a `*_EXTRA_ARGS` environment variable for passing additional
 CLI flags without modifying any files:
 
-| Backend                 | Env var                 | Example                                   |
-|-------------------------|-------------------------|-------------------------------------------|
-| Prometheus              | `PROMETHEUS_EXTRA_ARGS` | `--storage.tsdb.retention.time=90d`       |
-| Loki                    | `LOKI_EXTRA_ARGS`       | `--limits.retention-period=90d`           |
-| Tempo                   | `TEMPO_EXTRA_ARGS`      | `--query-frontend.mcp-server.enabled=true`|
-| Pyroscope               | `PYROSCOPE_EXTRA_ARGS`  |                                           |
-| OpenTelemetry Collector | `OTELCOL_EXTRA_ARGS`    |                                           |
+| Backend                 | Env var                 | Example                                                                                             |
+|-------------------------|-------------------------|-----------------------------------------------------------------------------------------------------|
+| Prometheus              | `PROMETHEUS_EXTRA_ARGS` | `--storage.tsdb.retention.time=90d`                                                                 |
+| Loki                    | `LOKI_EXTRA_ARGS`       | `-store.retention=90d -compactor.retention-enabled=true -compactor.delete-request-store=filesystem` |
+| Tempo                   | `TEMPO_EXTRA_ARGS`      | `--query-frontend.mcp-server.enabled=true`                                                          |
+| Pyroscope               | `PYROSCOPE_EXTRA_ARGS`  |                                                                                                     |
+| OpenTelemetry Collector | `OTELCOL_EXTRA_ARGS`    |                                                                                                     |
 
 For example, to set a 90-day retention period for Prometheus:
 

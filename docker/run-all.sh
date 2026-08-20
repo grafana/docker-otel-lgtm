@@ -42,24 +42,33 @@ start_component() {
 	eval "start_time_${component}=${start_time}"
 }
 
-# Start all components and record their start times
+# Start all components and record their start times, keeping the PID of
+# each so a component that exits before it becomes ready can be detected.
+declare -A component_pids
+
 start_component "grafana"
 ./run-grafana.sh &
+component_pids[grafana]=$!
 
 start_component "loki"
 ./run-loki.sh &
+component_pids[loki]=$!
 
 start_component "otelcol"
 ./run-otelcol.sh &
+component_pids[otelcol]=$!
 
 start_component "prometheus"
 ./run-prometheus.sh &
+component_pids[prometheus]=$!
 
 start_component "tempo"
 ./run-tempo.sh &
+component_pids[tempo]=$!
 
 start_component "pyroscope"
 ./run-pyroscope.sh &
+component_pids[pyroscope]=$!
 
 if [[ ${ENABLE_OBI:-false} == "true" ]]; then
 	start_component "obi"
@@ -113,12 +122,34 @@ check_service_ready() {
 	return 1
 }
 
+# Function to check if a component's process is still among the running
+# background jobs (as opposed to having already exited).
+pid_is_running() {
+	local target=$1
+	local pid
+	for pid in "${running_pids[@]}"; do
+		[[ ${pid} == "${target}" ]] && return 0
+	done
+	return 1
+}
+
 # Wait for all services to be ready
 all_ready=false
 while [[ $all_ready == false ]]; do
 	# Check each service
 	for service in "${!services[@]}"; do
 		check_service_ready "$service" "${services[$service]}"
+	done
+
+	# Fail fast if a component's process has already exited, rather than
+	# waiting forever for a health check that will never succeed.
+	mapfile -t running_pids < <(jobs -pr)
+	for service in "${!services[@]}"; do
+		if [[ ${service_ready[$service]} == false ]] && ! pid_is_running "${component_pids[$service]}"; then
+			echo "Error: ${service^} exited before becoming ready." >&2
+			echo "Re-run with ENABLE_LOGS_${service^^}=true (or ENABLE_LOGS_ALL=true) to see its output." >&2
+			exit 1
+		fi
 	done
 
 	# Check if all services are ready

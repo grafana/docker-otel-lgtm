@@ -160,6 +160,39 @@ assert_file_not_contains() {
 	assert_contains "Shutting down..."
 }
 
+@test "fails fast when a component exits before becoming ready" {
+	cat >"$TESTDIR/run-loki.sh" <<'SCRIPT'
+#!/usr/bin/env bash
+exit 1
+SCRIPT
+	chmod +x "$TESTDIR/run-loki.sh"
+
+	cat >"$TESTDIR/curl" <<'SCRIPT'
+#!/usr/bin/env bash
+args="$*"
+
+if [[ "$args" == *"127.0.0.1:3100/ready"* ]]; then
+	printf '000'
+	exit 0
+fi
+
+if [[ "$args" == *"/ready"* ||
+	"$args" == *"/api/health"* ||
+	"$args" == *"/api/v1/status/runtimeinfo"* ]]; then
+	printf '200'
+	exit 0
+fi
+
+printf '{}'
+SCRIPT
+	chmod +x "$TESTDIR/curl"
+
+	run run_run_all
+	[ "$status" -eq 1 ]
+	assert_contains "Error: Loki exited before becoming ready."
+	assert_contains "Re-run with ENABLE_LOGS_LOKI=true (or ENABLE_LOGS_ALL=true) to see its output."
+}
+
 @test "docs URL uses main for latest" {
 	local expected="https://github.com/grafana/docker-otel-lgtm/blob/main/docs/mcp-integration.md"
 	run run_run_all latest

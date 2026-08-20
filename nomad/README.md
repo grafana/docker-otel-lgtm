@@ -27,14 +27,14 @@ nomad job run -var="image=docker.io/grafana/otel-lgtm:0.30.2" nomad/lgtm.nomad.h
 
 ## Access
 
-| Service    | URL / address         |
-|------------|-----------------------|
-| Grafana    | http://127.0.0.1:3000 |
-| OTLP gRPC  | 127.0.0.1:4317        |
-| OTLP HTTP  | http://127.0.0.1:4318 |
-| Prometheus | http://127.0.0.1:9090 |
-| Tempo      | http://127.0.0.1:3200 |
-| Pyroscope  | http://127.0.0.1:4040 |
+| Service    | URL / address           |
+|------------|-------------------------|
+| Grafana    | `http://127.0.0.1:3000` |
+| OTLP gRPC  | `127.0.0.1:4317`        |
+| OTLP HTTP  | `http://127.0.0.1:4318` |
+| Prometheus | `http://127.0.0.1:9090` |
+| Tempo      | `http://127.0.0.1:3200` |
+| Pyroscope  | `http://127.0.0.1:4040` |
 
 Default Grafana credentials: `admin` / `admin`.
 

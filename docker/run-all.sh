@@ -2,16 +2,15 @@
 
 echo "Starting grafana/otel-lgtm ${LGTM_VERSION}"
 
-# Graceful shutdown: forward SIGTERM/SIGINT to all background jobs.
-shutdown() {
-	# Avoid re-entering the handler if another signal arrives while waiting.
-	trap - SIGTERM SIGINT
-	echo "Shutting down..."
-
+# Stop any still-running backgrounded components, giving them time to stop
+# cleanly before forcing any stragglers down. Used both for SIGTERM/SIGINT
+# and when a component fails to start, so a startup failure doesn't leak
+# orphaned processes.
+stop_components() {
 	local pids=()
 	mapfile -t pids < <(jobs -pr)
 	if ((${#pids[@]} == 0)); then
-		exit 0
+		return 0
 	fi
 
 	# The wrapper scripts exec the server processes, so these are the server
@@ -26,6 +25,14 @@ shutdown() {
 	wait "${pids[@]}" 2>/dev/null || true
 	kill "$watchdog_pid" 2>/dev/null || true
 	wait "$watchdog_pid" 2>/dev/null || true
+}
+
+# Graceful shutdown: forward SIGTERM/SIGINT to all background jobs.
+shutdown() {
+	# Avoid re-entering the handler if another signal arrives while waiting.
+	trap - SIGTERM SIGINT
+	echo "Shutting down..."
+	stop_components
 	exit 0
 }
 trap shutdown SIGTERM SIGINT
@@ -148,6 +155,7 @@ while [[ $all_ready == false ]]; do
 		if [[ ${service_ready[$service]} == false ]] && ! pid_is_running "${component_pids[$service]}"; then
 			echo "Error: ${service^} exited before becoming ready." >&2
 			echo "Re-run with ENABLE_LOGS_${service^^}=true (or ENABLE_LOGS_ALL=true) to see its output." >&2
+			stop_components
 			exit 1
 		fi
 	done

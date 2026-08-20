@@ -8,6 +8,10 @@
       "packageName": "grafana/loki",
       "datasource": "github-releases"
     },
+    "grafana/otel-lgtm": {
+      "packageName": "grafana/otel-lgtm",
+      "datasource": "docker"
+    },
     "obi": {
       "packageName": "open-telemetry/opentelemetry-ebpf-instrumentation",
       "datasource": "github-releases"
@@ -313,6 +317,16 @@
     "go.mod": {
       "gomod": [
         "go"
+      ]
+    },
+    "nomad/README.md": {
+      "regex": [
+        "grafana/otel-lgtm"
+      ]
+    },
+    "nomad/lgtm.nomad.hcl": {
+      "regex": [
+        "grafana/otel-lgtm"
       ]
     },
     "mise.toml": {

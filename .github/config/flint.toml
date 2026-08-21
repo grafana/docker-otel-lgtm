@@ -2,4 +2,4 @@
 exclude = ["**/package-lock.json"]
 
 [checks.renovate-deps]
-exclude_managers = ["github-actions", "github-runners"]
+exclude_managers = ["github-runners"]

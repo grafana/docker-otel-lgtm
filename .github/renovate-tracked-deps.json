@@ -4,13 +4,13 @@
       "packageName": "grafana/grafana",
       "datasource": "github-releases"
     },
-    "loki": {
-      "packageName": "grafana/loki",
-      "datasource": "github-releases"
-    },
     "grafana/otel-lgtm": {
       "packageName": "grafana/otel-lgtm",
       "datasource": "docker"
+    },
+    "loki": {
+      "packageName": "grafana/loki",
+      "datasource": "github-releases"
     },
     "obi": {
       "packageName": "open-telemetry/opentelemetry-ebpf-instrumentation",
@@ -40,23 +40,75 @@
       ]
     },
     ".github/workflows/acceptance-tests.yml": {
-      "regex": [
-        "mise"
+      "github-actions": [
+        "actions/checkout",
+        "jdx/mise",
+        "jdx/mise-action",
+        "ubuntu"
       ]
     },
     ".github/workflows/ci.yml": {
-      "regex": [
-        "mise"
+      "github-actions": [
+        "actions/checkout",
+        "jdx/mise",
+        "jdx/mise-action",
+        "ubuntu"
+      ]
+    },
+    ".github/workflows/codeql.yml": {
+      "github-actions": [
+        "actions/checkout",
+        "github/codeql-action",
+        "ubuntu"
+      ]
+    },
+    ".github/workflows/container-scan.yml": {
+      "github-actions": [
+        "aquasecurity/trivy",
+        "aquasecurity/trivy-action",
+        "github/codeql-action",
+        "ubuntu"
       ]
     },
     ".github/workflows/ghcr-image-build-and-publish.yml": {
+      "github-actions": [
+        "actions/attest",
+        "actions/checkout",
+        "docker/build-push-action",
+        "docker/login-action",
+        "docker/metadata-action",
+        "docker/setup-buildx-action",
+        "sigstore/cosign",
+        "sigstore/cosign-installer",
+        "ubuntu"
+      ],
       "regex": [
         "cosign"
       ]
     },
+    ".github/workflows/publish-release.yml": {
+      "github-actions": [
+        "actions/github-script",
+        "grafana/shared-workflows",
+        "ubuntu"
+      ]
+    },
     ".github/workflows/release.yml": {
+      "github-actions": [
+        "actions/checkout",
+        "grafana/shared-workflows",
+        "sigstore/cosign",
+        "sigstore/cosign-installer",
+        "ubuntu"
+      ],
       "regex": [
         "cosign"
+      ]
+    },
+    ".github/workflows/scheduled-release.yml": {
+      "github-actions": [
+        "actions/checkout",
+        "ubuntu"
       ]
     },
     "docker/Dockerfile": {
@@ -319,16 +371,6 @@
         "go"
       ]
     },
-    "nomad/README.md": {
-      "regex": [
-        "grafana/otel-lgtm"
-      ]
-    },
-    "nomad/lgtm.nomad.hcl": {
-      "regex": [
-        "grafana/otel-lgtm"
-      ]
-    },
     "mise.toml": {
       "mise": [
         "actionlint",
@@ -358,6 +400,90 @@
         "taplo",
         "typos"
       ]
+    },
+    "nomad/README.md": {
+      "regex": [
+        "grafana/otel-lgtm"
+      ]
+    },
+    "nomad/lgtm.nomad.hcl": {
+      "regex": [
+        "grafana/otel-lgtm"
+      ]
+    }
+  },
+  "actionMeta": {
+    "actions/attest": {
+      "packageName": "actions/attest",
+      "refKind": "version-tag"
+    },
+    "actions/checkout": {
+      "packageName": "actions/checkout",
+      "refKind": "version-tag"
+    },
+    "actions/github-script": {
+      "packageName": "actions/github-script",
+      "refKind": "version-tag"
+    },
+    "aquasecurity/trivy-action": {
+      "packageName": "aquasecurity/trivy-action",
+      "refKind": "version-tag"
+    },
+    "docker/build-push-action": {
+      "packageName": "docker/build-push-action",
+      "refKind": "version-tag"
+    },
+    "docker/login-action": {
+      "packageName": "docker/login-action",
+      "refKind": "version-tag"
+    },
+    "docker/metadata-action": {
+      "packageName": "docker/metadata-action",
+      "refKind": "version-tag"
+    },
+    "docker/setup-buildx-action": {
+      "packageName": "docker/setup-buildx-action",
+      "refKind": "version-tag"
+    },
+    "github/codeql-action/analyze": {
+      "packageName": "github/codeql-action",
+      "refKind": "version-tag"
+    },
+    "github/codeql-action/init": {
+      "packageName": "github/codeql-action",
+      "refKind": "version-tag"
+    },
+    "github/codeql-action/upload-sarif": {
+      "packageName": "github/codeql-action",
+      "refKind": "version-tag"
+    },
+    "grafana/shared-workflows/.github/workflows/sign-and-attest.yml": {
+      "packageName": "grafana/shared-workflows",
+      "refKind": "branch",
+      "ref": "main"
+    },
+    "grafana/shared-workflows/actions/create-github-app-token": {
+      "packageName": "grafana/shared-workflows",
+      "refKind": "version-tag",
+      "compatibility": "create-github-app-token"
+    },
+    "grafana/shared-workflows/actions/docker-build-push-image": {
+      "packageName": "grafana/shared-workflows",
+      "refKind": "version-tag",
+      "compatibility": "docker-build-push-image"
+    },
+    "grafana/shared-workflows/actions/wait-for-docker-publish": {
+      "packageName": "grafana/shared-workflows",
+      "refKind": "version-tag",
+      "compatibility": "wait-for-docker-publish"
+    },
+    "jdx/mise-action": {
+      "packageName": "jdx/mise-action",
+      "refKind": "version-tag"
+    },
+    "sigstore/cosign-installer": {
+      "packageName": "sigstore/cosign-installer",
+      "refKind": "version-tag"
     }
   }
 }

@@ -5,7 +5,7 @@
     "customManagers:dockerfileVersions",
     "customManagers:githubActionsVersions",
     "helpers:pinGitHubActionDigestsToSemver",
-    "github>grafana/flint#v0.22.10"
+    "github>grafana/flint#v0.22.11"
   ],
   branchPrefix: "grafanarenovatebot/",
   dependencyDashboard: true,
@@ -46,6 +46,19 @@
       matchDatasources: ["docker"],
       matchPackageNames: ["docker.io/otel/ebpf-instrument"],
       enabled: false
+    },
+    {
+      // aquasecurity/trivy-action has duplicate 0.35.0 tags that break github-tags lookups
+      matchManagers: ["github-actions"],
+      matchPackageNames: ["aquasecurity/trivy-action"],
+      overrideDatasource: "github-releases"
+    },
+    {
+      // Branch-pinned shared workflows must use digest updates, not the monorepo tags
+      matchManagers: ["github-actions"],
+      matchPackageNames: ["grafana/shared-workflows"],
+      matchCurrentValue: "main",
+      overrideDatasource: "github-digest"
     },
     {
       extends: ["monorepo:dotnet"],

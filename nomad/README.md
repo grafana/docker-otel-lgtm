@@ -22,7 +22,7 @@ nomad job run nomad/lgtm.nomad.hcl
 Override the image tag if needed:
 
 ```sh
-nomad job run -var="image=docker.io/grafana/otel-lgtm:0.30.2" nomad/lgtm.nomad.hcl
+nomad job run -var="image=docker.io/grafana/otel-lgtm:0.31.0" nomad/lgtm.nomad.hcl
 ```
 
 ## Access

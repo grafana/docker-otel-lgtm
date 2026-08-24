@@ -780,7 +780,7 @@ url_api = "https://api.github.com/repos/rvben/rumdl/releases/assets/496024315"
 provenance = "github-attestations"
 
 [[tools.rust]]
-version = "1.97.1"
+version = "1.98.0"
 backend = "core:rust"
 
 [tools.rust.options]

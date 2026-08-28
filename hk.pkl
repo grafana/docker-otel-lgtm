@@ -153,10 +153,12 @@ local linters = new Mapping<String, Config.Step> {
     }
     ["lychee"] = new Config.Step {
         glob = List("**/*.md", "**/*.mkd", "**/*.mdx", "**/*.mdown", "**/*.mdwn", "**/*.mkdn", "**/*.mkdown", "**/*.markdown", "**/*.html", "**/*.htm", "**/*.txt")
+        stdin = "{{ files_list | join(sep='\n') }}"
         check = new Config.CommandSpec {
-            command = new Config.Command { argv = List(".hk/lychee.sh", "{{files}}") }
+            command = new Config.Command { argv = List("flint", "checker", "lychee", "--files-from", "-") }
             effect = "read"
         }
+        diagnostic_format = "sarif"
     }
 }
 

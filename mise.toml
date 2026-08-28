@@ -45,7 +45,7 @@ depends = ["lint", "test:unit"]
 
 [tasks.lint]
 description = "Run all lints"
-run = "HK_MISE=1 hk check --all --check --no-fail-fast"
+run = 'mkdir -p .cache/dotnet && DOTNET_CLI_HOME="${DOTNET_CLI_HOME:-$PWD/.cache/dotnet}" HK_MISE=1 hk check --all --check --no-fail-fast'
 
 [tasks.lgtm]
 description = "Run LGTM image"
@@ -113,4 +113,4 @@ run = './build-lgtm.sh ${usage_tag}'
 
 [tasks."lint:fix"]
 description = "Auto-fix lint issues"
-run = "HK_MISE=1 hk fix --all --no-stage --no-fail-fast"
+run = 'mkdir -p .cache/dotnet && DOTNET_CLI_HOME="${DOTNET_CLI_HOME:-$PWD/.cache/dotnet}" HK_MISE=1 hk fix --all --no-stage --no-fail-fast'

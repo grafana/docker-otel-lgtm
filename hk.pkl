@@ -1,0 +1,166 @@
+// PoC: explicit hk reproduction of the checks activated dynamically by Flint.
+// Run with hk 1.56.1 or newer; earlier releases silently drop CommandSpec steps.
+amends "package://github.com/jdx/hk/releases/download/v1.56.1/hk@1.56.1#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.56.1/hk@1.56.1#/Builtins.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.56.1/hk@1.56.1#/Config.pkl"
+
+// Flint also skips tracked files marked linguist-generated.
+exclude = List("**/package-lock.json", ".hk/**", "hk.pkl", "mise.lock")
+
+local linters = new Mapping<String, Config.Step> {
+    ["actionlint"] = Builtins.actionlint
+    ["biome"] = new Builtins.biome {
+        exclude = ".github/renovate-tracked-deps.json"
+        check = new Config.CommandSpec {
+            command = new Config.Command { argv = List("biome", "lint", "--config-path", "biome.jsonc", "--no-errors-on-unmatched", "{{files}}") }
+            effect = "read"
+        }
+    }
+    ["biome-format"] = new Config.Step {
+        glob = List("**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx", "**/*.json")
+        exclude = ".github/renovate-tracked-deps.json"
+        check = new Config.CommandSpec {
+            command = new Config.Command { argv = List("biome", "format", "--config-path", "biome.jsonc", "--no-errors-on-unmatched", "{{files}}") }
+            effect = "read"
+        }
+        fix = new Config.CommandSpec {
+            command = new Config.Command { argv = List("biome", "format", "--config-path", "biome.jsonc", "--write", "--no-errors-on-unmatched", "{{files}}") }
+            effect = "write"
+        }
+    }
+    // Flint's editorconfig-checker defers files to active formatters. hk can
+    // reproduce that policy, but the formatter ownership list is duplicated
+    // here and must be maintained by the consumer.
+    ["editorconfig-checker"] = new Builtins.editorconfig_checker {
+        exclude = List(
+            "**/*.bash", "**/*.bats", "**/*.cs", "**/*.go", "**/*.htm", "**/*.html", "**/*.java",
+            "**/*.js", "**/*.json", "**/*.jsonc", "**/*.jsx", "**/*.md",
+            "**/*.mdown", "**/*.mdx", "**/*.mkd", "**/*.mkdn", "**/*.mkdown",
+            "**/*.markdown", "**/*.mdwn", "**/*.py", "**/*.rs", "**/*.sh",
+            "**/*.toml", "**/*.ts", "**/*.tsx", "**/*.yaml", "**/*.yml",
+        )
+    }
+    ["golangci-lint"] = new Builtins.golangci_lint {
+        check = new Config.CommandSpec { command = "golangci-lint run --config .github/config/.golangci.yml ./..."; effect = "write" }
+    }
+    ["google-java-format"] = Builtins.google_java_format
+    ["hadolint"] = new Builtins.hadolint {
+        check = new Config.CommandSpec {
+            command = new Config.Command { argv = List("hadolint", "--config", ".hadolint.yaml", "{{files}}") }
+            effect = "read"
+        }
+    }
+    ["ruff"] = Builtins.ruff
+    ["ruff-format"] = Builtins.ruff_format
+    ["rumdl"] = new Builtins.rumdl {
+        check_diff = new Config.CommandSpec {
+            command = new Config.Command { argv = List("rumdl", "check", "--config", ".github/config/.rumdl.toml", "--diff", "{{files}}") }
+            effect = "read"
+        }
+        fix = new Config.CommandSpec {
+            command = new Config.Command { argv = List("rumdl", "check", "--config", ".github/config/.rumdl.toml", "--fix", "{{files}}") }
+            effect = "write"
+        }
+    }
+    ["ryl"] = new Builtins.ryl {
+        check_diff = new Config.CommandSpec {
+            command = new Config.Command { argv = List("ryl", "-c", ".github/config/.yamllint.yml", "--diff", "{{files}}") }
+            effect = "read"
+        }
+        check_list_files = new Config.CommandSpec {
+            command = new Config.Command { argv = List("ryl", "-c", ".github/config/.yamllint.yml", "--list-files", "{{files}}") }
+            effect = "read"
+        }
+        fix = new Config.CommandSpec {
+            command = new Config.Command { argv = List("ryl", "-c", ".github/config/.yamllint.yml", "--fix", "{{files}}") }
+            effect = "write"
+        }
+    }
+    ["shellcheck"] = new Builtins.shellcheck {
+        check = new Config.CommandSpec { command = "shellcheck -x -P SCRIPTDIR {{files}}"; effect = "read" }
+    }
+    // Match Flint's explicit shfmt scope. hk's builtin also selects Bats files
+    // and extensionless shell scripts such as mvnw; those are useful optional
+    // stricter checks, but not full-run parity.
+    ["shfmt"] = new Config.Step {
+        glob = List("**/*.sh", "**/*.bash")
+        batch = true
+        check_diff = new Config.CommandSpec {
+            command = "shfmt -d --apply-ignore {{files}}"
+            effect = "read"
+        }
+        fix = new Config.CommandSpec {
+            command = "shfmt -w --apply-ignore {{files}}"
+            effect = "write"
+        }
+    }
+    ["taplo"] = new Builtins.taplo {
+        check = new Config.CommandSpec {
+            command = new Config.Command { argv = List("taplo", "fmt", "--config", ".github/config/.taplo.toml", "--check", "{{files}}") }
+            effect = "read"
+        }
+    }
+    ["typos"] = new Builtins.typos {
+        check_diff = new Config.CommandSpec { command = "typos --config .github/config/_typos.toml --force-exclude --diff {{files}}"; effect = "read" }
+        fix = new Config.CommandSpec { command = "typos --config .github/config/_typos.toml --force-exclude --write-changes {{files}}"; effect = "write" }
+    }
+    ["gofmt"] = Builtins.go_fmt
+    ["cargo-clippy"] = Builtins.cargo_clippy
+    ["cargo-fmt"] = new Builtins.cargo_fmt {
+        check = new Config.CommandSpec { command = "cargo fmt --manifest-path {{workspace_indicator}} -- --config-path .github/config/rustfmt.toml --check"; effect = "read" }
+        fix = new Config.CommandSpec { command = "cargo fmt --manifest-path {{workspace_indicator}} -- --config-path .github/config/rustfmt.toml"; effect = "write" }
+    }
+    ["dotnet-format"] = new Config.Step {
+        glob = "**/*.cs"
+        check = new Config.CommandSpec {
+            command = "dotnet format --verify-no-changes --include {{files}}"
+            effect = "read"
+        }
+        fix = new Config.CommandSpec {
+            command = "dotnet format --include {{files}}"
+            effect = "write"
+        }
+    }
+    ["kube-linter"] = new Config.Step {
+        glob = List("k8s/**/*.yml", "k8s/**/*.yaml", "kubernetes/**/*.yml", "kubernetes/**/*.yaml", "manifests/**/*.yml", "manifests/**/*.yaml")
+        check = new Config.CommandSpec {
+            command = new Config.Command { argv = List("kube-linter", "lint", "--config", ".github/config/kube-linter.yaml", "{{files}}") }
+            effect = "read"
+        }
+    }
+    ["xmloxide"] = new Config.Step {
+        glob = "**/*.xml"
+        check = new Config.CommandSpec {
+            command = new Config.Command { argv = List("xmllint", "--noout", "{{files}}") }
+            effect = "read"
+        }
+    }
+    // F6's entry point receives hk's exact newline-delimited selection. It
+    // never asks Flint to rediscover files through `flint run renovate-deps`.
+    ["renovate-deps"] = new Config.Step {
+        glob = List("renovate.json", "renovate.json5", ".github/renovate.json", ".github/renovate.json5", ".renovaterc", ".renovaterc.json", ".renovaterc.json5")
+        stdin = "{{ files_list | join(sep='\n') }}"
+        check = new Config.CommandSpec {
+            command = new Config.Command { argv = List("flint", "checker", "renovate-deps", "--files-from", "-") }
+            effect = "read"
+        }
+        fix = new Config.CommandSpec {
+            command = new Config.Command { argv = List("flint", "checker", "renovate-deps", "--files-from", "-", "--fix") }
+            effect = "write"
+        }
+        stage = List("renovate-tracked-deps.json", ".github/renovate-tracked-deps.json", "mise.toml", "renovate.json", "renovate.json5", ".github/renovate.json", ".github/renovate.json5", ".renovaterc", ".renovaterc.json", ".renovaterc.json5")
+        diagnostic_format = "sarif"
+    }
+    ["lychee"] = new Config.Step {
+        glob = List("**/*.md", "**/*.mkd", "**/*.mdx", "**/*.mdown", "**/*.mdwn", "**/*.mkdn", "**/*.mkdown", "**/*.markdown", "**/*.html", "**/*.htm", "**/*.txt")
+        check = new Config.CommandSpec {
+            command = new Config.Command { argv = List(".hk/lychee.sh", "{{files}}") }
+            effect = "read"
+        }
+    }
+}
+
+hooks {
+    ["check"] { steps = linters }
+    ["fix"] { fix = true; steps = linters }
+}

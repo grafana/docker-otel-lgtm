@@ -31,8 +31,8 @@ jobs:
 
       - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
-          version: v2026.8.10
-          sha256: 1f5e8795d24073904ef20ba70c1250ad6389d8c5672226d152e0ed24909ba72f
+          version: v2026.8.14
+          sha256: 7cd12d6002d5b3c83a89cad79023712faf2a36f9e8b2ee2061dac5135b3de0ed
 
       - name: Run acceptance tests
         env:

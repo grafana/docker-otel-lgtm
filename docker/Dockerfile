@@ -12,7 +12,7 @@ ARG PYROSCOPE_VERSION=v2.3.0
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
 ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.160.0
 # renovate: datasource=github-releases depName=obi packageName=open-telemetry/opentelemetry-ebpf-instrumentation
-ARG OBI_VERSION=v0.12.2
+ARG OBI_VERSION=v0.13.0
 
 # This is a source-only stage, so collapsing it into neighboring stages is not useful.
 # hadolint global ignore=DL3059

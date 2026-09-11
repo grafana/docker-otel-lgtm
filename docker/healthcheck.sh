@@ -2,6 +2,11 @@
 
 set -eu
 
+if [ ! -f /tmp/ready ]; then
+	echo "LGTM stack is not ready"
+	exit 1
+fi
+
 check_service() {
 	name=$1
 	url=$2
@@ -10,7 +15,7 @@ check_service() {
 
 	set +e
 	# check if port is listening
-	curl -s "$url" >/dev/null 2>&1
+	curl -fsS "$url" >/dev/null 2>&1
 	code=$?
 	set -e
 

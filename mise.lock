@@ -46,52 +46,6 @@ url = "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_
 url_api = "https://api.github.com/repos/rhysd/actionlint/releases/assets/384924919"
 provenance = "github-attestations"
 
-[[tools."aqua:grafana/flint"]]
-version = "0.22.11"
-backend = "aqua:grafana/flint"
-
-[tools."aqua:grafana/flint"."platforms.linux-arm64"]
-checksum = "sha256:a197969873591f857833f7c71ab66506a4050e0a12cf1872b09741652d20e99c"
-url = "https://github.com/grafana/flint/releases/download/v0.22.11/flint-aarch64-unknown-linux-gnu.tar.gz"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/522530497"
-provenance = "github-attestations"
-
-[tools."aqua:grafana/flint"."platforms.linux-arm64-musl"]
-checksum = "sha256:1797194efc0843a0a2c001a235ca91cc09aee9a5a7dc74d25c190ae42445099b"
-url = "https://github.com/grafana/flint/releases/download/v0.22.11/flint-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/522530700"
-provenance = "github-attestations"
-
-[tools."aqua:grafana/flint"."platforms.linux-x64"]
-checksum = "sha256:8c2400345fee126864183b96f8ec8a0f646b2c09abcd9ff25c7a0e56caa6f822"
-url = "https://github.com/grafana/flint/releases/download/v0.22.11/flint-x86_64-unknown-linux-gnu.tar.gz"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/522529698"
-provenance = "github-attestations"
-
-[tools."aqua:grafana/flint"."platforms.linux-x64-musl"]
-checksum = "sha256:bde67006096e2c38d4140d6362a6a83a9047cbe8bd1e4fcdeb7e7c0166b0f02c"
-url = "https://github.com/grafana/flint/releases/download/v0.22.11/flint-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/522530534"
-provenance = "github-attestations"
-
-[tools."aqua:grafana/flint"."platforms.macos-arm64"]
-checksum = "sha256:a93e428a2561af80bad79810ce23dbab13e9d39519bfdbb6625e902d2b06f8fa"
-url = "https://github.com/grafana/flint/releases/download/v0.22.11/flint-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/522531026"
-provenance = "github-attestations"
-
-[tools."aqua:grafana/flint"."platforms.macos-x64"]
-checksum = "sha256:c42ceb2cc835ec37b04f78215c243ebd24109f713757fbfffe7e4bc0c537a2ac"
-url = "https://github.com/grafana/flint/releases/download/v0.22.11/flint-x86_64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/522533290"
-provenance = "github-attestations"
-
-[tools."aqua:grafana/flint"."platforms.windows-x64"]
-checksum = "sha256:7474be1f55fc003dedf5e49da55f65b490f7783b49e6322cfabfb95930baba1a"
-url = "https://github.com/grafana/flint/releases/download/v0.22.11/flint-x86_64-pc-windows-msvc.zip"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/522531464"
-provenance = "github-attestations"
-
 [[tools."aqua:grafana/gcx"]]
 version = "v1.2.0"
 backend = "aqua:grafana/gcx"
@@ -330,6 +284,14 @@ url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.5
 url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/532854960"
 provenance = "github-attestations"
 
+[[tools."cargo:https://github.com/grafana/flint"]]
+version = "branch:feat/renovate-checker-entry-point"
+backend = "cargo:https://github.com/grafana/flint"
+
+[tools."cargo:https://github.com/grafana/flint".options]
+bin = "flint"
+crate = "flint"
+
 [[tools.dotnet]]
 version = "10.0.202"
 backend = "core:dotnet"
@@ -530,6 +492,40 @@ checksum = "sha256:01d927294962b5387f9ead4f18679158452be4f17c765ad0bdffe5264b9c7
 url = "https://github.com/hadolint/hadolint/releases/download/v2.15.1/hadolint-windows-x86_64.exe"
 url_api = "https://api.github.com/repos/hadolint/hadolint/releases/assets/496546508"
 provenance = "github-attestations"
+
+[[tools.hk]]
+version = "1.56.1"
+backend = "aqua:jdx/hk"
+
+[tools.hk."platforms.linux-arm64"]
+checksum = "sha256:cd671706a273dac35b012fd585a0fba1b0c0f340558dccfd4c9a4b976a794597"
+url = "https://github.com/jdx/hk/releases/download/v1.56.1/hk-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/jdx/hk/releases/assets/525632120"
+
+[tools.hk."platforms.linux-arm64-musl"]
+checksum = "sha256:5feac3cfcdae33227197d0104832b91a5d293733320632c3c19f864866a6c8ce"
+url = "https://github.com/jdx/hk/releases/download/v1.56.1/hk-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/jdx/hk/releases/assets/525632119"
+
+[tools.hk."platforms.linux-x64"]
+checksum = "sha256:67157431e36bb523213d8361a9f59b6eb718f80ae8534827849552b3c6c92a04"
+url = "https://github.com/jdx/hk/releases/download/v1.56.1/hk-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/jdx/hk/releases/assets/525632131"
+
+[tools.hk."platforms.linux-x64-musl"]
+checksum = "sha256:e7435c1aec98f60d98712da3231541987ac67c017c001f767c0f37bd517cfe43"
+url = "https://github.com/jdx/hk/releases/download/v1.56.1/hk-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/jdx/hk/releases/assets/525632133"
+
+[tools.hk."platforms.macos-arm64"]
+checksum = "sha256:f8400a1427e66f1b968e58568115a2138b5d0fe88e0561b97d3822648b7e35ea"
+url = "https://github.com/jdx/hk/releases/download/v1.56.1/hk-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/jdx/hk/releases/assets/525632123"
+
+[tools.hk."platforms.windows-x64"]
+checksum = "sha256:4ccf353e484997dd4975361b6433f3b2661f5db614f2b382cddcac7eaa74a604"
+url = "https://github.com/jdx/hk/releases/download/v1.56.1/hk-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/jdx/hk/releases/assets/525632118"
 
 [[tools.java]]
 version = "temurin-25.0.3+9.0.LTS"

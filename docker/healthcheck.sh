@@ -2,7 +2,9 @@
 
 set -eu
 
-if [ ! -f /tmp/ready ]; then
+READY_FILE=${LGTM_READY_FILE:-/tmp/ready}
+
+if [ ! -f "$READY_FILE" ]; then
 	echo "LGTM stack is not ready"
 	exit 1
 fi

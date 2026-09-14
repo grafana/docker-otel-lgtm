@@ -6,7 +6,7 @@ setup() {
 	READY_FILE="$TESTDIR/ready"
 	CURL_LOG="$TESTDIR/curl.log"
 
-	sed "s#/tmp/ready#$READY_FILE#" "$BATS_TEST_DIRNAME/healthcheck.sh" >"$TESTDIR/healthcheck.sh"
+	cp "$BATS_TEST_DIRNAME/healthcheck.sh" "$TESTDIR/healthcheck.sh"
 	cat >"$TESTDIR/curl" <<'SCRIPT'
 #!/usr/bin/env bash
 fail_on_http=false
@@ -48,6 +48,7 @@ run_healthcheck() {
 	PATH="$TESTDIR:$PATH" \
 		CURL_LOG="$CURL_LOG" \
 		STUB_CURL_MODE="$1" \
+		LGTM_READY_FILE="$READY_FILE" \
 		sh "$TESTDIR/healthcheck.sh"
 }
 

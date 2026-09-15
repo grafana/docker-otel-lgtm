@@ -6,6 +6,7 @@ setup() {
 	TESTDIR=$(mktemp -d)
 	CONFIGDIR="$TESTDIR/etc/lgtm"
 	TOKENFILE="$TESTDIR/tmp/grafana-sa-token"
+	READY_FILE="$TESTDIR/tmp/ready"
 	mkdir -p "$(dirname "$TOKENFILE")"
 	cp "$BATS_TEST_DIRNAME/run-all.sh" "$TESTDIR/"
 
@@ -34,6 +35,10 @@ mode="${STUB_SA_MODE:-success}"
 if [[ "$args" == *"/ready"* ||
 	"$args" == *"/api/health"* ||
 	"$args" == *"/api/v1/status/runtimeinfo"* ]]; then
+	if [[ "${STUB_STACK_NOT_READY:-false}" == "true" ]]; then
+		printf '000'
+		exit 0
+	fi
 	printf '200'
 	exit 0
 fi
@@ -98,9 +103,19 @@ run_run_all() {
 	PATH="$TESTDIR:$PATH" \
 		LGTM_CONFIG_DIR="$CONFIGDIR" \
 		GRAFANA_SA_TOKEN_FILE="$TOKENFILE" \
+		LGTM_READY_FILE="$READY_FILE" \
 		LGTM_VERSION="$version" \
 		CONTAINER_RUNTIME=docker \
 			timeout 3s bash ./run-all.sh
+}
+
+@test "clears a stale readiness marker before restarting services" {
+	touch "$READY_FILE"
+
+	STUB_STACK_NOT_READY=true run run_run_all
+
+	[ "$status" -eq 124 ]
+	assert_no_file "$READY_FILE"
 }
 
 run_run_all_with_stubborn_children() {

@@ -12,10 +12,7 @@ steps {
   ["biome"] = Builtins.biome
   ["destroyed-symlinks"] = Builtins.destroyed_symlinks
   ["editorconfig-checker"] = Builtins.editorconfig_checker
-  ["golangci-lint"] = (Builtins.golangci_lint) {
-    // The builtin explicitly disables source fixes during verification.
-    check = (Builtins.golangci_lint.check) { effect = "read" }
-  }
+  ["golangci-lint"] = Builtins.golangci_lint
   ["google-java-format"] = Builtins.google_java_format
   ["hadolint"] = Builtins.hadolint
   ["ruff"] = Builtins.ruff

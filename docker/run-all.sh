@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+READY_FILE=${LGTM_READY_FILE:-/tmp/ready}
+rm -f "$READY_FILE"
+
 echo "Starting grafana/otel-lgtm ${LGTM_VERSION}"
 
 # Stop any still-running backgrounded components, giving them time to stop
@@ -195,8 +198,8 @@ if [[ ${ENABLE_OBI:-false} == "true" ]]; then
 fi
 echo "Total: ${total_elapsed} seconds"
 
-touch /tmp/ready
-echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created /tmp/ready)"
+touch "$READY_FILE"
+echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created $READY_FILE)"
 
 # Check if Tempo MCP is enabled
 TEMPO_MCP_ENABLED=false

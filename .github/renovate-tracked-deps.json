@@ -393,6 +393,7 @@
         "lychee",
         "node",
         "npm:renovate",
+        "pkl",
         "ruff",
         "rumdl",
         "rust",

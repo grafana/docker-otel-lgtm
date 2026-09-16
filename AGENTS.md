@@ -62,8 +62,10 @@ Go code uses `.github/config/.golangci.yml`. Markdown uses
 
 `mise run lint` verifies that `.github/renovate-tracked-deps.json` stays in
 sync with what Renovate actually tracks. If the snapshot is stale, run
-`mise run lint:fix` and commit the result. The lint tasks are provided by
-[flint](https://github.com/grafana/flint).
+`mise run lint:fix` and commit the result. The lint tasks use
+[hk](https://github.com/jdx/hk), configured in `hk.pkl`;
+[flint](https://github.com/grafana/flint) supplies the `renovate-deps` and
+`lychee` checker adapters.
 
 ## Architecture
 

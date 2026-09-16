@@ -11,8 +11,9 @@ It's recommended to use the [mise][mise] for development.
 
 ## Linting
 
-This repository uses [flint][flint] for linting.
-See the flint readme for detailed documentation on each linter.
+This repository uses [hk][hk] to run the checks configured in `hk.pkl`.
+Most checks use hk builtins; [flint][flint] supplies the `renovate-deps` and `lychee` checker adapters.
+Tool versions are pinned in `mise.toml`.
 
 ```bash
 mise run lint:fix   # Auto-fix all issues (recommended before committing)
@@ -64,6 +65,7 @@ and [Checking your commit signature verification status][verifying-commits].
 
 [architecture]: https://docs.google.com/presentation/d/1txMBBitezscvtJIXRHNSXnCekjMRM29GmHufUSI0NRw/edit?slide=id.g26040f0db78_0_0#slide=id.g26040f0db78_0_0
 [flint]: https://github.com/grafana/flint
+[hk]: https://github.com/jdx/hk
 [mise]: https://github.com/jdx/mise
 [oats]: https://github.com/grafana/oats
 [signed-commits]: https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-signed-commits

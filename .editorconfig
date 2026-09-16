@@ -38,3 +38,12 @@ max_line_length = off
 [*.md]
 # Markdown line length is handled by rumdl
 max_line_length = off
+
+[examples/java/mvnw]
+# Generated Maven wrapper: preserve upstream formatting when refreshing it.
+# shfmt honors ignore with --apply-ignore; ShellCheck still analyzes the file.
+ignore = true
+
+[*.pkl]
+# Pkl formatting is handled by pkl format.
+max_line_length = off

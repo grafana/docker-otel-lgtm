@@ -16,6 +16,12 @@
   ignoreUnstable: true,
   packageRules: [
     {
+      matchPackageNames: ["jdx/hk"],
+      groupName: "hk",
+      separateMajorMinor: false,
+      separateMinorPatch: false
+    },
+    {
       matchPackageNames: ["open-telemetry/opentelemetry-collector-releases"],
       allowedVersions: "!/cmd/"
     },
@@ -74,6 +80,20 @@
   },
   osvVulnerabilityAlerts: true,
   customManagers: [
+    // Temporary until native Pkl support: https://github.com/renovatebot/renovate/discussions/45740
+    {
+      customType: "regex",
+      description: "Update hk Pkl package URLs",
+      managerFilePatterns: ["/^hk\\.pkl$/"],
+      matchStrings: [
+        "package://github\\.com/jdx/hk/releases/download/v[^/]+/hk@(?<currentValue>[^#]+)#"
+      ],
+      datasourceTemplate: "github-releases",
+      depNameTemplate: "hk",
+      packageNameTemplate: "jdx/hk",
+      extractVersionTemplate: "^v(?<version>.+)$",
+      autoReplaceStringTemplate: "package://github.com/jdx/hk/releases/download/v{{{newVersion}}}/hk@{{{newVersion}}}#"
+    },
     {
       customType: "regex",
       description: "Update _version variables in run.sh",

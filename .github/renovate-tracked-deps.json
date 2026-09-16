@@ -1,5 +1,9 @@
 {
   "meta": {
+    "aqua:jdx/hk": {
+      "packageName": "jdx/hk",
+      "datasource": "github-tags"
+    },
     "grafana": {
       "packageName": "grafana/grafana",
       "datasource": "github-releases"
@@ -7,6 +11,10 @@
     "grafana/otel-lgtm": {
       "packageName": "grafana/otel-lgtm",
       "datasource": "docker"
+    },
+    "hk": {
+      "packageName": "jdx/hk",
+      "datasource": "github-releases"
     },
     "loki": {
       "packageName": "grafana/loki",
@@ -369,6 +377,11 @@
     "go.mod": {
       "gomod": [
         "go"
+      ]
+    },
+    "hk.pkl": {
+      "regex": [
+        "hk"
       ]
     },
     "mise.toml": {

@@ -13,154 +13,42 @@ steps = new Mapping<String, Config.Step> {
   ["biome"] = (Builtins.biome) {
     exclude = ".github/renovate-tracked-deps.json"
   }
-  // Existing formatter ownership policy. Revisit with concrete conflicting
-  // findings rather than extending this list to mimic Flint automatically.
-  ["editorconfig-checker"] = (Builtins.editorconfig_checker) {
-    exclude =
-      List(
-        "**/*.bash",
-        "**/*.bats",
-        "**/*.cs",
-        "**/*.go",
-        "**/*.htm",
-        "**/*.html",
-        "**/*.java",
-        "**/*.js",
-        "**/*.json",
-        "**/*.jsonc",
-        "**/*.jsx",
-        "**/*.md",
-        "**/*.mdown",
-        "**/*.mdx",
-        "**/*.mkd",
-        "**/*.mkdn",
-        "**/*.mkdown",
-        "**/*.markdown",
-        "**/*.mdwn",
-        "**/*.py",
-        "**/*.rs",
-        "**/*.sh",
-        "**/*.toml",
-        "**/*.ts",
-        "**/*.tsx",
-        "**/*.yaml",
-        "**/*.yml",
-      )
-  }
+  ["editorconfig-checker"] = Builtins.editorconfig_checker
   ["golangci-lint"] = (Builtins.golangci_lint) {
-    dir = "."
-    // Each module shares golangci-lint's cache lock. Wait rather than fail.
-    // Resolve the shared config before entering each Go module.
-    check = new Config.CommandSpec {
-      command =
-        "config=\"$PWD/.github/config/.golangci.yml\"; cd {{workspace}} && golangci-lint run --allow-serial-runners --fix=false --config \"$config\" ./..."
-      effect = "read"
-    }
-    fix = new Config.CommandSpec {
-      command =
-        "config=\"$PWD/.github/config/.golangci.yml\"; cd {{workspace}} && golangci-lint run --allow-serial-runners --fix --config \"$config\" ./..."
-      effect = "write"
-    }
+    // The builtin explicitly disables source fixes during verification.
+    check = (Builtins.golangci_lint.check) { effect = "read" }
   }
   ["google-java-format"] = Builtins.google_java_format
   ["hadolint"] = Builtins.hadolint
   ["ruff"] = Builtins.ruff
   ["ruff-format"] = Builtins.ruff_format
-  ["rumdl"] = (Builtins.rumdl) {
-    check = new Config.CommandSpec {
-      command = new Config.Command {
-        argv = List("rumdl", "check", "--config", ".github/config/.rumdl.toml", "{{files}}")
-      }
-      effect = "read"
-    }
-    check_diff = new Config.CommandSpec {
-      command = new Config.Command {
-        argv =
-          List("rumdl", "check", "--config", ".github/config/.rumdl.toml", "--diff", "{{files}}")
-      }
-      effect = "read"
-    }
-    fix = new Config.CommandSpec {
-      command = new Config.Command {
-        argv =
-          List("rumdl", "check", "--config", ".github/config/.rumdl.toml", "--fix", "{{files}}")
-      }
-      effect = "write"
-    }
-  }
-  ["ryl"] = (Builtins.ryl) {
-    check = new Config.CommandSpec {
-      command = new Config.Command {
-        argv = List("ryl", "-c", ".github/config/.yamllint.yml", "{{files}}")
-      }
-      effect = "read"
-    }
-    check_diff = new Config.CommandSpec {
-      command = new Config.Command {
-        argv = List("ryl", "-c", ".github/config/.yamllint.yml", "--diff", "{{files}}")
-      }
-      effect = "read"
-    }
-    check_list_files = new Config.CommandSpec {
-      command = new Config.Command {
-        argv = List("ryl", "-c", ".github/config/.yamllint.yml", "--list-files", "{{files}}")
-      }
-      effect = "read"
-    }
-    fix = new Config.CommandSpec {
-      command = new Config.Command {
-        argv = List("ryl", "-c", ".github/config/.yamllint.yml", "--fix", "{{files}}")
-      }
-      effect = "write"
-    }
-  }
-  ["shellcheck"] = (Builtins.shellcheck) {
-    check = new Config.CommandSpec {
-      command = "shellcheck -x -P SCRIPTDIR {{files}}"
-      effect = "read"
-    }
-  }
-  // Include Bats and extensionless scripts rather than narrowing to Flint's scope.
+  ["rumdl"] = Builtins.rumdl
+  ["ryl"] = Builtins.ryl
+  ["shellcheck"] = Builtins.shellcheck
   ["shfmt"] = Builtins.shfmt
   ["taplo-format"] = Builtins.taplo_format
   ["pkl-format"] = Builtins.pkl_format
   ["typos"] = (Builtins.typos) {
+    // Preserve operational failures until the builtin handles empty error output.
+    check = new Config.CommandSpec {
+      command = "typos --force-exclude {{files}}"
+      effect = "read"
+    }
     check_diff = new Config.CommandSpec {
       command =
         """
-        output=$(typos --config .github/config/_typos.toml --force-exclude --diff {{files}})
-        [ -z "$output" ] && exit 0
+        status=0
+        output=$(typos --force-exclude --diff {{files}}) || status=$?
+        [ -z "$output" ] && exit "$status"
         printf "%s" "$output"
         exit 1
         """
       effect = "read"
     }
-    fix = new Config.CommandSpec {
-      command =
-        "typos --config .github/config/_typos.toml --force-exclude --write-changes {{files}}"
-      effect = "write"
-    }
   }
   ["gofmt"] = Builtins.go_fmt
   ["cargo-clippy"] = Builtins.cargo_clippy
-  ["cargo-fmt"] = (Builtins.cargo_fmt) {
-    check = new Config.CommandSpec {
-      command =
-        "cargo fmt --manifest-path {{workspace_indicator}} -- --config-path .github/config/rustfmt.toml --check"
-      effect = "read"
-    }
-    check_list_files = new Config.CommandSpec {
-      command =
-        "cargo fmt --manifest-path {{workspace_indicator}} -- --config-path .github/config/rustfmt.toml --check --files-with-diff"
-      effect = "read"
-    }
-    fix = new Config.CommandSpec {
-      command =
-        "cargo fmt --manifest-path {{workspace_indicator}} -- --config-path .github/config/rustfmt.toml"
-      effect = "write"
-    }
-  }
-  // Replace with the upstream builtin once available; keep the same contract here.
+  ["cargo-fmt"] = Builtins.cargo_fmt
   ["dotnet-format"] = new Config.Step {
     glob = List("**/*.cs", "**/*.vb")
     exclusive = true
@@ -190,8 +78,7 @@ steps = new Mapping<String, Config.Step> {
       )
     check = new Config.CommandSpec {
       command = new Config.Command {
-        argv =
-          List("kube-linter", "lint", "--config", ".github/config/kube-linter.yaml", "{{files}}")
+        argv = List("kube-linter", "lint", "{{files}}")
       }
       effect = "read"
     }

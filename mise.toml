@@ -23,7 +23,7 @@ golangci-lint = "2.13.2"
 google-java-format = "1.36.1"
 hadolint = "2.15.1"
 kube-linter = "0.8.3"
-"aqua:yannh/kubeconform" = "0.8.0"
+kubeconform = "0.8.0"
 lychee = "0.24.2"
 # @yarnpkg/libzip 3.2.2 is npm-signed and matches Yarn's release commit, but
 # was published without provenance; mise's no-downgrade policy otherwise rejects Renovate.
@@ -48,7 +48,7 @@ depends = ["lint", "test:unit"]
 
 [tasks.lint]
 description = "Run all lints"
-run = 'mkdir -p .cache/dotnet && DOTNET_CLI_HOME="${DOTNET_CLI_HOME:-$PWD/.cache/dotnet}" HK_MISE=1 hk check --all --check --no-fail-fast'
+run = 'HK_MISE=1 hk check --all --check --no-fail-fast'
 
 [tasks.lgtm]
 description = "Run LGTM image"
@@ -116,4 +116,4 @@ run = './build-lgtm.sh ${usage_tag}'
 
 [tasks."lint:fix"]
 description = "Auto-fix lint issues"
-run = 'mkdir -p .cache/dotnet && DOTNET_CLI_HOME="${DOTNET_CLI_HOME:-$PWD/.cache/dotnet}" HK_MISE=1 hk fix --all --no-stage --no-fail-fast'
+run = 'HK_MISE=1 hk fix --all --no-stage --no-fail-fast'

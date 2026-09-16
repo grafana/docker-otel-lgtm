@@ -26,14 +26,7 @@ steps {
   ["shfmt"] = Builtins.shfmt
   ["taplo-format"] = Builtins.taplo_format
   ["pkl-format"] = Builtins.pkl_format
-  ["typos"] = (Builtins.typos) {
-    // Avoid the builtin's diff wrapper, which can swallow operational failures.
-    check_diff = null
-    check = new Config.CommandSpec {
-      command = "typos --force-exclude {{files}}"
-      effect = "read"
-    }
-  }
+  ["typos"] = Builtins.typos
   ["gofmt"] = Builtins.go_fmt
   ["cargo-clippy"] = Builtins.cargo_clippy
   ["cargo-fmt"] = Builtins.cargo_fmt
@@ -54,7 +47,9 @@ steps {
       effect = "write"
     }
   }
-  // Validate demo manifests against a fixed Kubernetes API version, not master.
+  // Repository policy: only k8s/ contains Kubernetes manifests (not other YAML).
+  // Unlike the builtin defaults, validate against API 1.35.0 and fail when a
+  // schema is missing. Keep these choices when replacing the command with options.
   ["kubeconform"] = (Builtins.kubeconform) {
     glob = List("k8s/**/*.yaml", "k8s/**/*.yml")
     check = new Config.CommandSpec {

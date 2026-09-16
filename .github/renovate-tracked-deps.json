@@ -379,6 +379,7 @@
         "aqua:jdx/hk",
         "aqua:jonwiggins/xmloxide",
         "aqua:owenlamont/ryl",
+        "aqua:yannh/kubeconform",
         "bats",
         "biome",
         "cargo:https://github.com/grafana/flint",

@@ -1,5 +1,4 @@
-// Exploration: prefer hk builtins; keep only intentional repository policy.
-// Pin a current builtin set, including editorconfig-checker v4 support.
+// Builtins own tool invocations; native tool configs own repository policy.
 amends "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Config.pkl"
 
 import "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Builtins.pkl"
@@ -8,11 +7,10 @@ import "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Config.pk
 // Generated dependency inventories are maintained by their own tools.
 exclude = List("**/package-lock.json", "mise.lock", ".cache/**")
 
-steps = new Mapping<String, Config.Step> {
+steps {
   ["actionlint"] = Builtins.actionlint
-  ["biome"] = (Builtins.biome) {
-    exclude = ".github/renovate-tracked-deps.json"
-  }
+  ["biome"] = Builtins.biome
+  ["destroyed-symlinks"] = Builtins.destroyed_symlinks
   ["editorconfig-checker"] = Builtins.editorconfig_checker
   ["golangci-lint"] = (Builtins.golangci_lint) {
     // The builtin explicitly disables source fixes during verification.
@@ -29,20 +27,10 @@ steps = new Mapping<String, Config.Step> {
   ["taplo-format"] = Builtins.taplo_format
   ["pkl-format"] = Builtins.pkl_format
   ["typos"] = (Builtins.typos) {
-    // Preserve operational failures until the builtin handles empty error output.
+    // Avoid the builtin's diff wrapper, which can swallow operational failures.
+    check_diff = null
     check = new Config.CommandSpec {
       command = "typos --force-exclude {{files}}"
-      effect = "read"
-    }
-    check_diff = new Config.CommandSpec {
-      command =
-        """
-        status=0
-        output=$(typos --force-exclude --diff {{files}}) || status=$?
-        [ -z "$output" ] && exit "$status"
-        printf "%s" "$output"
-        exit 1
-        """
       effect = "read"
     }
   }
@@ -66,32 +54,27 @@ steps = new Mapping<String, Config.Step> {
       effect = "write"
     }
   }
+  // Validate demo manifests against a fixed Kubernetes API version, not master.
+  ["kubeconform"] = (Builtins.kubeconform) {
+    glob = List("k8s/**/*.yaml", "k8s/**/*.yml")
+    check = new Config.CommandSpec {
+      command = "kubeconform -summary -strict -kubernetes-version 1.35.0 {{files}}"
+      effect = "read"
+    }
+  }
   ["kube-linter"] = new Config.Step {
-    glob =
-      List(
-        "k8s/**/*.yml",
-        "k8s/**/*.yaml",
-        "kubernetes/**/*.yml",
-        "kubernetes/**/*.yaml",
-        "manifests/**/*.yml",
-        "manifests/**/*.yaml",
-      )
+    glob = List("k8s/**/*.yaml", "k8s/**/*.yml")
     check = new Config.CommandSpec {
       command = new Config.Command {
-        argv = List("kube-linter", "lint", "{{files}}")
+        argv = List("kube-linter", "lint", "--fail-if-no-objects-found", "{{files}}")
       }
       effect = "read"
     }
   }
   ["xmllint"] = Builtins.xmllint
-  // Temporary Flint-owned adapters: retain until focused probes justify replacing
-  // their additional policy. Pass hk's exact newline-delimited selection,
-  // without asking Flint to rediscover changed files.
+  // Flint still owns dependency consistency and repository-aware link checking.
   ["renovate-deps"] = new Config.Step {
-    // Pass all selected paths: the checker owns offline relevance matching for
-    // manifests, mise, workflows and Renovate config. Filtering only Renovate
-    // config here would silently skip dependency edits in changed-file runs.
-    // Snapshot extraction observes project-wide state; do not race other fixers.
+    // The checker filters relevance; snapshot extraction must not race fixers.
     exclusive = true
     stdin = "{{ files_list | join(sep='\n') }}"
     check = new Config.CommandSpec {
@@ -106,19 +89,7 @@ steps = new Mapping<String, Config.Step> {
       }
       effect = "write"
     }
-    stage =
-      List(
-        "renovate-tracked-deps.json",
-        ".github/renovate-tracked-deps.json",
-        "mise.toml",
-        "renovate.json",
-        "renovate.json5",
-        ".github/renovate.json",
-        ".github/renovate.json5",
-        ".renovaterc",
-        ".renovaterc.json",
-        ".renovaterc.json5",
-      )
+    stage = List(".github/renovate-tracked-deps.json", "mise.toml", ".github/renovate.json5")
     diagnostic_format = "sarif"
   }
   ["lychee"] = new Config.Step {

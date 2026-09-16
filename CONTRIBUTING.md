@@ -23,6 +23,12 @@ mise run lint  # Check only (same command used in CI)
 
 Always run `mise run lint:fix` before committing — review the changed files as auto-fixes may produce unexpected results.
 
+Kubernetes checks cover plain manifests under `k8s/`: kubeconform validates against
+Kubernetes 1.35.0 schemas, while kube-linter applies `.kube-linter.yaml` policy.
+Missing schemas fail rather than silently skipping resources. Schema downloads
+require network access; the API version is pinned, but the upstream schema files
+are not vendored. This validation target is not a minimum supported cluster version.
+
 ## Acceptance Tests
 
 Acceptance test cases are defined in `oats-case.yaml` files in the examples

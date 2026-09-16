@@ -23,6 +23,7 @@ golangci-lint = "2.13.2"
 google-java-format = "1.36.1"
 hadolint = "2.15.1"
 kube-linter = "0.8.3"
+"aqua:yannh/kubeconform" = "0.8.0"
 lychee = "0.24.2"
 # @yarnpkg/libzip 3.2.2 is npm-signed and matches Yarn's release commit, but
 # was published without provenance; mise's no-downgrade policy otherwise rejects Renovate.

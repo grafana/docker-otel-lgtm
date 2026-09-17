@@ -1,9 +1,5 @@
 {
   "meta": {
-    "aqua:jdx/hk": {
-      "packageName": "jdx/hk",
-      "datasource": "github-tags"
-    },
     "grafana": {
       "packageName": "grafana/grafana",
       "datasource": "github-releases"
@@ -389,7 +385,6 @@
         "actionlint",
         "aqua:grafana/gcx",
         "aqua:grafana/oats",
-        "aqua:jdx/hk",
         "aqua:jonwiggins/xmloxide",
         "aqua:owenlamont/ryl",
         "bats",
@@ -401,6 +396,7 @@
         "golangci-lint",
         "google-java-format",
         "hadolint",
+        "hk",
         "java",
         "kube-linter",
         "kubeconform",

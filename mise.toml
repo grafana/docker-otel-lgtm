@@ -12,8 +12,7 @@ rust = { version = "1.98.1", components = "clippy,rustfmt" }
 # Linters
 actionlint = "1.7.12"
 "cargo:https://github.com/grafana/flint" = { version = "rev:137e9293ca77c314e08b329ffb0400af10d39fdd", crate = "flint", bin = "flint" }
-# Pin the backend too: packslip does not supply URLs for CI's locked install.
-"aqua:jdx/hk" = "2.0.1"
+hk = "2.0.1"
 pkl = "0.32.1"
 "aqua:jonwiggins/xmloxide" = "0.5.0"
 "aqua:owenlamont/ryl" = "0.22.0"

@@ -106,7 +106,7 @@ run_run_all() {
 		LGTM_READY_FILE="$READY_FILE" \
 		LGTM_VERSION="$version" \
 		CONTAINER_RUNTIME=docker \
-			timeout 3s bash ./run-all.sh
+		timeout 3s bash ./run-all.sh
 }
 
 @test "clears a stale readiness marker before restarting services" {
@@ -127,7 +127,7 @@ run_run_all_with_stubborn_children() {
 		CONTAINER_RUNTIME=docker \
 		LGTM_SHUTDOWN_TIMEOUT_SECONDS=0.1 \
 		STUB_IGNORE_TERM=true \
-			timeout --preserve-status --signal=TERM --kill-after=2s 1s bash ./run-all.sh
+		timeout --preserve-status --signal=TERM --kill-after=2s 1s bash ./run-all.sh
 }
 
 run_mcp_case() {

@@ -46,52 +46,6 @@ url = "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_
 url_api = "https://api.github.com/repos/rhysd/actionlint/releases/assets/384924919"
 provenance = "github-attestations"
 
-[[tools."aqua:grafana/flint"]]
-version = "0.22.12"
-backend = "aqua:grafana/flint"
-
-[tools."aqua:grafana/flint"."platforms.linux-arm64"]
-checksum = "sha256:71c0a46d95c685802ff6aee4a8816b0a1598f9a238134ee09a2109ad5d74b0eb"
-url = "https://github.com/grafana/flint/releases/download/v0.22.12/flint-aarch64-unknown-linux-gnu.tar.gz"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/563223306"
-provenance = "github-attestations"
-
-[tools."aqua:grafana/flint"."platforms.linux-arm64-musl"]
-checksum = "sha256:cd6a2d56ae7cc4f2c52a9192ee3a86f965ac5c1ff7d675456dd489fe092c328c"
-url = "https://github.com/grafana/flint/releases/download/v0.22.12/flint-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/563223494"
-provenance = "github-attestations"
-
-[tools."aqua:grafana/flint"."platforms.linux-x64"]
-checksum = "sha256:4c65a385b39d8d32df032195f30c72b28610800f1bf39f3c315015fd592ae707"
-url = "https://github.com/grafana/flint/releases/download/v0.22.12/flint-x86_64-unknown-linux-gnu.tar.gz"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/563222761"
-provenance = "github-attestations"
-
-[tools."aqua:grafana/flint"."platforms.linux-x64-musl"]
-checksum = "sha256:71cf9b270de31c132e78bbc65e54b6a4176ba0a3c0709dcfde34d61fc6406d3c"
-url = "https://github.com/grafana/flint/releases/download/v0.22.12/flint-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/563223442"
-provenance = "github-attestations"
-
-[tools."aqua:grafana/flint"."platforms.macos-arm64"]
-checksum = "sha256:9281dfb0f1cfbf64b14e5fea743fcc223a87bf8a90b01391ed85c9ff305a4ea2"
-url = "https://github.com/grafana/flint/releases/download/v0.22.12/flint-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/563223869"
-provenance = "github-attestations"
-
-[tools."aqua:grafana/flint"."platforms.macos-x64"]
-checksum = "sha256:07231f3e4078221c2dc0196d0f2ecd7d45a668164314af40a6e3a468af339091"
-url = "https://github.com/grafana/flint/releases/download/v0.22.12/flint-x86_64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/563225757"
-provenance = "github-attestations"
-
-[tools."aqua:grafana/flint"."platforms.windows-x64"]
-checksum = "sha256:9a9b6edf93cb9234acdf74817e3d4a3e261019ea66a3e68ac99d60357b8bbed2"
-url = "https://github.com/grafana/flint/releases/download/v0.22.12/flint-x86_64-pc-windows-msvc.zip"
-url_api = "https://api.github.com/repos/grafana/flint/releases/assets/563224882"
-provenance = "github-attestations"
-
 [[tools."aqua:grafana/gcx"]]
 version = "v1.3.0"
 backend = "aqua:grafana/gcx"
@@ -256,6 +210,45 @@ url = "https://github.com/owenlamont/ryl/releases/download/v0.22.0/ryl-x86_64-pc
 url_api = "https://api.github.com/repos/owenlamont/ryl/releases/assets/547221108"
 provenance = "github-attestations"
 
+[[tools."aqua:yannh/kubeconform"]]
+version = "0.8.0"
+backend = "aqua:yannh/kubeconform"
+
+[tools."aqua:yannh/kubeconform"."platforms.linux-arm64"]
+checksum = "sha256:1f53fc8e81258197a35e8603054162a5af1de8c5af13746c71ab680d9534ed87"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612685"
+
+[tools."aqua:yannh/kubeconform"."platforms.linux-arm64-musl"]
+checksum = "sha256:1f53fc8e81258197a35e8603054162a5af1de8c5af13746c71ab680d9534ed87"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612685"
+
+[tools."aqua:yannh/kubeconform"."platforms.linux-x64"]
+checksum = "sha256:9bc2bffbf71f261128533edaf912153948b7ff238f9a531ae6d34466ec287883"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612666"
+
+[tools."aqua:yannh/kubeconform"."platforms.linux-x64-musl"]
+checksum = "sha256:9bc2bffbf71f261128533edaf912153948b7ff238f9a531ae6d34466ec287883"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612666"
+
+[tools."aqua:yannh/kubeconform"."platforms.macos-arm64"]
+checksum = "sha256:f84f4dfbebf4a6b0b230385fa065a39ea35e02608c2b50d025dcf64775a69d67"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-darwin-arm64.tar.gz"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612680"
+
+[tools."aqua:yannh/kubeconform"."platforms.macos-x64"]
+checksum = "sha256:71dbc87ac9f24099a62b93570e65aa06312ba6ac8aea63b7f86e9d999edf5a92"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-darwin-amd64.tar.gz"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612679"
+
+[tools."aqua:yannh/kubeconform"."platforms.windows-x64"]
+checksum = "sha256:e3f56102bcf4f50b034a567e2482a1c5330799983ddd655952310211aef73d93"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-windows-amd64.zip"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612665"
+
 [[tools.bats]]
 version = "1.14.0"
 backend = "aqua:bats-core/bats-core"
@@ -329,6 +322,14 @@ checksum = "sha256:3d7ce7840c4b47db771f258bd2258eecdae820a4bad376b9740af5bb9bb4d
 url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.5.13/biome-win32-x64.exe"
 url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/554847315"
 provenance = "github-attestations"
+
+[[tools."cargo:https://github.com/grafana/flint"]]
+version = "rev:137e9293ca77c314e08b329ffb0400af10d39fdd"
+backend = "cargo:https://github.com/grafana/flint"
+
+[tools."cargo:https://github.com/grafana/flint".options]
+bin = "flint"
+crate = "flint"
 
 [[tools.dotnet]]
 version = "10.0.202"
@@ -531,6 +532,40 @@ url = "https://github.com/hadolint/hadolint/releases/download/v2.15.1/hadolint-w
 url_api = "https://api.github.com/repos/hadolint/hadolint/releases/assets/496546508"
 provenance = "github-attestations"
 
+[[tools.hk]]
+version = "2.0.1"
+backend = "packslip:github.com/jdx/hk"
+
+[tools.hk."platforms.linux-arm64"]
+checksum = "sha256:8a28f2737914bbffa8dd16f39a2fc65d85e9a52261789cf6a1affd6c6762fbc1"
+url = "https://github.com/jdx/hk/releases/download/v2.0.1/hk-aarch64-unknown-linux-gnu.tar.gz"
+signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
+
+[tools.hk."platforms.linux-arm64-musl"]
+checksum = "sha256:b75f54bf8a3679a13a01d250959ae77fab033ca5025eb557b76442c59efa8eb8"
+url = "https://github.com/jdx/hk/releases/download/v2.0.1/hk-aarch64-unknown-linux-musl.tar.gz"
+signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
+
+[tools.hk."platforms.linux-x64"]
+checksum = "sha256:f14d0290a07f82911f32ea5e4a91dd80d90abb852488912b1ade9b240f70d615"
+url = "https://github.com/jdx/hk/releases/download/v2.0.1/hk-x86_64-unknown-linux-gnu.tar.gz"
+signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
+
+[tools.hk."platforms.linux-x64-musl"]
+checksum = "sha256:76269248e27114f361d533551ffca757e58a1d4abe880fd008df16d19128ea97"
+url = "https://github.com/jdx/hk/releases/download/v2.0.1/hk-x86_64-unknown-linux-musl.tar.gz"
+signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
+
+[tools.hk."platforms.macos-arm64"]
+checksum = "sha256:6ec393f898f562f76c4839a910356b4afec6740eff23f18ebdf8cf41c793a461"
+url = "https://github.com/jdx/hk/releases/download/v2.0.1/hk-aarch64-apple-darwin.tar.gz"
+signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
+
+[tools.hk."platforms.windows-x64"]
+checksum = "sha256:b3cb8ab5958393faacefabfb3a402060eb256b1fda8e1f83c74c3fc877ebff8f"
+url = "https://github.com/jdx/hk/releases/download/v2.0.1/hk-x86_64-pc-windows-msvc.zip"
+signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
+
 [[tools.java]]
 version = "temurin-25.0.3+9.0.LTS"
 backend = "core:java"
@@ -609,6 +644,45 @@ url = "https://github.com/stackrox/kube-linter/releases/download/v0.8.3/kube-lin
 url_api = "https://api.github.com/repos/stackrox/kube-linter/releases/assets/370825091"
 provenance = "cosign"
 
+[[tools.kubeconform]]
+version = "0.8.0"
+backend = "aqua:yannh/kubeconform"
+
+[tools.kubeconform."platforms.linux-arm64"]
+checksum = "sha256:1f53fc8e81258197a35e8603054162a5af1de8c5af13746c71ab680d9534ed87"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612685"
+
+[tools.kubeconform."platforms.linux-arm64-musl"]
+checksum = "sha256:1f53fc8e81258197a35e8603054162a5af1de8c5af13746c71ab680d9534ed87"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612685"
+
+[tools.kubeconform."platforms.linux-x64"]
+checksum = "sha256:9bc2bffbf71f261128533edaf912153948b7ff238f9a531ae6d34466ec287883"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612666"
+
+[tools.kubeconform."platforms.linux-x64-musl"]
+checksum = "sha256:9bc2bffbf71f261128533edaf912153948b7ff238f9a531ae6d34466ec287883"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612666"
+
+[tools.kubeconform."platforms.macos-arm64"]
+checksum = "sha256:f84f4dfbebf4a6b0b230385fa065a39ea35e02608c2b50d025dcf64775a69d67"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-darwin-arm64.tar.gz"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612680"
+
+[tools.kubeconform."platforms.macos-x64"]
+checksum = "sha256:71dbc87ac9f24099a62b93570e65aa06312ba6ac8aea63b7f86e9d999edf5a92"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-darwin-amd64.tar.gz"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612679"
+
+[tools.kubeconform."platforms.windows-x64"]
+checksum = "sha256:e3f56102bcf4f50b034a567e2482a1c5330799983ddd655952310211aef73d93"
+url = "https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-windows-amd64.zip"
+url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612665"
+
 [[tools.lychee]]
 version = "0.24.2"
 backend = "aqua:lycheeverse/lychee"
@@ -686,6 +760,45 @@ backend = "npm:renovate"
 
 [tools."npm:renovate".options]
 trust_policy_excludes = '["@yarnpkg/libzip@3.2.2"]'
+
+[[tools.pkl]]
+version = "0.32.1"
+backend = "aqua:apple/pkl"
+
+[tools.pkl."platforms.linux-arm64"]
+checksum = "sha256:a76d2dd47da435a8f911b0347373f47c7e59ea54fb75ff846d20b8df10dba058"
+url = "https://github.com/apple/pkl/releases/download/0.32.1/pkl-linux-aarch64"
+url_api = "https://api.github.com/repos/apple/pkl/releases/assets/487426568"
+
+[tools.pkl."platforms.linux-arm64-musl"]
+checksum = "sha256:a76d2dd47da435a8f911b0347373f47c7e59ea54fb75ff846d20b8df10dba058"
+url = "https://github.com/apple/pkl/releases/download/0.32.1/pkl-linux-aarch64"
+url_api = "https://api.github.com/repos/apple/pkl/releases/assets/487426568"
+
+[tools.pkl."platforms.linux-x64"]
+checksum = "sha256:3180b62da95c0cad1d904e9bb6c5f4a8f9032413c21e53194bb91ff1ee5f3211"
+url = "https://github.com/apple/pkl/releases/download/0.32.1/pkl-linux-amd64"
+url_api = "https://api.github.com/repos/apple/pkl/releases/assets/487426567"
+
+[tools.pkl."platforms.linux-x64-musl"]
+checksum = "sha256:3180b62da95c0cad1d904e9bb6c5f4a8f9032413c21e53194bb91ff1ee5f3211"
+url = "https://github.com/apple/pkl/releases/download/0.32.1/pkl-linux-amd64"
+url_api = "https://api.github.com/repos/apple/pkl/releases/assets/487426567"
+
+[tools.pkl."platforms.macos-arm64"]
+checksum = "sha256:563eb51c9a20b16a3625464ed745c675ed9750381f2126722696a0d7cac1d9d3"
+url = "https://github.com/apple/pkl/releases/download/0.32.1/pkl-macos-aarch64"
+url_api = "https://api.github.com/repos/apple/pkl/releases/assets/487426570"
+
+[tools.pkl."platforms.macos-x64"]
+checksum = "sha256:5b74b903234047960144f66f2cebdd12d267d9b98e8155ed91d2ae5ed27e2d1f"
+url = "https://github.com/apple/pkl/releases/download/0.32.1/pkl-macos-amd64"
+url_api = "https://api.github.com/repos/apple/pkl/releases/assets/487426599"
+
+[tools.pkl."platforms.windows-x64"]
+checksum = "sha256:8550a00fcf027335e42c5e2cd553b88e98845408cb1880b3e3d1860caf46d22a"
+url = "https://github.com/apple/pkl/releases/download/0.32.1/pkl-windows-amd64.exe"
+url_api = "https://api.github.com/repos/apple/pkl/releases/assets/487426668"
 
 [[tools.ruff]]
 version = "0.16.7"

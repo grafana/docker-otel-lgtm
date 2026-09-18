@@ -12,3 +12,6 @@ grafana-opentelemetry*.jar
 build/
 obj/
 examples/go/dice
+
+# Repository-local .NET first-run state for lint tasks
+.cache/

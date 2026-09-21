@@ -198,6 +198,12 @@ SCRIPT
 	assert_not_contains "/blob/vv1.2.3-test/"
 }
 
+@test "docs URL uses main for development refs" {
+	run run_run_all gcx-entry
+	assert_contains "  https://github.com/grafana/docker-otel-lgtm/blob/main/docs/gcx-integration.md"
+	assert_not_contains "/blob/vgcx-entry/"
+}
+
 @test "prints one local gcx guide after readiness without MCP promotion" {
 	run run_run_all latest
 	[ "$status" -eq 124 ]

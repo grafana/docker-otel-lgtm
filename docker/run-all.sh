@@ -205,7 +205,7 @@ echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running.
 echo ""
 echo "Query and troubleshoot telemetry with gcx:"
 docs_ref="main"
-if [[ -n "${LGTM_VERSION}" && "${LGTM_VERSION}" != "latest" && "${LGTM_VERSION}" != "main" ]]; then
+if [[ "${LGTM_VERSION}" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
 	docs_ref="${LGTM_VERSION}"
 	[[ "${docs_ref}" != v* ]] && docs_ref="v${docs_ref}"
 fi

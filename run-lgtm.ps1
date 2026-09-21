@@ -89,7 +89,6 @@ $runCommand += @(
     '-p', '4317:4317'
     '-p', '4318:4318'
     '-p', '9090:9090'
-    '-e', "CONTAINER_RUNTIME=$(Split-Path -Leaf $containerCommand)"
     '-e', "OTEL_COLLECTOR_DEBUG_EXPORTER=$($env:OTEL_COLLECTOR_DEBUG_EXPORTER)"
     '--rm'
 )

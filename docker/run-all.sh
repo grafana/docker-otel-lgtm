@@ -201,160 +201,15 @@ echo "Total: ${total_elapsed} seconds"
 touch "$READY_FILE"
 echo "The OpenTelemetry collector and the Grafana LGTM stack are up and running. (created $READY_FILE)"
 
-# Check if Tempo MCP is enabled
-TEMPO_MCP_ENABLED=false
-if [[ " ${TEMPO_EXTRA_ARGS:-} " == *" --query-frontend.mcp-server.enabled=true "* ]]; then
-	TEMPO_MCP_ENABLED=true
-fi
-
-# Create MCP config for AI tool access.
-GRAFANA_CREDS="${GF_SECURITY_ADMIN_USER:-admin}:${GF_SECURITY_ADMIN_PASSWORD:-admin}"
-GRAFANA_URL="${GRAFANA_URL:-http://127.0.0.1:3000}"
-GRAFANA_PUBLIC_URL="${GRAFANA_PUBLIC_URL:-http://localhost:3000}"
-TEMPO_URL="${TEMPO_URL:-http://localhost:3200}"
-LGTM_CONFIG_DIR="${LGTM_CONFIG_DIR:-/etc/lgtm}"
-GRAFANA_SA_TOKEN_FILE="${GRAFANA_SA_TOKEN_FILE:-/tmp/grafana-sa-token}"
-SA_NAME="ai-tools"
-SA_TOKEN_NAME="ai-tools-token"
-GRAFANA_SA_URL="${GRAFANA_URL}/api/serviceaccounts"
-SA_TOKEN=""
-EXEC="${CONTAINER_RUNTIME:-docker} exec lgtm"
-
-# Try to create SA; if it already exists (persisted data), look it up
-SA_RESPONSE="$(curl -sf "${GRAFANA_SA_URL}" \
-	-H "Content-Type: application/json" -u "${GRAFANA_CREDS}" \
-	-d "{\"name\":\"${SA_NAME}\",\"role\":\"Viewer\"}")"
-if [ -z "$SA_RESPONSE" ]; then
-	# SA already exists — find its ID
-	SA_RESPONSE="$(curl -sf "${GRAFANA_SA_URL}/search?query=${SA_NAME}" -u "${GRAFANA_CREDS}")"
-fi
-SA_ID="$(echo "$SA_RESPONSE" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)"
-if [ -n "$SA_ID" ]; then
-	# Delete only the bootstrap-managed token (preserve any manually-created tokens)
-	EXISTING_TOKENS="$(curl -sf "${GRAFANA_SA_URL}/${SA_ID}/tokens" -u "${GRAFANA_CREDS}")"
-	if [ -n "$EXISTING_TOKENS" ]; then
-		BOOTSTRAP_TOKEN_ID="$(echo "$EXISTING_TOKENS" | tr '{}' '\n' |
-			grep "\"name\":\"${SA_TOKEN_NAME}\"" | grep -o '"id":[0-9]*' | head -1 | cut -d: -f2)"
-		if [ -n "$BOOTSTRAP_TOKEN_ID" ]; then
-			curl -sf -X DELETE "${GRAFANA_SA_URL}/${SA_ID}/tokens/${BOOTSTRAP_TOKEN_ID}" \
-				-u "${GRAFANA_CREDS}" >/dev/null
-		fi
-	fi
-	TOKEN_RESPONSE="$(curl -sf "${GRAFANA_SA_URL}/${SA_ID}/tokens" \
-		-H "Content-Type: application/json" -u "${GRAFANA_CREDS}" \
-		-d "{\"name\":\"${SA_TOKEN_NAME}\"}")"
-	SA_TOKEN="$(echo "$TOKEN_RESPONSE" | grep -o '"key":"[^"]*"' | cut -d'"' -f4)"
-fi
-
-# JSON-escape a string for safe inclusion inside a double-quoted JSON value.
-# The runtime image has no jq, so escaping is done in pure Bash.
-json_escape() {
-	local s=$1
-	s=${s//\\/\\\\}
-	s=${s//\"/\\\"}
-	s=${s//$'\n'/\\n}
-	s=${s//$'\r'/\\r}
-	s=${s//$'\t'/\\t}
-	s=${s//$'\b'/\\b}
-	s=${s//$'\f'/\\f}
-	printf '%s' "$s"
-}
-
-TEMPO_MCP_URL_ESCAPED="$(json_escape "${TEMPO_URL}/api/mcp")"
-GRAFANA_PUBLIC_URL_ESCAPED="$(json_escape "${GRAFANA_PUBLIC_URL}")"
-SA_TOKEN_ESCAPED="$(json_escape "${SA_TOKEN}")"
-
-(
-	umask 077
-	mkdir -p "${LGTM_CONFIG_DIR}"
-	if [ -n "$SA_TOKEN" ]; then
-		echo "${SA_TOKEN}" >"${GRAFANA_SA_TOKEN_FILE}"
-	fi
-	if [ -n "$SA_TOKEN" ] && [[ ${TEMPO_MCP_ENABLED} == "true" ]]; then
-		cat >"${LGTM_CONFIG_DIR}/mcp.json" <<-MCPEOF
-			{
-			  "mcpServers": {
-			    "grafana": {
-			      "command": "uvx",
-			      "args": ["mcp-grafana"],
-			      "env": {
-			        "GRAFANA_URL": "${GRAFANA_PUBLIC_URL_ESCAPED}",
-			        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${SA_TOKEN_ESCAPED}"
-			      }
-			    },
-			    "tempo": {
-			      "url": "${TEMPO_MCP_URL_ESCAPED}"
-			    }
-			  }
-			}
-		MCPEOF
-	elif [ -n "$SA_TOKEN" ]; then
-		cat >"${LGTM_CONFIG_DIR}/mcp.json" <<-MCPEOF
-			{
-			  "mcpServers": {
-			    "grafana": {
-			      "command": "uvx",
-			      "args": ["mcp-grafana"],
-			      "env": {
-			        "GRAFANA_URL": "${GRAFANA_PUBLIC_URL_ESCAPED}",
-			        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${SA_TOKEN_ESCAPED}"
-			      }
-			    }
-			  }
-			}
-		MCPEOF
-	elif [[ ${TEMPO_MCP_ENABLED} == "true" ]]; then
-		cat >"${LGTM_CONFIG_DIR}/mcp.json" <<-MCPEOF
-			{
-			  "mcpServers": {
-			    "tempo": {
-			      "url": "${TEMPO_MCP_URL_ESCAPED}"
-			    }
-			  }
-			}
-		MCPEOF
-	else
-		cat >"${LGTM_CONFIG_DIR}/mcp.json" <<-MCPEOF
-			{
-			  "mcpServers": {}
-			}
-		MCPEOF
-	fi
-	{
-		echo "#!/usr/bin/env bash"
-		echo "# Connect Claude Code to the LGTM stack"
-		# Use printf %q so user-supplied values (e.g. TEMPO_URL or
-		# GRAFANA_PUBLIC_URL supplied via environment variables) are shell-quoted
-		# and cannot inject commands when this helper script is later executed.
-		if [ -n "$SA_TOKEN" ]; then
-			printf 'claude mcp add grafana -e GRAFANA_URL=%q -e GRAFANA_SERVICE_ACCOUNT_TOKEN=%q -- uvx mcp-grafana\n' "${GRAFANA_PUBLIC_URL}" "${SA_TOKEN}"
-		fi
-		if [[ ${TEMPO_MCP_ENABLED} == "true" ]]; then
-			printf 'claude mcp add --transport http tempo %q\n' "${TEMPO_URL}/api/mcp"
-		fi
-	} >"${LGTM_CONFIG_DIR}/claude-mcp-setup.sh"
-)
-
+# One local-first next step; gcx and agent skills run on the host.
 echo ""
-echo "AI Tool Integration (MCP):"
-if [[ ${TEMPO_MCP_ENABLED} == "true" ]]; then
-	echo "  Tempo MCP:    server enabled at ${TEMPO_URL}/api/mcp"
-else
-	echo "  Tempo MCP:    server disabled; enable with TEMPO_EXTRA_ARGS=--query-frontend.mcp-server.enabled=true"
-fi
-if [ -n "$SA_TOKEN" ]; then
-	echo "  Grafana MCP:  server enabled with service account token"
-else
-	echo "  Grafana MCP:  server unavailable; could not create service account token"
-fi
-printf '  Claude Code:  bash <(%s cat %q)\n' "$EXEC" "${LGTM_CONFIG_DIR}/claude-mcp-setup.sh"
-printf '  Other tools:  %s cat %q\n' "$EXEC" "${LGTM_CONFIG_DIR}/mcp.json"
+echo "Query and troubleshoot telemetry with gcx:"
 docs_ref="main"
 if [[ -n "${LGTM_VERSION}" && "${LGTM_VERSION}" != "latest" && "${LGTM_VERSION}" != "main" ]]; then
 	docs_ref="${LGTM_VERSION}"
 	[[ "${docs_ref}" != v* ]] && docs_ref="v${docs_ref}"
 fi
-echo "  Docs:         https://github.com/grafana/docker-otel-lgtm/blob/${docs_ref}/docs/mcp-integration.md"
+echo "  https://github.com/grafana/docker-otel-lgtm/blob/${docs_ref}/docs/gcx-integration.md"
 
 if [[ ${ENABLE_OBI:-false} == "true" ]]; then
 	# Non-blocking check — don't delay readiness if OBI fails (e.g. missing capabilities)
@@ -379,11 +234,7 @@ echo "Open ports:"
 echo " - 4317: OpenTelemetry GRPC endpoint"
 echo " - 4318: OpenTelemetry HTTP endpoint"
 echo " - 3000: Grafana (http://localhost:3000). User: admin, password: admin"
-if [[ ${TEMPO_MCP_ENABLED} == "true" ]]; then
-	echo " - 3200: Tempo endpoint (MCP at http://localhost:3200/api/mcp)"
-else
-	echo " - 3200: Tempo endpoint"
-fi
+echo " - 3200: Tempo endpoint"
 echo " - 4040: Pyroscope endpoint"
 echo " - 9090: Prometheus endpoint"
 

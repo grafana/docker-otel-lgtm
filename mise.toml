@@ -14,7 +14,7 @@ actionlint = "1.7.12"
 "aqua:grafana/flint" = "0.22.12"
 "aqua:jonwiggins/xmloxide" = "0.5.0"
 "aqua:owenlamont/ryl" = "0.22.0"
-biome = "2.5.13"
+biome = "2.5.14"
 editorconfig-checker = "4.0.1"
 golangci-lint = "2.13.2"
 google-java-format = "1.36.1"
@@ -23,13 +23,13 @@ kube-linter = "0.8.3"
 lychee = "0.24.2"
 # @yarnpkg/libzip 3.2.2 is npm-signed and matches Yarn's release commit, but
 # was published without provenance; mise's no-downgrade policy otherwise rejects Renovate.
-"npm:renovate" = { version = "44.80.0", trust_policy_excludes = ["@yarnpkg/libzip@3.2.2"] }
-ruff = "0.16.7"
-rumdl = "v0.2.71"
+"npm:renovate" = { version = "44.101.2", trust_policy_excludes = ["@yarnpkg/libzip@3.2.2"] }
+ruff = "0.16.8"
+rumdl = "v0.2.73"
 shellcheck = "0.11.0"
 shfmt = "3.14.1"
 taplo = "0.10.0"
-typos = "1.50.1"
+typos = "1.50.2"
 
 [env]
 FLINT_CONFIG_DIR = ".github/config"

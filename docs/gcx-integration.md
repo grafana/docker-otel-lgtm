@@ -136,6 +136,6 @@ example process with Ctrl-C; remove its generated venv only if you no longer
 need it. Keep pre-existing LGTM instances and data. Clean up a disposable stack
 only when its owner confirms it is no longer needed.
 
-[diagnostics]: https://github.com/grafana/gcx/blob/main/docs/guides/diagnose-missing-telemetry.md
-[connection]: https://github.com/grafana/gcx/blob/main/docs/guides/diagnose-missing-telemetry.md#connect-without-changing-your-usual-context
-[verification]: https://github.com/grafana/gcx/blob/main/docs/guides/diagnose-missing-telemetry.md#verify-a-repair-and-restore-the-environment
+[diagnostics]: https://github.com/grafana/gcx/blob/docs/gcx-diagnostics-entry/docs/guides/diagnose-missing-telemetry.md
+[connection]: https://github.com/grafana/gcx/blob/docs/gcx-diagnostics-entry/docs/guides/diagnose-missing-telemetry.md#connect-without-changing-your-usual-context
+[verification]: https://github.com/grafana/gcx/blob/docs/gcx-diagnostics-entry/docs/guides/diagnose-missing-telemetry.md#verify-a-repair-and-restore-the-environment

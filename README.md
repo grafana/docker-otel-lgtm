@@ -53,6 +53,10 @@ You can also use [mise][mise] to run the Docker image:
 mise run lgtm
 ```
 
+## Deploy with Easypanel
+
+[Easypanel](https://easypanel.io) is a self-hosted Docker deployment platform, and this image has a one-click deployment template there: https://easypanel.io/templates/grafana-otel-lgtm
+
 ## Configuration
 
 ### Enable logging

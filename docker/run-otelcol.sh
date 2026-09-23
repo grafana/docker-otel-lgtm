@@ -67,15 +67,18 @@ if [[ -n ${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:-} ||
 		echo "Adding headers from OTEL_EXPORTER_OTLP_HEADERS"
 
 		yaml_headers="{"
-		# split the headers into an array on , - and then each element using =
+		# split the headers into an array on , - and then each element on the
+		# first = only (header values, e.g. base64-encoded Basic auth
+		# credentials, routinely contain further = characters)
 		IFS=',' read -r -a headers <<<"$OTEL_EXPORTER_OTLP_HEADERS"
 		for header in "${headers[@]}"; do
-			IFS='=' read -r -a header_parts <<<"$header"
-			if [[ ${#header_parts[@]} -eq 2 ]]; then
+			if [[ $header == *=* ]]; then
+				key="${header%%=*}"
+				value="${header#*=}"
 				if [[ $yaml_headers != "{" ]]; then
 					yaml_headers+=", "
 				fi
-				yaml_headers+="'${header_parts[0]}': '${header_parts[1]}'"
+				yaml_headers+="'${key}': '${value}'"
 			else
 				echo "Invalid header: $header"
 			fi

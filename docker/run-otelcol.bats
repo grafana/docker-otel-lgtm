@@ -145,3 +145,11 @@ run_otelcol() {
 	run run_otelcol
 	run ! grep -q "headers:" "$TESTDIR/otelcol-config-export-http.yaml"
 }
+
+@test "headers: value containing = (e.g. padded base64) is preserved intact" {
+	local b64="ZmFrZS1pbnN0YW5jZS1pZDpmYWtlLXRva2VuLXZhbHVlPT0="
+	export OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4318
+	export OTEL_EXPORTER_OTLP_HEADERS="Authorization=Basic ${b64}"
+	run run_otelcol
+	grep -q "Basic ${b64}" "$TESTDIR/otelcol-config-export-http.yaml"
+}

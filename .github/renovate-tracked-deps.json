@@ -8,6 +8,10 @@
       "packageName": "grafana/otel-lgtm",
       "datasource": "docker"
     },
+    "hk": {
+      "packageName": "jdx/hk",
+      "datasource": "github-releases"
+    },
     "loki": {
       "packageName": "grafana/loki",
       "datasource": "github-releases"
@@ -374,27 +378,35 @@
         "go"
       ]
     },
+    "hk.pkl": {
+      "regex": [
+        "hk"
+      ]
+    },
     "mise.toml": {
       "mise": [
         "actionlint",
-        "aqua:grafana/flint",
         "aqua:grafana/gcx",
         "aqua:grafana/oats",
         "aqua:jonwiggins/xmloxide",
         "aqua:owenlamont/ryl",
         "bats",
         "biome",
+        "cargo:https://github.com/grafana/flint",
         "dotnet",
         "editorconfig-checker",
         "go",
         "golangci-lint",
         "google-java-format",
         "hadolint",
+        "hk",
         "java",
         "kube-linter",
+        "kubeconform",
         "lychee",
         "node",
         "npm:renovate",
+        "pkl",
         "ruff",
         "rumdl",
         "rust",

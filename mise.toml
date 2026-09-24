@@ -11,7 +11,9 @@ rust = { version = "1.98.1", components = "clippy,rustfmt" }
 
 # Linters
 actionlint = "1.7.12"
-"aqua:grafana/flint" = "0.22.12"
+"cargo:https://github.com/grafana/flint" = { version = "rev:137e9293ca77c314e08b329ffb0400af10d39fdd", crate = "flint", bin = "flint" }
+hk = "2.0.1"
+pkl = "0.32.1"
 "aqua:jonwiggins/xmloxide" = "0.5.0"
 "aqua:owenlamont/ryl" = "0.22.0"
 biome = "2.5.14"
@@ -20,6 +22,7 @@ golangci-lint = "2.13.2"
 google-java-format = "1.36.1"
 hadolint = "2.15.1"
 kube-linter = "0.8.3"
+kubeconform = "0.8.0"
 lychee = "0.24.2"
 # @yarnpkg/libzip 3.2.2 is npm-signed and matches Yarn's release commit, but
 # was published without provenance; mise's no-downgrade policy otherwise rejects Renovate.
@@ -44,7 +47,7 @@ depends = ["lint", "test:unit"]
 
 [tasks.lint]
 description = "Run all lints"
-run = "flint run"
+run = 'HK_MISE=1 hk check --all --check --no-fail-fast'
 
 [tasks.lgtm]
 description = "Run LGTM image"
@@ -112,4 +115,4 @@ run = './build-lgtm.sh ${usage_tag}'
 
 [tasks."lint:fix"]
 description = "Auto-fix lint issues"
-run = "flint run --fix"
+run = 'HK_MISE=1 hk fix --all --no-stage --no-fail-fast'

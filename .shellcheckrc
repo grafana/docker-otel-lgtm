@@ -1,0 +1,3 @@
+# Resolve sourced files relative to the script, including files not passed explicitly.
+source-path=SCRIPTDIR
+external-sources=true

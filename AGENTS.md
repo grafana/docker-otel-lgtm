@@ -125,3 +125,4 @@ made there, not elsewhere.
 Releases are automated weekly (Friday 09:00 UTC) via GitHub Actions if
 `docker/` has changed. Version auto-increments based on component changes.
 Releases are immutable once published.
+- Security issues should be reported via [Grafana's security issue reporting page](https://grafana.com/legal/report-a-security-issue/) and not directly in this repository.

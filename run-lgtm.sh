@@ -46,16 +46,38 @@ fi
 
 if command -v podman >/dev/null 2>&1; then
 	RUNTIME=podman
+elif command -v docker >/dev/null 2>&1; then
+	RUNTIME=docker
+elif command -v container >/dev/null 2>&1; then
+	# Apple Container CLI (macOS). Uses singular groups: `container run`,
+	# `container image pull`, `container exec`. See: https://github.com/apple/container
+	RUNTIME=container
+else
+	echo "Unable to find a suitable container runtime such as Podman, Docker, or Apple Container. Exiting."
+	exit 1
+fi
+
+if [ "$RUNTIME" = "podman" ]; then
 	# Fedora, by default, runs with SELinux on. We require the "z" option for bind mounts.
 	# See: https://docs.docker.com/engine/storage/bind-mounts/#configure-the-selinux-label
 	# See: https://docs.podman.io/en/stable/markdown/podman-run.1.html section "Labeling Volume Mounts"
 	MOUNT_OPTS="rw,z"
-elif command -v docker >/dev/null 2>&1; then
-	RUNTIME=docker
-	MOUNT_OPTS=rw
 else
-	echo "Unable to find a suitable container runtime such as Podman or Docker. Exiting."
-	exit 1
+	MOUNT_OPTS=rw
+fi
+
+if [ "$RUNTIME" = "container" ]; then
+	# Apple Container does not support --pid=host or --privileged, so OBI
+	# eBPF auto-instrumentation cannot run under it.
+	if ((${#OBI_FLAGS[@]})); then
+		echo "Error: OBI eBPF auto-instrumentation requires --pid=host --privileged, which Apple Container does not support. Use Docker or Podman for OBI." >&2
+		exit 1
+	fi
+	# Apple Container requires system services to be running.
+	# `container system start` is idempotent when already running.
+	if [[ ${DRY_RUN} != true ]]; then
+		container system start
+	fi
 fi
 
 if [ "$USE_LOCAL_IMAGE" = true ]; then
@@ -108,13 +130,18 @@ RUN_FLAGS+=(
 	--env-file .env
 )
 
+if [ "$RUNTIME" = "container" ]; then
+	# Apple's default of 1G is too small for the stack.
+	RUN_FLAGS+=(--memory "${LGTM_CONTAINER_MEMORY:-2G}")
+fi
+
 if [[ ${DRY_RUN} == true ]]; then
 	echo "runtime=$RUNTIME"
 	echo "image=$IMAGE"
-	for arg in container run "${RUN_FLAGS[@]}" "$IMAGE"; do
+	for arg in run "${RUN_FLAGS[@]}" "$IMAGE"; do
 		echo "arg=$arg"
 	done
 	exit 0
 fi
 
-$RUNTIME container run "${RUN_FLAGS[@]}" "$IMAGE"
+$RUNTIME run "${RUN_FLAGS[@]}" "$IMAGE"

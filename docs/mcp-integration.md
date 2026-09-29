@@ -31,7 +31,7 @@ the Grafana instance in the container.
 3. Get the MCP configuration:
 
    ```sh
-   docker exec lgtm cat /etc/lgtm/mcp.json   # or: podman exec ...
+   docker exec lgtm cat /etc/lgtm/mcp.json   # or: podman exec ... / container exec ...
    ```
 
 4. Paste the JSON into your AI tool's MCP configuration.
@@ -40,7 +40,7 @@ the Grafana instance in the container.
 
    ```sh
    # Get the service account token
-   TOKEN=$(docker exec lgtm cat /tmp/grafana-sa-token)   # or: podman exec ...
+   TOKEN=$(docker exec lgtm cat /tmp/grafana-sa-token)   # or: podman exec ... / container exec ...
 
    # Add the Grafana MCP server (requires uvx)
    claude mcp add grafana \

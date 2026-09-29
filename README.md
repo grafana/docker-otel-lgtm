@@ -45,7 +45,33 @@ docker pull grafana/otel-lgtm:latest
 ./run-lgtm
 ```
 
-### Linux/Unix Using mise
+### macOS
+
+With docker/podman:
+
+```sh
+./run-lgtm
+```
+
+With Apple Container:
+
+```sh
+container system start   # required once before first run (idempotent)
+./run-lgtm
+```
+
+Caveats with Apple Container:
+
+- OBI eBPF auto-instrumentation is not supported (`--privileged` / `--pid=host` don't exist).
+
+- Apple Container defaults to 1G of memory, which is insufficient for the stack; at least 2G is needed and is set as the default value. To override it, use
+  `LGTM_CONTAINER_MEMORY` environment variable (for example, `4G` or `4096M`):
+
+```sh
+LGTM_CONTAINER_MEMORY=4G ./run-lgtm.sh
+```
+
+### Linux/Unix/macOS Using mise
 
 You can also use [mise][mise] to run the Docker image:
 
@@ -96,7 +122,8 @@ mise run lgtm-obi
 **Requirements:** Linux kernel 5.8+ with BTF support. The `run-lgtm.sh` and
 `run-lgtm.ps1` scripts automatically add the required `--pid=host` and
 `--privileged` Docker flags when OBI is enabled. If you run `docker run`
-directly, you must add these flags manually.
+directly, you must add these flags manually. OBI is not supported on Apple
+Container (`container` CLI has no `--privileged` / `--pid=host`); use Docker or Podman.
 
 > [!NOTE]
 > The `--pid=host` flag shares the host's PID namespace with the container,
@@ -227,7 +254,8 @@ providers:
       foldersFromFilesStructure: false
 ```
 
-Mount both files in your `docker-compose.yml`:
+Mount both files in your `docker-compose.yml` (Docker/Podman only; Apple Container has no
+official compose equivalent):
 
 ```yaml
 services:
@@ -441,7 +469,7 @@ docker run -e TEMPO_EXTRA_ARGS="--query-frontend.mcp-server.enabled=true" grafan
 ```
 
 ```sh
-docker exec lgtm cat /etc/lgtm/mcp.json   # or: podman exec ...
+docker exec lgtm cat /etc/lgtm/mcp.json   # or: podman exec ... / container exec ...
 # Kubernetes: kubectl exec deploy/lgtm -- cat /etc/lgtm/mcp.json
 ```
 

@@ -53,6 +53,15 @@ You can also use [mise][mise] to run the Docker image:
 mise run lgtm
 ```
 
+## Query and troubleshoot with gcx
+
+Use [gcx with your local LGTM instance](docs/gcx-integration.md) to query fresh
+application telemetry and investigate an empty dashboard with existing gcx
+agent skills. gcx runs on your host; no Grafana Cloud account is required.
+
+Upgrading from the generated MCP setup? See the
+[migration note](docs/gcx-migration.md) for removed files and credential handling.
+
 ## Configuration
 
 ### Enable logging
@@ -172,7 +181,7 @@ CLI flags without modifying any files:
 |-------------------------|-------------------------|-----------------------------------------------------------------------------------------------------|
 | Prometheus              | `PROMETHEUS_EXTRA_ARGS` | `--storage.tsdb.retention.time=90d`                                                                 |
 | Loki                    | `LOKI_EXTRA_ARGS`       | `-store.retention=90d -compactor.retention-enabled=true -compactor.delete-request-store=filesystem` |
-| Tempo                   | `TEMPO_EXTRA_ARGS`      | `--query-frontend.mcp-server.enabled=true`                                                          |
+| Tempo                   | `TEMPO_EXTRA_ARGS`      |                                                           |
 | Pyroscope               | `PYROSCOPE_EXTRA_ARGS`  |                                                                                                     |
 | OpenTelemetry Collector | `OTELCOL_EXTRA_ARGS`    |                                                                                                     |
 
@@ -423,30 +432,6 @@ IMAGE="oci://ghcr.io/${REPOSITORY}:${VERSION}"
 gh attestation verify --repo "${REPOSITORY}" "${IMAGE}"
 ```
 
-## AI Tool Integration (MCP)
-
-The stack provides an [MCP][mcp] integration so AI coding tools can query logs, metrics, traces,
-and dashboards. Traces can be queried through Tempo's HTTP MCP endpoint or through the
-client-side [Grafana MCP server](https://grafana.com/docs/grafana/latest/developer-resources/mcp/)
-(`uvx mcp-grafana`), which also provides access to dashboards, logs, and metrics.
-
-Enable the Tempo MCP server by setting an environment variable:
-
-```sh
-TEMPO_EXTRA_ARGS="--query-frontend.mcp-server.enabled=true"
-```
-
-```sh
-docker run -e TEMPO_EXTRA_ARGS="--query-frontend.mcp-server.enabled=true" grafana/otel-lgtm
-```
-
-```sh
-docker exec lgtm cat /etc/lgtm/mcp.json   # or: podman exec ...
-# Kubernetes: kubectl exec deploy/lgtm -- cat /etc/lgtm/mcp.json
-```
-
-Paste the JSON into your AI tool's MCP configuration. See [docs/mcp-integration.md](docs/mcp-integration.md) for details.
-
 ## Related Work
 
 - [Metrics, Logs, Traces and Profiles in Grafana][mltp]
@@ -465,7 +450,6 @@ Paste the JSON into your AI tool's MCP configuration. See [docs/mcp-integration.
 [grafana-env-overrides]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#override-configuration-with-environment-variables
 [grafana-preinstall-plugins]: https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/#install-plugins-in-the-docker-container
 [java-example]: examples/java/
-[mcp]: https://modelcontextprotocol.io/ "Model Context Protocol"
 [mise]: https://github.com/jdx/mise
 [mltp]: https://github.com/grafana/intro-to-mltp
 [otel-checker]: https://github.com/grafana/otel-checker/

@@ -50,25 +50,37 @@ docker pull grafana/otel-lgtm:latest
 With docker/podman:
 
 ```sh
-./run-lgtm
+./run-lgtm.sh
 ```
 
-With Apple Container:
+With [Apple Container](https://github.com/apple/container):
+
+Before building or running, ensure Apple Container's services is started with `container system start`:
 
 ```sh
-container system start   # required once before first run (idempotent)
-./run-lgtm
+container system start
+CONTAINER_RUNTIME_OVERRIDE=container ./run-lgtm.sh
+```
+
+The build and run scripts automatically select Podman, then Docker, then Apple Container.
+Set `CONTAINER_RUNTIME_OVERRIDE` to `docker`, `podman`, or `container` to select a runtime
+when multiple are installed. This also works with mise, for example:
+
+```sh
+CONTAINER_RUNTIME_OVERRIDE=container mise run lgtm
 ```
 
 Caveats with Apple Container:
 
 - OBI eBPF auto-instrumentation is not supported (`--privileged` / `--pid=host` don't exist).
-
-- Apple Container defaults to 1G of memory, which is insufficient for the stack; at least 2G is needed and is set as the default value. To override it, use
+- The first run of `container system start` prompts to download and install a VM kernel, which
+  can take several minutes.
+- Apple Container defaults to 1G of memory, which is insufficient for the stack;
+  the run script sets 2G by default. To override it, use the
   `LGTM_CONTAINER_MEMORY` environment variable (for example, `4G` or `4096M`):
 
 ```sh
-LGTM_CONTAINER_MEMORY=4G ./run-lgtm.sh
+CONTAINER_RUNTIME_OVERRIDE=container LGTM_CONTAINER_MEMORY=4G ./run-lgtm.sh
 ```
 
 ### Linux/Unix/macOS Using mise
@@ -325,6 +337,18 @@ docker build . -t grafana/otel-lgtm
 # Using mise
 mise build-lgtm
 ```
+
+With Apple Container, run from the repository root after starting its services as described above:
+
+```sh
+CONTAINER_RUNTIME_OVERRIDE=container ./build-lgtm.sh
+
+# Using mise
+CONTAINER_RUNTIME_OVERRIDE=container mise run build-lgtm
+```
+
+The first `container build` downloads a builder image before building the LGTM image,
+so the first build can take longer.
 
 > [!TIP]
 > If you built your image locally, you can use the `run-lgtm` scripts with

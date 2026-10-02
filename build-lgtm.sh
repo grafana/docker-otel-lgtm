@@ -3,7 +3,7 @@
 set -euo pipefail
 
 RELEASE=${1:-latest}
-CONTAINER_RUNTIME_OVERRIDE=${2:-}
+CONTAINER_RUNTIME_OVERRIDE=${2:-${CONTAINER_RUNTIME_OVERRIDE:-}}
 
 echo "Building the Grafana OTEL-LGTM image with release ${RELEASE}..."
 

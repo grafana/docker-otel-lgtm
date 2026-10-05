@@ -81,7 +81,9 @@ if [ "$RUNTIME" = "apple_container" ]; then
 	# Apple Container does not support --pid=host or --privileged, so OBI
 	# eBPF auto-instrumentation cannot run under it.
 	if ((${#OBI_FLAGS[@]})); then
-		echo "Error: OBI eBPF auto-instrumentation requires --pid=host --privileged, which Apple Container does not support. Use Docker or Podman for OBI." >&2
+		printf '%s\n' \
+			"Error: OBI eBPF auto-instrumentation requires --pid=host --privileged, which Apple Container does not support." \
+			"Use Docker or Podman for OBI." >&2
 		exit 1
 	fi
 	if [[ ${DRY_RUN} != true ]] && ! container system status >/dev/null 2>&1; then

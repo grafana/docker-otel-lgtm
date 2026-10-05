@@ -5,7 +5,7 @@ lockfile_version = 3
 [[tools.actionlint]]
 version = "1.7.12"
 backend = "aqua:rhysd/actionlint"
-specifiers = ["1.7.12"]
+specifiers = ["latest"]
 
 [tools.actionlint."platforms.linux-arm64"]
 checksum = "sha256:325e971b6ba9bfa504672e29be93c24981eeb1c07576d730e9f7c8805afff0c6"
@@ -52,7 +52,7 @@ provenance = "github-attestations"
 [[tools."aqua:grafana/flint"]]
 version = "0.22.14"
 backend = "aqua:grafana/flint"
-specifiers = ["0.22.14"]
+specifiers = ["latest"]
 
 [tools."aqua:grafana/flint"."platforms.linux-arm64"]
 checksum = "sha256:f3f88892b1b129bd56f61e1a38e784e625284b37636155b5752b58585d7ac7c4"
@@ -99,7 +99,7 @@ provenance = "github-attestations"
 [[tools."aqua:grafana/gcx"]]
 version = "v1.4.0"
 backend = "aqua:grafana/gcx"
-specifiers = ["v1.4.0"]
+specifiers = ["latest"]
 
 [tools."aqua:grafana/gcx"."platforms.linux-arm64"]
 checksum = "sha256:68a4005272824dde10c3912f878424a4bd6cf15ce70886780b9e9eec0dc9e9fd"
@@ -139,7 +139,7 @@ url_api = "https://api.github.com/repos/grafana/gcx/releases/assets/605164867"
 [[tools."aqua:grafana/oats"]]
 version = "v0.10.0"
 backend = "aqua:grafana/oats"
-specifiers = ["v0.10.0"]
+specifiers = ["latest"]
 
 [tools."aqua:grafana/oats"."platforms.linux-arm64"]
 checksum = "sha256:be195aeeafce644c8a59438bbc8c472f5ca51df6f9570c6b646373a703d686b0"
@@ -186,7 +186,7 @@ provenance = "github-attestations"
 [[tools."aqua:jonwiggins/xmloxide"]]
 version = "0.5.0"
 backend = "aqua:jonwiggins/xmloxide"
-specifiers = ["0.5.0"]
+specifiers = ["latest"]
 
 [tools."aqua:jonwiggins/xmloxide"."platforms.linux-arm64"]
 checksum = "sha256:554d4ae976782bed0d9fa44b9ee7106a756f6a599ef9867b412db47a2a664399"
@@ -226,7 +226,7 @@ url_api = "https://api.github.com/repos/jonwiggins/xmloxide/releases/assets/5067
 [[tools."aqua:owenlamont/ryl"]]
 version = "0.22.0"
 backend = "aqua:owenlamont/ryl"
-specifiers = ["0.22.0"]
+specifiers = ["latest"]
 
 [tools."aqua:owenlamont/ryl"."platforms.linux-arm64"]
 checksum = "sha256:1045ea5807ae274c0812f63f73469018b58f822c8987e22b71f9995be971a6dd"
@@ -267,7 +267,7 @@ provenance = "github-attestations"
 [[tools.bats]]
 version = "1.14.0"
 backend = "aqua:bats-core/bats-core"
-specifiers = ["1.14.0"]
+specifiers = ["latest"]
 
 [tools.bats."platforms.linux-arm64"]
 url = "https://github.com/bats-core/bats-core/archive/refs/tags/v1.14.0.tar.gz"
@@ -296,7 +296,7 @@ url_api = "https://api.github.com/repos/bats-core/bats-core/tarball/v1.14.0"
 [[tools.biome]]
 version = "2.5.15"
 backend = "aqua:biomejs/biome"
-specifiers = ["2.5.15"]
+specifiers = ["latest"]
 
 [tools.biome."platforms.linux-arm64"]
 checksum = "sha256:a56bcd73ddbfdb0f57a82bb67b7ea698eed4027aff602b95aa18fafe919d59e0"
@@ -343,12 +343,12 @@ provenance = "github-attestations"
 [[tools.dotnet]]
 version = "10.0.202"
 backend = "core:dotnet"
-specifiers = ["10.0.202"]
+specifiers = ["latest"]
 
 [[tools.editorconfig-checker]]
 version = "4.0.2"
 backend = "github:editorconfig-checker/editorconfig-checker"
-specifiers = ["4.0.2"]
+specifiers = ["latest"]
 
 [tools.editorconfig-checker."platforms.linux-arm64"]
 checksum = "sha256:abad76da8c9950fdc2a314bcd66969172aa823e9c595fa7e3a389a91e34d025e"
@@ -395,7 +395,7 @@ provenance = "github-attestations"
 [[tools.go]]
 version = "1.27.1"
 backend = "core:go"
-specifiers = ["1.27.1"]
+specifiers = ["latest"]
 
 [tools.go."platforms.linux-arm64"]
 checksum = "sha256:3450b45a3f9ee8568792736a5c5e70a1f2e9b36c35a8f74958c03e51d7d92bec"
@@ -428,7 +428,7 @@ url = "https://dl.google.com/go/go1.27.1.windows-amd64.zip"
 [[tools.golangci-lint]]
 version = "2.14.0"
 backend = "aqua:golangci/golangci-lint"
-specifiers = ["2.14.0"]
+specifiers = ["latest"]
 
 [tools.golangci-lint."platforms.linux-arm64"]
 checksum = "sha256:ee7ec5f3453d15ddf106fae5a4d6c71737712348a979d1fe9cd52ec7ea299bae"
@@ -475,7 +475,7 @@ provenance = "github-attestations"
 [[tools.google-java-format]]
 version = "1.37.0"
 backend = "aqua:google/google-java-format"
-specifiers = ["1.37.0"]
+specifiers = ["latest"]
 
 [tools.google-java-format."platforms.linux-arm64"]
 checksum = "sha256:e8c1c4ae92f5a86367500d78ff0d09ad12bf8ad213fa35b372468fcabf281bd3"
@@ -510,7 +510,7 @@ url_api = "https://api.github.com/repos/google/google-java-format/releases/asset
 [[tools.hadolint]]
 version = "2.15.1"
 backend = "aqua:hadolint/hadolint"
-specifiers = ["2.15.1"]
+specifiers = ["latest"]
 
 [tools.hadolint."platforms.linux-arm64"]
 checksum = "sha256:f6198ef8090f404dbb771abfee086eb8c48ac177f30da7fd3510aca35b344b5d"
@@ -557,7 +557,7 @@ provenance = "github-attestations"
 [[tools.hk]]
 version = "2.5.0"
 backend = "packslip:github.com/jdx/hk"
-specifiers = ["2.5.0"]
+specifiers = ["latest"]
 
 [tools.hk."platforms.linux-arm64"]
 checksum = "sha256:c800091c414e1c8e8628137275d88c257bcfe0c35dd31d2762923a71dae7df7f"
@@ -598,7 +598,7 @@ repository_ids = { repository = "922514152", owner = "216188" }
 [[tools.java]]
 version = "temurin-25.0.3+9.0.LTS"
 backend = "core:java"
-specifiers = ["temurin-25.0.3+9.0.LTS"]
+specifiers = ["temurin-25"]
 
 [tools.java."platforms.linux-arm64"]
 checksum = "sha256:3e4287cb98870ba824ed698854bdc27cff984254caf66dd12cc291e7bfdde26b"
@@ -631,7 +631,7 @@ url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0
 [[tools.kube-linter]]
 version = "0.8.3"
 backend = "aqua:stackrox/kube-linter"
-specifiers = ["0.8.3"]
+specifiers = ["latest"]
 
 [tools.kube-linter."platforms.linux-arm64"]
 checksum = "sha256:9c39d35252e0dcafb16b26197b9e93ba578e44eb402c3c6660fc94e08f94094f"
@@ -678,7 +678,7 @@ provenance = "cosign"
 [[tools.kubeconform]]
 version = "0.8.0"
 backend = "aqua:yannh/kubeconform"
-specifiers = ["0.8.0"]
+specifiers = ["latest"]
 
 [tools.kubeconform."platforms.linux-arm64"]
 checksum = "sha256:1f53fc8e81258197a35e8603054162a5af1de8c5af13746c71ab680d9534ed87"
@@ -718,7 +718,7 @@ url_api = "https://api.github.com/repos/yannh/kubeconform/releases/assets/438612
 [[tools.lychee]]
 version = "0.24.2"
 backend = "aqua:lycheeverse/lychee"
-specifiers = ["0.24.2"]
+specifiers = ["latest"]
 
 [tools.lychee."platforms.linux-arm64"]
 checksum = "sha256:91a7bd65685da41b90ccb9bc867a3d649a7818042dae04ff405e55a25bddee4c"
@@ -758,7 +758,7 @@ url_api = "https://api.github.com/repos/lycheeverse/lychee/releases/assets/40995
 [[tools.node]]
 version = "24.21.0"
 backend = "core:node"
-specifiers = ["24.21.0"]
+specifiers = ["lts"]
 
 [tools.node."platforms.linux-arm64"]
 checksum = "sha256:724282c3b43aec998aa9527380465b45d229e021b58035f5f4f63095eabfe5d5"
@@ -792,7 +792,7 @@ url = "https://nodejs.org/dist/v24.21.0/node-v24.21.0-win-x64.zip"
 version = "44.132.2"
 aube = { path = ".mise/locks/npm-renovate/44.132.2~aa673d8d", digest = "sha256:4aa23f0888dba2ee2149c0cd7345d2739fbf898e31ce8c02ded359c2a94e2ebd" }
 backend = "npm:renovate"
-specifiers = ["44.132.2"]
+specifiers = ["latest"]
 
 [tools."npm:renovate".options]
 trust_policy_excludes = '["@yarnpkg/libzip@3.2.2"]'
@@ -800,7 +800,7 @@ trust_policy_excludes = '["@yarnpkg/libzip@3.2.2"]'
 [[tools.pkl]]
 version = "0.32.1"
 backend = "aqua:apple/pkl"
-specifiers = ["0.32.1"]
+specifiers = ["latest"]
 
 [tools.pkl."platforms.linux-arm64"]
 checksum = "sha256:a76d2dd47da435a8f911b0347373f47c7e59ea54fb75ff846d20b8df10dba058"
@@ -840,7 +840,7 @@ url_api = "https://api.github.com/repos/apple/pkl/releases/assets/487426668"
 [[tools.ruff]]
 version = "0.16.10"
 backend = "aqua:astral-sh/ruff"
-specifiers = ["0.16.10"]
+specifiers = ["latest"]
 
 [tools.ruff."platforms.linux-arm64"]
 checksum = "sha256:dc0d74de837ef0a7bcc62ce98c48a622b075d057161f13b958be2934becd55a6"
@@ -887,7 +887,7 @@ provenance = "github-attestations"
 [[tools.rumdl]]
 version = "v0.2.78"
 backend = "aqua:rvben/rumdl"
-specifiers = ["v0.2.78"]
+specifiers = ["latest"]
 
 [tools.rumdl."platforms.linux-arm64"]
 checksum = "sha256:16e518695868a650ad0f584f60f225e65e63ffb71b46aba2428c365c7225d262"
@@ -934,7 +934,7 @@ provenance = "github-attestations"
 [[tools.rust]]
 version = "1.99.0"
 backend = "core:rust"
-specifiers = ["1.99.0"]
+specifiers = ["latest"]
 
 [tools.rust.options]
 components = "clippy,rustfmt"
@@ -942,7 +942,7 @@ components = "clippy,rustfmt"
 [[tools.shellcheck]]
 version = "0.11.0"
 backend = "aqua:koalaman/shellcheck"
-specifiers = ["0.11.0"]
+specifiers = ["latest"]
 
 [tools.shellcheck."platforms.linux-arm64"]
 checksum = "sha256:12b331c1d2db6b9eb13cfca64306b1b157a86eb69db83023e261eaa7e7c14588"
@@ -982,7 +982,7 @@ url_api = "https://api.github.com/repos/koalaman/shellcheck/releases/assets/2790
 [[tools.shfmt]]
 version = "3.14.1"
 backend = "aqua:mvdan/sh"
-specifiers = ["3.14.1"]
+specifiers = ["latest"]
 
 [tools.shfmt."platforms.linux-arm64"]
 checksum = "sha256:5f2db09dae91fca848f7adbdd014632e921a383863a2ad7e0450ad3aba0c6489"
@@ -1022,7 +1022,7 @@ url_api = "https://api.github.com/repos/mvdan/sh/releases/assets/547320827"
 [[tools.taplo]]
 version = "0.10.0"
 backend = "aqua:tamasfe/taplo"
-specifiers = ["0.10.0"]
+specifiers = ["latest"]
 
 [tools.taplo."platforms.linux-arm64"]
 url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-linux-aarch64.gz"
@@ -1055,7 +1055,7 @@ url_api = "https://api.github.com/repos/tamasfe/taplo/releases/assets/257323062"
 [[tools.typos]]
 version = "1.50.3"
 backend = "aqua:crate-ci/typos"
-specifiers = ["1.50.3"]
+specifiers = ["latest"]
 
 [tools.typos."platforms.linux-arm64"]
 checksum = "sha256:456f9fe7aa6e7c1597879f5e951d7de2fab261a9ca05f16f324f896c806c55db"

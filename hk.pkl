@@ -27,23 +27,7 @@ steps {
   ["gofmt"] = Builtins.go_fmt
   ["cargo-clippy"] = Builtins.cargo_clippy
   ["cargo-fmt"] = Builtins.cargo_fmt
-  ["dotnet-format"] = new Config.Step {
-    glob = List("**/*.cs", "**/*.vb")
-    exclusive = true
-    check = new Config.CommandSpec {
-      command = new Config.Command {
-        argv = List("dotnet", "format", "--verify-no-changes", "--include", "{{files}}")
-      }
-      // Implicit restore may write obj/ even in verification mode.
-      effect = "write"
-    }
-    fix = new Config.CommandSpec {
-      command = new Config.Command {
-        argv = List("dotnet", "format", "--include", "{{files}}")
-      }
-      effect = "write"
-    }
-  }
+  ["dotnet-format"] = Builtins.dotnet_format
   // Validate root and example k8s/ manifests (not unrelated YAML).
   // Unlike the builtin defaults, validate against API 1.35.0 and fail when a
   // schema is missing.

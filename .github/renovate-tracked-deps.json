@@ -164,6 +164,7 @@
     },
     "examples/ebpf-profiler/generate-traffic.Dockerfile": {
       "dockerfile": [
+        "curl",
         "ubuntu"
       ]
     },
@@ -339,11 +340,13 @@
     },
     "examples/obi/python.Dockerfile": {
       "dockerfile": [
+        "build-base",
         "python"
       ]
     },
     "examples/python/Dockerfile": {
       "dockerfile": [
+        "build-base",
         "python"
       ],
       "regex": [

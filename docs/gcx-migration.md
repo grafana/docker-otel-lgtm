@@ -1,12 +1,15 @@
 # Migration: generated MCP setup replaced by gcx guidance
 
-The image no longer generates MCP client configuration or bootstraps credentials
-for AI tools. Use the [local gcx workflow](gcx-integration.md) instead. gcx and
-your agent stay on the host; neither is installed in the image.
+Starting with the planned docker-otel-lgtm `v0.36.0` release (the next release
+after `v0.35.0` as of 2026-10-05), the image will no longer generate MCP client
+configuration or bootstrap credentials for AI tools. If `v0.36.0` ships without
+this change, use the first later release that includes it. For local diagnosis,
+use the [gcx workflow](gcx-integration.md); gcx and your agent run on your host,
+not in the image.
 
-This removes the image-specific token/configuration maintenance and gives users
-one recommended troubleshooting path. It does not remove MCP from Grafana or
-Tempo as products.
+This change removes image-specific token and configuration maintenance and
+leaves you with one recommended troubleshooting path. MCP remains available in
+Grafana and Tempo themselves.
 
 ## Removed image behavior
 
@@ -22,9 +25,10 @@ behavior. The launch scripts no longer pass `CONTAINER_RUNTIME` into the image
 for generated setup commands; Docker/Podman runtime selection still works.
 This does not change similarly named environment variables in external tools.
 
-If your automation reads the generated files, update it before upgrading. The
-replacement guide explains how to configure gcx directly against Grafana; it
-does not depend on those files or on the bootstrap-managed token.
+If your automation reads the generated files, update it before moving to the
+first release that includes this change. The replacement guide shows how to
+configure gcx directly against Grafana; it does not need those files or the
+bootstrap-managed token.
 
 ## Existing credentials and client configuration
 
@@ -33,11 +37,10 @@ edit your host MCP client configuration, or remove user-mounted copies of the
 old generated files. Their presence is not evidence that the new image manages
 or refreshes them.
 
-After moving to gcx, review your old client registrations and credential consumers.
-Remove registrations/files or revoke credentials only when you know they are no
-longer used. A token used by another workflow must not be revoked merely because
-this image stopped creating it. Configure read-only gcx access where practical;
-do not copy credentials into chat, release reports, or committed files.
+Before cleaning up old client registrations or credentials, check whether any
+other workflow still uses them. A token used elsewhere should not be revoked
+just because this image no longer creates it. Where practical, give gcx
+read-only access, and keep credentials out of chat and committed files.
 
 ## Preserved functionality
 
@@ -51,7 +54,8 @@ do not copy credentials into chat, release reports, or committed files.
 
 ## Release-note summary
 
-Breaking change: the image no longer creates AI-tool service-account tokens or
-generates MCP client files. Configure host-side gcx using the
-[gcx workflow](gcx-integration.md). Existing credentials and user-mounted files
-are not deleted or revoked; review their consumers before removing them.
+Starting with the first release that includes this change, the image no longer
+creates AI-tool service-account tokens or generates MCP client files. Configure
+host-side gcx using the [gcx workflow](gcx-integration.md). Upgrading will not
+delete existing credentials or user-mounted files; check whether you still need
+them before removing them.

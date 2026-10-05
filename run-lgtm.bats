@@ -2,6 +2,7 @@
 bats_require_minimum_version 1.5.0
 
 setup() {
+	unset CONTAINER_RUNTIME_OVERRIDE LGTM_CONTAINER_MEMORY ENABLE_OBI RUNTIME_COMMAND
 	TESTDIR=$(mktemp -d)
 	BINDIR="$TESTDIR/bin"
 	mkdir -p "$BINDIR"
@@ -10,7 +11,7 @@ setup() {
 	cp "$BATS_TEST_DIRNAME/run-lgtm.ps1" "$TESTDIR/work/"
 	cp "$BATS_TEST_DIRNAME/run-lgtm.cmd" "$TESTDIR/work/"
 
-	for runtime in podman docker; do
+	for runtime in podman docker container; do
 		cat >"$BINDIR/$runtime" <<'SCRIPT'
 #!/usr/bin/env bash
 exit 0
@@ -56,6 +57,41 @@ assert_output_contains() {
 	assert_output_contains 'arg=--pid=host'
 	assert_output_contains 'arg=--privileged'
 	assert_output_contains 'arg=ENABLE_OBI=true'
+}
+
+@test "dry-run Apple Container override takes precedence and uses default memory" {
+	cd "$TESTDIR/work" || return 1
+	run env PATH="$BINDIR:$PATH" CONTAINER_RUNTIME_OVERRIDE=container \
+		bash ./run-lgtm.sh latest false --dry-run
+	[ "$status" -eq 0 ]
+	assert_output_contains 'runtime=container'
+	[[ "$output" != *'arg=CONTAINER_RUNTIME='* ]]
+	assert_output_contains $'arg=--memory\narg=2G'
+}
+
+@test "dry-run Apple Container honors the memory override" {
+	cd "$TESTDIR/work" || return 1
+	run env PATH="$BINDIR:$PATH" CONTAINER_RUNTIME_OVERRIDE=container LGTM_CONTAINER_MEMORY=4G \
+		bash ./run-lgtm.sh latest false --dry-run
+	[ "$status" -eq 0 ]
+	assert_output_contains $'arg=--memory\narg=4G'
+}
+
+@test "Apple Container rejects OBI eBPF auto-instrumentation" {
+	cd "$TESTDIR/work" || return 1
+	run env PATH="$BINDIR:$PATH" CONTAINER_RUNTIME_OVERRIDE=container ENABLE_OBI=true \
+		bash ./run-lgtm.sh latest false --dry-run
+	[ "$status" -eq 1 ]
+	assert_output_contains 'Error: OBI eBPF auto-instrumentation requires --pid=host --privileged'
+	assert_output_contains 'which Apple Container does not support.'
+}
+
+@test "invalid runtime override is rejected" {
+	cd "$TESTDIR/work" || return 1
+	run env PATH="$BINDIR:$PATH" CONTAINER_RUNTIME_OVERRIDE=invalid \
+		bash ./run-lgtm.sh latest false --dry-run
+	[ "$status" -eq 1 ]
+	assert_output_contains 'Invalid runtime: invalid (must be docker, podman, or container)'
 }
 
 @test "powershell launcher forwards OTEL collector debug exporter in dry-run output" {

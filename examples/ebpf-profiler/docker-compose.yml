@@ -1,6 +1,6 @@
 services:
   lgtm:
-    image: grafana/otel-lgtm:0.33.0@sha256:475319e883b66594d1a2f22ef168c2459802bb94548e6f25d9782bd5f5c19a3a
+    image: grafana/otel-lgtm:0.35.0@sha256:2de1094c593c671cbfca878a28ffcd7e46ff5e32f2ce966c0cf33003f6cf4266
     environment:
       ENABLE_LOGS_OTELCOL: true
       ENABLE_LOGS_PYROSCOPE: true

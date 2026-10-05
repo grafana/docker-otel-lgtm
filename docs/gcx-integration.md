@@ -1,11 +1,12 @@
 # Query and troubleshoot local telemetry with gcx
 
-Run gcx and your coding agent on the host; LGTM remains the backend. Normal
-LGTM use and plain gcx queries need neither an agent nor Grafana Cloud.
+Use gcx from your host to query telemetry in a local LGTM instance, then use one
+of its existing skills to investigate an empty dashboard. You can still use LGTM
+normally without gcx, an agent, or Grafana Cloud.
 
-Use the gcx-owned [diagnostic guide][diagnostics] for installation, existing
-skills, safety boundaries, and verification. This page supplies only the local
-LGTM connection and example application. Its commands target gcx 1.3.0.
+The gcx [diagnostic guide][diagnostics] covers installation, skills, safe
+diagnosis, and verification. This page shows how to connect to LGTM and exercise
+one of its example applications. These commands were validated with gcx 1.3.0.
 
 ## Start or reuse LGTM
 
@@ -51,9 +52,9 @@ contexts:
 These credentials are only the disposable image defaults. If you customized
 Grafana authentication, enter the actual credentials locally or configure a
 read-only service-account token using the shared guide's authentication link.
-Do not paste secrets into chat or commit this file. Do not reset Grafana's
-credentials to match this example. Review intentional environment overrides so
-the request does not accidentally target another instance.
+Keep your credentials in this private file; do not share them in chat or commit
+the file. Leave Grafana's existing credentials unchanged, and check any
+environment overrides to make sure you are querying the intended instance.
 
 ```sh
 gcx config check --config "$GCX_DIAGNOSTICS_CONFIG" --context lgtm-local
@@ -112,9 +113,10 @@ agent in your application checkout and supply the private config path and scope:
 > This application sends telemetry to my local docker-lgtm instance, but this
 > dashboard is empty: `<URL>`. Use gcx with `<private config path>` and context
 > `lgtm-local`. Inspect only `<application and container/project names>`.
-> Diagnose first. State what you could not observe; do not infer data loss from
-> missing access. Ask before changing application, Collector, or dashboard
-> configuration, restarting resources, or enabling payload logging.
+> Diagnose first. If part of the system is outside your access, say so; missing
+> visibility alone does not show that data was lost. Ask before changing the
+> application, Collector, or dashboard, restarting resources, or enabling payload
+> logging.
 
 ### Optional Collector receipt evidence
 
@@ -136,6 +138,6 @@ example process with Ctrl-C; remove its generated venv only if you no longer
 need it. Keep pre-existing LGTM instances and data. Clean up a disposable stack
 only when its owner confirms it is no longer needed.
 
-[diagnostics]: https://github.com/grafana/gcx/blob/docs/gcx-diagnostics-entry/docs/guides/diagnose-missing-telemetry.md
-[connection]: https://github.com/grafana/gcx/blob/docs/gcx-diagnostics-entry/docs/guides/diagnose-missing-telemetry.md#connect-without-changing-your-usual-context
-[verification]: https://github.com/grafana/gcx/blob/docs/gcx-diagnostics-entry/docs/guides/diagnose-missing-telemetry.md#verify-a-repair-and-restore-the-environment
+[diagnostics]: https://github.com/grafana/gcx/blob/v1.4.0/docs/guides/diagnose-missing-telemetry.md
+[connection]: https://github.com/grafana/gcx/blob/v1.4.0/docs/guides/diagnose-missing-telemetry.md#connect-without-changing-your-usual-context
+[verification]: https://github.com/grafana/gcx/blob/v1.4.0/docs/guides/diagnose-missing-telemetry.md#verify-a-repair-and-restore-the-environment

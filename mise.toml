@@ -115,4 +115,4 @@ run = './build-lgtm.sh ${usage_tag}'
 
 [tasks."lint:fix"]
 description = "Auto-fix lint issues"
-run = 'HK_MISE=1 hk fix --all --no-stage --no-fail-fast'
+run = 'HK_MISE=1 hk fix -q --all --no-stage --no-fail-fast'

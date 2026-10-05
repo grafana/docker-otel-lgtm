@@ -44,18 +44,50 @@ if test -t 0; then
 	TTY_FLAGS=(-t -i)
 fi
 
-if command -v podman >/dev/null 2>&1; then
+if [ -n "${CONTAINER_RUNTIME_OVERRIDE:-}" ]; then
+	RUNTIME_COMMAND="$CONTAINER_RUNTIME_OVERRIDE"
+	case "$CONTAINER_RUNTIME_OVERRIDE" in
+	docker | podman) RUNTIME="$CONTAINER_RUNTIME_OVERRIDE" ;;
+	container) RUNTIME=apple_container ;;
+	*)
+		echo "Invalid runtime: $CONTAINER_RUNTIME_OVERRIDE (must be docker, podman, or container)"
+		exit 1
+		;;
+	esac
+elif command -v podman >/dev/null 2>&1; then
 	RUNTIME=podman
+	RUNTIME_COMMAND=podman
+elif command -v docker >/dev/null 2>&1; then
+	RUNTIME=docker
+	RUNTIME_COMMAND=docker
+elif command -v container >/dev/null 2>&1; then
+	RUNTIME=apple_container
+	RUNTIME_COMMAND=container
+else
+	echo "Unable to find a suitable container runtime such as Podman, Docker, or Apple Container. Exiting."
+	exit 1
+fi
+
+if [ "$RUNTIME" = "podman" ]; then
 	# Fedora, by default, runs with SELinux on. We require the "z" option for bind mounts.
 	# See: https://docs.docker.com/engine/storage/bind-mounts/#configure-the-selinux-label
 	# See: https://docs.podman.io/en/stable/markdown/podman-run.1.html section "Labeling Volume Mounts"
 	MOUNT_OPTS="rw,z"
-elif command -v docker >/dev/null 2>&1; then
-	RUNTIME=docker
-	MOUNT_OPTS=rw
 else
-	echo "Unable to find a suitable container runtime such as Podman or Docker. Exiting."
-	exit 1
+	MOUNT_OPTS=rw
+fi
+
+if [ "$RUNTIME" = "apple_container" ]; then
+	# Apple Container does not support --pid=host or --privileged, so OBI
+	# eBPF auto-instrumentation cannot run under it.
+	if ((${#OBI_FLAGS[@]})); then
+		echo "Error: OBI eBPF auto-instrumentation requires --pid=host --privileged, which Apple Container does not support. Use Docker or Podman for OBI." >&2
+		exit 1
+	fi
+	if [[ ${DRY_RUN} != true ]] && ! container system status >/dev/null 2>&1; then
+		echo "Apple Container services are not running. Run 'container system start', then retry." >&2
+		exit 1
+	fi
 fi
 
 if [ "$USE_LOCAL_IMAGE" = true ]; then
@@ -68,7 +100,7 @@ if [ "$USE_LOCAL_IMAGE" = true ]; then
 else
 	IMAGE="docker.io/grafana/otel-lgtm:${RELEASE}"
 	if [[ ${DRY_RUN} != true ]]; then
-		$RUNTIME image pull "$IMAGE"
+		"$RUNTIME_COMMAND" image pull "$IMAGE"
 	fi
 fi
 
@@ -103,18 +135,23 @@ RUN_FLAGS+=(
 	-v "${LOCAL_VOLUME}"/prometheus:/data/prometheus:"${MOUNT_OPTS}"
 	-v "${LOCAL_VOLUME}"/loki:/data/loki:"${MOUNT_OPTS}"
 	-e GF_PATHS_DATA=/data/grafana
-	-e CONTAINER_RUNTIME="$RUNTIME"
+	-e CONTAINER_RUNTIME="$RUNTIME_COMMAND"
 	-e OTEL_COLLECTOR_DEBUG_EXPORTER="${OTEL_COLLECTOR_DEBUG_EXPORTER:-}"
 	--env-file .env
 )
 
+if [ "$RUNTIME" = "apple_container" ]; then
+	# Apple's default of 1G is too small for the stack.
+	RUN_FLAGS+=(--memory "${LGTM_CONTAINER_MEMORY:-2G}")
+fi
+
 if [[ ${DRY_RUN} == true ]]; then
-	echo "runtime=$RUNTIME"
+	echo "runtime=$RUNTIME_COMMAND"
 	echo "image=$IMAGE"
-	for arg in container run "${RUN_FLAGS[@]}" "$IMAGE"; do
+	for arg in run "${RUN_FLAGS[@]}" "$IMAGE"; do
 		echo "arg=$arg"
 	done
 	exit 0
 fi
 
-$RUNTIME container run "${RUN_FLAGS[@]}" "$IMAGE"
+"$RUNTIME_COMMAND" run "${RUN_FLAGS[@]}" "$IMAGE"

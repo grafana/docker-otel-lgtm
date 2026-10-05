@@ -1,8 +1,8 @@
 // Builtins own tool invocations; native tool configs own repository policy.
-amends "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Config.pkl"
+amends "package://github.com/jdx/hk/releases/download/v2.5.0/hk@2.5.0#/Config.pkl"
 
-import "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Builtins.pkl"
-import "package://github.com/jdx/hk/releases/download/v2.0.1/hk@2.0.1#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.5.0/hk@2.5.0#/Builtins.pkl"
+import "package://github.com/jdx/hk/releases/download/v2.5.0/hk@2.5.0#/Config.pkl"
 
 // Generated dependency inventories are maintained by their own tools.
 exclude = List("**/package-lock.json", "mise.lock", ".cache/**")
@@ -44,18 +44,30 @@ steps {
       effect = "write"
     }
   }
-  // Repository policy: only k8s/ contains Kubernetes manifests (not other YAML).
+  // Validate root and example k8s/ manifests (not unrelated YAML).
   // Unlike the builtin defaults, validate against API 1.35.0 and fail when a
-  // schema is missing. Keep these choices when replacing the command with options.
+  // schema is missing.
   ["kubeconform"] = (Builtins.kubeconform) {
-    glob = List("k8s/**/*.yaml", "k8s/**/*.yml")
+    glob =
+      List(
+        "k8s/**/*.yaml",
+        "k8s/**/*.yml",
+        "examples/**/k8s/**/*.yaml",
+        "examples/**/k8s/**/*.yml",
+      )
     check = new Config.CommandSpec {
       command = "kubeconform -summary -strict -kubernetes-version 1.35.0 {{files}}"
       effect = "read"
     }
   }
   ["kube-linter"] = new Config.Step {
-    glob = List("k8s/**/*.yaml", "k8s/**/*.yml")
+    glob =
+      List(
+        "k8s/**/*.yaml",
+        "k8s/**/*.yml",
+        "examples/**/k8s/**/*.yaml",
+        "examples/**/k8s/**/*.yml",
+      )
     check = new Config.CommandSpec {
       command = new Config.Command {
         argv = List("kube-linter", "lint", "--fail-if-no-objects-found", "{{files}}")
@@ -64,27 +76,12 @@ steps {
     }
   }
   ["xmllint"] = Builtins.xmllint
-  // Flint still owns dependency consistency and repository-aware link checking.
-  ["renovate-deps"] = new Config.Step {
-    // The checker filters relevance; snapshot extraction must not race fixers.
+  // The checker filters relevance; snapshot extraction must not race fixers.
+  ["renovate-deps"] = (Builtins.renovate_deps) {
     exclusive = true
-    stdin = "{{ files_list | join(sep='\n') }}"
-    check = new Config.CommandSpec {
-      command = new Config.Command {
-        argv = List("flint", "checker", "renovate-deps", "--files-from", "-")
-      }
-      effect = "read"
-    }
-    fix = new Config.CommandSpec {
-      command = new Config.Command {
-        argv = List("flint", "checker", "renovate-deps", "--files-from", "-", "--fix")
-      }
-      effect = "write"
-    }
     stage = List(".github/renovate-tracked-deps.json", "mise.toml", ".github/renovate.json5")
-    diagnostic_format = "sarif"
   }
-  ["lychee"] = new Config.Step {
+  ["lychee"] = (Builtins.lychee_extended) {
     glob =
       List(
         "**/*.md",
@@ -99,13 +96,5 @@ steps {
         "**/*.htm",
         "**/*.txt",
       )
-    stdin = "{{ files_list | join(sep='\n') }}"
-    check = new Config.CommandSpec {
-      command = new Config.Command {
-        argv = List("flint", "checker", "lychee", "--files-from", "-")
-      }
-      effect = "read"
-    }
-    diagnostic_format = "sarif"
   }
 }

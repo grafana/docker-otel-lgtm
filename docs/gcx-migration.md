@@ -1,11 +1,9 @@
 # Migration: generated MCP setup replaced by gcx guidance
 
-Starting with the planned docker-otel-lgtm `v0.36.0` release (the next release
-after `v0.35.0` as of 2026-10-05), the image will no longer generate MCP client
-configuration or bootstrap credentials for AI tools. If `v0.36.0` ships without
-this change, use the first later release that includes it. For local diagnosis,
-use the [gcx workflow](gcx-integration.md); gcx and your agent run on your host,
-not in the image.
+Starting with the docker-otel-lgtm `v0.36.0` release, the image will no longer
+generate MCP client configuration or bootstrap credentials for AI tools. For
+local diagnosis, use the [gcx workflow](gcx-integration.md); gcx and your agent
+run on your host, not in the image.
 
 This change removes image-specific token and configuration maintenance and
 leaves you with one recommended troubleshooting path. MCP remains available in
@@ -25,10 +23,9 @@ behavior. The launch scripts no longer pass `CONTAINER_RUNTIME` into the image
 for generated setup commands; Docker/Podman runtime selection still works.
 This does not change similarly named environment variables in external tools.
 
-If your automation reads the generated files, update it before moving to the
-first release that includes this change. The replacement guide shows how to
-configure gcx directly against Grafana; it does not need those files or the
-bootstrap-managed token.
+If your automation reads the generated files, update it before upgrading to
+`v0.36.0`. The replacement guide shows how to configure gcx directly against
+Grafana; it does not need those files or the bootstrap-managed token.
 
 ## Existing credentials and client configuration
 

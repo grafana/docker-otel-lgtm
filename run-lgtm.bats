@@ -39,7 +39,7 @@ assert_output_contains() {
 	assert_output_contains 'runtime=podman'
 	assert_output_contains 'image=docker.io/grafana/otel-lgtm:1.2.3'
 	assert_output_contains 'arg=-e'
-	assert_output_contains 'arg=CONTAINER_RUNTIME=podman'
+	[[ "$output" != *'arg=CONTAINER_RUNTIME='* ]]
 	assert_output_contains 'arg=OTEL_COLLECTOR_DEBUG_EXPORTER='
 	assert_output_contains 'arg=--env-file'
 }
@@ -65,7 +65,7 @@ assert_output_contains() {
 		bash ./run-lgtm.sh latest false --dry-run
 	[ "$status" -eq 0 ]
 	assert_output_contains 'runtime=container'
-	assert_output_contains 'arg=CONTAINER_RUNTIME=container'
+	[[ "$output" != *'arg=CONTAINER_RUNTIME='* ]]
 	assert_output_contains $'arg=--memory\narg=2G'
 }
 

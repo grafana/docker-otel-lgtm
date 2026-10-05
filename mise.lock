@@ -300,7 +300,7 @@ specifiers = ["10.0.202"]
 
 [[tools.editorconfig-checker]]
 version = "4.0.2"
-backend = "aqua:editorconfig-checker/editorconfig-checker"
+backend = "github:editorconfig-checker/editorconfig-checker"
 specifiers = ["4.0.2"]
 
 [tools.editorconfig-checker."platforms.linux-arm64"]

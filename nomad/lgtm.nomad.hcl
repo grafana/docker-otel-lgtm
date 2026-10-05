@@ -18,7 +18,7 @@
 
 variable "image" {
   type        = string
-  default     = "docker.io/grafana/otel-lgtm:0.34.0"
+  default     = "docker.io/grafana/otel-lgtm:0.35.0"
   description = "otel-lgtm container image"
 }
 

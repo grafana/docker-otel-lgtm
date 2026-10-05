@@ -54,8 +54,7 @@ read-only access, and keep credentials out of chat and committed files.
 
 ## Release-note summary
 
-Starting with the first release that includes this change, the image no longer
-creates AI-tool service-account tokens or generates MCP client files. Configure
-host-side gcx using the [gcx workflow](gcx-integration.md). Upgrading will not
-delete existing credentials or user-mounted files; check whether you still need
-them before removing them.
+This change removes the image's creation of AI-tool service-account tokens and
+generation of MCP client files. Configure host-side gcx using the [gcx
+workflow](gcx-integration.md). Upgrading will not delete existing credentials
+or user-mounted files; check whether you still need them before removing them.

@@ -5,29 +5,30 @@ of its existing skills to investigate an empty dashboard. You can still use LGTM
 normally without gcx, an agent, or Grafana Cloud.
 
 The gcx [diagnostic guide][diagnostics] covers installation, skills, safe
-diagnosis, and verification. This page shows how to connect to LGTM and exercise
+diagnosis, and verification. This guide shows how to connect to LGTM and exercise
 one of its example applications. These commands were validated with gcx 1.3.0.
 
 ## Start or reuse LGTM
 
-Follow [Run the Docker image](../README.md#run-the-docker-image). Reuse your
-existing instance if it is healthy; do not replace containers or delete volumes
-to resolve a port conflict. From the host, check:
+Start LGTM as described in [Run the Docker image](../README.md#run-the-docker-image),
+or use an existing healthy instance. A port conflict does not mean its containers
+or volumes need to be replaced. From the host, check:
 
 ```sh
 curl --fail --silent --show-error http://localhost:3000/api/health
 ```
 
-Use the actual published Grafana address if it differs. Health is not proof that
-the app is exporting telemetry. To reproduce a walkthrough later, record the
-image tag/digest, gcx version, and example checkout revision you used.
+Use the published Grafana address if it differs from this example. A healthy
+endpoint does not prove that the app is exporting telemetry. If you want to
+repeat this walkthrough, note the image tag or digest, gcx version, and example
+checkout revision.
 
 ## Configure an isolated local connection
 
-Follow the [private configuration step][connection] in the shared guide to
-create `GCX_DIAGNOSTICS_CONFIG`. Instead of its remote login example, put the
-following configuration in that **new private file**, not in an existing user
-or repository config:
+The shared guide's [private configuration step][connection] creates
+`GCX_DIAGNOSTICS_CONFIG`. For this local example, use the following values in
+that **new private file** rather than changing an existing user or repository
+config:
 
 ```yaml
 current-context: lgtm-local
@@ -49,12 +50,13 @@ contexts:
       pyroscope: pyroscope
 ```
 
-These credentials are only the disposable image defaults. If you customized
-Grafana authentication, enter the actual credentials locally or configure a
-read-only service-account token using the shared guide's authentication link.
-Keep your credentials in this private file; do not share them in chat or commit
-the file. Leave Grafana's existing credentials unchanged, and check any
-environment overrides to make sure you are querying the intended instance.
+The username and password above are disposable image defaults. If you changed
+Grafana authentication, use your actual credentials locally or set up a
+read-only service-account token as described in the shared guide's
+authentication section. Keep the credentials in this private file rather than
+sharing them in chat or committing the file. Your existing Grafana credentials
+remain unchanged; environment overrides can help confirm that you are querying
+the intended instance.
 
 ```sh
 gcx config check --config "$GCX_DIAGNOSTICS_CONFIG" --context lgtm-local
@@ -102,14 +104,20 @@ traffic does not prove this request succeeded. On a shared instance, use a
 distinct application identity/request correlation or narrow the query to the
 recorded time window. Record a matching fresh trace ID before declaring success.
 
-If the request works but the trace is missing, continue with the shared guide
-rather than changing ports, exporter settings, or dashboard filters blindly.
+If the request succeeds but no trace appears, the shared guide is the next place
+to look. It walks through exporter and dashboard diagnosis without changing
+ports or settings blindly.
 
 ## Investigate your original symptom
 
-After installing the existing gcx skills through the shared guide, start the
-agent in your application checkout and supply the private config path and scope:
+After installing the existing gcx skills through the shared guide, you can start
+an agent in your application checkout and provide the private config path and
+scope. For example:
 
+> [!WARNING]
+> The prompt below asks the agent to inspect telemetry without changing your
+> application or LGTM setup. Review proposed changes before applying them.
+>
 > This application sends telemetry to my local docker-lgtm instance, but this
 > dashboard is empty: `<URL>`. Use gcx with `<private config path>` and context
 > `lgtm-local`. Inspect only `<application and container/project names>`.
@@ -129,14 +137,15 @@ and restore only the settings you changed. Changing an existing instance's
 settings requires approval and
 may require recreation; do not restart it silently.
 
-This shows evidence at LGTM's Collector boundary, not at a separate upstream
-Collector or at final storage. Payloads can contain sensitive data. Disable the
-options after investigation and handle captured logs accordingly.
+This provides evidence at LGTM's Collector boundary, not at a separate upstream
+Collector or at final storage. Payloads can contain sensitive data, so turn these
+options off after the investigation and treat captured logs accordingly.
 
-Use the shared guide's [repair verification and cleanup][verification]. Stop the
-example process with Ctrl-C; remove its generated venv only if you no longer
-need it. Keep pre-existing LGTM instances and data. Clean up a disposable stack
-only when its owner confirms it is no longer needed.
+For repair verification and cleanup, see the shared guide's [repair verification
+and cleanup][verification]. When you're done, stop the example process with
+Ctrl-C; its generated `venv` can be removed if you no longer need it. Existing
+LGTM instances and data remain in place. Remove a disposable stack only after
+its owner confirms it is no longer needed.
 
 [diagnostics]: https://github.com/grafana/gcx/blob/v1.4.0/docs/guides/diagnose-missing-telemetry.md
 [connection]: https://github.com/grafana/gcx/blob/v1.4.0/docs/guides/diagnose-missing-telemetry.md#connect-without-changing-your-usual-context

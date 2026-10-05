@@ -49,6 +49,53 @@ url = "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_
 url_api = "https://api.github.com/repos/rhysd/actionlint/releases/assets/384924919"
 provenance = "github-attestations"
 
+[[tools."aqua:grafana/flint"]]
+version = "0.22.14"
+backend = "aqua:grafana/flint"
+specifiers = ["0.22.14"]
+
+[tools."aqua:grafana/flint"."platforms.linux-arm64"]
+checksum = "sha256:f3f88892b1b129bd56f61e1a38e784e625284b37636155b5752b58585d7ac7c4"
+url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/grafana/flint/releases/assets/586350611"
+provenance = "github-attestations"
+
+[tools."aqua:grafana/flint"."platforms.linux-arm64-musl"]
+checksum = "sha256:486d1cb4f619cd41a893db4bc1789510ae67112ebab1e071d3bd06d0c543883d"
+url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/grafana/flint/releases/assets/586351210"
+provenance = "github-attestations"
+
+[tools."aqua:grafana/flint"."platforms.linux-x64"]
+checksum = "sha256:37cf209f7a3d49bac222d7aebd12c4b623de7f7cfcb9f5bd8c0725733ddc6d39"
+url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/grafana/flint/releases/assets/586350080"
+provenance = "github-attestations"
+
+[tools."aqua:grafana/flint"."platforms.linux-x64-musl"]
+checksum = "sha256:d3bc50adf5f40a91b26cceb8ee0ab86420622baccc334b23f3accea9dbffe2c4"
+url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/grafana/flint/releases/assets/586351062"
+provenance = "github-attestations"
+
+[tools."aqua:grafana/flint"."platforms.macos-arm64"]
+checksum = "sha256:d777718c94102cdc55df6065081bc0d2e5a98d3d8965fc96cf6c316c08bc0eef"
+url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/grafana/flint/releases/assets/586351724"
+provenance = "github-attestations"
+
+[tools."aqua:grafana/flint"."platforms.macos-x64"]
+checksum = "sha256:5e860f846517a40559db4a6792fbe8b3422bc03c92c1684621e8be1cbc5437fd"
+url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/grafana/flint/releases/assets/586360754"
+provenance = "github-attestations"
+
+[tools."aqua:grafana/flint"."platforms.windows-x64"]
+checksum = "sha256:1e0010f102da4714aa11859de05bad09d2025697485321a9285b7ce04c7c6bc8"
+url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/grafana/flint/releases/assets/586353820"
+provenance = "github-attestations"
+
 [[tools."aqua:grafana/gcx"]]
 version = "v1.4.0"
 backend = "aqua:grafana/gcx"
@@ -307,36 +354,43 @@ specifiers = ["4.0.2"]
 checksum = "sha256:abad76da8c9950fdc2a314bcd66969172aa823e9c595fa7e3a389a91e34d025e"
 url = "https://github.com/editorconfig-checker/editorconfig-checker/releases/download/v4.0.2/editorconfig-checker-linux-arm64.tar.gz"
 url_api = "https://api.github.com/repos/editorconfig-checker/editorconfig-checker/releases/assets/574675779"
+provenance = "github-attestations"
 
 [tools.editorconfig-checker."platforms.linux-arm64-musl"]
 checksum = "sha256:abad76da8c9950fdc2a314bcd66969172aa823e9c595fa7e3a389a91e34d025e"
 url = "https://github.com/editorconfig-checker/editorconfig-checker/releases/download/v4.0.2/editorconfig-checker-linux-arm64.tar.gz"
 url_api = "https://api.github.com/repos/editorconfig-checker/editorconfig-checker/releases/assets/574675779"
+provenance = "github-attestations"
 
 [tools.editorconfig-checker."platforms.linux-x64"]
 checksum = "sha256:44efaef3ed14c6ab52eb87481d78e5e5c204796dccf26e2f4598a61ba17f8003"
 url = "https://github.com/editorconfig-checker/editorconfig-checker/releases/download/v4.0.2/editorconfig-checker-linux-amd64.tar.gz"
 url_api = "https://api.github.com/repos/editorconfig-checker/editorconfig-checker/releases/assets/574675771"
+provenance = "github-attestations"
 
 [tools.editorconfig-checker."platforms.linux-x64-musl"]
 checksum = "sha256:44efaef3ed14c6ab52eb87481d78e5e5c204796dccf26e2f4598a61ba17f8003"
 url = "https://github.com/editorconfig-checker/editorconfig-checker/releases/download/v4.0.2/editorconfig-checker-linux-amd64.tar.gz"
 url_api = "https://api.github.com/repos/editorconfig-checker/editorconfig-checker/releases/assets/574675771"
+provenance = "github-attestations"
 
 [tools.editorconfig-checker."platforms.macos-arm64"]
 checksum = "sha256:ff59f57717d95fc62b8e372c8051dbbb766f7d660942409a85d027b0feb2422c"
 url = "https://github.com/editorconfig-checker/editorconfig-checker/releases/download/v4.0.2/editorconfig-checker-darwin-all.tar.gz"
 url_api = "https://api.github.com/repos/editorconfig-checker/editorconfig-checker/releases/assets/574675773"
+provenance = "github-attestations"
 
 [tools.editorconfig-checker."platforms.macos-x64"]
 checksum = "sha256:ff59f57717d95fc62b8e372c8051dbbb766f7d660942409a85d027b0feb2422c"
 url = "https://github.com/editorconfig-checker/editorconfig-checker/releases/download/v4.0.2/editorconfig-checker-darwin-all.tar.gz"
 url_api = "https://api.github.com/repos/editorconfig-checker/editorconfig-checker/releases/assets/574675773"
+provenance = "github-attestations"
 
 [tools.editorconfig-checker."platforms.windows-x64"]
 checksum = "sha256:857f8f74dfc259d73dac93573e37cf3ce01150787d7b139bf839549cc6b5beb9"
 url = "https://github.com/editorconfig-checker/editorconfig-checker/releases/download/v4.0.2/editorconfig-checker-windows-amd64.zip"
 url_api = "https://api.github.com/repos/editorconfig-checker/editorconfig-checker/releases/assets/574675794"
+provenance = "github-attestations"
 
 [[tools.go]]
 version = "1.27.1"
@@ -742,53 +796,6 @@ specifiers = ["44.132.2"]
 
 [tools."npm:renovate".options]
 trust_policy_excludes = '["@yarnpkg/libzip@3.2.2"]'
-
-[[tools."packslip:grafana/flint"]]
-version = "0.22.14"
-backend = "packslip:grafana/flint"
-specifiers = ["0.22.14"]
-
-[tools."packslip:grafana/flint"."platforms.linux-arm64"]
-checksum = "sha256:f3f88892b1b129bd56f61e1a38e784e625284b37636155b5752b58585d7ac7c4"
-url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-aarch64-unknown-linux-gnu.tar.gz"
-signer = "sigstore-oidc:https://github.com/grafana/flint/.github/workflows/release.yml"
-repository_ids = { repository = "1157902094", owner = "7195757" }
-
-[tools."packslip:grafana/flint"."platforms.linux-arm64-musl"]
-checksum = "sha256:486d1cb4f619cd41a893db4bc1789510ae67112ebab1e071d3bd06d0c543883d"
-url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-aarch64-unknown-linux-musl.tar.gz"
-signer = "sigstore-oidc:https://github.com/grafana/flint/.github/workflows/release.yml"
-repository_ids = { repository = "1157902094", owner = "7195757" }
-
-[tools."packslip:grafana/flint"."platforms.linux-x64"]
-checksum = "sha256:37cf209f7a3d49bac222d7aebd12c4b623de7f7cfcb9f5bd8c0725733ddc6d39"
-url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-x86_64-unknown-linux-gnu.tar.gz"
-signer = "sigstore-oidc:https://github.com/grafana/flint/.github/workflows/release.yml"
-repository_ids = { repository = "1157902094", owner = "7195757" }
-
-[tools."packslip:grafana/flint"."platforms.linux-x64-musl"]
-checksum = "sha256:d3bc50adf5f40a91b26cceb8ee0ab86420622baccc334b23f3accea9dbffe2c4"
-url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-x86_64-unknown-linux-musl.tar.gz"
-signer = "sigstore-oidc:https://github.com/grafana/flint/.github/workflows/release.yml"
-repository_ids = { repository = "1157902094", owner = "7195757" }
-
-[tools."packslip:grafana/flint"."platforms.macos-arm64"]
-checksum = "sha256:d777718c94102cdc55df6065081bc0d2e5a98d3d8965fc96cf6c316c08bc0eef"
-url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-aarch64-apple-darwin.tar.gz"
-signer = "sigstore-oidc:https://github.com/grafana/flint/.github/workflows/release.yml"
-repository_ids = { repository = "1157902094", owner = "7195757" }
-
-[tools."packslip:grafana/flint"."platforms.macos-x64"]
-checksum = "sha256:5e860f846517a40559db4a6792fbe8b3422bc03c92c1684621e8be1cbc5437fd"
-url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-x86_64-apple-darwin.tar.gz"
-signer = "sigstore-oidc:https://github.com/grafana/flint/.github/workflows/release.yml"
-repository_ids = { repository = "1157902094", owner = "7195757" }
-
-[tools."packslip:grafana/flint"."platforms.windows-x64"]
-checksum = "sha256:1e0010f102da4714aa11859de05bad09d2025697485321a9285b7ce04c7c6bc8"
-url = "https://github.com/grafana/flint/releases/download/v0.22.14/flint-x86_64-pc-windows-msvc.zip"
-signer = "sigstore-oidc:https://github.com/grafana/flint/.github/workflows/release.yml"
-repository_ids = { repository = "1157902094", owner = "7195757" }
 
 [[tools.pkl]]
 version = "0.32.1"

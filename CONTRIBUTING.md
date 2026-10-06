@@ -13,8 +13,7 @@ It's recommended to use the [mise][mise] for development.
 
 This repository uses [hk][hk] to run the checks configured in `hk.pkl`.
 Most checks use hk builtins; [flint][flint] supplies the `renovate-deps` and `lychee` checker adapters.
-Tool versions are pinned in `mise.toml`. Each tool discovers its native configuration
-from the repository root; `hk.pkl` selects checks rather than duplicating their commands.
+Tool versions are selected in `mise.toml` and pinned in the generated `mise.lock`. Each tool discovers its native configuration from the repository root; `hk.pkl` selects checks rather than duplicating their commands.
 
 ```bash
 mise run lint:fix   # Auto-fix all issues (recommended before committing)

@@ -34,8 +34,6 @@ taplo = "latest"
 typos = "latest"
 "aqua:grafana/flint" = "latest"
 
-[env]
-FLINT_CONFIG_DIR = ".github/config"
 
 [tasks."test:unit"]
 description = "Run unit tests"
@@ -47,7 +45,11 @@ depends = ["lint", "test:unit"]
 
 [tasks.lint]
 description = "Run all lints"
-run = 'HK_MISE=1 hk check --all --check --no-fail-fast'
+run = 'HK_MISE=1 hk check -q --all --check --no-fail-fast'
+
+[tasks."lint:fix"]
+description = "Auto-fix lint issues"
+run = 'HK_MISE=1 hk fix -q --all --no-stage --no-fail-fast'
 
 [tasks.lgtm]
 description = "Run LGTM image"
@@ -112,7 +114,3 @@ run = "kubectl port-forward service/lgtm 3000:3000 3200:3200 4040:4040 4317:4317
 description = "Build LGTM image"
 usage = 'arg "<tag>" default="latest"'
 run = './build-lgtm.sh ${usage_tag}'
-
-[tasks."lint:fix"]
-description = "Auto-fix lint issues"
-run = 'HK_MISE=1 hk fix -q --all --no-stage --no-fail-fast'

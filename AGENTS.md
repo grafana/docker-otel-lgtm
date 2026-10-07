@@ -55,15 +55,17 @@ mise run lint
 After running `lint:fix`, always review the changed files before committing —
 auto-fixes may produce unexpected results.
 
-Go code uses `.github/config/.golangci.yml`. Markdown uses
-`.github/config/.rumdl.toml`. EditorConfig rules live in `.editorconfig`.
+Go code uses `.golangci.yml`. Markdown uses
+`.rumdl.toml`. EditorConfig rules live in `.editorconfig`.
 
 ### Renovate Tracked Deps Linter
 
 `mise run lint` verifies that `.github/renovate-tracked-deps.json` stays in
 sync with what Renovate actually tracks. If the snapshot is stale, run
-`mise run lint:fix` and commit the result. The lint tasks are provided by
-[flint](https://github.com/grafana/flint).
+`mise run lint:fix` and commit the result. The lint tasks use
+[hk](https://github.com/jdx/hk), configured in `hk.pkl`;
+[flint](https://github.com/grafana/flint) supplies the `renovate-deps` and
+`lychee` checker adapters.
 
 ## Architecture
 

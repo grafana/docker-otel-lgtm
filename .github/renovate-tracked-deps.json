@@ -8,6 +8,10 @@
       "packageName": "grafana/otel-lgtm",
       "datasource": "docker"
     },
+    "hk": {
+      "packageName": "jdx/hk",
+      "datasource": "github-releases"
+    },
     "loki": {
       "packageName": "grafana/loki",
       "datasource": "github-releases"
@@ -109,6 +113,11 @@
       "github-actions": [
         "actions/checkout",
         "ubuntu"
+      ]
+    },
+    ".mise/locks/npm-renovate/44.132.2~aa673d8d/package.json": {
+      "npm": [
+        "renovate"
       ]
     },
     "docker/Dockerfile": {
@@ -374,6 +383,11 @@
         "go"
       ]
     },
+    "hk.pkl": {
+      "regex": [
+        "hk"
+      ]
+    },
     "mise.toml": {
       "mise": [
         "actionlint",
@@ -390,11 +404,14 @@
         "golangci-lint",
         "google-java-format",
         "hadolint",
+        "hk",
         "java",
         "kube-linter",
+        "kubeconform",
         "lychee",
         "node",
         "npm:renovate",
+        "pkl",
         "ruff",
         "rumdl",
         "rust",

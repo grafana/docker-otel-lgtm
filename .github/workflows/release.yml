@@ -174,7 +174,9 @@ jobs:
         run: |
           verify_signatures() {
             for image in "${CONTAINER_IMAGE_DIGEST}" "${CONTAINER_IMAGE_FLOATING}" "${CONTAINER_IMAGE_LABEL}"; do
-              cosign verify "${image}" --certificate-identity-regexp "${CERTIFICATE_IDENTITY_REGEX}" --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" --certificate-github-workflow-repository "${GITHUB_REPOSITORY}" || return 1
+              cosign verify "${image}" --certificate-identity-regexp "${CERTIFICATE_IDENTITY_REGEX}" \
+                --certificate-oidc-issuer "${CERTIFICATE_OIDC_ISSUER}" \
+                --certificate-github-workflow-repository "${GITHUB_REPOSITORY}" || return 1
             done
           }
           attempts=0

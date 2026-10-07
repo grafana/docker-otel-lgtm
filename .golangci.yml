@@ -1,0 +1,6 @@
+version: "2"
+
+run:
+  timeout: 1m
+  # hk runs one job per module; wait for the shared cache lock.
+  allow-serial-runners: true

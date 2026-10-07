@@ -1,38 +1,39 @@
 # pin all versions to avoid GitHub rate limit
 [tools]
-"aqua:grafana/gcx" = "v1.4.0"
-"aqua:grafana/oats" = "v0.10.0"
-bats = "1.14.0"
-dotnet = "10.0.202"
-go = "1.27.1"
-java = "temurin-25.0.3+9.0.LTS"
-node = "24.21.0"
-rust = { version = "1.99.0", components = "clippy,rustfmt" }
+"aqua:grafana/gcx" = "latest"
+"aqua:grafana/oats" = "latest"
+bats = "latest"
+dotnet = "latest"
+go = "latest"
+java = "temurin-25"
+node = "lts"
+rust = { version = "latest", components = "clippy,rustfmt" }
 
 # Linters
-actionlint = "1.7.12"
-"aqua:grafana/flint" = "0.22.14"
-"aqua:jonwiggins/xmloxide" = "0.5.0"
-"aqua:owenlamont/ryl" = "0.22.0"
-biome = "2.5.15"
-editorconfig-checker = "4.0.2"
-golangci-lint = "2.14.0"
-google-java-format = "1.37.0"
-hadolint = "2.15.1"
-kube-linter = "0.8.3"
-lychee = "0.24.2"
+actionlint = "latest"
+hk = "latest"
+"aqua:jonwiggins/xmloxide" = "latest"
+"aqua:owenlamont/ryl" = "latest"
+biome = "latest"
+editorconfig-checker = "latest"
+golangci-lint = "latest"
+google-java-format = "latest"
+hadolint = "latest"
+kube-linter = "latest"
+kubeconform = "latest"
+lychee = "latest"
 # @yarnpkg/libzip 3.2.2 is npm-signed and matches Yarn's release commit, but
 # was published without provenance; mise's no-downgrade policy otherwise rejects Renovate.
-"npm:renovate" = { version = "44.132.2", trust_policy_excludes = ["@yarnpkg/libzip@3.2.2"] }
-ruff = "0.16.10"
-rumdl = "v0.2.78"
-shellcheck = "0.11.0"
-shfmt = "3.14.1"
-taplo = "0.10.0"
-typos = "1.50.3"
+"npm:renovate" = { version = "latest", trust_policy_excludes = ["@yarnpkg/libzip@3.2.2"] }
+ruff = "latest"
+pkl = "latest"
+rumdl = "latest"
+shellcheck = "latest"
+shfmt = "latest"
+taplo = "latest"
+typos = "latest"
+"aqua:grafana/flint" = "latest"
 
-[env]
-FLINT_CONFIG_DIR = ".github/config"
 
 [tasks."test:unit"]
 description = "Run unit tests"
@@ -44,7 +45,11 @@ depends = ["lint", "test:unit"]
 
 [tasks.lint]
 description = "Run all lints"
-run = "flint run"
+run = 'HK_MISE=1 hk check -q --all --check --no-fail-fast'
+
+[tasks."lint:fix"]
+description = "Auto-fix lint issues"
+run = 'HK_MISE=1 hk fix -q --all --no-stage --no-fail-fast'
 
 [tasks.lgtm]
 description = "Run LGTM image"
@@ -109,7 +114,3 @@ run = "kubectl port-forward service/lgtm 3000:3000 3200:3200 4040:4040 4317:4317
 description = "Build LGTM image"
 usage = 'arg "<tag>" default="latest"'
 run = './build-lgtm.sh ${usage_tag}'
-
-[tasks."lint:fix"]
-description = "Auto-fix lint issues"
-run = "flint run --fix"

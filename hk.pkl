@@ -5,7 +5,7 @@ import "package://github.com/jdx/hk/releases/download/v2.5.0/hk@2.5.0#/Builtins.
 import "package://github.com/jdx/hk/releases/download/v2.5.0/hk@2.5.0#/Config.pkl"
 
 // Generated dependency inventories are maintained by their own tools.
-exclude = List("**/package-lock.json", "mise.lock", ".mise/locks/**", ".cache/**")
+exclude = List("**/package-lock.json", "mise.lock", ".mise/locks/**")
 
 steps {
   ["actionlint"] = Builtins.actionlint

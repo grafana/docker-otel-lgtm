@@ -8,7 +8,7 @@ ARG TEMPO_VERSION=v3.1.0
 # renovate: datasource=github-releases depName=loki packageName=grafana/loki
 ARG LOKI_VERSION=v3.7.8
 # renovate: datasource=github-releases depName=pyroscope packageName=grafana/pyroscope
-ARG PYROSCOPE_VERSION=v2.3.1
+ARG PYROSCOPE_VERSION=v2.3.2
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
 ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.162.0
 # renovate: datasource=github-releases depName=obi packageName=open-telemetry/opentelemetry-ebpf-instrumentation

@@ -74,6 +74,11 @@
       description: ["Disable major version updates for .NET"],
       matchUpdateTypes: ["major"],
       enabled: false
+    },
+    {
+      matchPackageNames: ["renovate"],
+      description: "Only update renovate once a week",
+      schedule: ["before 4am on Monday"],
     }
   ],
   schedule: ["* 5-21 * * MON-FRI"],

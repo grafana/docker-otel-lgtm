@@ -2,6 +2,6 @@
   "name": "mise-npm-install",
   "private": true,
   "dependencies": {
-    "renovate": "44.164.10"
+    "renovate": "44.165.1"
   }
 }

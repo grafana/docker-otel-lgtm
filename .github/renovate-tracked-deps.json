@@ -16,6 +16,10 @@
       "packageName": "grafana/loki",
       "datasource": "github-releases"
     },
+    "npm:renovate": {
+      "packageName": "renovate",
+      "datasource": "npm"
+    },
     "obi": {
       "packageName": "open-telemetry/opentelemetry-ebpf-instrumentation",
       "datasource": "github-releases"
@@ -31,6 +35,10 @@
     "pyroscope": {
       "packageName": "grafana/pyroscope",
       "datasource": "github-releases"
+    },
+    "renovate": {
+      "packageName": "renovate",
+      "datasource": "npm"
     },
     "tempo": {
       "packageName": "grafana/tempo",

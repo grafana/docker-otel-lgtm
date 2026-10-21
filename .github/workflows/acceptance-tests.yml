@@ -40,6 +40,12 @@ jobs:
           OATS_TAGS: ${{ matrix.tags }}
         run: mise run acceptance-tests ${{ github.event.pull_request.head.sha }}
 
+      - name: Link eBPF profiler troubleshooting guide
+        if: ${{ failure() && matrix.name == 'ebpf-profiler' }}
+        run: |
+          guide="https://github.com/grafana/docker-otel-lgtm/blob/main/examples/ebpf-profiler/README.md"
+          echo "::notice title=eBPF profiler troubleshooting::See ${guide}#troubleshooting-missing-profiles"
+
   # Keep the stable required-check name while running the suites concurrently.
   acceptance-tests:
     if: ${{ always() }}

@@ -8,6 +8,11 @@ The gcx [diagnostic guide][diagnostics] covers installation, skills, safe
 diagnosis, and verification. This guide shows how to connect to LGTM and exercise
 one of its example applications. These commands were validated with gcx 1.3.0.
 
+If the eBPF profiler acceptance test reports missing profiles, see the [profiler
+troubleshooting guide](../examples/ebpf-profiler/README.md#troubleshooting-missing-profiles).
+It explains how to distinguish profiles received by the Collector from profiles
+successfully stored by Pyroscope.
+
 ## Start or reuse LGTM
 
 Start LGTM as described in [Run the Docker image](../README.md#run-the-docker-image),

@@ -18,7 +18,7 @@ env:
 jobs:
   scan-image:
     name: ${{ format('Scan {0} container image', matrix.repository) }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     if: github.event.repository.fork == false
 

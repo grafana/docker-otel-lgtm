@@ -51,9 +51,11 @@
       labels: ["docker-dependency"]
     },
     {
-      // version is derived from OBI_VERSION which tracks open-telemetry/opentelemetry-ebpf-instrumentation
-      matchDatasources: ["docker"],
-      matchPackageNames: ["docker.io/otel/ebpf-instrument"],
+      // version is derived from OBI_VERSION which tracks open-telemetry/opentelemetry-ebpf-instrumentation.
+      // Match on the depName as written in the Dockerfile rather than the packageName, so the FROM image
+      // is always ignored. Updating it pins a digest into OBI_VERSION, which breaks releases.
+      matchManagers: ["dockerfile"],
+      matchDepNames: ["/(^|/)otel/ebpf-instrument$/"],
       enabled: false
     },
     {

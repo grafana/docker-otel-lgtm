@@ -78,6 +78,8 @@ jobs:
               }
 
               if ($key.EndsWith($suffix)) {
+                # Ignore any image digest suffix (e.g. "v1.2.3@sha256:...")
+                $value = ($value -split '@', 2)[0]
                 $result[$key.Substring(0, $key.Length - $suffix.Length)] = [System.Version]::new($value.TrimStart("v"))
               }
             }

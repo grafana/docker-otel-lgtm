@@ -590,7 +590,7 @@ url = "https://github.com/jdx/hk/releases/download/v2.7.1/hk-x86_64-pc-windows-m
 signer = "sigstore-oidc:https://github.com/jdx/hk/.github/workflows/release.yml"
 
 [[tools.java]]
-version = "temurin-25.0.3+9.0.LTS"
+version = "temurin-25.0.5+8.0.LTS"
 backend = "core:java"
 specifiers = ["temurin-25"]
 
@@ -603,16 +603,16 @@ checksum = "sha256:6ed368e93049d3b188c045fce0b20953bbea92fe0614dbbf4d3fd8daad7be
 url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.3%2B9/OpenJDK25U-jdk_aarch64_alpine-linux_hotspot_25.0.3_9.tar.gz"
 
 [tools.java."platforms.linux-x64"]
-checksum = "sha256:69264a7a211bf5029830d07bc3370f879769d62ebc5b5488e90c9343a2da0e1f"
-url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.3%2B9/OpenJDK25U-jdk_x64_linux_hotspot_25.0.3_9.tar.gz"
+checksum = "sha256:68982529869257d0ee6b824ec5aa270ff8b118bb438670da0b97ebdab178d7fb"
+url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.5%2B8/OpenJDK25U-jdk_x64_linux_hotspot_25.0.5_8.tar.gz"
 
 [tools.java."platforms.linux-x64-musl"]
-checksum = "sha256:51c2415b370aac7c3796b0c4663c8fcf91bc22d76f03df95b25fa5667cb5fdd8"
-url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.3%2B9/OpenJDK25U-jdk_x64_alpine-linux_hotspot_25.0.3_9.tar.gz"
+checksum = "sha256:efc86581260b73c340c313e7577c4c85d6a8a899edc3748d78bee5238fe44a4e"
+url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.5%2B8/OpenJDK25U-jdk_x64_alpine-linux_hotspot_25.0.5_8.tar.gz"
 
 [tools.java."platforms.macos-arm64"]
-checksum = "sha256:7baab4d69a15554e119b86ff78d40e3fdc28819b5b322955c913cebfe3f6a37c"
-url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.3%2B9/OpenJDK25U-jdk_aarch64_mac_hotspot_25.0.3_9.tar.gz"
+checksum = "sha256:36dc14d797aaff6d89aab302cd053fdba6207dfdcf772052fa7b023a94b0e857"
+url = "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.5%2B8/OpenJDK25U-jdk_aarch64_mac_hotspot_25.0.5_8.tar.gz"
 
 [tools.java."platforms.macos-x64"]
 checksum = "sha256:4c539a18b4d656960ff6766727e9ca546fc17f7a29714dba9e7b47bdcb37c447"

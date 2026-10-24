@@ -24,7 +24,12 @@ mise run lgtm dev1
 mise run local-lgtm
 ```
 
-The build script (`build-lgtm.sh`) auto-detects Docker or Podman.
+The build script (`build-lgtm.sh`) auto-detects Podman, Docker, WSL containers
+(`wslc`), or Apple Container in that order. On Windows, `build-lgtm.cmd`
+detects Podman, Docker, then `wslc`. Set `CONTAINER_RUNTIME_OVERRIDE` to
+`docker`, `podman`, `wslc`, or `container` to force a specific runtime.
+In Bash scripts, `wslc` is checked **before** `container` to avoid confusing
+it with Apple Container (`container` is Apple-only in this repo).
 
 ## Testing
 

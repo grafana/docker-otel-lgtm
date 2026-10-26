@@ -21,4 +21,4 @@ if [[ -z ${OTEL_EBPF_AUTO_TARGET_EXE:-} && -z ${OTEL_EBPF_OPEN_PORT:-} ]]; then
 	export OTEL_EBPF_OPEN_PORT="80,443,8080-8099,3000-3999,5000-5999"
 fi
 
-run_with_logging "OBI ${OBI_VERSION%%@*}""${ENABLE_LOGS_OBI:-false}" ./obi/obi --config=./obi-config.yaml
+run_with_logging "OBI ${OBI_VERSION%%@*}" "${ENABLE_LOGS_OBI:-false}" ./obi/obi --config=./obi-config.yaml

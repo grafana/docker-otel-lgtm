@@ -309,7 +309,6 @@
         "@opentelemetry/sdk-logs",
         "@opentelemetry/sdk-metrics",
         "@opentelemetry/sdk-node",
-        "@opentelemetry/sdk-trace-node",
         "@opentelemetry/semantic-conventions",
         "express"
       ]

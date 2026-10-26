@@ -302,17 +302,15 @@ services:
 
 ### Run as a non-root user
 
-The image runs as `root` by default, but it also supports running as an arbitrary UID — the normal case on
-OpenShift's `restricted-v2` SCC, and on any Kubernetes pod that sets `runAsUser`. Everything under `/otel-lgtm`
-belongs to group `0` and is group-writable, and an arbitrary UID is always a member of gid `0`.
+The image runs as `root` by default, but it also supports running as an arbitrary UID.
 
-The one thing you have to provide is a writable `/data`, where every backend stores its data. It is not part of
-the image, so without it the stack stops at `mkdir: cannot create directory '/data'`. Mount a volume there, as
-[`k8s/lgtm.yaml`](k8s/lgtm.yaml) does.
-
-```sh
-docker run --user 1000820000:0 --tmpfs /data:rw,mode=1777,size=3g -p 3000:3000 grafana/otel-lgtm
-```
+> [!NOTE]
+> When not running as root a writable `/data` volume to store data must be configured.
+>
+> For example:
+> ```sh
+> docker run --user 1000820000:0 --tmpfs /data:rw,mode=1777,size=3g -p 3000:3000 grafana/otel-lgtm
+> ```
 
 ## Run lgtm in Kubernetes
 

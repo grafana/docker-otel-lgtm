@@ -114,6 +114,11 @@ COPY --from=obi-source /obi /otel-lgtm/obi/obi
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/
 
+# Support running as an arbitrary UID.
+# Without this, the files extracted from the Grafana archive are not writable by the running user and the background plugin installer fails to auto-update.
+# See https://github.com/grafana/docker-otel-lgtm/issues/2037
+RUN chgrp -R 0 /otel-lgtm && chmod -R g=u /otel-lgtm
+
 FROM docker.io/redhat/ubi9-micro:9.8@sha256:5be877a2a280ae36eb9ab80ca4efb28bbf77c57abbba38137cdc37a03b8465e6
 
 RUN mkdir /otel-lgtm

@@ -308,6 +308,7 @@ The image runs as `root` by default, but it also supports running as an arbitrar
 > When not running as root a writable `/data` volume to store data must be configured.
 >
 > For example:
+>
 > ```sh
 > docker run --user 1000820000:0 --tmpfs /data:rw,mode=1777,size=3g -p 3000:3000 grafana/otel-lgtm
 > ```

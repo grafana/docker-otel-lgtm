@@ -107,8 +107,17 @@ jobs:
             github.ref_name == github.event.repository.default_branch && github.event.repository.default_branch || 'latest') }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh attestation verify --repo "${GITHUB_REPOSITORY}" "${CONTAINER_IMAGE_DIGEST}" || exit 1
-          gh attestation verify --repo "${GITHUB_REPOSITORY}" "${CONTAINER_IMAGE_LABEL}" || exit 1
+          for image in "${CONTAINER_IMAGE_DIGEST}" "${CONTAINER_IMAGE_LABEL}"; do
+            attempts=0
+            until gh attestation verify --repo "${GITHUB_REPOSITORY}" "${image}"; do
+              attempts=$((attempts + 1))
+              if [ "${attempts}" -ge 6 ]; then
+                echo "Attestation verification failed for ${image} after ${attempts} attempts."
+                exit 1
+              fi
+              sleep 5s
+            done
+          done
 
       - name: Install cosign
         if: github.event_name != 'pull_request'

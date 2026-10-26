@@ -114,12 +114,8 @@ COPY --from=obi-source /obi /otel-lgtm/obi/obi
 COPY grafana-datasources.yaml /otel-lgtm/grafana/conf/provisioning/datasources/
 COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/
 
-# Support running as an arbitrary UID, which is the normal case on OpenShift's restricted-v2 SCC and on
-# any Kubernetes pod that sets runAsUser. Such a UID is always a member of gid 0, so give group 0 the
-# same access as the owner. Without this, the files extracted from the Grafana archive stay 1000:1000
-# rwxrwxr-x and are not writable by the running user: the background plugin installer then fails to
-# auto-update the bundled datasource plugins, and the failed install unregisters the prometheus, loki,
-# tempo and pyroscope plugins that had already loaded, so those datasources disappear from every picker.
+# Support running as an arbitrary UID.
+# Without this, the files extracted from the Grafana archive are not writable by the running user and the background plugin installer fails to auto-update.
 # See https://github.com/grafana/docker-otel-lgtm/issues/2037
 RUN chgrp -R 0 /otel-lgtm && chmod -R g=u /otel-lgtm
 

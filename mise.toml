@@ -32,7 +32,7 @@ shellcheck = "latest"
 shfmt = "latest"
 taplo = "latest"
 typos = "latest"
-"aqua:grafana/flint" = "latest"
+"aqua:grafana/flint" = "0.22.15"
 
 
 [tasks."test:unit"]

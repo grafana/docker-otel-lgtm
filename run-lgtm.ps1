@@ -6,19 +6,32 @@ param (
     [Parameter(Mandatory = $false)] [switch] $DryRun
 )
 
-$supportedContainerRuntime = 'podman', 'docker'
+$supportedContainerRuntime = 'podman', 'docker', 'wslc'
 $containers = 'grafana', 'prometheus', 'loki'
 $image = "docker.io/grafana/otel-lgtm:${ReleaseTag}"
 
 # prefilled pwd var to avoid repeated calls in build string.moved to top init section or logic
 $path = (Get-Location).Path
 
-$containerCommand = $supportedContainerRuntime | ForEach-Object {
-    (Get-Command $_ -ErrorAction SilentlyContinue).Source
-} | Select-Object -first 1
+if ($env:CONTAINER_RUNTIME_OVERRIDE) {
+    $validRuntimes = 'docker', 'podman', 'container', 'wslc'
+    if ($validRuntimes -notcontains $env:CONTAINER_RUNTIME_OVERRIDE) {
+        Write-Error "Invalid runtime: $($env:CONTAINER_RUNTIME_OVERRIDE) (must be docker, podman, container, or wslc)"
+        return
+    }
+    $containerCommand = (Get-Command $env:CONTAINER_RUNTIME_OVERRIDE -ErrorAction SilentlyContinue).Source
+    if ($null -eq $containerCommand) {
+        Write-Error "Runtime '$($env:CONTAINER_RUNTIME_OVERRIDE)' specified in CONTAINER_RUNTIME_OVERRIDE was not found on PATH."
+        return
+    }
+} else {
+    $containerCommand = $supportedContainerRuntime | ForEach-Object {
+        (Get-Command $_ -ErrorAction SilentlyContinue).Source
+    } | Select-Object -first 1
+}
 
 if ($null -eq $containerCommand) {
-    Write-Error "Unable to find a suitable container runtime such as Docker or Podman. Exiting."
+    Write-Error "Unable to find a suitable container runtime such as Docker, Podman, or WSL containers (wslc). Exiting."
     return
 }
 
@@ -31,7 +44,7 @@ if (-Not (Test-Path -Path ".env")) {
 }
 
 if ($UseLocalImage) {
-    if ($containerCommand -eq 'podman') {
+    if ((Split-Path -Leaf $containerCommand) -eq 'podman') {
         $image = "localhost/grafana/otel-lgtm:${ReleaseTag}"
     }
     else {
@@ -52,6 +65,11 @@ if (-Not $obiEnabled -and (Test-Path -Path ".env")) {
     $obiEnabled = (Get-Content ".env" | Select-String -Pattern '^ENABLE_OBI=true$' -Quiet)
 }
 if ($obiEnabled) {
+    $commandLeaf = Split-Path -Leaf $containerCommand
+    if ($commandLeaf -in @('wslc', 'wslc.exe')) {
+        Write-Error "Error: OBI eBPF auto-instrumentation requires --pid=host --privileged, which WSL containers (wslc) does not support. Use Docker or Podman for OBI."
+        return
+    }
     Write-Output "OBI eBPF auto-instrumentation enabled. Adding --pid=host --privileged flags."
     $obiFlags = @('--pid=host', '--privileged')
     # Forward OBI-specific env vars into the container (they are not in .env by default).
@@ -73,8 +91,11 @@ if ([Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
 $runCommand = @(
     'container', 'run'
     '--name', 'lgtm'
-    '--init'
 )
+
+if ((Split-Path -Leaf $containerCommand) -notin @('wslc', 'wslc.exe')) {
+    $runCommand += '--init'
+}
 
 # Append OBI-related flags (if any) so each flag is a separate argument
 if ($obiFlags.Count -gt 0) {

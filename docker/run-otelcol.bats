@@ -13,6 +13,7 @@ setup() {
 run_with_logging() {
 	shift 2  # skip name and envvar args
 	printf '%s\n' "\$@" >"$TESTDIR/otelcol-invocation"
+	printf '%s\0' "\$@" >"$TESTDIR/otelcol-invocation-nul"
 }
 EOF
 
@@ -34,7 +35,7 @@ teardown() {
 }
 
 run_otelcol() {
-	cd "$TESTDIR" && bash run-otelcol.sh
+	cd "$TESTDIR" && bash run-otelcol.sh "$@"
 }
 
 # --- no flags ---
@@ -50,6 +51,40 @@ run_otelcol() {
 	[ "$status" -eq 0 ]
 	grep -q -- "--config=file:./otelcol-config.yaml" "$TESTDIR/otelcol-invocation"
 	run ! grep -q "otelcol-config-export-http" "$TESTDIR/otelcol-invocation"
+	mapfile -d '' -t args <"$TESTDIR/otelcol-invocation-nul"
+	[ "${#args[@]}" -eq 4 ]
+	[ "${args[0]}" = "./otelcol-contrib/otelcol-contrib" ]
+	[ "${args[1]}" = "--feature-gates" ]
+	[ "${args[2]}" = "service.profilesSupport" ]
+	[ "${args[3]}" = "--config=file:./otelcol-config.yaml" ]
+}
+
+@test "container args: prefixed options are stripped and appended after env args" {
+	export OTELCOL_EXTRA_ARGS="--existing=one"
+	run run_otelcol --otelcol-feature-gates=first --otelcol-feature-gates=second
+	[ "$status" -eq 0 ]
+	mapfile -d '' -t args <"$TESTDIR/otelcol-invocation-nul"
+	[ "${args[4]}" = "--existing=one" ]
+	[ "${args[5]}" = "--feature-gates=first" ]
+	[ "${args[6]}" = "--feature-gates=second" ]
+	[ "${#args[@]}" -eq 7 ]
+}
+
+@test "container args: spaces and newlines stay within one argument" {
+	local value=$'first line\nsecond line with spaces'
+	run run_otelcol "--otelcol-config=${value}"
+	[ "$status" -eq 0 ]
+	mapfile -d '' -t args <"$TESTDIR/otelcol-invocation-nul"
+	[ "${args[4]}" = "--config=${value}" ]
+	[ "${#args[@]}" -eq 5 ]
+}
+
+@test "container args: non-prefixed and bare-prefix args are ignored" {
+	run run_otelcol --unrelated-flag --otelcol- --otelcol-name=value
+	[ "$status" -eq 0 ]
+	mapfile -d '' -t args <"$TESTDIR/otelcol-invocation-nul"
+	[ "${args[4]}" = "--name=value" ]
+	[ "${#args[@]}" -eq 5 ]
 }
 
 # --- debug only ---

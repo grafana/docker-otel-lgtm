@@ -101,5 +101,14 @@ extra_args=()
 if [[ -n "${OTELCOL_EXTRA_ARGS:-}" ]]; then
 	read -ra extra_args <<<"${OTELCOL_EXTRA_ARGS}"
 fi
+# Container CMD arguments selected by run-all.sh have an --otelcol- prefix
+# to distinguish them from arguments for other services. Preserve each argument
+# as a single array item.
+for arg in "$@"; do
+	[[ $arg == --otelcol-* ]] || continue
+	option=${arg#--otelcol-}
+	[[ -n $option ]] || continue
+	extra_args+=("--${option}")
+done
 run_with_logging "OpenTelemetry Collector ${OPENTELEMETRY_COLLECTOR_VERSION}" "${ENABLE_LOGS_OTELCOL:-false}" \
 	./otelcol-contrib/otelcol-contrib "${otelcol_args[@]}" "${extra_args[@]}"

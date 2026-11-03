@@ -234,6 +234,26 @@ docker run -e PROMETHEUS_EXTRA_ARGS="--storage.tsdb.retention.time=90d" grafana/
 > The value is split on whitespace into separate arguments. For options that
 > require values with spaces, mount a custom configuration file instead (see below).
 
+You can also pass OpenTelemetry Collector CLI options as container arguments by
+prefixing each option with `--otelcol-`. Use `--name=value` for options with
+values; each container argument becomes one collector argument, so spaces and
+newlines in a value are preserved. When the first container argument uses this
+prefix, the default stack launcher runs and ignores any other unprefixed
+arguments. Ordinary command overrides (such as `bash`) continue to run as
+commands. For example, this passes TLS certificate and key overrides to the
+collector (with the files mounted at `/certs`):
+
+```sh
+docker run -v ./certs:/certs:ro grafana/otel-lgtm \
+  '--otelcol-config=yaml:receivers::otlp::protocols::grpc::tls::cert_file: "/certs/cert.pem"' \
+  '--otelcol-config=yaml:receivers::otlp::protocols::grpc::tls::key_file: "/certs/key.pem"'
+```
+
+This is an alternative to `OTELCOL_EXTRA_ARGS`, which splits its value on
+whitespace and therefore cannot preserve spaces within an argument. Use a
+single `--otelcol-name=value` argument rather than separate option and value
+arguments.
+
 For deeper customization, you can mount custom configuration files into the container:
 
 | Backend                 | Config file path                            |

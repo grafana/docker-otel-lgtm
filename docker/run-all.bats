@@ -19,6 +19,10 @@ setup() {
 		run-pyroscope.sh; do
 		cat >"$TESTDIR/$script" <<'SCRIPT'
 #!/usr/bin/env bash
+if [[ "$0" == *run-otelcol.sh ]]; then
+	: >"$STUB_OTELCOL_ARGS"
+	if (($#)); then printf '%s\0' "$@" >"$STUB_OTELCOL_ARGS"; fi
+fi
 if [[ "${STUB_IGNORE_TERM:-false}" == "true" ]]; then
 	trap '' TERM
 fi
@@ -56,6 +60,7 @@ teardown() {
 
 run_run_all() {
 	local version=${1-latest}
+	shift || true
 	cd "$TESTDIR" || return 1
 	PATH="$TESTDIR:$PATH" \
 		LGTM_CONFIG_DIR="$CONFIGDIR" \
@@ -63,7 +68,8 @@ run_run_all() {
 		LGTM_READY_FILE="$READY_FILE" \
 		LGTM_VERSION="$version" \
 		STUB_CURL_LOG="$TESTDIR/curl-calls" \
-		timeout 3s bash ./run-all.sh
+		STUB_OTELCOL_ARGS="$TESTDIR/otelcol-args" \
+		timeout 3s bash ./run-all.sh "$@"
 }
 
 @test "clears a stale readiness marker before restarting services" {
@@ -73,6 +79,29 @@ run_run_all() {
 
 	[ "$status" -eq 124 ]
 	assert_no_file "$READY_FILE"
+	[ ! -s "$TESTDIR/otelcol-args" ]
+}
+
+@test "forwards only prefixed collector args in order without changing boundaries" {
+	local multiline=$'first line\nsecond line with spaces'
+	run run_run_all latest --other-flag \
+		"--otelcol-config=${multiline}" \
+		--otelcol-feature-gates=one \
+		--otelcol-feature-gates=two \
+		--otelcol-
+	[ "$status" -eq 124 ]
+	mapfile -d '' -t args <"$TESTDIR/otelcol-args"
+	[ "${#args[@]}" -eq 4 ]
+	[ "${args[0]}" = "--otelcol-config=${multiline}" ]
+	[ "${args[1]}" = "--otelcol-feature-gates=one" ]
+	[ "${args[2]}" = "--otelcol-feature-gates=two" ]
+	[ "${args[3]}" = "--otelcol-" ]
+}
+
+@test "forwards no args when container args are unprefixed" {
+	run run_run_all latest --other-flag
+	[ "$status" -eq 124 ]
+	[ ! -s "$TESTDIR/otelcol-args" ]
 }
 
 run_run_all_with_stubborn_children() {
@@ -83,6 +112,7 @@ run_run_all_with_stubborn_children() {
 		LGTM_READY_FILE="$READY_FILE" \
 		LGTM_VERSION=latest \
 		STUB_CURL_LOG="$TESTDIR/curl-calls" \
+		STUB_OTELCOL_ARGS="$TESTDIR/otelcol-args" \
 		LGTM_SHUTDOWN_TIMEOUT_SECONDS=0.1 \
 		STUB_IGNORE_TERM=true \
 		timeout --preserve-status --signal=TERM --kill-after=2s 1s bash ./run-all.sh

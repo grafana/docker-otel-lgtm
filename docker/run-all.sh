@@ -56,6 +56,15 @@ start_component() {
 # each so a component that exits before it becomes ready can be detected.
 declare -A component_pids
 
+# Container CMD arguments use an explicit prefix so they cannot be confused
+# with arguments intended for another component. run-otelcol.sh removes it.
+otelcol_container_args=()
+for arg in "$@"; do
+	if [[ $arg == --otelcol-* ]]; then
+		otelcol_container_args+=("$arg")
+	fi
+done
+
 start_component "grafana"
 ./run-grafana.sh &
 component_pids[grafana]=$!
@@ -65,7 +74,7 @@ start_component "loki"
 component_pids[loki]=$!
 
 start_component "otelcol"
-./run-otelcol.sh &
+./run-otelcol.sh "${otelcol_container_args[@]}" &
 component_pids[otelcol]=$!
 
 start_component "prometheus"

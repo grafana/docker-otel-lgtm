@@ -89,6 +89,7 @@ COPY common.sh \
  otelcol-config*.yaml \
  run-otelcol.sh \
  run-all.sh \
+ entrypoint.sh \
  /otel-lgtm/
 
 # UBI repository metadata does not expose a stable package version for this build helper.
@@ -134,6 +135,7 @@ COPY --from=builder /mnt/rootfs /
 COPY --from=builder /etc/pki /etc/pki
 
 COPY --from=builder /otel-lgtm /otel-lgtm
+RUN chmod +x /otel-lgtm/entrypoint.sh
 
 # just for displaying the version in the startup message
 ARG LGTM_VERSION
@@ -190,4 +192,5 @@ EXPOSE 4318
 # Prometheus
 EXPOSE 9090
 
+ENTRYPOINT ["/otel-lgtm/entrypoint.sh"]
 CMD ["/otel-lgtm/run-all.sh"]

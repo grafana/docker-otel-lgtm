@@ -37,7 +37,7 @@ typos = "latest"
 
 [tasks."test:unit"]
 description = "Run unit tests"
-run = "bats docker/healthcheck.bats docker/run-otelcol.bats docker/run-all.bats docker/grafana-plugins.bats run-lgtm.bats"
+run = "bats docker/healthcheck.bats docker/entrypoint.bats docker/run-otelcol.bats docker/run-all.bats docker/grafana-plugins.bats run-lgtm.bats"
 
 [tasks."ci"]
 description = "Run all checks (lint + unit tests)"

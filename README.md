@@ -237,8 +237,10 @@ docker run -e PROMETHEUS_EXTRA_ARGS="--storage.tsdb.retention.time=90d" grafana/
 You can also pass OpenTelemetry Collector CLI options as container arguments by
 prefixing each option with `--otelcol-`. Use `--name=value` for options with
 values; each container argument becomes one collector argument, so spaces and
-newlines in a value are preserved. Container arguments without this prefix are
-ignored. For example, this passes TLS certificate and key overrides to the
+newlines in a value are preserved. When the first container argument uses this
+prefix, the default stack launcher runs and ignores any other unprefixed
+arguments. Ordinary command overrides (such as `bash`) continue to run as
+commands. For example, this passes TLS certificate and key overrides to the
 collector (with the files mounted at `/certs`):
 
 ```sh

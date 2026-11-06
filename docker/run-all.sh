@@ -160,12 +160,12 @@ while [[ $all_ready == false ]]; do
 		check_service_ready "$service" "${services[$service]}"
 	done
 
-	# Fail fast if a component's process has already exited, rather than
-	# waiting forever for a health check that will never succeed.
+	# Fail fast if any required component has exited, including one that was
+	# already ready, rather than waiting for another service indefinitely.
 	mapfile -t running_pids < <(jobs -pr)
 	for service in "${!services[@]}"; do
-		if [[ ${service_ready[$service]} == false ]] && ! pid_is_running "${component_pids[$service]}"; then
-			echo "Error: ${service^} exited before becoming ready." >&2
+		if ! pid_is_running "${component_pids[$service]}"; then
+			echo "Error: ${service^} exited before the stack became ready." >&2
 			echo "Re-run with ENABLE_LOGS_${service^^}=true (or ENABLE_LOGS_ALL=true) to see its output." >&2
 			stop_components
 			exit 1
@@ -247,6 +247,24 @@ echo " - 3200: Tempo endpoint"
 echo " - 4040: Pyroscope endpoint"
 echo " - 9090: Prometheus endpoint"
 
-# Wait for signal; backgrounded sleep allows the trap to fire
-sleep infinity &
-wait $!
+# Monitor required services after startup. Polling avoids relying on wait -p
+# to identify an exited child and also catches children that exited earlier.
+while true; do
+	mapfile -t running_pids < <(jobs -pr)
+	for service in "${!services[@]}"; do
+		pid=${component_pids[$service]}
+		if ! pid_is_running "$pid"; then
+			exit_status=0
+			wait "$pid" || exit_status=$?
+			echo "Error: ${service^} exited after becoming ready with status ${exit_status}." >&2
+			echo "Re-run with ENABLE_LOGS_${service^^}=true (or ENABLE_LOGS_ALL=true) to see its output." >&2
+			rm -f "$READY_FILE"
+			stop_components
+			exit 1
+		fi
+	done
+
+	# Keep the signal trap responsive while waiting for the next check.
+	sleep 1 &
+	wait $!
+done

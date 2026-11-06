@@ -160,12 +160,12 @@ while [[ $all_ready == false ]]; do
 		check_service_ready "$service" "${services[$service]}"
 	done
 
-	# Fail fast if a component's process has already exited, rather than
-	# waiting forever for a health check that will never succeed.
+	# Fail fast if any required component has exited, including one that was
+	# already ready, rather than waiting for another service indefinitely.
 	mapfile -t running_pids < <(jobs -pr)
 	for service in "${!services[@]}"; do
-		if [[ ${service_ready[$service]} == false ]] && ! pid_is_running "${component_pids[$service]}"; then
-			echo "Error: ${service^} exited before becoming ready." >&2
+		if ! pid_is_running "${component_pids[$service]}"; then
+			echo "Error: ${service^} exited before the stack became ready." >&2
 			echo "Re-run with ENABLE_LOGS_${service^^}=true (or ENABLE_LOGS_ALL=true) to see its output." >&2
 			stop_components
 			exit 1

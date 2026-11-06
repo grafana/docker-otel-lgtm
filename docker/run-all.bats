@@ -213,6 +213,26 @@ run_run_all_with_stubborn_children() {
 		timeout --preserve-status --signal=TERM --kill-after=2s 1s bash ./run-all.sh
 }
 
+run_run_all_with_startup_exit_after_readiness() {
+	cd "$TESTDIR" || return 1
+	mkdir -p "$TESTDIR/child-pids"
+	local status=0
+	PATH="$TESTDIR:$PATH" \
+		LGTM_CONFIG_DIR="$CONFIGDIR" \
+		GRAFANA_SA_TOKEN_FILE="$TOKENFILE" \
+		LGTM_READY_FILE="$READY_FILE" \
+		LGTM_VERSION=latest \
+		STUB_CURL_LOG="$TESTDIR/curl-calls" \
+		STUB_OTELCOL_ARGS="$TESTDIR/otelcol-args" \
+		STUB_CHILD_PIDS_DIR="$TESTDIR/child-pids" \
+		STUB_FIRST_READY_FILE="$TESTDIR/first-ready-service" \
+		STUB_EXIT_SENT_FILE="$TESTDIR/ready-service-exited" \
+		timeout --preserve-status --signal=TERM --kill-after=2s 3s \
+		bash ./run-all.sh >"$TESTDIR/run-all-output" 2>&1 || status=$?
+	cat "$TESTDIR/run-all-output"
+	return "$status"
+}
+
 assert_contains() {
 	local needle=$1
 	[[ "$output" == *"$needle"* ]]
@@ -248,7 +268,7 @@ process_is_alive() {
 	assert_contains "Shutting down..."
 }
 
-@test "fails fast when a component exits before becoming ready" {
+@test "fails fast when a component exits before stack readiness" {
 	cat >"$TESTDIR/run-loki.sh" <<'SCRIPT'
 #!/usr/bin/env bash
 exit 1
@@ -289,10 +309,70 @@ SCRIPT
 
 	run run_run_all
 	[ "$status" -eq 1 ]
-	assert_contains "Error: Loki exited before becoming ready."
+	assert_contains "Error: Loki exited before the stack became ready."
 	assert_contains "Re-run with ENABLE_LOGS_LOKI=true (or ENABLE_LOGS_ALL=true) to see its output."
 	assert_has_file "$pidfile"
 	assert_process_stopped "$(cat "$pidfile")"
+}
+
+@test "fails startup when a ready component exits while another is pending" {
+	cat >"$TESTDIR/curl" <<'SCRIPT'
+#!/usr/bin/env bash
+url=$4
+case "$url" in
+	*127.0.0.1:3000/api/health*) service=grafana ;;
+	*127.0.0.1:3100/ready*) service=loki ;;
+	*127.0.0.1:9090/api/v1/status/runtimeinfo*) service=prometheus ;;
+	*127.0.0.1:3200/ready*) service=tempo ;;
+	*127.0.0.1:4040/ready*) service=pyroscope ;;
+	*127.0.0.1:13133/ready*) service=otelcol ;;
+	*) echo "Unexpected startup URL: $url" >&2; exit 1 ;;
+esac
+
+if [[ ! -f "$STUB_FIRST_READY_FILE" ]]; then
+	for child in grafana loki otelcol prometheus tempo pyroscope; do
+		for ((attempt = 0; attempt < 100; attempt++)); do
+			[[ -f "$STUB_CHILD_PIDS_DIR/$child" ]] && break
+			sleep 0.01
+		done
+		[[ -f "$STUB_CHILD_PIDS_DIR/$child" ]] || exit 1
+	done
+	printf '%s' "$service" >"$STUB_FIRST_READY_FILE"
+	printf '200'
+	exit 0
+fi
+
+if [[ ! -f "$STUB_EXIT_SENT_FILE" ]]; then
+	ready_service=$(cat "$STUB_FIRST_READY_FILE")
+	ready_pid=$(cat "$STUB_CHILD_PIDS_DIR/$ready_service")
+	kill -TERM "$ready_pid"
+	for ((attempt = 0; attempt < 100; attempt++)); do
+		state=$(ps -o stat= -p "$ready_pid" 2>/dev/null || true)
+		state=${state//[[:space:]]/}
+		[[ -z $state || ${state:0:1} == Z ]] && break
+		sleep 0.01
+	done
+	touch "$STUB_EXIT_SENT_FILE"
+fi
+
+printf '000'
+SCRIPT
+	chmod +x "$TESTDIR/curl"
+
+	run run_run_all_with_startup_exit_after_readiness
+	[ "$status" -eq 1 ]
+	local ready_service
+	ready_service=$(cat "$TESTDIR/first-ready-service")
+	assert_contains "${ready_service^} is up and running."
+	assert_contains "Error: ${ready_service^} exited before the stack became ready."
+	local log_hint="Re-run with ENABLE_LOGS_${ready_service^^}=true "
+	log_hint+="(or ENABLE_LOGS_ALL=true) to see its output."
+	assert_contains "$log_hint"
+	assert_has_file "$TESTDIR/ready-service-exited"
+	assert_no_file "$READY_FILE"
+	for service in grafana loki otelcol prometheus tempo pyroscope; do
+		assert_process_stopped "$(cat "$TESTDIR/child-pids/$service")"
+	done
 }
 
 @test "fails the container when a required component exits after readiness" {

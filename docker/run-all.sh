@@ -247,6 +247,24 @@ echo " - 3200: Tempo endpoint"
 echo " - 4040: Pyroscope endpoint"
 echo " - 9090: Prometheus endpoint"
 
-# Wait for signal; backgrounded sleep allows the trap to fire
-sleep infinity &
-wait $!
+# Monitor required services after startup. Polling avoids relying on wait -p
+# to identify an exited child and also catches children that exited earlier.
+while true; do
+	mapfile -t running_pids < <(jobs -pr)
+	for service in "${!services[@]}"; do
+		pid=${component_pids[$service]}
+		if ! pid_is_running "$pid"; then
+			exit_status=0
+			wait "$pid" || exit_status=$?
+			echo "Error: ${service^} exited after becoming ready with status ${exit_status}." >&2
+			echo "Re-run with ENABLE_LOGS_${service^^}=true (or ENABLE_LOGS_ALL=true) to see its output." >&2
+			rm -f "$READY_FILE"
+			stop_components
+			exit 1
+		fi
+	done
+
+	# Keep the signal trap responsive while waiting for the next check.
+	sleep 1 &
+	wait $!
+done

@@ -19,12 +19,21 @@ setup() {
 		run-pyroscope.sh; do
 		cat >"$TESTDIR/$script" <<'SCRIPT'
 #!/usr/bin/env bash
+service=${0##*/run-}
+service=${service%.sh}
+if [[ -n ${STUB_CHILD_PIDS_DIR:-} ]]; then
+	echo "$$" >"$STUB_CHILD_PIDS_DIR/$service"
+fi
 if [[ "$0" == *run-otelcol.sh ]]; then
 	: >"$STUB_OTELCOL_ARGS"
 	if (($#)); then printf '%s\0' "$@" >"$STUB_OTELCOL_ARGS"; fi
 fi
 if [[ "${STUB_IGNORE_TERM:-false}" == "true" ]]; then
 	trap '' TERM
+fi
+if [[ ${STUB_EXIT_SERVICE:-} == "$service" ]]; then
+	while [[ ! -e ${STUB_EXIT_TRIGGER:?} ]]; do sleep 0.05; done
+	exit "${STUB_EXIT_STATUS:-1}"
 fi
 exec sleep 60
 SCRIPT
@@ -52,6 +61,92 @@ exit 1
 SCRIPT
 	chmod +x "$TESTDIR/curl"
 
+}
+
+run_run_all_with_post_readiness_exit() {
+	local service=$1
+	local exit_status=$2
+	cd "$TESTDIR" || return 1
+	rm -f "$READY_FILE" "$TESTDIR/exit-now" "$TESTDIR/run-all-output"
+	rm -rf "$TESTDIR/child-pids"
+	mkdir -p "$TESTDIR/child-pids"
+	PATH="$TESTDIR:$PATH" \
+		LGTM_CONFIG_DIR="$CONFIGDIR" \
+		GRAFANA_SA_TOKEN_FILE="$TOKENFILE" \
+		LGTM_READY_FILE="$READY_FILE" \
+		LGTM_VERSION=latest \
+		STUB_CURL_LOG="$TESTDIR/curl-calls" \
+		STUB_OTELCOL_ARGS="$TESTDIR/otelcol-args" \
+		STUB_CHILD_PIDS_DIR="$TESTDIR/child-pids" \
+		STUB_EXIT_SERVICE="$service" \
+		STUB_EXIT_STATUS="$exit_status" \
+		STUB_EXIT_TRIGGER="$TESTDIR/exit-now" \
+		timeout --preserve-status --signal=TERM --kill-after=2s 10s \
+		bash ./run-all.sh >"$TESTDIR/run-all-output" 2>&1 &
+	local launcher_pid=$!
+	local attempt
+	for ((attempt = 0; attempt < 100; attempt++)); do
+		[[ -f "$READY_FILE" ]] && break
+		sleep 0.05
+	done
+	if [[ ! -f "$READY_FILE" ]]; then
+		kill "$launcher_pid" 2>/dev/null || true
+		wait "$launcher_pid" 2>/dev/null || true
+		cat "$TESTDIR/run-all-output"
+		return 1
+	fi
+	touch "$TESTDIR/exit-now"
+	local status=0
+	wait "$launcher_pid" || status=$?
+	cat "$TESTDIR/run-all-output"
+	return "$status"
+}
+
+run_run_all_with_optional_obi_exit() {
+	cd "$TESTDIR" || return 1
+	rm -f "$READY_FILE" "$TESTDIR/exit-now" "$TESTDIR/run-all-output"
+	cat >"$TESTDIR/run-obi.sh" <<'SCRIPT'
+#!/usr/bin/env bash
+while [[ ! -e ${STUB_EXIT_TRIGGER:?} ]]; do sleep 0.05; done
+exit 1
+SCRIPT
+	chmod +x "$TESTDIR/run-obi.sh"
+	PATH="$TESTDIR:$PATH" \
+		ENABLE_OBI=true \
+		LGTM_CONFIG_DIR="$CONFIGDIR" \
+		GRAFANA_SA_TOKEN_FILE="$TOKENFILE" \
+		LGTM_READY_FILE="$READY_FILE" \
+		LGTM_VERSION=latest \
+		STUB_CURL_LOG="$TESTDIR/curl-calls" \
+		STUB_OTELCOL_ARGS="$TESTDIR/otelcol-args" \
+		STUB_EXIT_TRIGGER="$TESTDIR/exit-now" \
+		timeout --preserve-status --signal=TERM --kill-after=2s 10s \
+		bash ./run-all.sh >"$TESTDIR/run-all-output" 2>&1 &
+	local launcher_pid=$!
+	local attempt
+	for ((attempt = 0; attempt < 100; attempt++)); do
+		[[ -f "$READY_FILE" ]] && break
+		sleep 0.05
+	done
+	if [[ ! -f "$READY_FILE" ]]; then
+		kill "$launcher_pid" 2>/dev/null || true
+		wait "$launcher_pid" 2>/dev/null || true
+		cat "$TESTDIR/run-all-output"
+		return 1
+	fi
+	touch "$TESTDIR/exit-now"
+	sleep 1.2
+	if ! kill -0 "$launcher_pid" 2>/dev/null || [[ ! -f "$READY_FILE" ]]; then
+		kill -TERM "$launcher_pid" 2>/dev/null || true
+		wait "$launcher_pid" 2>/dev/null || true
+		cat "$TESTDIR/run-all-output"
+		return 1
+	fi
+	kill -TERM "$launcher_pid"
+	local status=0
+	wait "$launcher_pid" || status=$?
+	cat "$TESTDIR/run-all-output"
+	return "$status"
 }
 
 teardown() {
@@ -191,6 +286,37 @@ SCRIPT
 	assert_contains "Re-run with ENABLE_LOGS_LOKI=true (or ENABLE_LOGS_ALL=true) to see its output."
 	assert_has_file "$pidfile"
 	assert_process_stopped "$(cat "$pidfile")"
+}
+
+@test "fails the container when a required component exits after readiness" {
+	for service in grafana loki otelcol prometheus tempo pyroscope; do
+		run run_run_all_with_post_readiness_exit "$service" 1
+		[ "$status" -eq 1 ]
+		assert_contains "Error: ${service^} exited after becoming ready with status 1."
+		local log_hint="Re-run with ENABLE_LOGS_${service^^}=true "
+		log_hint+="(or ENABLE_LOGS_ALL=true) to see its output."
+		assert_contains "$log_hint"
+		assert_no_file "$READY_FILE"
+		for child in grafana loki otelcol prometheus tempo pyroscope; do
+			assert_process_stopped "$(cat "$TESTDIR/child-pids/$child")"
+		done
+	done
+}
+
+@test "fails the container when a required component exits successfully after readiness" {
+	run run_run_all_with_post_readiness_exit loki 0
+	[ "$status" -eq 1 ]
+	assert_contains "Error: Loki exited after becoming ready with status 0."
+	assert_no_file "$READY_FILE"
+	for service in grafana otelcol prometheus tempo pyroscope; do
+		assert_process_stopped "$(cat "$TESTDIR/child-pids/$service")"
+	done
+}
+
+@test "an optional OBI exit does not stop the stack" {
+	run run_run_all_with_optional_obi_exit
+	[ "$status" -eq 0 ]
+	assert_has_file "$READY_FILE"
 }
 
 @test "docs URL uses main for latest" {

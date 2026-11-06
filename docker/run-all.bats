@@ -136,7 +136,7 @@ SCRIPT
 	fi
 	touch "$TESTDIR/exit-now"
 	sleep 1.2
-	if ! kill -0 "$launcher_pid" 2>/dev/null || [[ ! -f "$READY_FILE" ]]; then
+	if ! process_is_alive "$launcher_pid" || [[ ! -f "$READY_FILE" ]]; then
 		kill -TERM "$launcher_pid" 2>/dev/null || true
 		wait "$launcher_pid" 2>/dev/null || true
 		cat "$TESTDIR/run-all-output"
@@ -235,6 +235,13 @@ assert_process_stopped() {
 	! kill -0 "$1" 2>/dev/null
 }
 
+process_is_alive() {
+	local state
+	state=$(ps -o stat= -p "$1" 2>/dev/null) || return 1
+	state=${state//[[:space:]]/}
+	[[ -n $state && ${state:0:1} != Z ]]
+}
+
 @test "shutdown force stops children after the grace period" {
 	run run_run_all_with_stubborn_children
 	[ "$status" -eq 0 ]
@@ -317,6 +324,27 @@ SCRIPT
 	run run_run_all_with_optional_obi_exit
 	[ "$status" -eq 0 ]
 	assert_has_file "$READY_FILE"
+}
+
+@test "process liveness rejects missing and zombie processes" {
+	mkdir -p "$TESTDIR/fake-bin"
+	cat >"$TESTDIR/fake-bin/ps" <<'SCRIPT'
+#!/usr/bin/env bash
+case $4 in
+live) echo S ;;
+zombie) echo Z ;;
+missing) exit 1 ;;
+*) exit 2 ;;
+esac
+SCRIPT
+	chmod +x "$TESTDIR/fake-bin/ps"
+	PATH="$TESTDIR/fake-bin:$PATH" process_is_alive live
+	if PATH="$TESTDIR/fake-bin:$PATH" process_is_alive zombie; then
+		return 1
+	fi
+	if PATH="$TESTDIR/fake-bin:$PATH" process_is_alive missing; then
+		return 1
+	fi
 }
 
 @test "docs URL uses main for latest" {

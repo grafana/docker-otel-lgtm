@@ -14,9 +14,18 @@ $image = "docker.io/grafana/otel-lgtm:${ReleaseTag}"
 $path = (Get-Location).Path
 
 if ($env:CONTAINER_RUNTIME_OVERRIDE) {
-    $validRuntimes = 'docker', 'podman', 'container', 'wslc'
+    $validRuntimes = 'docker', 'podman', 'wslc'
+    # 'container' is the Apple Container CLI; on Windows, container.exe is a
+    # wslc alias, so only allow it on macOS.
+    if ($IsMacOS) {
+        $validRuntimes += 'container'
+    }
     if ($validRuntimes -notcontains $env:CONTAINER_RUNTIME_OVERRIDE) {
-        Write-Error "Invalid runtime: $($env:CONTAINER_RUNTIME_OVERRIDE) (must be docker, podman, container, or wslc)"
+        if ($env:CONTAINER_RUNTIME_OVERRIDE -eq 'container') {
+            Write-Error "Invalid runtime: container. On Windows, use 'wslc' instead (container.exe is a wslc alias)."
+        } else {
+            Write-Error "Invalid runtime: $($env:CONTAINER_RUNTIME_OVERRIDE) (must be docker, podman, or wslc)"
+        }
         return
     }
     $containerCommand = (Get-Command $env:CONTAINER_RUNTIME_OVERRIDE -ErrorAction SilentlyContinue).Source
@@ -35,6 +44,10 @@ if ($null -eq $containerCommand) {
     return
 }
 
+# Compute once: is the resolved runtime wslc?
+$commandLeaf = Split-Path -Leaf $containerCommand
+$isWslc = [IO.Path]::GetFileNameWithoutExtension($commandLeaf) -eq 'wslc'
+
 $containers | ForEach-Object {
     $null = New-Item -ItemType Directory -Path "$path/container/$_" -Force
 }
@@ -44,7 +57,7 @@ if (-Not (Test-Path -Path ".env")) {
 }
 
 if ($UseLocalImage) {
-    if ((Split-Path -Leaf $containerCommand) -eq 'podman') {
+    if ([IO.Path]::GetFileNameWithoutExtension($commandLeaf) -eq 'podman') {
         $image = "localhost/grafana/otel-lgtm:${ReleaseTag}"
     }
     else {
@@ -65,8 +78,7 @@ if (-Not $obiEnabled -and (Test-Path -Path ".env")) {
     $obiEnabled = (Get-Content ".env" | Select-String -Pattern '^ENABLE_OBI=true$' -Quiet)
 }
 if ($obiEnabled) {
-    $commandLeaf = Split-Path -Leaf $containerCommand
-    if ($commandLeaf -in @('wslc', 'wslc.exe')) {
+    if ($isWslc) {
         Write-Error "Error: OBI eBPF auto-instrumentation requires --pid=host --privileged, which WSL containers (wslc) does not support. Use Docker or Podman for OBI."
         return
     }
@@ -93,7 +105,7 @@ $runCommand = @(
     '--name', 'lgtm'
 )
 
-if ((Split-Path -Leaf $containerCommand) -notin @('wslc', 'wslc.exe')) {
+if (-not $isWslc) {
     $runCommand += '--init'
 }
 

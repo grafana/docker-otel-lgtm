@@ -101,7 +101,7 @@ if ([Environment]::UserInteractive -and -not [Console]::IsInputRedirected) {
 }
 
 $runCommand = @(
-    'container', 'run'
+    'run'
     '--name', 'lgtm'
 )
 

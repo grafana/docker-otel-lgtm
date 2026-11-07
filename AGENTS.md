@@ -28,8 +28,10 @@ The build script (`build-lgtm.sh`) auto-detects Podman, Docker, WSL containers
 (`wslc`), or Apple Container in that order. On Windows, `build-lgtm.cmd`
 detects Podman, Docker, then `wslc`. Set `CONTAINER_RUNTIME_OVERRIDE` to
 `docker`, `podman`, `wslc`, or `container` to force a specific runtime.
-In Bash scripts, `wslc` is checked **before** `container` to avoid confusing
-it with Apple Container (`container` is Apple-only in this repo).
+In Bash scripts, `wslc` auto-detection is gated to WSL (Linux kernel with a
+Microsoft signature); on native Windows, use `build-lgtm.cmd` / `run-lgtm.ps1`.
+`wslc` is checked **before** `container` to avoid confusing it with Apple
+Container (`container` is Apple-only in this repo).
 
 ## Testing
 

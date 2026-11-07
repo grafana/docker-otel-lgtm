@@ -47,7 +47,7 @@ docker pull grafana/otel-lgtm:latest
 
 ### Windows with WSL containers (`wslc`)
 
-Prerequisite: Windows with WSL containers installed. Run `wsl --update` to get
+Prerequisite: Windows with [WSL containers](https://learn.microsoft.com/windows/wsl/tutorials/wsl-containers) installed. Run `wsl --update` to get
 the latest WSL version, then verify with `wslc --version`.
 
 To build the image:

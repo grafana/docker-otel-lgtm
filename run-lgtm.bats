@@ -10,19 +10,23 @@ setup() {
 	cp "$BATS_TEST_DIRNAME/run-lgtm.sh" "$TESTDIR/work/"
 	cp "$BATS_TEST_DIRNAME/run-lgtm.ps1" "$TESTDIR/work/"
 	cp "$BATS_TEST_DIRNAME/run-lgtm.cmd" "$TESTDIR/work/"
+	cp "$BATS_TEST_DIRNAME/build-lgtm.sh" "$TESTDIR/work/"
+	cp "$BATS_TEST_DIRNAME/build-lgtm.cmd" "$TESTDIR/work/"
 
 	for runtime in podman docker container wslc; do
-		cat >"$BINDIR/$runtime" <<'SCRIPT'
+		cat >"$BINDIR/$runtime" <<SCRIPT
 #!/usr/bin/env bash
+printf '%s\n' "\$*" >> "$TESTDIR/\$(basename "\$0").log"
 exit 0
 SCRIPT
 		chmod +x "$BINDIR/$runtime"
 	done
 
-	# Default uname mock: report Windows (Git Bash) so wslc auto-detection is active in most tests
+	# Default uname mock: report Linux so that most tests work (override tests
+	# use CONTAINER_RUNTIME_OVERRIDE and don't rely on auto-detection).
 	cat >"$BINDIR/uname" <<'SCRIPT'
 #!/usr/bin/env bash
-echo "MINGW64_NT-10.0"
+echo "Linux"
 SCRIPT
 	chmod +x "$BINDIR/uname"
 }
@@ -60,6 +64,30 @@ make_isolated_bin() {
 		printf '#!/usr/bin/env bash\nexit 0\n' >"$dir/$tool"
 		chmod +x "$dir/$tool"
 	done
+}
+
+# Simulate a WSL environment for auto-detection tests.
+# Intercepts grep so that "grep -qi microsoft /proc/version" succeeds.
+# Usage: make_wsl_bin DIR [runtime ...]
+make_wsl_bin() {
+	local dir="$1"
+	shift
+	make_isolated_bin "$dir" "Linux" "$@"
+	# Replace the real grep with a wrapper that fakes /proc/version for the
+	# Microsoft check, but delegates everything else to the real grep.
+	local real_grep
+	real_grep=$(command -v grep)
+	cat >"$dir/grep" <<SCRIPT
+#!/usr/bin/env bash
+for arg in "\$@"; do
+	if [[ "\$arg" == */proc/version ]]; then
+		echo "Linux version 5.15.167.4-microsoft-standard-WSL2" | "$real_grep" "\${@:1:\$#-1}" -
+		exit \$?
+	fi
+done
+exec "$real_grep" "\$@"
+SCRIPT
+	chmod +x "$dir/grep"
 }
 
 @test "dry-run prints preferred runtime and release-tag image" {
@@ -142,24 +170,35 @@ make_isolated_bin() {
 	grep -Fq 'if /I "%~3"=="--dry-run" set "dryrun=-DryRun"' "$TESTDIR/work/run-lgtm.cmd"
 }
 
-@test "dry-run wslc override uses wslc" {
+@test "dry-run wslc override uses wslc and omits --init" {
 	cd "$TESTDIR/work" || return 1
 	run env PATH="$BINDIR:$PATH" CONTAINER_RUNTIME_OVERRIDE=wslc \
 		bash ./run-lgtm.sh latest false --dry-run
 	[ "$status" -eq 0 ]
 	assert_output_contains 'runtime=wslc'
+	# The main behavioural change: --init must be absent for wslc
+	[[ "$output" != *'arg=--init'* ]]
+}
+
+@test "dry-run docker override includes --init" {
+	cd "$TESTDIR/work" || return 1
+	run env PATH="$BINDIR:$PATH" CONTAINER_RUNTIME_OVERRIDE=docker \
+		bash ./run-lgtm.sh latest false --dry-run
+	[ "$status" -eq 0 ]
+	assert_output_contains 'runtime=docker'
+	assert_output_contains 'arg=--init'
 }
 
 @test "dry-run auto-detects wslc when podman and docker are absent" {
-	make_isolated_bin "$TESTDIR/wslc-only" "MINGW64_NT-10.0" wslc
+	make_wsl_bin "$TESTDIR/wslc-only" wslc
 	cd "$TESTDIR/work" || return 1
 	run env PATH="$TESTDIR/wslc-only" bash ./run-lgtm.sh latest false --dry-run
 	[ "$status" -eq 0 ]
 	assert_output_contains 'runtime=wslc'
 }
 
-@test "dry-run wslc is chosen over container when both exist on Windows" {
-	make_isolated_bin "$TESTDIR/both" "MINGW64_NT-10.0" wslc container
+@test "dry-run wslc is chosen over container when both exist under WSL" {
+	make_wsl_bin "$TESTDIR/both" wslc container
 	cd "$TESTDIR/work" || return 1
 	run env PATH="$TESTDIR/both" bash ./run-lgtm.sh latest false --dry-run
 	[ "$status" -eq 0 ]
@@ -173,4 +212,49 @@ make_isolated_bin() {
 	run env PATH="$TESTDIR/mac" LGTM_CONTAINER_MEMORY=2G bash ./run-lgtm.sh latest false --dry-run
 	[ "$status" -eq 0 ]
 	assert_output_contains 'runtime=container'
+}
+
+
+@test "wslc is not auto-detected on plain Linux" {
+	make_isolated_bin "$TESTDIR/linux-wslc" "Linux" wslc
+	cd "$TESTDIR/work" || return 1
+	run env PATH="$TESTDIR/linux-wslc" bash ./run-lgtm.sh latest false --dry-run
+	[ "$status" -eq 1 ]
+	assert_output_contains 'Unable to find a suitable container runtime'
+}
+
+@test "wslc is not auto-detected on macOS" {
+	make_isolated_bin "$TESTDIR/mac-wslc" "Darwin" wslc
+	cd "$TESTDIR/work" || return 1
+	run env PATH="$TESTDIR/mac-wslc" bash ./run-lgtm.sh latest false --dry-run
+	[ "$status" -eq 1 ]
+	assert_output_contains 'Unable to find a suitable container runtime'
+}
+
+@test "wslc auto-detected under WSL omits --init" {
+	make_wsl_bin "$TESTDIR/wsl-init" wslc
+	cd "$TESTDIR/work" || return 1
+	run env PATH="$TESTDIR/wsl-init" bash ./run-lgtm.sh latest false --dry-run
+	[ "$status" -eq 0 ]
+	assert_output_contains 'runtime=wslc'
+	[[ "$output" != *'arg=--init'* ]]
+}
+
+@test "build-lgtm.sh with wslc override builds image with wslc" {
+	cd "$TESTDIR/work" || return 1
+	run env PATH="$BINDIR:$PATH" CONTAINER_RUNTIME_OVERRIDE=wslc \
+		bash ./build-lgtm.sh dev1
+	[ "$status" -eq 0 ]
+	grep -Fq 'build -f docker/Dockerfile' "$TESTDIR/wslc.log"
+	grep -Fq 'grafana/otel-lgtm:dev1' "$TESTDIR/wslc.log"
+}
+
+@test "build-lgtm.cmd contains wslc detection and build target" {
+	grep -Fq 'WHERE /Q wslc' "$TESTDIR/work/build-lgtm.cmd"
+	grep -Fq 'wslc build -f docker/Dockerfile' "$TESTDIR/work/build-lgtm.cmd"
+}
+
+@test "powershell launcher omits --init and rejects OBI for wslc" {
+	grep -Fq 'if (-not $isWslc)' "$TESTDIR/work/run-lgtm.ps1"
+	grep -Fq 'which WSL containers (wslc) does not support' "$TESTDIR/work/run-lgtm.ps1"
 }

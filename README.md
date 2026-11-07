@@ -74,7 +74,7 @@ Known limits with WSL containers:
 - OBI eBPF auto-instrumentation is not supported
   (`--privileged` / `--pid=host` are not supported by `wslc`).
   Use Docker or Podman for OBI.
-- `wslc compose` is on Microsoft's roadmap but is not yet available.
+- `wslc compose` is not yet supported.
 
 ### macOS
 

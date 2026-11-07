@@ -8,15 +8,13 @@ CONTAINER_RUNTIME_OVERRIDE=${2:-${CONTAINER_RUNTIME_OVERRIDE:-}}
 echo "Building the Grafana OTEL-LGTM image with release ${RELEASE}..."
 
 OS=$(uname -s)
-# wslc is Windows-only: detect Git Bash (MINGW/MSYS/CYGWIN) and WSL (Linux kernel with Microsoft signature)
-IS_WINDOWS=false
-case "$OS" in
-MINGW* | MSYS* | CYGWIN*) IS_WINDOWS=true ;;
-Linux)
-	if grep -qi microsoft /proc/version 2>/dev/null; then
-		IS_WINDOWS=true
-	fi ;;
-esac
+# wslc auto-detection is gated to WSL (Linux kernel with a Microsoft signature).
+# On native Windows, use build-lgtm.cmd instead of this script.
+# CONTAINER_RUNTIME_OVERRIDE=wslc still works for any environment.
+IS_WSL=false
+if [ "$OS" = "Linux" ] && grep -qi microsoft /proc/version 2>/dev/null; then
+	IS_WSL=true
+fi
 
 if [ -n "$CONTAINER_RUNTIME_OVERRIDE" ]; then
 	case "$CONTAINER_RUNTIME_OVERRIDE" in
@@ -32,7 +30,7 @@ elif command -v podman >/dev/null 2>&1; then
 	RUNTIME=podman
 elif command -v docker >/dev/null 2>&1; then
 	RUNTIME=docker
-elif [ "$IS_WINDOWS" = true ] && command -v wslc >/dev/null 2>&1; then
+elif [ "$IS_WSL" = true ] && command -v wslc >/dev/null 2>&1; then
 	RUNTIME=wslc
 elif [ "$OS" = "Darwin" ] && command -v container >/dev/null 2>&1; then
 	RUNTIME=apple_container

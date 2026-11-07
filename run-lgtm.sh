@@ -45,15 +45,13 @@ if test -t 0; then
 fi
 
 OS=$(uname -s)
-# wslc is Windows-only: detect Git Bash (MINGW/MSYS/CYGWIN) and WSL (Linux kernel with Microsoft signature)
-IS_WINDOWS=false
-case "$OS" in
-MINGW* | MSYS* | CYGWIN*) IS_WINDOWS=true ;;
-Linux)
-	if grep -qi microsoft /proc/version 2>/dev/null; then
-		IS_WINDOWS=true
-	fi ;;
-esac
+# wslc auto-detection is gated to WSL (Linux kernel with a Microsoft signature).
+# On native Windows, use run-lgtm.ps1 / run-lgtm.cmd instead of this script.
+# CONTAINER_RUNTIME_OVERRIDE=wslc still works for any environment.
+IS_WSL=false
+if [ "$OS" = "Linux" ] && grep -qi microsoft /proc/version 2>/dev/null; then
+	IS_WSL=true
+fi
 
 if [ -n "${CONTAINER_RUNTIME_OVERRIDE:-}" ]; then
 	RUNTIME_COMMAND="$CONTAINER_RUNTIME_OVERRIDE"
@@ -72,7 +70,7 @@ elif command -v podman >/dev/null 2>&1; then
 elif command -v docker >/dev/null 2>&1; then
 	RUNTIME=docker
 	RUNTIME_COMMAND=docker
-elif [ "$IS_WINDOWS" = true ] && command -v wslc >/dev/null 2>&1; then
+elif [ "$IS_WSL" = true ] && command -v wslc >/dev/null 2>&1; then
 	RUNTIME=wslc
 	RUNTIME_COMMAND=wslc
 elif [ "$OS" = "Darwin" ] && command -v container >/dev/null 2>&1; then
@@ -96,12 +94,12 @@ if [ "$RUNTIME" = "apple_container" ] || [ "$RUNTIME" = "wslc" ]; then
 	# Neither Apple Container nor WSL containers support --pid=host or --privileged, so OBI
 	# eBPF auto-instrumentation cannot run under them.
 	if ((${#OBI_FLAGS[@]})); then
-		local_runtime_name="Apple Container"
+		runtime_name="Apple Container"
 		if [ "$RUNTIME" = "wslc" ]; then
-			local_runtime_name="WSL containers (wslc)"
+			runtime_name="WSL containers (wslc)"
 		fi
 		printf '%s\n' \
-			"Error: OBI eBPF auto-instrumentation requires --pid=host --privileged, which ${local_runtime_name} does not support." \
+			"Error: OBI eBPF auto-instrumentation requires --pid=host --privileged, which ${runtime_name} does not support." \
 			"Use Docker or Podman for OBI." >&2
 		exit 1
 	fi

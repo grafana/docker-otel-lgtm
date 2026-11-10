@@ -10,7 +10,7 @@ ARG LOKI_VERSION=v3.7.9
 # renovate: datasource=github-releases depName=pyroscope packageName=grafana/pyroscope
 ARG PYROSCOPE_VERSION=v2.4.3
 # renovate: datasource=github-releases depName=opentelemetry-collector packageName=open-telemetry/opentelemetry-collector-releases
-ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.164.0
+ARG OPENTELEMETRY_COLLECTOR_VERSION=v0.165.0
 # renovate: datasource=github-releases depName=obi packageName=open-telemetry/opentelemetry-ebpf-instrumentation
 ARG OBI_VERSION=v1.0.0@sha256:a68d70e934260f72540f157ccf4fb4adfa38f11de060d7d905696dad6a3fca02
 

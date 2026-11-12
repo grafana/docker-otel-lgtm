@@ -120,7 +120,7 @@ COPY grafana-dashboards.yaml /otel-lgtm/grafana/conf/provisioning/dashboards/
 # See https://github.com/grafana/docker-otel-lgtm/issues/2037
 RUN chgrp -R 0 /otel-lgtm && chmod -R g=u /otel-lgtm
 
-FROM docker.io/redhat/ubi9-micro:9.8@sha256:6d9eff186ce3ccf399c1835265e7fd3f83bd112cc3422da2d39fd44e234aab59
+FROM docker.io/redhat/ubi9-micro:9.8@sha256:d3499a0896e2d6a1642f922615831bc5c2fd513bbb34f3446cabba530d9d54a2
 
 RUN mkdir /otel-lgtm
 WORKDIR /otel-lgtm

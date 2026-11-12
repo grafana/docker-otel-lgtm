@@ -128,6 +128,11 @@
         "renovate"
       ]
     },
+    ".mise/locks/npm-renovate/44.219.0~aa673d8d/package.json": {
+      "npm": [
+        "renovate"
+      ]
+    },
     "docker/Dockerfile": {
       "dockerfile": [
         "docker.io/otel/ebpf-instrument",

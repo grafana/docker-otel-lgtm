@@ -348,7 +348,7 @@ url_api = "https://api.github.com/repos/biomejs/biome/releases/assets/601227624"
 provenance = "github-attestations"
 
 [[tools.dotnet]]
-version = "10.0.202"
+version = "11.0.100"
 backend = "core:dotnet"
 specifiers = ["latest"]
 

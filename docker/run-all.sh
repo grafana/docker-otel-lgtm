@@ -65,29 +65,47 @@ for arg in "$@"; do
 	fi
 done
 
-start_component "grafana"
-./run-grafana.sh &
-component_pids[grafana]=$!
+LGTM_SERVICES=${LGTM_SERVICES:-all}
+if [[ "${LGTM_SERVICES}" == *"all"* ]]; then
+	LGTM_SERVICES="grafana loki otelcol prometheus tempo pyroscope"
+fi
 
-start_component "loki"
-./run-loki.sh &
-component_pids[loki]=$!
+echo "Selected components: ${LGTM_SERVICES}"
+if [[ "${LGTM_SERVICES}" == *"grafana"* ]]; then
+	start_component "grafana"
+	./run-grafana.sh &
+	component_pids[grafana]=$!
+fi
 
-start_component "otelcol"
-./run-otelcol.sh "${otelcol_container_args[@]}" &
-component_pids[otelcol]=$!
+if [[ "${LGTM_SERVICES}" == *"loki"* ]]; then
+	start_component "loki"
+	./run-loki.sh &
+	component_pids[loki]=$!
+fi
 
-start_component "prometheus"
-./run-prometheus.sh &
-component_pids[prometheus]=$!
+if [[ "${LGTM_SERVICES}" == *"otelcol"* ]]; then
+	start_component "otelcol"
+	./run-otelcol.sh "${otelcol_container_args[@]}" &
+	component_pids[otelcol]=$!
+fi
 
-start_component "tempo"
-./run-tempo.sh &
-component_pids[tempo]=$!
+if [[ "${LGTM_SERVICES}" == *"prometheus"* ]]; then
+	start_component "prometheus"
+	./run-prometheus.sh &
+	component_pids[prometheus]=$!
+fi
 
-start_component "pyroscope"
-./run-pyroscope.sh &
-component_pids[pyroscope]=$!
+if [[ "${LGTM_SERVICES}" == *"tempo"* ]]; then
+	start_component "tempo"
+	./run-tempo.sh &
+	component_pids[tempo]=$!
+fi
+
+if [[ "${LGTM_SERVICES}" == *"pyroscope"* ]]; then
+	start_component "pyroscope"
+	./run-pyroscope.sh &
+	component_pids[pyroscope]=$!
+fi
 
 if [[ ${ENABLE_OBI:-false} == "true" ]]; then
 	start_component "obi"
@@ -101,12 +119,13 @@ declare -A service_ready elapsed_times
 
 # Define services and their health check URLs
 declare -A services
-services["grafana"]="http://127.0.0.1:3000/api/health"
-services["loki"]="http://127.0.0.1:3100/ready"
-services["prometheus"]="http://127.0.0.1:9090/api/v1/status/runtimeinfo"
-services["tempo"]="http://127.0.0.1:3200/ready"
-services["pyroscope"]="http://127.0.0.1:4040/ready"
-services["otelcol"]="http://127.0.0.1:13133/ready"
+
+[[ "${LGTM_SERVICES}" == *"grafana"* ]] && services["grafana"]="http://127.0.0.1:3000/api/health"
+[[ "${LGTM_SERVICES}" == *"loki"* ]] && services["loki"]="http://127.0.0.1:3100/ready"
+[[ "${LGTM_SERVICES}" == *"prometheus"* ]] && services["prometheus"]="http://127.0.0.1:9090/api/v1/status/runtimeinfo"
+[[ "${LGTM_SERVICES}" == *"tempo"* ]] && services["tempo"]="http://127.0.0.1:3200/ready"
+[[ "${LGTM_SERVICES}" == *"pyroscope"* ]] && services["pyroscope"]="http://127.0.0.1:4040/ready"
+[[ "${LGTM_SERVICES}" == *"otelcol"* ]] && services["otelcol"]="http://127.0.0.1:13133/ready"
 
 # Initialize service_ready status to false for all services
 for service in "${!services[@]}"; do
@@ -196,12 +215,12 @@ echo "Total startup time: ${total_elapsed} seconds"
 # Print startup time summary
 echo -e "\nStartup Time Summary:"
 echo "---------------------"
-echo "Grafana: ${elapsed_times[grafana]} seconds"
-echo "Loki: ${elapsed_times[loki]} seconds"
-echo "Prometheus: ${elapsed_times[prometheus]} seconds"
-echo "Tempo: ${elapsed_times[tempo]} seconds"
-echo "Pyroscope: ${elapsed_times[pyroscope]} seconds"
-echo "OpenTelemetry collector: ${elapsed_times[otelcol]} seconds"
+[[ "${LGTM_SERVICES}" == *"grafana"* ]] && echo "Grafana: ${elapsed_times[grafana]} seconds"
+[[ "${LGTM_SERVICES}" == *"loki"* ]] && echo "Loki: ${elapsed_times[loki]} seconds"
+[[ "${LGTM_SERVICES}" == *"prometheus"* ]] && echo "Prometheus: ${elapsed_times[prometheus]} seconds"
+[[ "${LGTM_SERVICES}" == *"tempo"* ]] && echo "Tempo: ${elapsed_times[tempo]} seconds"
+[[ "${LGTM_SERVICES}" == *"pyroscope"* ]] && echo "Pyroscope: ${elapsed_times[pyroscope]} seconds"
+[[ "${LGTM_SERVICES}" == *"otelcol"* ]] && echo "OpenTelemetry collector: ${elapsed_times[otelcol]} seconds"
 if [[ ${ENABLE_OBI:-false} == "true" ]]; then
 	echo "OBI: (opt-in, not in health check)"
 fi
@@ -240,12 +259,12 @@ fi
 
 echo ""
 echo "Open ports:"
-echo " - 4317: OpenTelemetry GRPC endpoint"
-echo " - 4318: OpenTelemetry HTTP endpoint"
-echo " - 3000: Grafana (http://localhost:3000). User: admin, password: admin"
-echo " - 3200: Tempo endpoint"
-echo " - 4040: Pyroscope endpoint"
-echo " - 9090: Prometheus endpoint"
+[[ "${LGTM_SERVICES}" == *"otelcol"* ]] && echo " - 4317: OpenTelemetry GRPC endpoint"
+[[ "${LGTM_SERVICES}" == *"otelcol"* ]] && echo " - 4318: OpenTelemetry HTTP endpoint"
+[[ "${LGTM_SERVICES}" == *"grafana"* ]] && echo " - 3000: Grafana (http://localhost:3000). User: admin, password: admin"
+[[ "${LGTM_SERVICES}" == *"tempo"* ]] && echo " - 3200: Tempo endpoint"
+[[ "${LGTM_SERVICES}" == *"pyroscope"* ]] && echo " - 4040: Pyroscope endpoint"
+[[ "${LGTM_SERVICES}" == *"prometheus"* ]] && echo " - 9090: Prometheus endpoint"
 
 # Wait for signal; backgrounded sleep allows the trap to fire
 sleep infinity &

@@ -1,4 +1,4 @@
-FROM eclipse-temurin:25.0.5_8-jdk@sha256:83f4a7fc27df94dcc7b8de04d14cbbba8da14406f921e966969c3b09000aa507 AS builder
+FROM eclipse-temurin:25.0.5_8-jdk@sha256:b8705e936964c228dfce359e63dbf08f6c69cb380ed1d576b1f6b1064f15567d AS builder
 
 WORKDIR /usr/src/app/
 
@@ -9,7 +9,7 @@ COPY json-logging-ecs/logback-spring.xml ./src/main/resources/logback-spring.xml
 RUN sed -i '/<dependencies>/a <dependency><groupId>co.elastic.logging</groupId><artifactId>logback-ecs-encoder</artifactId><version>1.6.0</version></dependency>' pom.xml
 RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests
 
-FROM eclipse-temurin:25.0.5_8-jre@sha256:ecdc0adb37bde1a281c4d245a3cd535004b1fc8322d560f5b09463b248c81df0
+FROM eclipse-temurin:25.0.5_8-jre@sha256:a640968ae55027b322cedd5f8228b01a84baff0b9e9360e47601c6a111ba1699
 
 WORKDIR /usr/src/app/
 

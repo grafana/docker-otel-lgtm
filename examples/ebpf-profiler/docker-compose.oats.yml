@@ -20,13 +20,6 @@ services:
     build:
       context: ../../examples/ebpf-profiler
       dockerfile: Dockerfile
-    command:
-      [
-        "-collection-agent",
-        "lgtm:4317",
-        "-no-kernel-version-check",
-        "-disable-tls"
-      ]
     hostname: ebpf-profiler
     privileged: true
     pid: "host"

@@ -91,6 +91,10 @@ You can also use [mise][mise] to run the Docker image:
 mise run lgtm
 ```
 
+After startup, the container exits with an error if a required backend process
+stops unexpectedly, stopping the remaining services. OBI is optional; its exit
+does not trigger this shutdown policy.
+
 ## Query and troubleshoot with gcx
 
 Use [gcx with your local LGTM instance](docs/gcx-integration.md) to query fresh

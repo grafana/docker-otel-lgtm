@@ -8,7 +8,9 @@
     'github>grafana/flint#v0.22.15',
   ],
   branchPrefix: 'grafanarenovatebot/',
-  dependencyDashboard: true,
+  dependencyDashboard: {
+    enabled: true,
+  },
   platformCommit: 'enabled',
   automerge: true,
   ignorePaths: [],

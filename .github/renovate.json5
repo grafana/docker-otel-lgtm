@@ -82,6 +82,7 @@
     {
       matchDepNames: [
         "actionlint",
+        "aqua:grafana/flint",
         "aqua:jonwiggins/xmloxide",
         "aqua:owenlamont/ryl",
         "biome",
@@ -111,14 +112,6 @@
       timezone: "UTC",
       updateNotScheduled: false,
       separateMajorMinor: false
-    },
-    {
-      matchPackageNames: ["grafana/flint"],
-      groupName: "flint",
-      description: "Only update the Flint dependency once a week",
-      schedule: ["* 0-3 * * 1"],
-      timezone: "UTC",
-      updateNotScheduled: false
     },
     {
       matchPackageNames: ["jdx/mise"],

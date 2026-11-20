@@ -9,7 +9,7 @@ COPY json-logging-ecs/logback-spring.xml ./src/main/resources/logback-spring.xml
 RUN sed -i '/<dependencies>/a <dependency><groupId>co.elastic.logging</groupId><artifactId>logback-ecs-encoder</artifactId><version>1.6.0</version></dependency>' pom.xml
 RUN --mount=type=cache,target=/root/.m2 ./mvnw install -DskipTests
 
-FROM eclipse-temurin:25.0.5_8-jre@sha256:a640968ae55027b322cedd5f8228b01a84baff0b9e9360e47601c6a111ba1699
+FROM eclipse-temurin:25.0.5_8-jre@sha256:945247f9d092703e0c6be92243ef3c51640229e23ab34d353c8dcdc73e6cd4e6
 
 WORKDIR /usr/src/app/
 

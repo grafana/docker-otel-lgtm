@@ -123,7 +123,7 @@
         "ubuntu"
       ]
     },
-    ".mise/locks/npm-renovate/44.132.2~aa673d8d/package.json": {
+    ".mise/locks/npm-renovate/44.251.0~aa673d8d/package.json": {
       "npm": [
         "renovate"
       ]

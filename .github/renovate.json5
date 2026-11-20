@@ -4,8 +4,7 @@
     "config:best-practices",
     "customManagers:dockerfileVersions",
     "customManagers:githubActionsVersions",
-    "helpers:pinGitHubActionDigestsToSemver",
-    "github>grafana/flint#v0.22.15"
+    "helpers:pinGitHubActionDigestsToSemver"
   ],
   branchPrefix: "grafanarenovatebot/",
   dependencyDashboard: true,
@@ -22,7 +21,10 @@
       matchPackageNames: ["jdx/hk"],
       groupName: "hk",
       separateMajorMinor: false,
-      separateMinorPatch: false
+      separateMinorPatch: false,
+      schedule: ["* 0-3 * * 1"],
+      timezone: "UTC",
+      updateNotScheduled: false
     },
     {
       matchPackageNames: ["open-telemetry/opentelemetry-collector-releases"],
@@ -78,11 +80,61 @@
       enabled: false
     },
     {
+      matchDepNames: [
+        "actionlint",
+        "aqua:jonwiggins/xmloxide",
+        "aqua:owenlamont/ryl",
+        "biome",
+        "checkstyle",
+        "dotenv-linter",
+        "editorconfig-checker",
+        "golangci-lint",
+        "google-java-format",
+        "hadolint",
+        "ktlint",
+        "kube-linter",
+        "kubeconform",
+        "lychee",
+        "npm:renovate",
+        "pkl",
+        "ruff",
+        "rumdl",
+        "shellcheck",
+        "shfmt",
+        "taplo",
+        "typos",
+        "zizmor"
+      ],
+      groupName: "linters",
+      description: "Only update linter dependencies once a week",
+      schedule: ["* 0-3 * * 1"],
+      timezone: "UTC",
+      updateNotScheduled: false,
+      separateMajorMinor: false
+    },
+    {
+      matchPackageNames: ["grafana/flint"],
+      groupName: "flint",
+      description: "Only update the Flint dependency once a week",
+      schedule: ["* 0-3 * * 1"],
+      timezone: "UTC",
+      updateNotScheduled: false
+    },
+    {
+      matchPackageNames: ["jdx/mise"],
+      groupName: "mise",
+      description: "Only update mise once a week",
+      schedule: ["* 0-3 * * 1"],
+      timezone: "UTC",
+      updateNotScheduled: false
+    },
+    {
       matchManagers: ["mise"],
       matchDepNames: ["npm:renovate"],
       description: "Only update renovate once a week",
       updatePinnedDependencies: true,
       schedule: ["* 0-3 * * 1"],
+      timezone: "UTC",
       updateNotScheduled: false
     }
   ],

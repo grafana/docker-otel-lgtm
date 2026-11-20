@@ -16,10 +16,6 @@
       "packageName": "grafana/loki",
       "datasource": "github-releases"
     },
-    "npm:renovate": {
-      "packageName": "renovate",
-      "datasource": "npm"
-    },
     "obi": {
       "packageName": "open-telemetry/opentelemetry-ebpf-instrumentation",
       "datasource": "github-releases"
@@ -35,10 +31,6 @@
     "pyroscope": {
       "packageName": "grafana/pyroscope",
       "datasource": "github-releases"
-    },
-    "renovate": {
-      "packageName": "renovate",
-      "datasource": "npm"
     },
     "tempo": {
       "packageName": "grafana/tempo",
@@ -121,11 +113,6 @@
       "github-actions": [
         "actions/checkout",
         "ubuntu"
-      ]
-    },
-    ".mise/locks/npm-renovate/44.132.2~aa673d8d/package.json": {
-      "npm": [
-        "renovate"
       ]
     },
     "docker/Dockerfile": {

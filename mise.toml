@@ -24,7 +24,7 @@ kubeconform = "latest"
 lychee = "latest"
 # @yarnpkg/libzip 3.2.2 is npm-signed and matches Yarn's release commit, but
 # was published without provenance; mise's no-downgrade policy otherwise rejects Renovate.
-"npm:renovate" = { version = "latest", trust_policy_excludes = ["@yarnpkg/libzip@3.2.2"] }
+"npm:renovate" = { version = "44.252.0", trust_policy_excludes = ["@yarnpkg/libzip@3.2.2"] }
 ruff = "latest"
 pkl = "latest"
 rumdl = "latest"

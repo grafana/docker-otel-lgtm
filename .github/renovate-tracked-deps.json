@@ -1,5 +1,37 @@
 {
   "meta": {
+    "actionlint": {
+      "packageName": "rhysd/actionlint",
+      "datasource": "github-releases"
+    },
+    "aqua:grafana/flint": {
+      "packageName": "grafana/flint",
+      "datasource": "github-tags"
+    },
+    "aqua:jonwiggins/xmloxide": {
+      "packageName": "jonwiggins/xmloxide",
+      "datasource": "github-tags"
+    },
+    "aqua:owenlamont/ryl": {
+      "packageName": "owenlamont/ryl",
+      "datasource": "github-tags"
+    },
+    "biome": {
+      "packageName": "biomejs/biome",
+      "datasource": "github-tags"
+    },
+    "editorconfig-checker": {
+      "packageName": "editorconfig-checker/editorconfig-checker",
+      "datasource": "github-releases"
+    },
+    "golangci-lint": {
+      "packageName": "golangci/golangci-lint",
+      "datasource": "github-tags"
+    },
+    "google-java-format": {
+      "packageName": "google/google-java-format",
+      "datasource": "github-tags"
+    },
     "grafana": {
       "packageName": "grafana/grafana",
       "datasource": "github-releases"
@@ -8,13 +40,37 @@
       "packageName": "grafana/otel-lgtm",
       "datasource": "docker"
     },
+    "hadolint": {
+      "packageName": "hadolint/hadolint",
+      "datasource": "github-tags"
+    },
     "hk": {
       "packageName": "jdx/hk",
       "datasource": "github-releases"
     },
+    "jdx/mise": {
+      "packageName": "jdx/mise",
+      "datasource": "github-release-attachments"
+    },
+    "kube-linter": {
+      "packageName": "stackrox/kube-linter",
+      "datasource": "github-tags"
+    },
+    "kubeconform": {
+      "packageName": "yannh/kubeconform",
+      "datasource": "github-tags"
+    },
     "loki": {
       "packageName": "grafana/loki",
       "datasource": "github-releases"
+    },
+    "lychee": {
+      "packageName": "lycheeverse/lychee",
+      "datasource": "github-releases"
+    },
+    "npm:renovate": {
+      "packageName": "renovate",
+      "datasource": "npm"
     },
     "obi": {
       "packageName": "open-telemetry/opentelemetry-ebpf-instrumentation",
@@ -22,6 +78,10 @@
     },
     "opentelemetry-collector": {
       "packageName": "open-telemetry/opentelemetry-collector-releases",
+      "datasource": "github-releases"
+    },
+    "pkl": {
+      "packageName": "apple/pkl",
       "datasource": "github-releases"
     },
     "prometheus": {
@@ -32,17 +92,36 @@
       "packageName": "grafana/pyroscope",
       "datasource": "github-releases"
     },
+    "ruff": {
+      "packageName": "astral-sh/ruff",
+      "datasource": "github-releases"
+    },
+    "rumdl": {
+      "packageName": "rvben/rumdl",
+      "datasource": "github-releases"
+    },
+    "shellcheck": {
+      "packageName": "koalaman/shellcheck",
+      "datasource": "github-releases"
+    },
+    "shfmt": {
+      "packageName": "mvdan/sh",
+      "datasource": "github-releases"
+    },
+    "taplo": {
+      "packageName": "tamasfe/taplo",
+      "datasource": "github-releases"
+    },
     "tempo": {
       "packageName": "grafana/tempo",
+      "datasource": "github-releases"
+    },
+    "typos": {
+      "packageName": "crate-ci/typos",
       "datasource": "github-releases"
     }
   },
   "files": {
-    ".github/renovate.json5": {
-      "renovate-config": [
-        "grafana/flint"
-      ]
-    },
     ".github/workflows/acceptance-tests.yml": {
       "github-actions": [
         "actions/checkout",

@@ -15,6 +15,11 @@ memberlist:
   bind_addr: [127.0.0.1]
   bind_port: 7947
 
+query_frontend:
+  # Tempo 3 defaults to 30s, which hides new traces from search for half a minute.
+  # This image is meant for development and demos, so show them sooner.
+  query_end_cutoff: 5s
+
 querier:
   frontend_worker:
     frontend_address: 127.0.0.1:9096

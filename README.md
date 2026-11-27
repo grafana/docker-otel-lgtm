@@ -45,6 +45,37 @@ docker pull grafana/otel-lgtm:latest
 ./run-lgtm
 ```
 
+### Windows with WSL containers (`wslc`)
+
+Prerequisite: Windows with [WSL containers](https://learn.microsoft.com/windows/wsl/tutorials/wsl-containers)
+installed. Run `wsl --update` to get the latest WSL version, then verify with `wslc --version`.
+
+To build the image:
+
+```cmd
+build-lgtm.cmd
+```
+
+To run the image:
+
+```powershell
+./run-lgtm
+```
+
+To force `wslc` when multiple runtimes are installed:
+
+```powershell
+$env:CONTAINER_RUNTIME_OVERRIDE = "wslc"
+./run-lgtm
+```
+
+Known limits with WSL containers:
+
+- OBI eBPF auto-instrumentation is not supported
+  (`--privileged` / `--pid=host` are not supported by `wslc`).
+  Use Docker or Podman for OBI.
+- `wslc compose` is not yet supported.
+
 ### macOS
 
 With docker/podman:
@@ -62,8 +93,9 @@ container system start
 CONTAINER_RUNTIME_OVERRIDE=container ./run-lgtm.sh
 ```
 
-The build and run scripts automatically select Podman, then Docker, then Apple Container.
-Set `CONTAINER_RUNTIME_OVERRIDE` to `docker`, `podman`, or `container` to select a runtime
+The build and run scripts automatically select Podman, then Docker, then WSL containers (`wslc`),
+then Apple Container.
+Set `CONTAINER_RUNTIME_OVERRIDE` to `docker`, `podman`, `wslc`, or `container` to select a runtime
 when multiple are installed. This also works with mise, for example:
 
 ```sh

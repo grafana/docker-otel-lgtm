@@ -44,13 +44,23 @@ if test -t 0; then
 	TTY_FLAGS=(-t -i)
 fi
 
+OS=$(uname -s)
+# wslc auto-detection is gated to WSL (Linux kernel with a Microsoft signature).
+# On native Windows, use run-lgtm.ps1 / run-lgtm.cmd instead of this script.
+# CONTAINER_RUNTIME_OVERRIDE=wslc still works for any environment.
+IS_WSL=false
+if [ "$OS" = "Linux" ] && grep -qi microsoft /proc/version 2>/dev/null; then
+	IS_WSL=true
+fi
+
 if [ -n "${CONTAINER_RUNTIME_OVERRIDE:-}" ]; then
 	RUNTIME_COMMAND="$CONTAINER_RUNTIME_OVERRIDE"
 	case "$CONTAINER_RUNTIME_OVERRIDE" in
 	docker | podman) RUNTIME="$CONTAINER_RUNTIME_OVERRIDE" ;;
 	container) RUNTIME=apple_container ;;
+	wslc) RUNTIME=wslc ;;
 	*)
-		echo "Invalid runtime: $CONTAINER_RUNTIME_OVERRIDE (must be docker, podman, or container)"
+		echo "Invalid runtime: $CONTAINER_RUNTIME_OVERRIDE (must be docker, podman, container, or wslc)"
 		exit 1
 		;;
 	esac
@@ -60,11 +70,14 @@ elif command -v podman >/dev/null 2>&1; then
 elif command -v docker >/dev/null 2>&1; then
 	RUNTIME=docker
 	RUNTIME_COMMAND=docker
-elif command -v container >/dev/null 2>&1; then
+elif [ "$IS_WSL" = true ] && command -v wslc >/dev/null 2>&1; then
+	RUNTIME=wslc
+	RUNTIME_COMMAND=wslc
+elif [ "$OS" = "Darwin" ] && command -v container >/dev/null 2>&1; then
 	RUNTIME=apple_container
 	RUNTIME_COMMAND=container
 else
-	echo "Unable to find a suitable container runtime such as Podman, Docker, or Apple Container. Exiting."
+	echo "Unable to find a suitable container runtime such as Podman, Docker, WSL containers (wslc), or Apple Container. Exiting."
 	exit 1
 fi
 
@@ -77,16 +90,20 @@ else
 	MOUNT_OPTS=rw
 fi
 
-if [ "$RUNTIME" = "apple_container" ]; then
-	# Apple Container does not support --pid=host or --privileged, so OBI
-	# eBPF auto-instrumentation cannot run under it.
+if [ "$RUNTIME" = "apple_container" ] || [ "$RUNTIME" = "wslc" ]; then
+	# Neither Apple Container nor WSL containers support --pid=host or --privileged, so OBI
+	# eBPF auto-instrumentation cannot run under them.
 	if ((${#OBI_FLAGS[@]})); then
+		runtime_name="Apple Container"
+		if [ "$RUNTIME" = "wslc" ]; then
+			runtime_name="WSL containers (wslc)"
+		fi
 		printf '%s\n' \
-			"Error: OBI eBPF auto-instrumentation requires --pid=host --privileged, which Apple Container does not support." \
+			"Error: OBI eBPF auto-instrumentation requires --pid=host --privileged, which ${runtime_name} does not support." \
 			"Use Docker or Podman for OBI." >&2
 		exit 1
 	fi
-	if [[ ${DRY_RUN} != true ]] && ! container system status >/dev/null 2>&1; then
+	if [ "$RUNTIME" = "apple_container" ] && [[ ${DRY_RUN} != true ]] && ! container system status >/dev/null 2>&1; then
 		echo "Apple Container services are not running. Run 'container system start', then retry." >&2
 		exit 1
 	fi
@@ -108,8 +125,11 @@ fi
 
 RUN_FLAGS=(
 	--name lgtm
-	--init
 )
+
+if [ "$RUNTIME" != "wslc" ]; then
+	RUN_FLAGS+=(--init)
+fi
 
 if ((${#OBI_FLAGS[@]})); then
 	RUN_FLAGS+=("${OBI_FLAGS[@]}")
